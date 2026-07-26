@@ -1,2 +1,659 @@
-/* Stub stylesheet — intentionally empty.
-   Design System tokens and styles are implemented in Milestone 1. */
+/* ==========================================================================
+   Ançın İnşaat — Design System Foundation
+   Milestone 1 · Commit 2 — Core Design Tokens
+
+   This file defines the reusable visual-language tokens approved in
+   docs/02_DesignSystem.md. It intentionally contains NO reset rules,
+   NO utility classes, NO layout classes and NO component styles —
+   those are implemented in later Milestone 1 commits.
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. Font Face Declarations
+   Self-hosted, WOFF2 only, font-display: swap.
+   Each weight ships two subsets — "latin" and "latin-ext" — because the
+   site is Turkish (lang="tr") and characters such as ş / İ used in
+   "Ançın İnşaat" itself fall in the latin-ext Unicode range.
+   ========================================================================== */
+
+/* ---- Playfair Display (headings only) ---- */
+
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/playfair-display/playfair-display-400-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/playfair-display/playfair-display-400-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/playfair-display/playfair-display-700-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/playfair-display/playfair-display-700-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ---- Inter (body / UI text) ---- */
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/inter/inter-400-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/inter/inter-400-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/inter/inter-500-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/inter/inter-500-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/inter/inter-600-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/inter/inter-600-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/inter/inter-700-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/inter/inter-700-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+
+/* ==========================================================================
+   2. Design Tokens
+   ========================================================================== */
+
+:root {
+
+  /* --------------------------------------------------------------------
+     2.1 Colour
+     Source: docs/02_DesignSystem.md — Approved Design Decisions.
+     Secondary and Feedback (success/warning/error/info) colours are
+     intentionally deferred to the milestone that first requires them.
+     -------------------------------------------------------------------- */
+
+  /* Brand */
+  --color-accent: #9E2B25;        /* Deep Brick Red — CTAs, active nav, links, highlights only. Never a large background. */
+
+  /* Neutrals */
+  --color-near-black: #1C1C1C;
+  --color-dark-gray: #55504D;
+  --color-light-gray: #F0EEEB;
+  --color-white: #FFFFFF;
+
+  /* Semantic aliases (map approved colours to the usage roles
+     described in 02_DesignSystem.md — no new hues introduced) */
+  --color-background: var(--color-white);
+  --color-surface: var(--color-light-gray);
+  --color-border: var(--color-light-gray);
+  --color-text-primary: var(--color-near-black);
+  --color-text-secondary: var(--color-dark-gray);
+
+
+  /* --------------------------------------------------------------------
+     2.2 Typography
+     Font families and weights are per Approved Design Decisions.
+     -------------------------------------------------------------------- */
+
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Inter', sans-serif;
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --font-size-h1: 3rem;      /* 48px */
+  --font-size-h2: 2.25rem;   /* 36px */
+  --font-size-h3: 1.75rem;   /* 28px */
+  --font-size-h4: 1.25rem;   /* 20px */
+  --font-size-body: 1rem;    /* 16px */
+  --font-size-small: 0.875rem; /* 14px */
+
+  --line-height-heading: 1.2;
+  --line-height-body: 1.6;
+
+
+  /* --------------------------------------------------------------------
+     2.3 Spacing
+     8px rhythm with a 4px half-step, expressed in rem.
+     -------------------------------------------------------------------- */
+
+  --space-2xs: 0.25rem;  /* 4px */
+  --space-xs: 0.5rem;    /* 8px */
+  --space-sm: 0.75rem;   /* 12px */
+  --space-md: 1rem;      /* 16px */
+  --space-lg: 1.5rem;    /* 24px */
+  --space-xl: 2rem;      /* 32px */
+  --space-2xl: 3rem;     /* 48px */
+  --space-3xl: 4rem;     /* 64px */
+  --space-4xl: 6rem;     /* 96px */
+  --space-5xl: 8rem;     /* 128px */
+
+
+  /* --------------------------------------------------------------------
+     2.4 Border Radius
+     Two tiers only — per 02_DesignSystem.md's "avoid mixing multiple
+     corner styles."
+     -------------------------------------------------------------------- */
+
+  --radius-sm: 0.25rem;  /* 4px — buttons, inputs, badges */
+  --radius-md: 0.5rem;   /* 8px — cards, larger containers, images */
+
+
+  /* --------------------------------------------------------------------
+     2.5 Shadows
+     Subtle, low-opacity, tinted from --color-near-black for cohesion
+     with the approved palette rather than generic black.
+     -------------------------------------------------------------------- */
+
+  --shadow-sm: 0 1px 2px rgba(28, 28, 28, 0.06);
+  --shadow-md: 0 4px 12px rgba(28, 28, 28, 0.08);
+
+
+  /* --------------------------------------------------------------------
+     2.6 Container Width
+     Side padding reuses the spacing scale rather than introducing new
+     arbitrary values. Applied to actual layout in a later commit.
+     -------------------------------------------------------------------- */
+
+  --container-max-width: 1280px;
+  --container-padding-mobile: var(--space-md);   /* 16px */
+  --container-padding-tablet: var(--space-lg);   /* 24px */
+  --container-padding-desktop: var(--space-xl);  /* 32px */
+
+
+  /* --------------------------------------------------------------------
+     2.7 Transition Durations & Easing
+     Token definitions only — no animations are implemented here.
+     --transition-slow sits inside the 0.6s–1.2s range already
+     specified in docs/05_Animations.md; --ease-standard is that same
+     document's stated preferred easing.
+     -------------------------------------------------------------------- */
+
+  --transition-fast: 150ms;
+  --transition-base: 300ms;
+  --transition-slow: 800ms;
+  --ease-standard: ease-in-out;
+
+
+  /* --------------------------------------------------------------------
+     2.8 Grid Gap
+     Introduced in Commit 4 (Layout & Grid Utilities) — reuses the
+     spacing scale rather than introducing new arbitrary values.
+     -------------------------------------------------------------------- */
+
+  --grid-gap-sm: var(--space-sm);  /* 12px */
+  --grid-gap-md: var(--space-lg);  /* 24px */
+  --grid-gap-lg: var(--space-xl);  /* 32px */
+
+}
+
+
+/* ==========================================================================
+   Reference — Approved Responsive Breakpoints
+   Not expressed as custom properties: CSS custom properties cannot be
+   read inside @media conditions. Recorded here for consistency and
+   applied as literal values starting in Commit 4 (Layout & Grid Utilities).
+
+     Tablet:  min-width 768px
+     Desktop: min-width 1024px
+   ========================================================================== */
+
+
+/* ==========================================================================
+   3. Modern Reset
+   Conservative on purpose — normalizes inconsistent browser defaults
+   without removing behaviour that helps accessibility (default focus
+   indication, semantic list markers, underlined links, etc.).
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100%;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+picture,
+svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+
+/* ==========================================================================
+   4. Base Element Styles
+   ========================================================================== */
+
+body {
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  color: var(--color-text-primary);
+  background-color: var(--color-background);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-heading);
+  color: var(--color-text-primary);
+  margin-block-end: var(--space-md);
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+}
+
+h3 {
+  font-size: var(--font-size-h3);
+}
+
+h4 {
+  font-size: var(--font-size-h4);
+}
+
+p {
+  margin-block-end: var(--space-md);
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration-line: underline;
+  text-underline-offset: 0.15em;
+  transition: color var(--transition-fast) var(--ease-standard);
+}
+
+a:hover {
+  color: var(--color-near-black);
+}
+
+ul,
+ol {
+  margin-block-end: var(--space-md);
+  padding-inline-start: var(--space-lg);
+}
+
+li {
+  margin-block-end: var(--space-2xs);
+}
+
+button {
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+
+input,
+textarea,
+select {
+  border-radius: var(--radius-sm);
+}
+
+
+/* ==========================================================================
+   5. Accessible Focus States
+   :focus-visible only — the browser's default :focus behaviour is left
+   intact rather than suppressed, so keyboard focus is always indicated
+   even in the rare case a browser doesn't support :focus-visible.
+   ========================================================================== */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+
+/* ==========================================================================
+   6. Reduced Motion
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+/* ==========================================================================
+   7. Layout & Grid Utilities
+   Layout-only primitives — container, grid, section spacing. No
+   component, page-specific, or content styling belongs in this section.
+   Mobile-first: every rule below is the mobile default first, refined
+   at the two approved breakpoints (Tablet 768px, Desktop 1024px).
+   ========================================================================== */
+
+.container {
+  width: 100%;
+  max-width: var(--container-max-width);
+  margin-inline: auto;
+  padding-inline: var(--container-padding-mobile);
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-inline: var(--container-padding-tablet);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-inline: var(--container-padding-desktop);
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--grid-gap-md);
+}
+
+@media (min-width: 768px) {
+  .grid-cols-2,
+  .grid-cols-3,
+  .grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .grid-cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .grid-cols-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.section {
+  padding-block: var(--space-2xl);
+}
+
+@media (min-width: 768px) {
+  .section {
+    padding-block: var(--space-3xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .section {
+    padding-block: var(--space-4xl);
+  }
+}
+
+
+/* ==========================================================================
+   8. Primitive Component Styles
+   Reusable visual primitives only — no page-specific or content-specific
+   styling. Actual components (Navbar, Hero, Footer, Project Card,
+   Contact Form, etc.) are built in later milestones on top of these.
+   ========================================================================== */
+
+/* ---- Buttons ----
+   .btn is the shared shell (sizing, spacing, shape); .btn-primary /
+   .btn-secondary / .btn-text supply only fill, border and text colour.
+   Applies equally to <button> and <a class="btn">. */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  min-height: 2.75rem; /* 44px minimum touch target */
+  padding-inline: var(--space-lg);
+  border-radius: var(--radius-sm);
+  border: 2px solid transparent;
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-body);
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast) var(--ease-standard),
+    border-color var(--transition-fast) var(--ease-standard),
+    color var(--transition-fast) var(--ease-standard),
+    box-shadow var(--transition-fast) var(--ease-standard);
+}
+
+.btn-primary {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-white);
+}
+
+.btn-primary:hover {
+  background-color: color-mix(in srgb, var(--color-accent) 85%, black);
+  border-color: color-mix(in srgb, var(--color-accent) 85%, black);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-accent);
+  color: var(--color-white);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-text {
+  background-color: transparent;
+  border-color: transparent;
+  padding-inline: var(--space-sm);
+  color: var(--color-accent);
+}
+
+.btn-text:hover {
+  color: color-mix(in srgb, var(--color-accent) 85%, black);
+  text-decoration-line: underline;
+}
+
+/* .btn focus-visible states are inherited from Section 5 (Accessible
+   Focus States) — button/a already carry the shared accent outline
+   rule, so it is intentionally not repeated here. */
+
+
+/* ---- Card ---- */
+
+.card {
+  background-color: var(--color-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-lg);
+}
+
+
+/* ---- Section Header ---- */
+
+.section-header {
+  margin-block-end: var(--space-xl);
+}
+
+.section-header > :last-child {
+  margin-block-end: 0;
+}
+
+
+/* ---- Form Controls ---- */
+
+label {
+  display: block;
+  font-weight: var(--font-weight-medium);
+  margin-block-end: var(--space-2xs);
+}
+
+input,
+textarea,
+select {
+  display: block;
+  width: 100%;
+  min-height: 2.75rem; /* 44px minimum touch target */
+  padding-block: var(--space-xs);
+  padding-inline: var(--space-sm);
+  border: 1px solid var(--color-dark-gray);
+  background-color: var(--color-white);
+  transition: border-color var(--transition-fast) var(--ease-standard);
+}
+
+textarea {
+  min-height: 8rem;
+  resize: vertical;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  border-color: var(--color-accent);
+}
+
+/* Base input/select/textarea :focus-visible outline and border-radius
+   are inherited from Sections 3 and 5 and intentionally not repeated. */
+
+
+/* ---- Validation State Placeholders ----
+   Structure only. Success/Warning/Error colours are intentionally
+   deferred to the milestone that first requires them (docs/02_DesignSystem.md
+   "Approved Design Decisions"). Do not add colour here until approved. */
+
+.form-field {
+  margin-block-end: var(--space-md);
+}
+
+.form-hint,
+.form-error {
+  display: block;
+  font-size: var(--font-size-small);
+  margin-block-start: var(--space-2xs);
+}
+
+input[aria-invalid='true'],
+textarea[aria-invalid='true'],
+select[aria-invalid='true'] {
+  border-width: 2px;
+}
