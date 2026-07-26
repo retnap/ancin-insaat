@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet --list-sdks)",
+      "Bash(dotnet --version)",
+      "Bash(dotnet new *)",
+      "Bash(git init *)",
+      "Bash(dotnet sln *)",
+      "Bash(dotnet build *)",
+      "Bash(dotnet add *)",
+      "Bash(curl -s \"https://api.nuget.org/v3-flatcontainer/microsoft.entityframeworkcore.sqlite/index.json\")",
+      "Bash(python3 -c \"import sys,json; data=json.load\\(sys.stdin\\); print\\([v for v in data['versions'] if v.startswith\\('8.0.'\\)][-5:]\\)\")",
+      "Bash(ASPNETCORE_ENVIRONMENT=Development ASPNETCORE_URLS=http://localhost:5057 nohup dotnet run --no-build)",
+      "Bash(echo \"PID:$!\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5057/)",
+      "Bash(kill 41633)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:5057/)",
+      "Bash(mkdir -p images/company images/projects images/hero images/icons images/logos images/partners images/team images/seo videos documents/catalogues documents/kvkk documents/brochures fonts icons uploads)",
+      "Bash(touch images/company/.gitkeep images/projects/.gitkeep images/hero/.gitkeep images/icons/.gitkeep images/logos/.gitkeep images/partners/.gitkeep images/team/.gitkeep images/seo/.gitkeep videos/.gitkeep documents/catalogues/.gitkeep documents/kvkk/.gitkeep documents/brochures/.gitkeep fonts/.gitkeep icons/.gitkeep uploads/.gitkeep)",
+      "Bash(git add *)"
+    ]
+  }
+}

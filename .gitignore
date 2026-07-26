@@ -1,0 +1,32 @@
+## .NET
+bin/
+obj/
+out/
+
+## Visual Studio / Rider / VS Code
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+
+## SQLite databases (never commit runtime data)
+*.db
+*.db-shm
+*.db-wal
+
+## App_Data (runtime SQLite storage)
+App_Data/
+
+## OS files
+.DS_Store
+Thumbs.db
+
+## Build results
+*.dll
+*.pdb
+
+## NuGet
+*.nupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
