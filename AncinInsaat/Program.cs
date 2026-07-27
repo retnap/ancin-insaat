@@ -1,5 +1,6 @@
 using AncinInsaat.Data;
 using AncinInsaat.Data.Seed;
+using AncinInsaat.Services;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +12,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(connectionString));
+
+builder.Services.AddScoped<IProjectQueryService, ProjectQueryService>();
 
 var app = builder.Build();
 
