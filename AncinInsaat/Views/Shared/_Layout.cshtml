@@ -7,7 +7,25 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    @RenderBody()
+    <a href="#main-content" class="skip-link">Skip to content</a>
+
+    <header class="navbar">
+        @await Component.InvokeAsync("Navbar")
+    </header>
+
+    <main id="main-content" tabindex="-1">
+        @RenderBody()
+    </main>
+
+    @await Component.InvokeAsync("CtaBanner")
+
+    @await Component.InvokeAsync("PartnerLogos")
+
+    <footer class="footer">
+        @await Component.InvokeAsync("Footer")
+    </footer>
+
+    @await Component.InvokeAsync("FloatingContactButton")
 
     <script src="~/js/site.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
