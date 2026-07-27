@@ -1290,3 +1290,54 @@ select[aria-invalid='true'] {
 }
 
 
+/* ==========================================================================
+   14. Breadcrumb
+   Milestone 2 · Rebuild — see docs/14_Decisions.md (CSS recovery,
+   2026-07-27). Sits on the default white page background (per
+   03_PageBlueprints.md — Project Detail), so it uses the standard
+   link/focus treatment rather than the dark-surface overrides in
+   Sections 10–13.
+   ========================================================================== */
+
+.breadcrumb-nav {
+  padding-block: var(--space-sm);
+}
+
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2xs);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: var(--font-size-small);
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  margin-block-end: 0;
+}
+
+.breadcrumb-link {
+  color: var(--color-text-secondary);
+  text-decoration-line: none;
+}
+
+.breadcrumb-link:hover {
+  color: var(--color-accent);
+  text-decoration-line: underline;
+}
+
+.breadcrumb-current {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+.breadcrumb-separator {
+  color: var(--color-dark-gray);
+}
+
+
