@@ -657,3 +657,328 @@ textarea[aria-invalid='true'],
 select[aria-invalid='true'] {
   border-width: 2px;
 }
+
+
+/* ==========================================================================
+   9. Navigation
+   Milestone 2 · Commit 2 — Navbar desktop structure + dropdown menus.
+   Milestone 2 · Commit 3 — Mobile menu (hamburger-triggered panel).
+   Dropdowns (Corporate / People First) use hover/click on desktop
+   (≥1024px) and tap-to-expand accordions inside the mobile panel
+   below that breakpoint.
+   ========================================================================== */
+
+/* ---- Skip Link ----
+   Visually hidden until keyboard-focused, per WCAG 2.4.1 (Bypass Blocks). */
+
+.skip-link {
+  position: absolute;
+  top: -3rem;
+  left: var(--space-md);
+  z-index: 100;
+  padding-block: var(--space-xs);
+  padding-inline: var(--space-md);
+  background-color: var(--color-white);
+  color: var(--color-near-black);
+  border-radius: var(--radius-sm);
+  transition: top var(--transition-fast) var(--ease-standard);
+}
+
+.skip-link:focus-visible {
+  top: var(--space-md);
+}
+
+/* ---- Navbar ---- */
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: var(--color-near-black);
+}
+
+.navbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: var(--space-sm);
+}
+
+.navbar-logo {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0; /* never let the flex row collapse the logo to zero width */
+}
+
+.navbar-logo img {
+  height: 2.5rem; /* 40px */
+  width: auto;
+  display: block;
+}
+
+/* ---- Mobile Menu Toggle ----
+   Hidden at ≥1024px, where the full nav row already fits. The three
+   bars morph into an X using only `transform` (rotate/translate) and
+   `opacity`, per docs/05_Animations.md's "animate opacity/transform,
+   never width/height/top/left" rule. */
+
+.navbar-toggle {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3125rem; /* 5px */
+  width: 2.75rem;  /* 44px touch target */
+  height: 2.75rem;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+@media (min-width: 1024px) {
+  .navbar-toggle {
+    display: none;
+  }
+}
+
+.navbar-toggle-bar {
+  display: block;
+  width: 1.375rem; /* 22px */
+  height: 2px;
+  background-color: var(--color-white);
+  border-radius: var(--radius-sm);
+  transition: transform var(--transition-fast) var(--ease-standard),
+    opacity var(--transition-fast) var(--ease-standard);
+}
+
+.navbar-toggle.is-active .navbar-toggle-bar:nth-child(1) {
+  transform: translateY(0.5625rem) rotate(45deg); /* 9px */
+}
+
+.navbar-toggle.is-active .navbar-toggle-bar:nth-child(2) {
+  opacity: 0;
+}
+
+.navbar-toggle.is-active .navbar-toggle-bar:nth-child(3) {
+  transform: translateY(-0.5625rem) rotate(-45deg);
+}
+
+.navbar-nav-list {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---- Mobile Nav Panel ----
+   Below 1024px the nav becomes a hamburger-triggered panel that
+   overlays the page (absolutely positioned, like the Commit 2
+   dropdowns) rather than pushing content down — so open/close stays an
+   opacity + transform animation with no height transition involved. */
+
+@media (max-width: 1023px) {
+  .navbar-nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--color-near-black);
+    box-shadow: var(--shadow-md);
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-0.5rem);
+    transition:
+      opacity var(--transition-base) var(--ease-standard),
+      transform var(--transition-base) var(--ease-standard),
+      visibility 0s linear var(--transition-base);
+  }
+
+  .navbar-nav.is-open {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity var(--transition-base) var(--ease-standard),
+      transform var(--transition-base) var(--ease-standard),
+      visibility 0s linear 0s;
+  }
+
+  .navbar-nav-list {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    max-height: calc(100vh - 4.5rem);
+    overflow-y: auto;
+    padding: var(--space-xs) var(--container-padding-mobile) var(--space-md);
+  }
+}
+
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem; /* 44px minimum touch target */
+  padding-inline: var(--space-xs);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-body);
+  color: var(--color-white);
+  background: none;
+  border: none;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color var(--transition-fast) var(--ease-standard),
+    opacity var(--transition-fast) var(--ease-standard);
+}
+
+/* Accent red on the near-black navbar background computes to only 2.29:1
+   contrast — below the 4.5:1 WCAG AA minimum for text (and below the 3:1
+   minimum even for a purely graphical indicator) — so it cannot be used
+   here. Hover/active state is instead communicated using only the
+   already-approved white token, at full contrast against the navbar
+   background. `color` is set explicitly on hover so the global `a:hover`
+   rule (near-black, for body copy) cannot leak into the navbar anchors. */
+
+.nav-link:hover {
+  color: var(--color-white);
+  opacity: 0.72;
+}
+
+.nav-link--active {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-white);
+  opacity: 1;
+}
+
+@media (max-width: 1023px) {
+  .nav-link {
+    width: 100%;
+    padding-inline: 0;
+    min-height: 3rem; /* 48px — slightly taller than desktop for a stacked list */
+  }
+
+  .nav-link--parent {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+/* ---- Navbar Dropdown (Corporate / People First) ----
+   Desktop (≥1024px): a hover/click popover per the WAI-ARIA Menu Button
+   pattern, undisclosed until hover/focus — no chevron or other static
+   indicator, matching the Folkart/Terzioğlu reference navigation.
+   Mobile (<1024px): hover has no equivalent, so the submenu instead
+   behaves as a tap-to-expand accordion nested inside the panel, with a
+   chevron making the affordance visible up front. Interaction for both
+   modes is implemented in site.js. */
+
+.nav-chevron {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .nav-chevron {
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-right: 2px solid var(--color-white);
+    border-bottom: 2px solid var(--color-white);
+    transform: rotate(45deg);
+    transition: transform var(--transition-fast) var(--ease-standard);
+  }
+
+  .nav-link--parent[aria-expanded='true'] .nav-chevron {
+    transform: rotate(-135deg);
+  }
+}
+
+.nav-item-dropdown {
+  position: relative;
+}
+
+.nav-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 12rem;
+  margin: 0;
+  padding-block: var(--space-xs);
+  list-style: none;
+  background-color: var(--color-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-0.25rem);
+  transition:
+    opacity var(--transition-fast) var(--ease-standard),
+    transform var(--transition-fast) var(--ease-standard),
+    visibility 0s linear var(--transition-fast);
+}
+
+.nav-dropdown.is-open {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity var(--transition-fast) var(--ease-standard),
+    transform var(--transition-fast) var(--ease-standard),
+    visibility 0s linear 0s;
+}
+
+/* Below 1024px the popover positioning/motion above is replaced outright:
+   the submenu sits in normal flow as a nested accordion card and is
+   shown/hidden with `display` only (an instant toggle, not a
+   transition) — deliberately not animating height, per
+   docs/05_Animations.md. */
+@media (max-width: 1023px) {
+  .nav-dropdown {
+    display: none;
+    position: static;
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    transition: none;
+    width: 100%;
+    min-width: 0;
+    margin-block: var(--space-2xs) var(--space-xs);
+    box-shadow: none;
+  }
+
+  .nav-dropdown.is-open {
+    display: block;
+  }
+}
+
+.nav-dropdown-link {
+  display: flex;
+  align-items: center;
+  min-height: 2.75rem; /* 44px minimum touch target */
+  padding-inline: var(--space-md);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-body);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav-dropdown-link:hover {
+  background-color: var(--color-surface);
+}
+
+/* .nav-dropdown-link focus-visible states are inherited from Section 5
+   (Accessible Focus States) and intentionally not repeated here. */
+
+/* Applied to <body> by site.js only while the mobile panel is open, so
+   the page underneath can't scroll behind the overlay. */
+.no-scroll {
+  overflow: hidden;
+}
+
+

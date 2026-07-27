@@ -1,0 +1,81 @@
+@model NavbarViewModel
+
+<div class="container navbar-inner">
+
+    <a href="/" class="navbar-logo" aria-label="Ançın İnşaat — Home">
+        <img src="~/images/logos/ancin-logo.png" alt="Ançın İnşaat" width="114" height="40" />
+    </a>
+
+    <button type="button"
+            id="navbar-toggle"
+            class="navbar-toggle"
+            aria-expanded="false"
+            aria-controls="navbar-nav"
+            aria-label="Open menu">
+        <span class="navbar-toggle-bar"></span>
+        <span class="navbar-toggle-bar"></span>
+        <span class="navbar-toggle-bar"></span>
+    </button>
+
+    <nav class="navbar-nav" id="navbar-nav" aria-label="Main navigation">
+        <ul class="navbar-nav-list">
+            <li>
+                <a href="/" class="nav-link @(Model.IsHomeActive ? "nav-link--active" : "")">Home</a>
+            </li>
+            <li class="nav-item-dropdown">
+                <button type="button"
+                        id="nav-dropdown-trigger-corporate"
+                        class="nav-link nav-link--parent"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        aria-controls="nav-dropdown-menu-corporate">
+                    Corporate
+                    <span class="nav-chevron" aria-hidden="true"></span>
+                </button>
+                <ul class="nav-dropdown"
+                    id="nav-dropdown-menu-corporate"
+                    role="menu"
+                    aria-labelledby="nav-dropdown-trigger-corporate">
+                    <li role="none">
+                        <a role="menuitem" tabindex="-1" class="nav-dropdown-link" href="/about">About Us</a>
+                    </li>
+                    <li role="none">
+                        <a role="menuitem" tabindex="-1" class="nav-dropdown-link" href="/values">Our Values</a>
+                    </li>
+                    <li role="none">
+                        <a role="menuitem" tabindex="-1" class="nav-dropdown-link" href="/kvkk">KVKK</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="/projects" class="nav-link @(Model.IsProjectsActive ? "nav-link--active" : "")">Projects</a>
+            </li>
+            <li class="nav-item-dropdown">
+                <button type="button"
+                        id="nav-dropdown-trigger-people-first"
+                        class="nav-link nav-link--parent"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        aria-controls="nav-dropdown-menu-people-first">
+                    People First
+                    <span class="nav-chevron" aria-hidden="true"></span>
+                </button>
+                <ul class="nav-dropdown"
+                    id="nav-dropdown-menu-people-first"
+                    role="menu"
+                    aria-labelledby="nav-dropdown-trigger-people-first">
+                    <li role="none">
+                        <a role="menuitem" tabindex="-1" class="nav-dropdown-link" href="/career">Career</a>
+                    </li>
+                    <li role="none">
+                        <a role="menuitem" tabindex="-1" class="nav-dropdown-link" href="/hr-policy">HR Policy</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="/contact" class="nav-link @(Model.IsContactActive ? "nav-link--active" : "")">Contact</a>
+            </li>
+        </ul>
+    </nav>
+
+</div>
