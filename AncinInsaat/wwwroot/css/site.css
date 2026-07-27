@@ -982,3 +982,68 @@ select[aria-invalid='true'] {
 }
 
 
+/* ==========================================================================
+   10. Social Media Component
+   Milestone 2 · Rebuild — see docs/14_Decisions.md (CSS recovery,
+   2026-07-27). Circular, outlined icon buttons. Two contexts, selected
+   by the `onLight` flag on SocialMediaViewComponent: the default
+   (near-black Footer) and an `--on-light` modifier reserved for future
+   light-section use. Accent red is never used here — at 2.29:1 against
+   --color-near-black it fails WCAG's 3:1 non-text contrast minimum
+   (same measurement documented in Section 9's Navbar notes) — so both
+   variants rely on the monochrome tokens instead.
+   ========================================================================== */
+
+.social-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  list-style: none;
+  margin: 0;
+  margin-block-start: var(--space-md);
+  padding: 0;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;  /* 44px minimum touch target */
+  height: 2.75rem;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: var(--color-white);
+  transition:
+    background-color var(--transition-fast) var(--ease-standard),
+    border-color var(--transition-fast) var(--ease-standard);
+}
+
+.social-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--color-white);
+}
+
+.social-link:focus-visible {
+  outline-color: var(--color-white);
+}
+
+/* --on-light: same shape, monochrome-on-white tokens. Not yet invoked
+   anywhere (Footer always renders the default), but the component's
+   own onLight parameter anticipates it, so it is styled in full. */
+
+.social-links--on-light .social-link {
+  border-color: var(--color-dark-gray);
+  color: var(--color-text-secondary);
+}
+
+.social-links--on-light .social-link:hover {
+  background-color: var(--color-surface);
+  border-color: var(--color-text-primary);
+  color: var(--color-text-primary);
+}
+
+.social-links--on-light .social-link:focus-visible {
+  outline-color: var(--color-accent);
+}
+
+
