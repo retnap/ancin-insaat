@@ -1,0 +1,12 @@
+@model PartnerLogosViewModel
+
+<section class="partner-logos section">
+    <div class="container">
+        <div class="partner-logos-grid">
+            @foreach (var partner in Model.Partners)
+            {
+                <span class="partner-logo">@partner.Label</span>
+            }
+        </div>
+    </div>
+</section>

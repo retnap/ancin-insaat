@@ -1341,3 +1341,30 @@ select[aria-invalid='true'] {
 }
 
 
+/* ==========================================================================
+   15. Partner Logos
+   Milestone 2 · Rebuild — see docs/14_Decisions.md (CSS recovery,
+   2026-07-27). Terzioğlu reference: muted, monochrome wordmarks in a
+   generously spaced row on the default white background — no section
+   background override. `.section` (Section 7) already supplies the
+   responsive vertical rhythm; only the grid and label treatment are
+   defined here. No text-transform is applied — see
+   PartnerLogosViewComponent's uppercase-literal note (dotted İ risk
+   under lang="tr").
+   ========================================================================== */
+
+.partner-logos-grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg) var(--space-2xl);
+}
+
+.partner-logo {
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-small);
+  letter-spacing: 0.08em;
+  color: var(--color-dark-gray);
+}
