@@ -1174,3 +1174,51 @@ select[aria-invalid='true'] {
 }
 
 
+/* ==========================================================================
+   12. Floating Contact Button
+   Milestone 2 · Rebuild — see docs/14_Decisions.md (CSS recovery,
+   2026-07-27). Fixed, middle-right on every page per 01_SiteMap.md.
+   Accent red is appropriate here — a small circular control, not a
+   large background, matching the "Primary CTA buttons" usage documented
+   in 02_DesignSystem.md. White-on-accent contrast is ~7.4:1 (AA/AAA safe).
+   ========================================================================== */
+
+.floating-contact {
+  position: fixed;
+  top: 50%;
+  right: var(--space-md);
+  z-index: 40; /* below the sticky Navbar's z-index: 50 */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;    /* 48px */
+  height: 3rem;
+  border-radius: 50%;
+  background-color: var(--color-accent);
+  color: var(--color-white);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-50%);
+  transition:
+    transform var(--transition-fast) var(--ease-standard),
+    background-color var(--transition-fast) var(--ease-standard);
+}
+
+.floating-contact:hover {
+  background-color: color-mix(in srgb, var(--color-accent) 85%, black);
+  transform: translateY(-50%) scale(1.06);
+}
+
+.floating-contact:focus-visible {
+  outline-color: var(--color-white);
+  outline-offset: 3px;
+}
+
+@media (min-width: 768px) {
+  .floating-contact {
+    right: var(--space-lg);
+    width: 3.5rem;  /* 56px */
+    height: 3.5rem;
+  }
+}
+
+
