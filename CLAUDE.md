@@ -18,6 +18,36 @@ Always explain your implementation plan before modifying the project.
 
 Commit-sized changes are preferred over large rewrites.
 
+## Approval Policy
+
+Do not stop after every commit.
+
+Continue automatically within the approved milestone.
+
+Only request user approval when:
+
+- a client decision is required,
+- project scope changes,
+- architecture changes,
+- documentation requires approval,
+- or a blocking issue is found.
+
+Routine implementation decisions should not interrupt the workflow.
+
+## Context Management
+
+When the conversation approaches the context limit:
+
+- produce a concise project state summary,
+- preserve all approved decisions,
+- preserve milestone status,
+- preserve outstanding issues,
+- preserve deferred decisions,
+
+then continue implementation.
+
+Do not ask the user to restate previously approved decisions.
+
 ## Purpose
 
 This document defines how Claude Code should understand, interpret and build the Ançın İnşaat website.
