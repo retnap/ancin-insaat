@@ -1222,3 +1222,71 @@ select[aria-invalid='true'] {
 }
 
 
+/* ==========================================================================
+   13. CTA Banner — "All Projects"
+   Milestone 2 · Rebuild — see docs/14_Decisions.md (CSS recovery,
+   2026-07-27). Folkart reference: a full-bleed dark band between page
+   content and the Partner Logos / Footer, driving traffic to the
+   Projects page. Renders on every page (see _Layout.cshtml), so the
+   styling stays page-agnostic. Accent red is avoided on this near-black
+   surface for the same contrast reason documented in Sections 9–11.
+   ========================================================================== */
+
+.cta-banner {
+  background-color: var(--color-near-black);
+}
+
+.cta-banner-link {
+  display: block;
+  color: var(--color-white);
+  text-decoration-line: none;
+  transition: background-color var(--transition-fast) var(--ease-standard);
+}
+
+.cta-banner-link:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.cta-banner-link:focus-visible {
+  outline-color: var(--color-white);
+  outline-offset: -2px; /* inset — the link fills the full-bleed band */
+}
+
+.cta-banner-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding-block: var(--space-lg);
+}
+
+@media (min-width: 768px) {
+  .cta-banner-inner {
+    padding-block: var(--space-xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .cta-banner-inner {
+    padding-block: var(--space-2xl);
+  }
+}
+
+.cta-banner-heading {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-h4);
+  letter-spacing: 0.02em;
+}
+
+.cta-banner-arrow {
+  flex-shrink: 0;
+  transition: transform var(--transition-fast) var(--ease-standard);
+}
+
+.cta-banner-link:hover .cta-banner-arrow,
+.cta-banner-link:focus-visible .cta-banner-arrow {
+  transform: translateX(0.25rem);
+}
+
+
