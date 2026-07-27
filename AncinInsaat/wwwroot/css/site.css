@@ -1223,13 +1223,16 @@ select[aria-invalid='true'] {
 
 
 /* ==========================================================================
-   13. CTA Banner — "All Projects"
+   13. CTA Banner — "Tüm Projeler"
    Milestone 2 · Rebuild — see docs/14_Decisions.md (CSS recovery,
    2026-07-27). Folkart reference: a full-bleed dark band between page
    content and the Partner Logos / Footer, driving traffic to the
    Projects page. Renders on every page (see _Layout.cshtml), so the
    styling stays page-agnostic. Accent red is avoided on this near-black
    surface for the same contrast reason documented in Sections 9–11.
+   The heading sets its own color explicitly so it stays white even
+   though the global `a:hover` rule (Section 4) would otherwise darken
+   it — only the link's background tints on hover.
    ========================================================================== */
 
 .cta-banner {
@@ -1238,7 +1241,6 @@ select[aria-invalid='true'] {
 
 .cta-banner-link {
   display: block;
-  color: var(--color-white);
   text-decoration-line: none;
   transition: background-color var(--transition-fast) var(--ease-standard);
 }
@@ -1255,8 +1257,7 @@ select[aria-invalid='true'] {
 .cta-banner-inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-md);
+  justify-content: center;
   padding-block: var(--space-lg);
 }
 
@@ -1277,16 +1278,7 @@ select[aria-invalid='true'] {
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-h4);
   letter-spacing: 0.02em;
-}
-
-.cta-banner-arrow {
-  flex-shrink: 0;
-  transition: transform var(--transition-fast) var(--ease-standard);
-}
-
-.cta-banner-link:hover .cta-banner-arrow,
-.cta-banner-link:focus-visible .cta-banner-arrow {
-  transform: translateX(0.25rem);
+  color: var(--color-white);
 }
 
 

@@ -12,7 +12,7 @@ public class CtaBannerViewComponent : ViewComponent
     {
         var model = new CtaBannerViewModel
         {
-            Heading = "All Projects",
+            Heading = "Tüm Projeler",
             LinkUrl = "/projects"
         };
 
