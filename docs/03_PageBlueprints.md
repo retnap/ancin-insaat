@@ -30,6 +30,28 @@ Each section defines:
 
 ---
 
+## Global Sections (Every Page)
+
+Some sections are not composed per-page — they render once from the shared
+layout (`_Layout.cshtml`) and appear identically on every page, Home
+included. Page blueprints below no longer list these individually under
+their own "Projects CTA" / "Career CTA" wording; treat them as already
+provided:
+
+- **Navbar** — global navigation.
+- **CTA Banner** — a single page-agnostic "Tüm Projeler" (All Projects)
+  banner, not a different variant per page.
+- **Project Logo Carousel** — a marquee of Ançın's own confirmed project
+  wordmarks (component name `PartnerLogos` for historical reasons; these
+  are not third-party partners — see 04_ComponentLibrary.md).
+- **Footer** (includes the Social Media icon list).
+
+A page only needs its own blueprint entry for a section if that section's
+content is specific to that page (e.g. Hero Banner copy, Project Detail's
+own Business Partners logos).
+
+---
+
 # Page — Home
 
 ## Purpose
@@ -87,23 +109,43 @@ Read More → About Us
 
 ---
 
-### Featured Projects
+### Company History
 
 **Purpose**
 
-Highlight selected projects from the portfolio.
+Build trust by presenting the company's history as a browsable timeline of
+milestones, reinforcing the "53 years of experience" claim made in Company
+Overview.
+
+**Components**
+
+- Video Showcase (compact variant)
+- History Info Panel
+- History Carousel (card-per-milestone, not a rail timeline)
+
+Rendered as a large decorative heading (Cormorant Garamond, e.g. "Zaman
+Tüneli") above a two-column layout: video + info panel on the left,
+carousel on the right.
+
+---
+
+### Projects Showcase
+
+**Purpose**
+
+Present the complete portfolio (every published project, not a curated
+subset) in a browsable carousel — replaces the originally planned
+"Featured Projects" curated-subset approach.
 
 **Components**
 
 - Section Header
-- Project Card
-- Primary Button
+- Project Card (Carousel variant)
+- Status Badge
 
 **Navigation**
 
 Project Card → Project Detail
-
-View All Projects → Projects
 
 ---
 
@@ -120,44 +162,10 @@ Present the company's strengths and values.
 
 ---
 
-### Projects CTA
+### CTA Banner, Project Logo Carousel, Footer
 
-**Purpose**
-
-Encourage visitors to explore the complete portfolio.
-
-**Components**
-
-- CTA Banner
-- Primary Button
-
-**Navigation**
-
-Projects
-
----
-
-### Social Media
-
-**Purpose**
-
-Promote official social media channels.
-
-**Components**
-
-- Social Media Component
-
----
-
-### Footer
-
-**Purpose**
-
-Provide global navigation and company information.
-
-**Components**
-
-- Footer
+Rendered globally by the shared layout — see "Global Sections (Every
+Page)" above. Not composed as Home-specific sections.
 
 ---
 

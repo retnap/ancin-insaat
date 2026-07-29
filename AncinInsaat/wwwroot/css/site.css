@@ -55,6 +55,27 @@
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
+/* ---- Cormorant Garamond (decorative headings only, e.g. Company
+   History's oversized background title) ---- */
+
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/cormorant-garamond/cormorant-garamond-400-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/cormorant-garamond/cormorant-garamond-400-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
 /* ---- Inter (body / UI text) ---- */
 
 @font-face {
@@ -168,6 +189,7 @@
 
   --font-heading: 'Playfair Display', serif;
   --font-body: 'Inter', sans-serif;
+  --font-decorative: 'Cormorant Garamond', serif;
 
   --font-weight-regular: 400;
   --font-weight-medium: 500;
@@ -427,6 +449,7 @@ textarea:focus-visible,
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important; /* zeroes out [data-reveal]'s stagger (Section 18) */
   }
 }
 
@@ -502,6 +525,24 @@ textarea:focus-visible,
   }
 }
 
+/* ---- Visually Hidden ----
+   Standard WCAG "sr-only" pattern: keeps content in the accessibility
+   tree and available to screen readers without reserving layout space,
+   for cases where a control's accessible name must not appear as
+   visible copy (e.g. Video Showcase's play button). */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 
 /* ==========================================================================
    8. Primitive Component Styles
@@ -544,9 +585,13 @@ textarea:focus-visible,
   color: var(--color-white);
 }
 
+/* Hover deliberately inverts to a white fill with the border staying
+   accent-red and the label going near-black — never a black fill and
+   never red text on hover (2026-07-28 refinement, "Devamını Oku"). */
 .btn-primary:hover {
-  background-color: color-mix(in srgb, var(--color-accent) 85%, black);
-  border-color: color-mix(in srgb, var(--color-accent) 85%, black);
+  background-color: var(--color-white);
+  border-color: var(--color-accent);
+  color: var(--color-near-black);
   box-shadow: var(--shadow-sm);
 }
 
@@ -560,6 +605,24 @@ textarea:focus-visible,
   background-color: var(--color-accent);
   color: var(--color-white);
   box-shadow: var(--shadow-sm);
+}
+
+/* ---- Secondary Button, on dark backgrounds ----
+   var(--color-accent) on var(--color-near-black) contrasts at ~2.3:1 —
+   well under the 3:1 floor for UI components/large text (WCAG 1.4.11 /
+   1.4.3), so the default .btn-secondary cannot be used over the Hero
+   Banner's dark background. This modifier swaps the outline to white,
+   which stays legible there. */
+
+.btn-secondary--on-dark {
+  border-color: var(--color-white);
+  color: var(--color-white);
+}
+
+.btn-secondary--on-dark:hover {
+  background-color: var(--color-white);
+  border-color: var(--color-white);
+  color: var(--color-near-black);
 }
 
 .btn-text {
@@ -589,14 +652,132 @@ textarea:focus-visible,
 }
 
 
-/* ---- Section Header ---- */
+/* ---- Section Header ----
+   Title Only / Title + Description variants (docs/04_ComponentLibrary.md)
+   are expressed by the partial simply omitting the optional description
+   paragraph — no modifier class needed. */
 
 .section-header {
   margin-block-end: var(--space-xl);
 }
 
+@media (min-width: 1024px) {
+  .section-header {
+    margin-block-end: var(--space-2xl);
+  }
+}
+
 .section-header > :last-child {
   margin-block-end: 0;
+}
+
+.section-header__description {
+  max-width: 60ch;
+  color: var(--color-text-secondary);
+}
+
+/* ---- Section Header Eyebrow ----
+   Optional third slot (2026-07-28 refinement), inspired by
+   Inspirationals/Terzioglu's small label-above-heading pattern. Weight,
+   size and letter-spacing reuse the same "label" treatment already
+   established by .footer-heading rather than inventing a new one; the
+   short accent-coloured line is the one deliberate brand touch, using
+   var(--color-accent) in its approved "small decorative accent" role. */
+
+.section-header__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-block-end: var(--space-sm);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary);
+}
+
+.section-header__eyebrow-line {
+  display: inline-block;
+  width: 1.5rem;
+  height: 2px;
+  background-color: var(--color-accent);
+}
+
+/* ---- Section Header, centered ----
+   For sections whose heading stands alone rather than beside body copy
+   (e.g. Company History's "Zaman Tüneli"). */
+
+.section-header--center {
+  text-align: center;
+}
+
+.section-header--center .section-header__eyebrow {
+  justify-content: center;
+}
+
+.section-header--center .section-header__description {
+  margin-inline: auto;
+}
+
+
+/* ---- Image Block ----
+   Generic image container for two-column content sections (Company
+   Overview, Company Story, People & Culture — see 03_PageBlueprints.md).
+   A fixed aspect ratio keeps mixed source images visually consistent
+   per docs/02_DesignSystem.md ("Images ... use consistent aspect
+   ratios"); object-fit crops rather than distorts. */
+
+.image-block {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+
+/* ---- Scroll Indicator ----
+   Hero Banner affordance only (see 03_PageBlueprints.md). Uses a
+   continuous, low-amplitude bounce rather than a one-time load
+   animation, since visitors often read hero copy first and would miss
+   a cue that only plays once. The global prefers-reduced-motion rule
+   (Section 6) already caps animation-iteration-count at 1 and shortens
+   its duration, so no separate override is needed here. Colour
+   defaults to the standard text colour; a hero built on a photographic
+   background (Commit 3) can override it via the CssClass hook for
+   contrast. */
+
+.scroll-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  color: var(--color-text-primary);
+  animation: scroll-indicator-bounce 2s var(--ease-standard) infinite;
+}
+
+.scroll-indicator:hover {
+  color: var(--color-accent);
+}
+
+/* ---- Scroll Indicator, on dark backgrounds ----
+   var(--color-text-primary) (near-black) is invisible against the Hero
+   Banner's near-black background — see 16. Hero Banner. */
+
+.scroll-indicator--on-dark {
+  color: var(--color-white);
+}
+
+@keyframes scroll-indicator-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(6px);
+  }
 }
 
 
@@ -694,14 +875,14 @@ select[aria-invalid='true'] {
   position: sticky;
   top: 0;
   z-index: 50;
-  background-color: var(--color-near-black);
+  background-color: var(--color-white);
 }
 
 .navbar-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-block: var(--space-sm);
+  padding-block: var(--space-md);
 }
 
 .navbar-logo {
@@ -711,7 +892,7 @@ select[aria-invalid='true'] {
 }
 
 .navbar-logo img {
-  height: 2.5rem; /* 40px */
+  height: 4.5rem; /* 48px — sized up from 40px so the mark reads clearly on the white bar */
   width: auto;
   display: block;
 }
@@ -747,7 +928,7 @@ select[aria-invalid='true'] {
   display: block;
   width: 1.375rem; /* 22px */
   height: 2px;
-  background-color: var(--color-white);
+  background-color: var(--color-text-primary);
   border-radius: var(--radius-sm);
   transition: transform var(--transition-fast) var(--ease-standard),
     opacity var(--transition-fast) var(--ease-standard);
@@ -786,7 +967,7 @@ select[aria-invalid='true'] {
     top: 100%;
     left: 0;
     right: 0;
-    background-color: var(--color-near-black);
+    background-color: var(--color-white);
     box-shadow: var(--shadow-md);
     visibility: hidden;
     opacity: 0;
@@ -811,7 +992,7 @@ select[aria-invalid='true'] {
     flex-direction: column;
     align-items: stretch;
     gap: 0;
-    max-height: calc(100vh - 4.5rem);
+    max-height: calc(100vh - 5rem);
     overflow-y: auto;
     padding: var(--space-xs) var(--container-padding-mobile) var(--space-md);
   }
@@ -825,7 +1006,7 @@ select[aria-invalid='true'] {
   font-family: var(--font-body);
   font-weight: var(--font-weight-medium);
   font-size: var(--font-size-body);
-  color: var(--color-white);
+  color: var(--color-text-primary);
   background: none;
   border: none;
   text-decoration: none;
@@ -836,22 +1017,19 @@ select[aria-invalid='true'] {
     opacity var(--transition-fast) var(--ease-standard);
 }
 
-/* Accent red on the near-black navbar background computes to only 2.29:1
-   contrast — below the 4.5:1 WCAG AA minimum for text (and below the 3:1
-   minimum even for a purely graphical indicator) — so it cannot be used
-   here. Hover/active state is instead communicated using only the
-   already-approved white token, at full contrast against the navbar
-   background. `color` is set explicitly on hover so the global `a:hover`
-   rule (near-black, for body copy) cannot leak into the navbar anchors. */
+/* Hover/active state is communicated with an opacity dim rather than a
+   colour swap, so it reads consistently regardless of link state.
+   `color` is set explicitly on hover so the global `a:hover` rule
+   (near-black, for body copy) doesn't silently no-op here. */
 
 .nav-link:hover {
-  color: var(--color-white);
+  color: var(--color-text-primary);
   opacity: 0.72;
 }
 
 .nav-link--active {
   font-weight: var(--font-weight-semibold);
-  color: var(--color-white);
+  color: var(--color-text-primary);
   opacity: 1;
 }
 
@@ -886,8 +1064,8 @@ select[aria-invalid='true'] {
     display: inline-block;
     width: 0.5rem;
     height: 0.5rem;
-    border-right: 2px solid var(--color-white);
-    border-bottom: 2px solid var(--color-white);
+    border-right: 2px solid var(--color-text-primary);
+    border-bottom: 2px solid var(--color-text-primary);
     transform: rotate(45deg);
     transition: transform var(--transition-fast) var(--ease-standard);
   }
@@ -1050,54 +1228,46 @@ select[aria-invalid='true'] {
 
 /* ==========================================================================
    11. Footer
-   Milestone 2 · Rebuild — see docs/14_Decisions.md (CSS recovery,
-   2026-07-27). Terzioğlu reference: dark, generously spaced footer with
-   a distinct company/contact column, three quick-link columns, and a
-   separated copyright strip. Accent red is intentionally avoided on
-   this near-black surface for the same contrast reason documented in
-   Sections 9 and 10.
+   Milestone 2 · Redesign — see docs/14_Decisions.md (Footer redesign,
+   2026-07-28). Terzioğlu reference: dark, generously spaced footer with
+   a single row of three top-aligned groups — brand/copyright, contact
+   details, and social follow — and no repeated site navigation. Accent
+   red is intentionally avoided on this near-black surface for the same
+   contrast reason documented in Sections 9 and 10.
    ========================================================================== */
 
 .footer {
-  background-color: var(--color-near-black);
+  background-color: #000000;
   color: rgba(255, 255, 255, 0.72);
 }
 
 .footer-inner {
-  padding-block: var(--space-3xl) var(--space-xl);
+  padding-block: var(--space-3xl);
 }
 
 @media (min-width: 1024px) {
   .footer-inner {
-    padding-block: var(--space-4xl) var(--space-xl);
+    padding-block: var(--space-4xl);
   }
 }
 
-.footer-grid {
-  display: grid;
-  grid-template-columns: 1fr;
+.footer-row {
+  display: flex;
+  flex-direction: column;
   gap: var(--space-2xl);
 }
 
 @media (min-width: 768px) {
-  .footer-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .footer-column--company {
-    grid-column: 1 / -1;
+  .footer-row {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: var(--space-xl);
   }
 }
 
-@media (min-width: 1024px) {
-  .footer-grid {
-    grid-template-columns: 2fr repeat(3, 1fr);
-    gap: var(--space-xl);
-  }
-
-  .footer-column--company {
-    grid-column: auto;
-  }
+.footer-brand {
+  display: flex;
+  flex-direction: column;
 }
 
 .footer-logo {
@@ -1106,24 +1276,27 @@ select[aria-invalid='true'] {
 }
 
 .footer-logo img {
-  height: 2.5rem; /* 40px — matches the Navbar logo treatment */
+  height: 6rem; /* 40px — matches the Navbar logo treatment */
   width: auto;
 }
 
-.footer-tagline {
-  max-width: 26rem;
-  margin-block-end: var(--space-lg);
-  color: rgba(255, 255, 255, 0.72);
-}
-
-.footer-address {
-  font-style: normal; /* override the browser's default italic <address> */
+.footer-copyright {
   margin-block-end: 0;
+  font-size: var(--font-size-small);
+  color: rgba(255, 255, 255, 0.56);
 }
 
-.footer-address p {
-  margin-block-end: var(--space-2xs);
-  font-size: var(--font-size-small);
+.footer-contact {
+  font-style: normal; /* override the browser's default italic <address> */
+}
+
+.footer-contact p {
+  margin-block-end: var(--space-sm);
+  color: var(--color-white);
+}
+
+.footer-contact p:last-child {
+  margin-block-end: 0;
 }
 
 .footer-heading {
@@ -1135,14 +1308,16 @@ select[aria-invalid='true'] {
   color: var(--color-white);
 }
 
-.footer-links {
-  list-style: none;
-  margin-block-end: 0;
-  padding-inline-start: 0;
+.footer-follow {
+  display: flex;
+  flex-direction: column;
 }
 
-.footer-links li {
-  margin-block-end: var(--space-sm);
+@media (min-width: 768px) {
+  .footer-follow {
+    align-items: flex-end;
+    text-align: right;
+  }
 }
 
 .footer-link {
@@ -1158,19 +1333,6 @@ select[aria-invalid='true'] {
 
 .footer-link:focus-visible {
   outline-color: var(--color-white);
-}
-
-.footer-bottom {
-  margin-block-start: var(--space-2xl);
-  padding-block-start: var(--space-lg);
-  border-block-start: 1px solid rgba(255, 255, 255, 0.12);
-  font-size: var(--font-size-small);
-  color: rgba(255, 255, 255, 0.56);
-  text-align: center;
-}
-
-.footer-bottom p {
-  margin-block-end: 0;
 }
 
 
@@ -1230,13 +1392,22 @@ select[aria-invalid='true'] {
    Projects page. Renders on every page (see _Layout.cshtml), so the
    styling stays page-agnostic. Accent red is avoided on this near-black
    surface for the same contrast reason documented in Sections 9–11.
-   The heading sets its own color explicitly so it stays white even
+   A near-black gradient overlay sits between the background-color
+   fallback and the background image so the heading stays readable
+   regardless of image content. The heading sets its own color
+   explicitly (soft off-white, not pure white) so it stays legible even
    though the global `a:hover` rule (Section 4) would otherwise darken
    it — only the link's background tints on hover.
    ========================================================================== */
 
 .cta-banner {
   background-color: var(--color-near-black);
+  background-image:
+    linear-gradient(rgba(28, 28, 28, 0.72), rgba(28, 28, 28, 0.72)),
+    url('/images/projects/all-projects/skyscrapper-2.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .cta-banner-link {
@@ -1278,7 +1449,7 @@ select[aria-invalid='true'] {
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-h4);
   letter-spacing: 0.02em;
-  color: var(--color-white);
+  color: rgba(255, 255, 255, 0.92);
 }
 
 
@@ -1335,28 +1506,1058 @@ select[aria-invalid='true'] {
 
 /* ==========================================================================
    15. Partner Logos
-   Milestone 2 · Rebuild — see docs/14_Decisions.md (CSS recovery,
-   2026-07-27). Terzioğlu reference: muted, monochrome wordmarks in a
-   generously spaced row on the default white background — no section
-   background override. `.section` (Section 7) already supplies the
-   responsive vertical rhythm; only the grid and label treatment are
-   defined here. No text-transform is applied — see
-   PartnerLogosViewComponent's uppercase-literal note (dotted İ risk
-   under lang="tr").
+   Milestone 2 · Visual Refresh — real logo images replacing the text
+   placeholder (2026-07-28), rebuilt as an infinite horizontal carousel.
+   Confirmed with the client 2026-07-28: this strip shows Ançın's own
+   project wordmarks (a portfolio trust strip), not third-party partner
+   logos — the "Partner Logos" name is kept only because it's what the
+   component/class names were already called; nothing user-facing says
+   "Partners" (see the .partner-logos aria-label in the view).
+   Terzioğlu reference: muted marks in a generously spaced row on the
+   default white background — no section background override. `.section`
+   (Section 7) already supplies the responsive vertical rhythm; only the
+   carousel and logo treatment are defined here.
+
+   ---- Why `invert()` instead of `grayscale()` ----
+   The source PNGs are white wordmarks on transparent — built for dark
+   hero-style backgrounds, per the client. On this section's white
+   background `grayscale(100%)` is a no-op (white stays white) and the
+   marks disappear. `invert(1)` flips the white pixels to black while
+   leaving alpha untouched, then the element's own 70% `opacity` blends
+   that black against the white page background — landing on a
+   consistent dark gray without ever introducing a second filter step
+   or touching any brand colour (there isn't one; every source file is
+   pure white).
+
+   ---- How the loop stays seamless ----
+   `.partner-logos-track` holds two identical `.partner-logos-set`
+   copies (the second is aria-hidden — screen readers only hear the
+   logo list once) and is animated by translateX only, so it stays
+   compositor-accelerated per docs/05_Animations.md's Performance
+   Rules. A plain `-50%` translate would under-shoot the exact boundary
+   between the two copies by half of one gap — flex `gap` adds one
+   connecting gap between the two sets but the track's own width (100%)
+   only accounts for it once, not twice — so the keyframe below
+   subtracts that extra `--partner-logos-gap / 2` explicitly. Without
+   it the loop shows a small spacing hiccup exactly where the two
+   copies meet, which is the "visible jump" the brief calls out to
+   avoid.
+
+   The global prefers-reduced-motion rule (Section 6) collapses the
+   animation to a single near-instant frame, same as Hero Background
+   Zoom — harmless here because the frame it lands on (the second,
+   identical copy) is visually indistinguishable from the starting
+   frame.
    ========================================================================== */
 
-.partner-logos-grid {
+.partner-logos-carousel {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+.partner-logos-track {
+  --partner-logos-gap: var(--space-xl);
+
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  gap: var(--space-lg) var(--space-2xl);
+  width: max-content;
+  gap: var(--partner-logos-gap);
+  animation: partner-logos-scroll 42s linear infinite;
+}
+
+.partner-logos-carousel:hover .partner-logos-track {
+  animation-play-state: paused;
+}
+
+@keyframes partner-logos-scroll {
+  to {
+    transform: translateX(calc(-50% - (var(--partner-logos-gap) / 2)));
+  }
+}
+
+.partner-logos-set {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--partner-logos-gap);
 }
 
 .partner-logo {
+  flex: none;
+  height: 2.5rem;
+  width: auto;
+  filter: invert(1);
+  opacity: 0.7;
+  -webkit-user-drag: none;
+  user-select: none;
+  transition:
+    opacity var(--transition-base) var(--ease-standard),
+    transform var(--transition-base) var(--ease-standard);
+}
+
+/* Hover only raises opacity to 1 (no extra filter) — invert(1) already
+   maps every source pixel to pure black, so full opacity is itself the
+   "darken" step: it removes the white-background blend that produced
+   the 70%-opacity dark gray, landing on solid black. */
+.partner-logo:hover {
+  opacity: 1;
+  transform: scale(1.04);
+}
+
+@media (min-width: 768px) {
+  .partner-logos-track {
+    --partner-logos-gap: var(--space-2xl);
+  }
+
+  .partner-logo {
+    height: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .partner-logos-track {
+    --partner-logos-gap: var(--space-3xl);
+  }
+
+  .partner-logo {
+    height: 4rem;
+  }
+}
+
+
+/* ==========================================================================
+   16. Hero Banner
+   Milestone 4 · Commit 3 — Home variant only (see HeroBannerViewComponent).
+   Refined the same commit: background is now the latest featured
+   project's own banner image (HeroBannerViewComponent sets --hero-bg-image inline
+   from IProjectQueryService; site.css never hardcodes a project). The
+   flat two-stop gradient is both the readability overlay (painted above
+   the photo) and the graceful fallback background when no featured
+   project exists — --hero-bg-image is simply omitted in that case, and
+   the var() falls back to the neutral gradient. var(--color-accent) is
+   deliberately never used as part of this background per
+   docs/02_DesignSystem.md ("Never use this colour for large
+   backgrounds"); it only appears on small elements (Primary Button
+   fill, Project CTA).
+
+   2026-07-28: the gradient + image moved from .hero itself onto a new
+   .hero-bg child so it can be given the slow ambient motion described just
+   above that rule, without .hero (which still positions .hero-inner /
+   .hero-bottom) needing to move at all.
+
+   2026-07-28 (later same day): replaced the horizontal pan with a
+   cinematic zoom "breathe" — see Hero Background Zoom below.
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  z-index: 0; /* establishes a stacking context so .hero-bg's z-index: -1 stays contained here, rather than escaping to compete with unrelated page elements */
+  overflow: hidden; /* clips .hero-bg, which is oversized so the zoom's upper end never exposes an edge */
+  display: flex;
+  align-items: flex-end;
+  min-height: 90vh;
+  min-height: 90svh;
+}
+
+/* ---- Hero Background Zoom ----
+   A continuous, transform-only scale "breathe": in from 1.00 to 1.10
+   and back out, never past 1.00 so .hero-bg's -5% inset bleed always
+   covers .hero with no edge exposed. transform (never width/height,
+   which are not compositor-accelerated and sit outside the "animate
+   opacity/transform" rule in docs/05_Animations.md's Performance
+   Rules) is the only property touched, and it starts the instant the
+   page loads — no scroll or hover trigger.
+
+   The 0% / 50% / 100% keyframe shape (rather than a from/to pair with
+   `alternate`) is what keeps the loop seamless: ease-in-out has zero
+   velocity at both ends of each keyframe, so the animation is already
+   momentarily still at 50% (peak zoom) and again at 100% (back to
+   1.00) — the same state 0% begins at — so the cycle restarts with no
+   visible pause or jump. The global prefers-reduced-motion rule
+   (Section 6) already collapses this to a single, near-instant frame —
+   no separate override needed here. */
+
+.hero-bg {
+  position: absolute;
+  z-index: -1; /* an absolutely-positioned layer otherwise paints above static in-flow content like .hero-inner, regardless of DOM order — this keeps it behind the heading/subheading */
+  inset: -5%;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--color-near-black) 55%, transparent), color-mix(in srgb, var(--color-near-black) 55%, transparent)),
+    var(--hero-bg-image, linear-gradient(160deg, var(--color-near-black) 0%, var(--color-dark-gray) 100%));
+  background-size: cover;
+  background-position: center;
+  animation: hero-bg-zoom 22s ease-in-out infinite;
+}
+
+@keyframes hero-bg-zoom {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.hero-inner {
+  width: 100%;
+  padding-block-start: var(--space-4xl);
+  /* Taller than padding-block-start on purpose — reserves room for the
+     absolutely-positioned .hero-bottom stack (Project CTA + Scroll
+     Indicator) so it never overlaps hero-actions on short/narrow
+     viewports, where hero-content can otherwise run right up to it. */
+  padding-block-end: 8rem;
+}
+
+.hero-content {
+  max-width: 42rem;
+}
+
+.hero-heading {
+  color: var(--color-white);
+}
+
+@media (min-width: 1024px) {
+  .hero-heading {
+    font-size: 3.5rem;
+  }
+}
+
+.hero-subheading {
+  max-width: 60ch;
+  color: var(--color-light-gray);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  margin-block-start: var(--space-lg);
+}
+
+/* ---- Hero Bottom ----
+   Bottom-center stack: Project CTA above the Scroll Indicator. Centering
+   lives here (transform: translateX) rather than on .scroll-indicator
+   itself, since .scroll-indicator's own transform is already spoken for
+   by the bounce keyframes (Section 8) — the two would otherwise clobber
+   each other every animation frame. */
+
+.hero-bottom {
+  position: absolute;
+  left: 50%;
+  bottom: var(--space-xl);
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+/* ---- Project CTA ----
+   Starts as understated text with a thin accent underline; on
+   hover/focus it grows into a solid, rectangular (no border-radius —
+   deliberately distinct from the pill-shaped .btn primitives) accent
+   button by animating padding rather than swapping elements. */
+
+.hero-project-cta {
+  display: inline-block;
+  border-bottom: 1px solid var(--color-accent);
+  padding-block-end: var(--space-2xs);
   font-family: var(--font-body);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-body);
+  color: var(--color-white);
+  text-decoration-line: none;
+  transition:
+    background-color var(--transition-base) var(--ease-standard),
+    border-color var(--transition-base) var(--ease-standard),
+    padding var(--transition-base) var(--ease-standard),
+    font-weight var(--transition-base) var(--ease-standard);
+}
+
+.hero-project-cta:hover,
+.hero-project-cta:focus-visible {
+  background-color: var(--color-accent);
+  border-color: transparent;
+  padding-inline: var(--space-lg);
+  padding-block: var(--space-sm);
   font-weight: var(--font-weight-semibold);
+  color: var(--color-white);
+}
+
+
+/* ==========================================================================
+   17. Company Overview
+   Milestone 4 · Commit 4 — Home only (docs/03_PageBlueprints.md). Reuses
+   the Section 7 .grid/.grid-cols-2 utility as-is: a single column on
+   mobile (text content above the Image Block, in source order — 2026-07-28
+   refinement puts text first so the eyebrow/heading/CTA read before the
+   image on mobile) and two columns from the tablet breakpoint, text on
+   the left per that same refinement. The only rule needed here centers
+   the two columns against each other, since the image and text naturally
+   differ in height.
+
+   2026-07-28 refinement: at the 1024px breakpoint the Section 7
+   .grid-cols-2 utility's even 1fr/1fr split let the Image Block occupy
+   nearly half the section, visually competing with the text column.
+   Terzioğlu's "48 Yıllık Tecrübe" block (Inspirationals/Terzioglu/
+   terzioglu-48-yillik-tecrube.png) was used as inspiration only — same
+   idea of a narrower, supporting-visual image column — not copied
+   directly. Overriding the column split here (rather than editing
+   .grid-cols-2) keeps that utility's even split available for any other
+   section that adopts it later.
+   ========================================================================== */
+
+.company-overview-grid {
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .company-overview-grid {
+    grid-template-columns: 65% 35%;
+  }
+}
+
+/* Clears the sticky Navbar (Section 9, ~64–70px tall depending on
+   breakpoint) when this section is reached via an in-page anchor link —
+   currently the Hero Banner's Scroll Indicator (href="#company-overview").
+   Without this, the section's top edge (including the eyebrow label)
+   lands directly under the sticky Navbar and gets visually clipped. */
+#company-overview {
+  scroll-margin-top: 5rem;
+}
+
+/* Same fix as #company-overview above — this section is also a same-page
+   anchor target (Home page id, reachable via a direct #projects-showcase
+   link even though nothing links to it yet). */
+#projects-showcase {
+  scroll-margin-top: 5rem;
+}
+
+
+/* ==========================================================================
+   18. Scroll Reveal Utility
+   Milestone 4 · Commit 5 — Company Timeline. Generic, reusable fade-up
+   utility for docs/05_Animations.md's "Scroll Animations" (fade + subtle
+   translateY, triggered once, per-element opt-in via [data-reveal]).
+   site.js observes every [data-reveal] with an IntersectionObserver and
+   adds .is-visible the first time it enters the viewport, then stops
+   observing it.
+
+   Gated behind .js (see _Layout.cshtml's no-js/js swap): without it,
+   [data-reveal] elements render at full opacity with no transform, so
+   content stays fully usable if JavaScript is disabled or the observer
+   never fires — see docs/05_Animations.md "Content should remain usable
+   even if animations are disabled."
+
+   [data-reveal-group] children get a --reveal-index custom property
+   (set by site.js) for a slight stagger; ungrouped [data-reveal]
+   elements default to index 0 (no delay).
+   ========================================================================== */
+
+.js [data-reveal] {
+  opacity: 1;
+  transform: translateY(24px);
+  transition:
+    opacity var(--transition-slow) var(--ease-standard),
+    transform var(--transition-slow) var(--ease-standard);
+  transition-delay: calc(var(--reveal-index, 0) * 90ms);
+}
+
+.js [data-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+/* ==========================================================================
+   19. Video Showcase
+   Reusable trigger + modal pair (Views/Shared/_VideoShowcase.cshtml) —
+   the site's standard video player. The modal is a sibling of
+   .video-showcase in markup, not a descendant: a non-"none" transform
+   (which .video-showcase carries once revealed — Section 18) becomes
+   the containing block for any position: fixed descendant, which would
+   trap the modal's full-viewport overlay to this element's box instead
+   of the viewport. site.js pairs trigger/modal at runtime via
+   aria-controls.
+   ========================================================================== */
+
+.video-showcase {
+  position: relative;
+  max-width: 960px;
+  margin-inline: auto;
+}
+
+.video-showcase-trigger {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: none;
+  padding: 0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.video-showcase-poster {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-base) var(--ease-standard);
+}
+
+.video-showcase-trigger:hover .video-showcase-poster {
+  transform: scale(1.03);
+}
+
+.video-showcase-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 50%;
+  background-color: var(--color-accent);
+  color: var(--color-white);
+  box-shadow: var(--shadow-md);
+  transition:
+    transform var(--transition-fast) var(--ease-standard),
+    background-color var(--transition-fast) var(--ease-standard);
+}
+
+.video-showcase-trigger:hover .video-showcase-play {
+  background-color: color-mix(in srgb, var(--color-accent) 85%, black);
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+/* Play icon sits a hair right of true center — visually balances the
+   triangle's own asymmetric shape inside the circle. */
+.video-showcase-play svg {
+  margin-inline-start: 3px;
+}
+
+@media (min-width: 768px) {
+  .video-showcase-play {
+    width: 5.5rem;
+    height: 5.5rem;
+  }
+}
+
+/* .video-showcase-trigger focus-visible state is inherited from
+   Section 5 (Accessible Focus States) and intentionally not repeated. */
+
+
+/* ---- Video Modal ----
+   Full-viewport fixed overlay, independent of scroll position. */
+
+.video-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+}
+
+.video-modal[hidden] {
+  display: none;
+}
+
+.video-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(28, 28, 28, 0.9);
+}
+
+.video-modal-panel {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+}
+
+.video-modal-close {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: none;
+  border-radius: 50%;
+  background-color: rgba(28, 28, 28, 0.6);
+  color: var(--color-white);
+  transition: background-color var(--transition-fast) var(--ease-standard);
+}
+
+.video-modal-close:hover {
+  background-color: rgba(28, 28, 28, 0.85);
+}
+
+.video-modal-frame {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background-color: var(--color-near-black);
+}
+
+.video-modal-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.video-modal-placeholder {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.video-modal-placeholder-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.5;
+}
+
+.video-modal-placeholder-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: var(--space-lg);
+  margin-block-end: 0;
+  text-align: center;
+  color: var(--color-white);
+  font-weight: var(--font-weight-medium);
+}
+
+
+/* ==========================================================================
+   20. Company History Section
+   Rebuilt 2026-07-28 (see CompanyHistorySectionViewComponent) to closely
+   follow Inspirationals/Terzioglu/terzioglu-zaman-tuneli.png's actual
+   composition: a small video teaser, a large decorative title, a
+   navigation-only info panel and an independent card carousel (year
+   lives inside each card, not on a shared rail) — while keeping our own
+   Design System tokens for colour and type.
+   ========================================================================== */
+
+/* ---- Section Background ----
+   Warm cream, distinct from the white sections above/below without
+   reading as yellow — per the project owner's explicit 2026-07-28
+   proportion-refinement request. */
+
+.company-history {
+  background-color: #F2EDEB;  
+}
+
+/* ---- Video Showcase, compact modifier ----
+   The shared _VideoShowcase partial defaults to a large 960px showcase
+   centered via margin-inline: auto; this section wants it as a small
+   teaser that sits INSIDE the left info column (Video -> small title ->
+   arrows, per the project owner's 2026-07-28 layout-hierarchy request),
+   left-aligned with the column's text rather than centered by itself. */
+
+.video-showcase--compact {
+  max-width: 240px;
+  margin-inline: 0;
+}
+
+.video-showcase--compact .video-showcase-trigger {
+  aspect-ratio: 1 / 1;
+}
+
+.video-showcase--compact .video-showcase-play {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+@media (min-width: 768px) {
+  .video-showcase--compact .video-showcase-play {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+.company-history-info-col > .video-showcase {
+  margin-block-end: var(--space-lg);
+}
+
+/* ---- Section Layout ----
+   Decorative Title always leads, full width, its own row. Below it,
+   Info Column (Video -> small title -> arrows, nothing else) and
+   Carousel sit side by side from 1024px; mobile stacks Info Column
+   above Carousel. Column ratio and gaps per the project owner's
+   2026-07-28 layout-hierarchy request. */
+
+.company-history-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xl);
+}
+
+.company-history-decorative-title,
+.company-history-info-col,
+.company-history-carousel-col {
+  width: 100%;
+  min-width: 0;
+}
+
+@media (min-width: 1024px) {
+  .company-history-grid {
+    display: grid;
+    grid-template-columns: minmax(240px, 28%) 1fr;
+    column-gap: var(--space-3xl);
+    row-gap: var(--space-xl);
+    align-items: start;
+  }
+
+  .company-history-decorative-title {
+    grid-column: 1 / -1;
+  }
+
+  .company-history-info-col {
+    grid-column: 1;
+  }
+
+  .company-history-carousel-col {
+    grid-column: 2;
+  }
+}
+
+/* ---- Info Column ----
+   Stacks Video above HistoryInfoPanel (small title + arrows), left-
+   aligned, top-aligned with the Carousel beside it — not centered or
+   stretched to the row's full height, which previously left the small
+   title/arrows floating in empty space beside the taller Carousel. */
+
+.company-history-info-col {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- Decorative Background Title ----
+   Real, visible <h2> (also the section's accessible name via
+   aria-labelledby) styled to read as oversized decorative type rather
+   than a functional heading — left-aligned, very low contrast so it
+   never competes with the Info Panel / Carousel below it, per the
+   project owner's explicit request. Regular weight (not the Bold used
+   elsewhere for headings) keeps it feeling light rather than shouty at
+   this size. Scaled down ~50% and slightly lower contrast 2026-07-28
+   (was clamp(3.5rem, 11vw, 9rem) at 6% mix) so it supports the layout
+   as a background element instead of dominating it. The negative
+   margin-top is tuned relative to `.section`'s own responsive
+   padding-block (Section 5) so the title keeps a small, consistent
+   gap under the sticky header at every breakpoint instead of a fixed
+   -60px overshooting the smaller mobile/tablet padding and clipping
+   under the header. */
+
+.company-history-decorative-title {
+  margin: 0;
+  margin-top: -30px;
+  margin-block-end: var(--space-lg);
+  font-weight: var(--font-weight-regular);
+  font-family: var(--font-decorative);
+  font-size: clamp(3rem, 8vw, 7rem);
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+
+  color: rgba(255, 255, 255, 0.9);
+
+  text-align: left;
+}
+
+@media (min-width: 768px) {
+  .company-history-decorative-title {
+    margin-top: -40px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .company-history-decorative-title {
+    margin-top: -60px;
+  }
+}
+
+/* ---- History Info Panel ----
+   Navigation only, per the project owner's explicit request — no years,
+   no timeline line, no cards. Sits directly below the Video Showcase in
+   the Info Column, top-aligned rather than centered against the taller
+   Carousel beside it (2026-07-28 layout-hierarchy request). */
+
+.history-info-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.history-info-panel-title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-h4);
+  color: var(--color-text-primary);
+}
+
+.history-info-panel-nav {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+/* ---- History Carousel ----
+   Horizontal snap-scroll of equal-size cards, synchronised with History
+   Info Panel by site.js. Native scroll-snap keeps touch dragging smooth
+   without a custom drag implementation; the Info Panel's Previous/Next
+   buttons drive the same scroll for mouse/keyboard users. */
+
+.history-carousel {
+  position: relative;
+}
+
+.history-carousel-track {
+  display: flex;
+  gap: var(--space-md);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  padding-block-end: var(--space-2xs);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .history-carousel-track {
+    scroll-behavior: auto;
+  }
+}
+
+.history-carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+.history-card {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  width: min(260px, 78vw);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+  transition: border-color var(--transition-base) var(--ease-standard);
+}
+
+@media (min-width: 768px) {
+  .history-card {
+    width: 280px;
+  }
+}
+
+.history-card.is-active {
+  border-color: var(--color-accent);
+}
+
+.history-card-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background-color: var(--color-surface);
+}
+
+.history-card-body {
+  padding: var(--space-md);
+}
+
+.history-card-year {
+  display: block;
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-h4);
+  line-height: 1;
+  color: var(--color-accent);
+  margin-block-end: var(--space-xs);
+}
+
+.history-card-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-heading);
+  color: var(--color-text-primary);
+  margin-block-end: var(--space-xs);
+}
+
+.history-card-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
   font-size: var(--font-size-small);
-  letter-spacing: 0.08em;
-  color: var(--color-dark-gray);
+  color: var(--color-text-secondary);
+  margin-block-end: var(--space-sm);
+}
+
+.history-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  color: var(--color-accent);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+}
+
+.history-card-link:hover {
+  text-decoration: underline;
+}
+
+.history-card-link span {
+  transition: transform var(--transition-fast) var(--ease-standard);
+}
+
+.history-card-link:hover span {
+  transform: translateX(3px);
+}
+
+/* ---- Shared Prev/Next Button ----
+   Lives in History Info Panel, not History Carousel (the panel is the
+   dedicated navigation surface) — kept as its own class since a future
+   reuse (e.g. About Us "Our Journey") pairs the same button with the
+   same carousel. */
+
+.history-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-white);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast) var(--ease-standard),
+    color var(--transition-fast) var(--ease-standard);
+}
+
+/* .history-nav-btn focus-visible state is inherited from Section 5
+   (Accessible Focus States) and intentionally not repeated. */
+
+.history-nav-btn:hover:not(:disabled) {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.history-nav-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+
+/* ==========================================================================
+   21. Projects Showcase
+   Home page, directly below Company History (project owner's 2026-07-28
+   request). A premium horizontal card slider — deliberately not a static
+   grid — driven by Embla Carousel + its Autoplay plugin (site.js), with
+   .history-nav-btn reused rather than a second arrow-button style. Layout
+   inspiration only from Inspirationals/Terzioglu's "TAMAMLANAN PROJELER"
+   section — its "Hayallerinizi Yaşatır" eyebrow copy is intentionally not
+   reused, per that request.
+
+   2026-07-28 refinement: swapped the native scroll-snap track for Embla
+   (better touch support, reliable infinite loop, no more capturing the
+   page's vertical scroll — see .projects-slider-viewport below), widened
+   the cards to a cinematic 4:3 media ratio, and moved the project title
+   out from below the image into the hover overlay.
+   ========================================================================== */
+
+.projects-showcase-header {
+  max-width: 640px;
+}
+
+.projects-slider {
+  position: relative;
+}
+
+/* Embla's required structure: an overflow-hidden "viewport" clips a
+   flex "container" that Embla pans with a transform — no overflow-x:auto
+   anywhere, which is what stops the section from capturing vertical wheel
+   scroll the old scroll-snap track sometimes did. */
+.projects-slider-viewport {
+  overflow: hidden;
+}
+
+.projects-slider-container {
+  display: flex;
+  gap: var(--space-lg);
+}
+
+.projects-slider-slide {
+  flex: 0 0 auto;
+  width: min(360px, 88vw);
+}
+
+@media (min-width: 768px) {
+  .projects-slider-slide {
+    width: min(480px, 47vw);
+  }
+}
+
+@media (min-width: 1024px) {
+  .projects-slider-slide {
+    width: 560px;
+  }
+}
+
+.project-card {
+  display: block;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+.project-card-media {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  aspect-ratio: 4 / 3;
+  background-color: var(--color-surface);
+}
+
+.project-card-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow) var(--ease-standard);
+}
+
+.project-card:hover .project-card-image,
+.project-card:focus-visible .project-card-image {
+  transform: scale(1.06);
+}
+
+/* Semi-transparent Ançın red overlay, fading in on hover/focus only — the
+   accent colour used here as a large-area wash rather than its usual
+   small-highlight role. docs/02_DesignSystem.md's "never for large
+   backgrounds" concerns the section's resting state, which stays white;
+   this only ever appears as a transient interaction state on one card. */
+
+.project-card-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  padding: var(--space-lg);
+  background-color: color-mix(in srgb, var(--color-accent) 78%, transparent);
+  opacity: 0;
+  transition: opacity var(--transition-base) var(--ease-standard);
+}
+
+.project-card:hover .project-card-overlay,
+.project-card:focus-visible .project-card-overlay {
+  opacity: 1;
+}
+
+/* The project title only ever exists inside this hover overlay (the
+   "Projeyi İncele" label and the always-visible name below the image are
+   both gone — see docs/00_ProjectVision.md 2026-07-28 refinement). No
+   line-clamp: a title is left to wrap onto a 3rd line rather than being
+   cut off or shrunk, per that request; in practice the overlay's padding
+   leaves comfortable room for that without the card needing to resize. */
+
+.project-card-overlay-title {
+  max-width: 85%;
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-h3);
+  line-height: var(--line-height-heading);
+  text-align: left;
+  color: var(--color-white);
+  transform: translateY(8px);
+  opacity: 0;
+  transition:
+    transform var(--transition-base) var(--ease-standard),
+    opacity var(--transition-base) var(--ease-standard);
+}
+
+@media (min-width: 1024px) {
+  .project-card-overlay-title {
+    font-size: var(--font-size-h2);
+  }
+}
+
+.project-card:hover .project-card-overlay-title,
+.project-card:focus-visible .project-card-overlay-title {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-card-image,
+  .project-card-overlay,
+  .project-card-overlay-title {
+    transition: none;
+  }
+}
+
+/* ---- Status Badge ----
+   Bare class is inline/static so the same markup also works on the future
+   Project Detail page; the absolute corner position only applies when
+   nested inside a card's media block (scoped by descendant selector
+   rather than a second modifier class, to avoid two same-specificity
+   classes fighting over position). Completed uses the brand accent as a
+   small, confined highlight (its approved role); Ongoing stays neutral so
+   Completed reads as the more notable of the two states, not the reverse. */
+
+.project-status-badge {
+  display: inline-block;
+  padding-block: var(--space-2xs);
+  padding-inline: var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.02em;
+  color: var(--color-white);
+}
+
+.project-card-media .project-status-badge {
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+}
+
+.project-status-badge--completed {
+  background-color: var(--color-accent);
+}
+
+.project-status-badge--ongoing {
+  background-color: color-mix(in srgb, var(--color-near-black) 65%, transparent);
+}
+
+.projects-slider-nav {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  margin-block-start: var(--space-lg);
 }

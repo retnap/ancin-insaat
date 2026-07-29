@@ -271,17 +271,89 @@ About Us
 
 ---
 
+## Company History Section
+
+**Purpose**
+
+Present company milestones as a large decorative heading over a
+two-column layout: a compact Video Showcase + History Info Panel on the
+left, a History Carousel of milestone cards on the right. Not a vertical
+rail timeline — every milestone (year included) is its own independent
+card.
+
+**Variants**
+
+- Default
+
+**Used In**
+
+Home
+
+---
+
+## History Info Panel
+
+**Purpose**
+
+Small title + previous/next controls for the History Carousel. Reusable
+outside Company History (e.g. a future About Us "Our Journey" section).
+
+**Variants**
+
+- Default
+
+**Used In**
+
+Home (Company History)
+
+---
+
+## History Carousel
+
+**Purpose**
+
+Card-based carousel of milestone entries (year, title, description,
+image, link). Reusable alongside History Info Panel.
+
+**Variants**
+
+- Default
+
+**Used In**
+
+Home (Company History)
+
+---
+
 # Project Components
+
+## Projects Showcase
+
+**Purpose**
+
+Section wrapper composing Section Header + a horizontal Project Card
+slider (Embla Carousel) over every published project — not a curated
+"featured" subset.
+
+**Variants**
+
+- Default
+
+**Used In**
+
+Home
+
+---
 
 ## Project Card
 
 **Purpose**
 
-Present a project summary.
+Present a project summary (cover image, name, status badge).
 
 **Variants**
 
-- Featured
+- Carousel (Projects Showcase slide)
 - Standard
 
 **Used In**
@@ -375,19 +447,27 @@ Project Detail
 
 ---
 
-## Partner Logos
+## Partner Logos (Project Logo Carousel)
 
 **Purpose**
 
-Display project partners.
+Marquee/carousel of Ançın's own confirmed project wordmarks — a portfolio
+trust strip, not third-party partner logos (component/folder name is
+historical). Rendered once by the shared layout, below the CTA Banner.
+Content must stay generic (no page-specific project highlighting).
+
+Distinct from Project Detail's future "Business Partners" section (not
+yet built), which will read the per-project `Partner` entity for a
+project's real third-party partners (contractors, architects) — that
+will need its own component name to avoid colliding with this one.
 
 **Variants**
 
-- Logo Grid
+- Marquee (global, shared layout)
 
 **Used In**
 
-Project Detail
+Every page (global layout)
 
 ---
 
@@ -463,17 +543,18 @@ Career
 
 **Purpose**
 
-Guide visitors toward the next important action.
+Guide visitors toward the complete project portfolio. Rendered once by
+the shared layout as a single page-agnostic "Tüm Projeler" (All Projects)
+banner — not a different variant per page/goal as originally planned;
+copy must stay page-agnostic.
 
 **Variants**
 
-- Projects
-- Contact
-- Career
+- Default (All Projects)
 
 **Used In**
 
-Multiple pages
+Every page (global layout)
 
 ---
 

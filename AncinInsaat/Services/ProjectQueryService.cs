@@ -31,6 +31,15 @@ public class ProjectQueryService : IProjectQueryService
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<Project?> GetLatestFeaturedProjectAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Projects
+            .AsNoTracking()
+            .Where(p => p.IsPublished && p.IsFeatured)
+            .OrderBy(p => p.DisplayOrder)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<Project?> GetPublishedProjectBySlugAsync(string slug, CancellationToken cancellationToken = default)
     {
         return await _context.Projects

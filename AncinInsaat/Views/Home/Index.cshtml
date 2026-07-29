@@ -1,9 +1,20 @@
-@{
-    ViewData["Title"] = "Temporary Scaffold";
+@* Title/description/canonical/OG come from ViewData["Seo"], set in
+   HomeController.Index via ISeoService — see _Layout.cshtml's <head>. *@
+
+@await Component.InvokeAsync("HeroBanner")
+
+@await Component.InvokeAsync("CompanyOverview")
+
+@await Component.InvokeAsync("CompanyHistorySection")
+
+@await Component.InvokeAsync("ProjectsShowcase")
+
+@section Scripts {
+    @* Embla Carousel + Autoplay plugin (vendored at wwwroot/lib/embla-carousel,
+       v8.6.0 UMD builds), Home-page-only since ProjectsShowcase is the only
+       section that uses it. Must load before site.js, which reads the
+       window.EmblaCarousel / window.EmblaCarouselAutoplay globals these
+       define to initialise the slider. *@
+    <script src="~/lib/embla-carousel/embla-carousel.umd.min.js"></script>
+    <script src="~/lib/embla-carousel/embla-carousel-autoplay.umd.min.js"></script>
 }
-
-@* TEMPORARY SCAFFOLD — Milestone 0 only.
-   This page exists solely to verify that the MVC pipeline starts and renders correctly.
-   It is NOT a completed page and will be fully replaced by the real Home page in Milestone 4. *@
-
-<p>Temporary scaffold page — Milestone 0 pipeline verification only. Not a completed page.</p>

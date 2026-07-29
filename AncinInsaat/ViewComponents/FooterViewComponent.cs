@@ -13,28 +13,11 @@ public class FooterViewComponent : ViewComponent
     {
         var model = new FooterViewModel
         {
-            CompanyTagline = "Building lasting value across Aydın, one project at a time.",
-            Address = "Kültür Mahallesi, İnşaat Caddesi No:12, Aydın, Türkiye",
+            AddressLine1 = "Kültür Mahallesi, İnşaat Caddesi No:12",
+            AddressLine2 = "Aydın, Türkiye",
             Phone = "+90 256 123 45 67",
             PhoneHref = "+902561234567",
             Email = "info@ancininsaat.com",
-            CorporateLinks = new List<FooterLinkItem>
-            {
-                new() { Label = "About Us", Url = "/about" },
-                new() { Label = "Our Values", Url = "/values" },
-                new() { Label = "KVKK", Url = "/kvkk" }
-            },
-            PeopleFirstLinks = new List<FooterLinkItem>
-            {
-                new() { Label = "Career", Url = "/career" },
-                new() { Label = "HR Policy", Url = "/hr-policy" }
-            },
-            ExploreLinks = new List<FooterLinkItem>
-            {
-                new() { Label = "Home", Url = "/" },
-                new() { Label = "Projects", Url = "/projects" },
-                new() { Label = "Contact", Url = "/contact" }
-            },
             CopyrightYear = DateTime.UtcNow.Year
         };
 

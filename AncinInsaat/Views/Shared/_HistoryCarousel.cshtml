@@ -1,0 +1,27 @@
+@model HistoryCarouselModel
+
+@*
+    Cards only — every historical entry is independent, year included
+    (see history-card-year below), matching the Inspirationals reference
+    rather than a shared timeline rail. Previous/Next controls live in
+    the paired _HistoryInfoPanel (same Model.Id), not here; site.js pairs
+    them at runtime via data-history-carousel / data-history-info-panel.
+*@
+
+<div class="history-carousel" data-history-carousel="@Model.Id">
+    <div class="history-carousel-track" data-history-track tabindex="0" role="group" aria-label="Zaman tüneli, kaydırılabilir" data-reveal-group>
+        @for (var i = 0; i < Model.Entries.Count; i++)
+        {
+            var entry = Model.Entries[i];
+            <article class="history-card@(i == 0 ? " is-active" : "")" data-history-index="@i" data-reveal>
+                <img class="history-card-image" src="@entry.ImageSrc" alt="@entry.ImageAlt" loading="lazy" decoding="async" />
+                <div class="history-card-body">
+                    <span class="history-card-year">@entry.Year</span>
+                    <h3 class="history-card-title">@entry.Title</h3>
+                    <p class="history-card-description">@entry.Description</p>
+                    <a class="history-card-link" href="@entry.LinkUrl">@entry.LinkLabel <span aria-hidden="true">&rarr;</span></a>
+                </div>
+            </article>
+        }
+    </div>
+</div>

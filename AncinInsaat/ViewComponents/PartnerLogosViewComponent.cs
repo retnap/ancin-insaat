@@ -2,32 +2,36 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AncinInsaat.ViewComponents;
 
-// PLACEHOLDER — real partner logos are not yet available (wwwroot/images/
-// partners/ is still empty, see 07_AssetStructure.md). Generic numbered
-// labels are used deliberately rather than invented company names, which
-// would misrepresent an unconfirmed business relationship. Replace with
-// real logo images before launch. Part of the shared layout (renders on
-// every page below the CTA Banner), so content here must stay generic
-// rather than page-specific.
+// Real logo images (wwwroot/images/logos/project-logos/), supplied
+// 2026-07-28. Confirmed with the client the same day: despite the
+// component/folder naming, these are Ançın's own project wordmarks (a
+// portfolio trust strip), not third-party partner logos — nothing
+// user-facing says "Partners" (see the section's aria-label in
+// Default.cshtml). logo_01-removebg-preview is excluded per client
+// instruction; it is Ançın's own company mark, not a project. ImageAlt
+// transcribes the wordmark text visible in each source file rather than
+// inventing a label. Part of the shared layout (renders on every page
+// below the CTA Banner), so content here must stay generic rather than
+// page-specific.
 public class PartnerLogosViewComponent : ViewComponent
 {
-    // Pre-uppercased literals rather than a CSS `text-transform: uppercase`
-    // — see the Footer's "PEOPLE FIRST" fix in the Milestone 2 review:
-    // under `lang="tr"` that transform case-folds a lowercase "i" to a
-    // dotted "İ". None of these labels contain one, but the pattern is
-    // avoided here on principle rather than by coincidence.
-    private static readonly IReadOnlyList<PartnerLogoItem> PlaceholderPartners = new List<PartnerLogoItem>
+    private static readonly IReadOnlyList<PartnerLogoItem> Partners = new List<PartnerLogoItem>
     {
-        new() { Label = "PARTNER 01" },
-        new() { Label = "PARTNER 02" },
-        new() { Label = "PARTNER 03" },
-        new() { Label = "PARTNER 04" },
-        new() { Label = "PARTNER 05" }
+        new() { ImageSrc = "/images/logos/project-logos/logo_02-removebg-preview.png", ImageAlt = "Nlatis" },
+        new() { ImageSrc = "/images/logos/project-logos/logo_03-removebg-preview.png", ImageAlt = "Tralles Gold Residence" },
+        new() { ImageSrc = "/images/logos/project-logos/logo_04-removebg-preview.png", ImageAlt = "Alinda Gold Residence" },
+        new() { ImageSrc = "/images/logos/project-logos/logo_05-removebg-preview.png", ImageAlt = "Magnesia Gold Residence" },
+        new() { ImageSrc = "/images/logos/project-logos/logo_06-removebg-preview.png", ImageAlt = "La Fiore Karabağ" },
+        new() { ImageSrc = "/images/logos/project-logos/logo_07-removebg-preview.png", ImageAlt = "La Fiore Karabağ 2. Etap" },
+        new() { ImageSrc = "/images/logos/project-logos/logo_08-removebg-preview.png", ImageAlt = "Le Jardin" },
+        new() { ImageSrc = "/images/logos/project-logos/logo_09-removebg-preview.png", ImageAlt = "Lavia Kuyulu" },
+        new() { ImageSrc = "/images/logos/project-logos/logo_10-removebg-preview.png", ImageAlt = "Nysa Gold Residence" },
+        new() { ImageSrc = "/images/logos/project-logos/logo_11-removebg-preview.png", ImageAlt = "Dlatis Thermal Wellness Residence" }
     };
 
     public IViewComponentResult Invoke()
     {
-        var model = new PartnerLogosViewModel { Partners = PlaceholderPartners };
+        var model = new PartnerLogosViewModel { Partners = Partners };
         return View(model);
     }
 }

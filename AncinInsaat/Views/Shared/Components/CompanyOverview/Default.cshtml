@@ -1,0 +1,11 @@
+@model CompanyOverviewViewModel
+
+<section class="section company-overview" id="company-overview" aria-labelledby="@Model.SectionHeader.HeadingId">
+    <div class="container grid grid-cols-2 company-overview-grid">
+        <div class="company-overview-content">
+            <partial name="_SectionHeader" model="Model.SectionHeader" />
+            <a class="btn btn-primary" href="@Model.CtaUrl">@Model.CtaLabel</a>
+        </div>
+        <partial name="_ImageBlock" model="Model.Image" />
+    </div>
+</section>

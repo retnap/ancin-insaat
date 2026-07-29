@@ -1,0 +1,33 @@
+@model HeroBannerViewModel
+
+@{
+    var heroStyle = Model.BackgroundImageUrl is not null
+        ? $"--hero-bg-image: url('{Model.BackgroundImageUrl}')"
+        : null;
+}
+
+<section class="hero" style="@heroStyle" aria-labelledby="hero-heading">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container hero-inner">
+        <div class="hero-content">
+            <h1 id="hero-heading" class="hero-heading">@Model.Heading</h1>
+            <p class="hero-subheading">@Model.Subheading</p>
+        </div>
+    </div>
+
+    <div class="hero-bottom">
+        @if (Model.ProjectCtaUrl is not null)
+        {
+            <a class="hero-project-cta" href="@Model.ProjectCtaUrl">@Model.ProjectCtaLabel</a>
+        }
+        @{
+            var scrollIndicatorModel = new ScrollIndicatorModel
+            {
+                TargetId = Model.ScrollTargetId,
+                Label = "Aşağı kaydır",
+                CssClass = "scroll-indicator--on-dark"
+            };
+        }
+        <partial name="_ScrollIndicator" model="scrollIndicatorModel" />
+    </div>
+</section>

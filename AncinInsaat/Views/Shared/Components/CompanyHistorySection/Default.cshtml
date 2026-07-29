@@ -1,0 +1,36 @@
+@model CompanyHistorySectionViewModel
+
+@*
+    Layout ordering per the project owner's 2026-07-28 layout-hierarchy
+    request, closely matching
+    Inspirationals/Terzioglu/terzioglu-zaman-tuneli.png:
+    1. Large decorative background title — full width, its own row at
+       the very top, above the two-column content below. Also the
+       section's real, visible heading (no separate sr-only duplicate
+       needed).
+    2. Two-column row: the left column stacks VideoShowcase (small
+       teaser) directly above HistoryInfoPanel (small title + prev/next
+       — nothing else); the right column is the independent
+       HistoryCarousel, unchanged.
+
+    data-reveal-group nests two levels (grid -> info column ->
+    HistoryInfoPanel's own title/nav) so the fade-in stagger follows the
+    requested order: title, video, small title, arrows, cards.
+    _HistoryCarousel's own track keeps its separate nested group for the
+    cards, independent of this ordering.
+*@
+
+<section class="section company-history" id="company-history" aria-labelledby="@Model.HeadingId">
+    <div class="container">
+        <div class="company-history-grid" data-reveal-group>
+            <h2 id="@Model.HeadingId" class="company-history-decorative-title" data-reveal>@Model.DecorativeTitle</h2>
+            <div class="company-history-info-col" data-reveal-group>
+                <partial name="_VideoShowcase" model="Model.Video" />
+                <partial name="_HistoryInfoPanel" model="Model.InfoPanel" />
+            </div>
+            <div class="company-history-carousel-col" data-reveal>
+                <partial name="_HistoryCarousel" model="Model.Carousel" />
+            </div>
+        </div>
+    </div>
+</section>

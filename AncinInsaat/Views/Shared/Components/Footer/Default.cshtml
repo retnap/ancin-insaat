@@ -2,55 +2,26 @@
 
 <div class="container footer-inner">
 
-    <div class="footer-grid">
+    <div class="footer-row">
 
-        <div class="footer-column footer-column--company">
+        <div class="footer-brand">
             <a href="/" class="footer-logo" aria-label="Ançın İnşaat — Home">
-                <img src="~/images/logos/ancin-logo.png" alt="Ançın İnşaat" width="114" height="40" />
+                <img src="~/images/logos/ancin-logo-2-removebg.png" alt="Ançın İnşaat" width="98" height="40" />
             </a>
-            <p class="footer-tagline">@Model.CompanyTagline</p>
-            <address class="footer-address">
-                <p>@Model.Address</p>
-                <p><a class="footer-link" href="tel:@Model.PhoneHref">@Model.Phone</a></p>
-                <p><a class="footer-link" href="mailto:@Model.Email">@Model.Email</a></p>
-            </address>
+            <p class="footer-copyright">&copy; @Model.CopyrightYear Ançın İnşaat. All rights reserved.</p>
+        </div>
+
+        <address class="footer-contact">
+            <p>@Model.AddressLine1<br />@Model.AddressLine2</p>
+            <p><a class="footer-link" href="tel:@Model.PhoneHref">@Model.Phone</a></p>
+            <p><a class="footer-link" href="mailto:@Model.Email">@Model.Email</a></p>
+        </address>
+
+        <div class="footer-follow">
+            <h2 class="footer-heading">Follow Us</h2>
             @await Component.InvokeAsync("SocialMedia")
         </div>
 
-        <div class="footer-column">
-            <h2 class="footer-heading">CORPORATE</h2>
-            <ul class="footer-links">
-                @foreach (var link in Model.CorporateLinks)
-                {
-                    <li><a class="footer-link" href="@link.Url">@link.Label</a></li>
-                }
-            </ul>
-        </div>
-
-        <div class="footer-column">
-            <h2 class="footer-heading">PEOPLE FIRST</h2>
-            <ul class="footer-links">
-                @foreach (var link in Model.PeopleFirstLinks)
-                {
-                    <li><a class="footer-link" href="@link.Url">@link.Label</a></li>
-                }
-            </ul>
-        </div>
-
-        <div class="footer-column">
-            <h2 class="footer-heading">EXPLORE</h2>
-            <ul class="footer-links">
-                @foreach (var link in Model.ExploreLinks)
-                {
-                    <li><a class="footer-link" href="@link.Url">@link.Label</a></li>
-                }
-            </ul>
-        </div>
-
-    </div>
-
-    <div class="footer-bottom">
-        <p>&copy; @Model.CopyrightYear Ançın İnşaat. All rights reserved.</p>
     </div>
 
 </div>

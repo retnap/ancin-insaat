@@ -13,5 +13,11 @@ public interface IProjectQueryService
 
     Task<IReadOnlyList<Project>> GetFeaturedProjectsAsync(CancellationToken cancellationToken = default);
 
+    // The project currently showcased in the Home Hero Banner — the
+    // featured project with the lowest DisplayOrder. Promoting a
+    // different project to the hero is an editorial change (reorder
+    // DisplayOrder / IsFeatured in the data), never a code change.
+    Task<Project?> GetLatestFeaturedProjectAsync(CancellationToken cancellationToken = default);
+
     Task<Project?> GetPublishedProjectBySlugAsync(string slug, CancellationToken cancellationToken = default);
 }

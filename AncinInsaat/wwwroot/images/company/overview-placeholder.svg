@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-hidden="true">
+  <title>Ançın İnşaat — yer tutucu mimari çizim</title>
+  <rect width="800" height="600" fill="#F0EEEB" />
+
+  <!-- Minimal architectural elevation line-art. Placeholder only —
+       replace with real company/project photography before launch. -->
+  <g fill="none" stroke="#55504D" stroke-width="2">
+    <rect x="260" y="120" width="340" height="360" />
+    <line x1="328" y1="120" x2="328" y2="480" />
+    <line x1="396" y1="120" x2="396" y2="480" />
+    <line x1="464" y1="120" x2="464" y2="480" />
+    <line x1="532" y1="120" x2="532" y2="480" />
+    <line x1="260" y1="192" x2="600" y2="192" />
+    <line x1="260" y1="264" x2="600" y2="264" />
+    <line x1="260" y1="336" x2="600" y2="336" />
+    <line x1="260" y1="408" x2="600" y2="408" />
+    <rect x="398" y="408" width="64" height="72" />
+  </g>
+
+  <line x1="140" y1="480" x2="700" y2="480" stroke="#9E2B25" stroke-width="3" />
+</svg>

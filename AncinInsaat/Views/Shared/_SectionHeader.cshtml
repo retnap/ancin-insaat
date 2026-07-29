@@ -1,0 +1,13 @@
+@model SectionHeaderModel
+
+<div class="section-header @Model.CssClass">
+    @if (!string.IsNullOrWhiteSpace(Model.Eyebrow))
+    {
+        <p class="section-header__eyebrow"><span class="section-header__eyebrow-line" aria-hidden="true"></span>@Model.Eyebrow</p>
+    }
+    <h2 id="@Model.HeadingId">@Model.Title</h2>
+    @if (!string.IsNullOrWhiteSpace(Model.Description))
+    {
+        <p class="section-header__description">@Model.Description</p>
+    }
+</div>

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-hidden="true">
+  <title>Ançın İnşaat — tanıtım filmi yer tutucu görseli</title>
+  <rect width="800" height="450" fill="#F0EEEB" />
+
+  <!-- Minimal architectural skyline line-art, same treatment as
+       company/overview-placeholder.svg. Placeholder only — replace
+       with a real frame from the promotional video before launch. -->
+  <g fill="none" stroke="#55504D" stroke-width="2">
+    <rect x="220" y="140" width="120" height="220" />
+    <rect x="360" y="90" width="140" height="270" />
+    <rect x="520" y="170" width="110" height="190" />
+    <line x1="252" y1="140" x2="252" y2="360" />
+    <line x1="284" y1="140" x2="284" y2="360" />
+    <line x1="316" y1="140" x2="316" y2="360" />
+    <line x1="392" y1="90" x2="392" y2="360" />
+    <line x1="424" y1="90" x2="424" y2="360" />
+    <line x1="456" y1="90" x2="456" y2="360" />
+    <line x1="488" y1="90" x2="488" y2="360" />
+    <line x1="548" y1="170" x2="548" y2="360" />
+    <line x1="576" y1="170" x2="576" y2="360" />
+    <line x1="604" y1="170" x2="604" y2="360" />
+  </g>
+
+  <line x1="140" y1="360" x2="660" y2="360" stroke="#9E2B25" stroke-width="3" />
+</svg>

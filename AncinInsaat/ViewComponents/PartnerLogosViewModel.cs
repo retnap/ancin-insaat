@@ -2,7 +2,8 @@ namespace AncinInsaat.ViewComponents;
 
 public class PartnerLogoItem
 {
-    public required string Label { get; init; }
+    public required string ImageSrc { get; init; }
+    public required string ImageAlt { get; init; }
 }
 
 public class PartnerLogosViewModel

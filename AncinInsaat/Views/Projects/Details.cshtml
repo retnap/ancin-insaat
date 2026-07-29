@@ -1,0 +1,33 @@
+@model AncinInsaat.Data.Entities.Project
+
+@{
+    ViewData["Title"] = $"{Model.Name} — Ançın İnşaat";
+    var statusLabel = Model.Status == AncinInsaat.Data.Entities.ProjectStatus.Completed ? "Tamamlandı" : "Devam Ediyor";
+}
+
+@*
+    Placeholder detail page — routing only for now (project owner's
+    Projects Showcase request, 2026-07-28). Full layout (Gallery, Floor
+    Plans, Business Partners, Catalogue — docs/03_PageBlueprints.md "Page —
+    Project Detail") is a separate, not-yet-requested milestone.
+*@
+
+@{
+    var breadcrumbTrail = new List<AncinInsaat.ViewComponents.BreadcrumbItem>
+    {
+        new() { Label = Model.Name }
+    };
+}
+@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail })
+
+<section class="section project-detail-placeholder">
+    <div class="container">
+        <span class="project-status-badge @(Model.Status == AncinInsaat.Data.Entities.ProjectStatus.Completed ? "project-status-badge--completed" : "project-status-badge--ongoing")">@statusLabel</span>
+        <h1>@Model.Name</h1>
+        @if (!string.IsNullOrWhiteSpace(Model.ShortDescription))
+        {
+            <p class="section-header__description">@Model.ShortDescription</p>
+        }
+        <p>Bu projenin detay sayfası hazırlanmaktadır.</p>
+    </div>
+</section>

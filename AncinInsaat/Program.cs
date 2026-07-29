@@ -14,6 +14,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(connectionString));
 
 builder.Services.AddScoped<IProjectQueryService, ProjectQueryService>();
+builder.Services.AddScoped<ISeoService, SeoService>();
+builder.Services.AddScoped<ISiteSettingsService, SiteSettingsService>();
 
 var app = builder.Build();
 

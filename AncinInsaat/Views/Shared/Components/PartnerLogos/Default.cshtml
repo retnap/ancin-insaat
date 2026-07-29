@@ -1,12 +1,24 @@
 @model PartnerLogosViewModel
 
-<section class="partner-logos section">
+@{
+    // Rendered twice back-to-back so the marquee (site.css Section 15) can
+    // loop seamlessly; the second copy is aria-hidden so screen readers
+    // only hear the logo list once.
+}
+<section class="partner-logos section" aria-label="Projelerimiz">
     <div class="container">
-        <div class="partner-logos-grid">
-            @foreach (var partner in Model.Partners)
-            {
-                <span class="partner-logo">@partner.Label</span>
-            }
+        <div class="partner-logos-carousel">
+            <div class="partner-logos-track">
+                @for (var copy = 0; copy < 2; copy++)
+                {
+                    <div class="partner-logos-set" aria-hidden="@(copy == 1 ? "true" : null)">
+                        @foreach (var partner in Model.Partners)
+                        {
+                            <img class="partner-logo" src="@partner.ImageSrc" alt="@(copy == 0 ? partner.ImageAlt : "")" loading="lazy" decoding="async" />
+                        }
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </section>

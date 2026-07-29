@@ -1,0 +1,64 @@
+@model ProjectsShowcaseViewModel
+
+@*
+    Premium horizontal slider (not a grid) — Embla Carousel (+ Autoplay
+    plugin) drives panning, looping and touch drag; site.js only wires
+    Embla up to this markup and to the Previous/Next arrows
+    (data-projects-viewport / data-projects-container / data-projects-prev
+    / data-projects-next). Embla's viewport is overflow:hidden with
+    transform-based panning rather than a native overflow-x:auto track, so
+    it never captures vertical wheel/touch scrolling the way the old
+    scroll-snap track did.
+
+    Reveal sequence mirrors CompanyHistorySection's nested-stagger idiom
+    (site.css Section 18 / site.js Scroll Reveal): the outer group reveals
+    the header, then the slider frame, each as one step; the Embla
+    container is its own nested data-reveal-group so every card gets its
+    own slight stagger within that step. data-reveal sits on the inner
+    .project-card, one level inside the slide Embla itself transforms —
+    stacking the reveal's CSS transform directly on a slide Embla also
+    transforms (for the loop effect) would fight it, since an element only
+    has one `transform`.
+*@
+
+<section class="section projects-showcase" id="projects-showcase" aria-labelledby="@Model.Header.HeadingId">
+    <div class="container" data-reveal-group>
+        <div class="projects-showcase-header" data-reveal>
+            <partial name="_SectionHeader" model="Model.Header" />
+        </div>
+
+        <div class="projects-slider" data-projects-slider data-reveal>
+            <div class="projects-slider-viewport" data-projects-viewport>
+                <div class="projects-slider-container" data-projects-container role="group" aria-label="Projeler, kaydırılabilir" data-reveal-group>
+                    @foreach (var card in Model.Cards)
+                    {
+                        <div class="projects-slider-slide">
+                            <a class="project-card" href="@card.DetailUrl" aria-label="@card.Name" data-reveal>
+                                <span class="project-card-media">
+                                    <img class="project-card-image" src="@card.CoverImageSrc" alt="@card.Name" loading="lazy" decoding="async" />
+                                    <span class="project-card-overlay" aria-hidden="true">
+                                        <span class="project-card-overlay-title">@card.Name</span>
+                                    </span>
+                                    <span class="project-status-badge @card.StatusModifierClass">@card.StatusLabel</span>
+                                </span>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="projects-slider-nav">
+                <button type="button" class="history-nav-btn" data-projects-prev aria-label="Önceki proje">
+                    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                        <path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+                <button type="button" class="history-nav-btn" data-projects-next aria-label="Sonraki proje">
+                    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                        <path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
