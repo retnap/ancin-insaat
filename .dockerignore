@@ -1,0 +1,51 @@
+## Build outputs (all projects) — rebuilt inside the Docker build itself
+**/bin/
+**/obj/
+**/out/
+
+## IDE / editor
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+
+## Git
+.git/
+.gitattributes
+
+## SQLite runtime artifacts — never bake WAL/journal state or backups into
+## the image. Mirrors the same exclusions as the repo's own .gitignore.
+**/*.db-shm
+**/*.db-wal
+**/*.db-journal
+AncinInsaat/App_Data/*
+!AncinInsaat/App_Data/ancinInsaat.db
+AncinInsaat/App_Data/uploads/
+AncinInsaat/App_Data/*.bak*
+
+## OS files
+.DS_Store
+Thumbs.db
+
+## Not required to build or run the web app
+AncinInsaat.ImagePipeline/
+tools/
+Inspirationals/
+ProjectAssets/
+docs/
+.claude/
+.playwright-mcp/
+
+## Ad-hoc verification screenshots at repo root (mirrors .gitignore;
+## anchored to root only — does not affect AncinInsaat/wwwroot/**)
+/company-history-after-next.png
+/company-history-section-full.png
+/company-history-section-full2.png
+/gallery-dropdown.png
+/lafiore-*.png
+/lafiore2etap-regression-check.png
+
+## Docker
+Dockerfile
+.dockerignore
