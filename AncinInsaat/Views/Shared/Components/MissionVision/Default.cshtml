@@ -1,0 +1,18 @@
+@model MissionVisionViewModel
+
+@*
+    About Us "Mission & Vision" (docs/03_PageBlueprints.md — Mission & Vision
+    phase, 2026-08-01). Reuses the Information Card component's Grid layout
+    (Views/Shared/_InformationCard.cshtml) — two equally sized cards, Mission
+    left / Vision right, each with its own reveal direction set on the item
+    itself (MissionVisionViewComponent). Same cream-free, default section
+    background as Company Introduction — Our Journey already carries the
+    page's one background accent, so this section stays quiet.
+*@
+
+<section class="section mission-vision" id="about-mission-vision" aria-labelledby="@Model.SectionHeader.HeadingId">
+    <div class="container">
+        <partial name="_SectionHeader" model="Model.SectionHeader" />
+        <partial name="_InformationCard" model="Model.InformationCard" />
+    </div>
+</section>

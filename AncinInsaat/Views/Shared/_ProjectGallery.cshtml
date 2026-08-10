@@ -1,0 +1,288 @@
+@model AncinInsaat.Models.ProjectDetailViewModel
+
+@* Image Gallery, redesigned as premium Category Cards (Gallery Category
+   Cards redesign, 2026-08-04 — inspired by, not copying,
+   Inspirationals/Folkart's Orion gallery). Reuses _FilterDropdown.cshtml
+   as-is for the category selector — restyled via #project-gallery-scoped
+   CSS only, so Projects/Index's two dropdowns are untouched — and the
+   shared Media Viewer (_MediaViewer.cshtml, site.js) for the lightbox, same
+   as the previous flat-grid version. Every gallery image renders exactly
+   once, in category order (Exterior, then Interior, then Social Areas —
+   ProjectsController.GalleryCategorySortOrder), as its own card. "Tüm
+   Görseller" (2026-08-04 fix — was only ever showing one card per
+   category) shows every card, in that same order; picking a category
+   shows only that category's cards. data-media-viewer-group-category
+   holds each card's own category group; data-media-viewer-group starts
+   equal to it (cards render visible-by-default, matching "Tüm Görseller"
+   being the default selection) and site.js repoints it to "gallery-all" or
+   back to the category group whenever the filter changes, so the Media
+   Viewer — which resolves group membership from that attribute at click
+   time rather than baking it in at page load — always opens on the
+   correct combined-or-category list with no duplicate entries. Filtering
+   is scoped, single-instance JS in site.js ("Project Gallery — Category
+   Cards"), deliberately not sharing the generic Filter Dropdown module:
+   that one early-exits whenever [data-project-grid] is absent, which would
+   leave this page's _FilterDropdown.cshtml instance inert. Every project
+   with 1+ named categories gets this dropdown/category-card treatment
+   (Nlatis Gallery revision, 2026-08-10 — previously a project with exactly
+   one named category fell back to a plain ungrouped grid with no dropdown,
+   since there was "nothing meaningful to filter"; changed generically, not
+   as an Nlatis-specific slug check, once a real single-category project —
+   Nlatis, "Exterior" only — needed its one category offered as a real
+   dropdown entry alongside "Tüm Görseller", matching every other project's
+   Gallery interface). A project with zero named categories (every image's
+   Category left null, e.g. La Via AVM — see BuildKuyuluAvmImages) still
+   gets the same card treatment: every image renders as one ungrouped set,
+   and _FilterDropdown's Options list is empty, so its menu offers only its
+   built-in "Tüm Görseller" entry (Consistency Revisions, 2026-08-06). The
+   old plain-grid fallback (.project-gallery/.gallery-thumb, previously
+   reached only when a project had exactly one named category) is now
+   unreachable and has been removed.
+
+   Block / Apartment Type chip rows (La Fiore Karabağ 2. Etap Gallery pilot,
+   2026-08-06) — ONLY for this project; every other project's images leave
+   GalleryImageModel.Block/ApartmentType null, so both rows below simply
+   don't render for them (no slug check needed anywhere). Each row lists the
+   distinct values present across ALL gallery images up front; site.js hides
+   individual chips (and the whole row, when fewer than 2 remain) as the
+   category/block selection narrows the visible set, so a chip is only ever
+   offered when it would actually do something. Each .gallery-card below
+   carries data-gallery-block/data-gallery-apartment-type so site.js can
+   filter without another server round-trip.
+
+   Gallery videos (Gallery video support, 2026-08-09) — any GalleryImageModel
+   with VideoUrl set renders as a video card (poster thumbnail + Play icon,
+   same card shell) instead of a Media Viewer trigger; Play opens the shared
+   video modal Concept's video slides already use (site.js, broadened
+   trigger selector). Purely data-driven off ProjectImage.VideoPath — no
+   per-project code, works identically for every project's Gallery.
+
+   Nav arrows (2026-08-04 refinement): .project-gallery-nav-group's two
+   .history-nav-btn buttons (data-gallery-prev/next) sit beneath
+   [data-gallery-cards] and scroll it by one card via site.js — reusing the
+   same button and disabled-state styling as the History Carousel/Floor
+   Plans/Projects Showcase, alongside (not instead of) the track's native
+   drag/swipe/wheel scrolling. Only rendered in this Category Cards branch;
+   the plain-grid fallback below has no horizontal track to scroll. *@
+
+@if (Model.GalleryImages.Count == 0)
+{
+    <p class="projects-grid-empty">Bu proje için galeri görselleri yakında eklenecek.</p>
+}
+else
+{
+    <div class="project-gallery-header">
+        <h2 id="project-gallery-heading" class="sr-only">Galeri</h2>
+        <p class="project-gallery-title" aria-hidden="true">GALERİ</p>
+
+        <partial name="_FilterDropdown" model="@(new AncinInsaat.Models.FilterDropdownModel
+        {
+            FilterKey = "gallery-category",
+            Placeholder = "Tüm Görseller",
+            Options = Model.GalleryCategories.Select(category => category.Label).ToList()
+        })" />
+    </div>
+
+    @* Nysa Gold Residence reference redesign (2026-08-07), rolled out to
+       every project (2026-08-08) — replaces the immediate merged grid under
+       "Tüm Görseller" with a continuously looping (right-to-left) row of
+       category picker cards. Each real card is duplicated once
+       (aria-hidden, tabindex="-1") purely so the CSS marquee loop (site.css)
+       has a second copy to scroll into — see site.js for how the duplicate
+       is excluded from both tab order and the click handler.
+
+           UI revision (2026-08-07): picker cards now render as plain
+           .gallery-card markup (same <img>/overlay/title structure as every
+           Interior/Exterior card below) instead of a bespoke
+           background-image button, so they share the exact same width,
+           height, border radius, typography and spacing — no separate card
+           design. Clicking one no longer routes through the dropdown's
+           selectOption/setCategory (which used to swap this picker for the
+           filtered grid); site.js instead opens the existing Media Viewer
+           directly, scoped to every image in that category, so "Tüm
+           Görseller" itself never navigates away. The dropdown and
+           applyFilters/setCategory architecture are otherwise completely
+           untouched — selecting a category from the dropdown still swaps to
+           the filtered grid exactly as before. *@
+        @* UI revision (2026-08-07): the set is now duplicated 6× (not 2×) —
+           with only 2-3 categories, 2 copies produced a track shorter than
+           many viewports, so the loop's full content was visible at once and
+           read as a short, obviously-repeating strip rather than an endless
+           one. 6 is still an even number, so the CSS marquee's translateX
+           (-50%) still lands exactly on an identical second half (site.css
+           "Gallery Category Picker" — its animation-duration was scaled up
+           3× alongside this change to keep the same per-card scroll speed,
+           just over a longer, less perceptible cycle. *@
+    @* Only meaningful when there's at least one named category to pick from
+       — a project with zero named categories (e.g. La Via AVM, every
+       image's Category left null) has nothing for the marquee to loop
+       through, so it keeps the plain merged grid below instead, exactly as
+       it did before this section existed. *@
+    @if (Model.GalleryCategories.Count > 0)
+    {
+        <div class="project-gallery-category-picker" data-gallery-category-picker>
+            <div class="project-gallery-category-track" data-gallery-category-track>
+                @for (var loopIndex = 0; loopIndex < 6; loopIndex++)
+                {
+                    @foreach (var category in Model.GalleryCategories)
+                    {
+                        var firstCategoryImage = Model.GalleryImages.FirstOrDefault(image => string.Equals(image.Category, category.Value, StringComparison.OrdinalIgnoreCase));
+
+                        <button type="button"
+                                class="gallery-card"
+                                data-gallery-category-card="@category.Label"
+                                tabindex="@(loopIndex == 0 ? "0" : "-1")"
+                                aria-hidden="@(loopIndex == 0 ? "false" : "true")">
+                            @if (firstCategoryImage is not null)
+                            {
+                                <img class="gallery-card-image" src="@firstCategoryImage.ThumbnailSrc" alt="" loading="lazy" decoding="async" />
+                            }
+                            <span class="gallery-card-overlay" aria-hidden="true"></span>
+                            <span class="gallery-card-title">@category.Label</span>
+                        </button>
+                    }
+                }
+            </div>
+        </div>
+    }
+
+    var galleryBlocks = Model.GalleryImages
+        .Where(image => !string.IsNullOrWhiteSpace(image.Block))
+        .Select(image => image.Block!)
+        .Distinct()
+        .ToList();
+    var galleryApartmentTypes = Model.GalleryImages
+        .Where(image => !string.IsNullOrWhiteSpace(image.ApartmentType))
+        .Select(image => image.ApartmentType!)
+        .Distinct()
+        .ToList();
+
+    @if (galleryBlocks.Count > 0)
+    {
+        <div class="project-gallery-chip-row" data-gallery-block-row>
+            @foreach (var block in galleryBlocks)
+            {
+                <button type="button" class="project-gallery-chip" data-gallery-block-chip="@block">@block</button>
+            }
+        </div>
+    }
+    @if (galleryApartmentTypes.Count > 0)
+    {
+        <div class="project-gallery-chip-row" data-gallery-apartment-row hidden>
+            @foreach (var apartmentType in galleryApartmentTypes)
+            {
+                <button type="button" class="project-gallery-chip" data-gallery-apartment-chip="@apartmentType">@apartmentType</button>
+            }
+        </div>
+    }
+
+    <div class="project-gallery-cards" data-gallery-cards data-reveal-group @(Model.GalleryCategories.Count > 0 ? "hidden" : null)>
+        @if (Model.GalleryCategories.Count > 0)
+        {
+            @foreach (var category in Model.GalleryCategories)
+            {
+                var categoryImages = Model.GalleryImages
+                    .Where(image => string.Equals(image.Category, category.Value, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+                var groupKey = "gallery-" + category.Value.ToLowerInvariant().Replace(" ", "-");
+
+                for (var i = 0; i < categoryImages.Count; i++)
+                {
+                    var image = categoryImages[i];
+
+                    @if (image.VideoUrl is not null)
+                    {
+                        @* Gallery video card (Gallery video support, 2026-08-09)
+                           — same card shell as a photo, poster thumbnail only
+                           (no <video> element here), Play opens the shared
+                           video modal (#concept-video-modal, site.js) instead
+                           of the Media Viewer — mirrors _ProjectConcept.cshtml's
+                           own video-slide branch exactly. Never carries
+                           data-media-viewer-* — the Media Viewer is image-only. *@
+                        <button type="button"
+                                class="gallery-card gallery-card--video"
+                                data-reveal
+                                data-gallery-category="@category.Label"
+                                data-gallery-block="@image.Block"
+                                data-gallery-apartment-type="@image.ApartmentType"
+                                data-gallery-video-play
+                                data-video-src="@image.VideoUrl"
+                                data-poster-src="@image.Src"
+                                data-video-title="@image.Alt"
+                                aria-label="@($"{image.Alt} videosunu oynat")">
+                            <img class="gallery-card-image" src="@image.ThumbnailSrc" alt="@image.Alt" loading="lazy" decoding="async" />
+                            <span class="gallery-card-overlay" aria-hidden="true"></span>
+                            <span class="gallery-card-play" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
+                                    <circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" stroke-width="1.5" />
+                                    <path d="M10 8l6 4-6 4V8z" fill="currentColor" />
+                                </svg>
+                            </span>
+                            <span class="gallery-card-title">@category.Label</span>
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="button"
+                                class="gallery-card"
+                                data-reveal
+                                data-gallery-category="@category.Label"
+                                data-gallery-block="@image.Block"
+                                data-gallery-apartment-type="@image.ApartmentType"
+                                data-media-viewer-trigger
+                                data-media-viewer-group="gallery-all"
+                                data-media-viewer-group-category="@groupKey"
+                                data-media-viewer-src="@image.Src"
+                                data-media-viewer-alt="@image.Alt"
+                                aria-label="@($"{category.Label} — büyüt")">
+                            <img class="gallery-card-image" src="@image.ThumbnailSrc" alt="@image.Alt" loading="lazy" decoding="async" />
+                            <span class="gallery-card-overlay" aria-hidden="true"></span>
+                            <span class="gallery-card-title">@category.Label</span>
+                        </button>
+                    }
+                }
+            }
+        }
+        else
+        {
+            @* No named categories at all (e.g. La Via AVM — every image's
+               Category is null, see BuildKuyuluAvmImages) — every image
+               renders as one ungrouped set, same card markup minus the
+               per-category title overlay, since there is no category name to
+               show. The dropdown above still renders (Options is empty), so
+               its menu offers only _FilterDropdown's built-in "Tüm
+               Görseller" entry. *@
+            for (var i = 0; i < Model.GalleryImages.Count; i++)
+            {
+                var image = Model.GalleryImages[i];
+                var accessibleLabel = string.IsNullOrWhiteSpace(image.Alt) ? $"Galeri görseli {i + 1}" : image.Alt;
+
+                <button type="button"
+                        class="gallery-card"
+                        data-reveal
+                        data-media-viewer-trigger
+                        data-media-viewer-group="gallery-all"
+                        data-media-viewer-group-category="gallery-all"
+                        data-media-viewer-src="@image.Src"
+                        data-media-viewer-alt="@image.Alt"
+                        aria-label="@($"{accessibleLabel} — büyüt")">
+                    <img class="gallery-card-image" src="@image.ThumbnailSrc" alt="@image.Alt" loading="lazy" decoding="async" />
+                    <span class="gallery-card-overlay" aria-hidden="true"></span>
+                </button>
+            }
+        }
+    </div>
+
+    <div class="project-gallery-nav-group" @(Model.GalleryCategories.Count > 0 ? "hidden" : null)>
+        <button type="button" class="history-nav-btn project-gallery-nav project-gallery-prev" data-gallery-prev aria-label="Önceki görsel">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                <path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </button>
+        <button type="button" class="history-nav-btn project-gallery-nav project-gallery-next" data-gallery-next aria-label="Sonraki görsel">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                <path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </button>
+    </div>
+}

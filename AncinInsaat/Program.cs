@@ -16,6 +16,18 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IProjectQueryService, ProjectQueryService>();
 builder.Services.AddScoped<ISeoService, SeoService>();
 builder.Services.AddScoped<ISiteSettingsService, SiteSettingsService>();
+builder.Services.AddScoped<IContactMessageService, ContactMessageService>();
+builder.Services.AddScoped<ICareerPositionQueryService, CareerPositionQueryService>();
+builder.Services.AddScoped<IJobApplicationService, JobApplicationService>();
+
+// Global Search Service (docs/14_Decisions.md, Global Navigation & Search
+// milestone) — every ISearchIndexProvider registered here is combined by
+// ISearchService. A future content type becomes searchable by adding one
+// more registration, without touching SearchController or the overlay.
+builder.Services.AddScoped<ISearchIndexProvider, StaticPageSearchProvider>();
+builder.Services.AddScoped<ISearchIndexProvider, ProjectSearchProvider>();
+builder.Services.AddScoped<ISearchIndexProvider, CareerPositionSearchProvider>();
+builder.Services.AddScoped<ISearchService, SearchService>();
 
 var app = builder.Build();
 

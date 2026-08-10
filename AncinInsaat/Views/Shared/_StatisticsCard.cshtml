@@ -1,0 +1,18 @@
+@model StatisticsCardModel
+
+@* Statistics Card (docs/04_ComponentLibrary.md) — reusable large-number
+   card, a sibling to Information Card rather than a replacement for it
+   (see StatisticsCardModel). Each item is its own standalone card inside
+   the shared .grid/.grid-cols-N utility, same structural convention as
+   Information Card's Grid layout (reuses .card as-is; only the inner
+   value/label shape differs). *@
+
+<div class="grid grid-cols-@Model.Columns statistics-card-grid" data-reveal-group>
+    @foreach (var item in Model.Items)
+    {
+        <div class="card statistic-card" data-reveal="@item.Reveal">
+            <span class="statistic-card__value">@item.Value</span>
+            <span class="statistic-card__label">@item.Label</span>
+        </div>
+    }
+</div>

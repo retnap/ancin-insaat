@@ -76,6 +76,52 @@
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
+/* ---- Montserrat Light (Project Detail Hero typography only, 2026-08-08) —
+   used exclusively for the Nlatis/Dlatis Hero title, matching those two
+   projects' own logo wordmark. Only the 300 weight ships; nothing else on
+   the site references this family. ---- */
+
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/montserrat/montserrat-300-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/montserrat/montserrat-300-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ---- Poiret One (Project Detail Hero typography only, 2026-08-08) — used
+   exclusively for the four "Gold" project Hero titles (Nysa, Tralles,
+   Alinda, Magnesia), matching those logos' thin geometric wordmark. Only
+   the 400 weight exists for this family. ---- */
+
+@font-face {
+  font-family: 'Poiret One';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/poiret-one/poiret-one-400-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Poiret One';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/poiret-one/poiret-one-400-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
 /* ---- Inter (body / UI text) ---- */
 
 @font-face {
@@ -167,6 +213,15 @@
   /* Brand */
   --color-accent: #9E2B25;        /* Deep Brick Red — CTAs, active nav, links, highlights only. Never a large background. */
 
+  /* Nysa Gold Residence UI revision (2026-08-07) — project-owner-approved
+     one-off, NOT an addition to docs/02_DesignSystem.md's approved
+     palette. Used only for that project's Concept panel background,
+     where --color-accent itself is off-limits per the "never a large
+     background" rule above; a real, distinct warm terracotta rather than
+     a tint of the accent keeps that rule intact. Scoped entirely to
+     .project-concept-panel--featured — no other project references it. */
+  --color-terracotta: #B96A4A;
+
   /* Neutrals */
   --color-near-black: #1C1C1C;
   --color-dark-gray: #55504D;
@@ -190,6 +245,13 @@
   --font-heading: 'Playfair Display', serif;
   --font-body: 'Inter', sans-serif;
   --font-decorative: 'Cormorant Garamond', serif;
+
+  /* Project Detail Hero title only (2026-08-08) — matches each project's
+     own logo wordmark; see .hero-heading--font-* below. Not part of the
+     site-wide type scale, so kept out of 02_DesignSystem.md's approved
+     token set. */
+  --font-hero-montserrat: 'Montserrat', sans-serif;
+  --font-hero-poiret: 'Poiret One', sans-serif;
 
   --font-weight-regular: 400;
   --font-weight-medium: 500;
@@ -254,6 +316,14 @@
   --container-padding-mobile: var(--space-md);   /* 16px */
   --container-padding-tablet: var(--space-lg);   /* 24px */
   --container-padding-desktop: var(--space-xl);  /* 32px */
+
+  /* .navbar-logo img's height (4.5rem) + .navbar-inner's padding-block
+     (var(--space-md) top and bottom) — constant at every breakpoint, so
+     one token instead of each consumer recomputing it. Currently only
+     Section 36 (Search Overlay) reads this, to sit its panel flush under
+     the sticky Navbar without duplicating the 6.5rem figure. Update this
+     alongside either of those two values if they ever change. */
+  --navbar-height: 6.5rem;
 
 
   /* --------------------------------------------------------------------
@@ -615,6 +685,12 @@ textarea:focus-visible,
    which stays legible there. */
 
 .btn-secondary--on-dark {
+  /* Explicit transparent background (2026-08-07 fix) — every prior use of
+     this modifier was an <a>, which has no native background, so this gap
+     went unnoticed; the Nysa Gold Hero's "Vaziyet Planı" is a <button>
+     (a Media Viewer trigger, not a link) and exposed it: native <button>
+     UA chrome supplies its own light gray face otherwise. */
+  background-color: transparent;
   border-color: var(--color-white);
   color: var(--color-white);
 }
@@ -817,10 +893,15 @@ select:focus-visible {
    are inherited from Sections 3 and 5 and intentionally not repeated. */
 
 
-/* ---- Validation State Placeholders ----
-   Structure only. Success/Warning/Error colours are intentionally
-   deferred to the milestone that first requires them (docs/02_DesignSystem.md
-   "Approved Design Decisions"). Do not add colour here until approved. */
+/* ---- Validation States ----
+   Contact Form milestone (2026-08-01): resolves the colour gap left open
+   above without introducing any hex value outside 02_DesignSystem.md's
+   approved 4-colour palette. Error reuses --color-accent — already
+   approved for "Highlights" and conventionally red, so an invalid field
+   needs no new colour. There is no approved "success green"; the Success
+   Message component (site.css Section 27) is deliberately colour-neutral
+   (near-black/white + an accent-coloured check icon) instead of inventing
+   one — see docs/14_Decisions.md. */
 
 .form-field {
   margin-block-end: var(--space-md);
@@ -833,10 +914,20 @@ select:focus-visible {
   margin-block-start: var(--space-2xs);
 }
 
+.form-error {
+  color: var(--color-accent);
+  font-weight: var(--font-weight-medium);
+}
+
+.form-error:empty {
+  display: none;
+}
+
 input[aria-invalid='true'],
 textarea[aria-invalid='true'],
 select[aria-invalid='true'] {
   border-width: 2px;
+  border-color: var(--color-accent);
 }
 
 
@@ -876,13 +967,58 @@ select[aria-invalid='true'] {
   top: 0;
   z-index: 50;
   background-color: var(--color-white);
+  transition: background-color var(--transition-base) var(--ease-standard);
 }
 
+/* ---- Navbar — Transparent Over Hero (Nysa Gold Residence reference
+   redesign, 2026-08-07, rolled out to every Project Detail page 2026-08-08
+   and the Home Hero 2026-08-10) ----
+   Only ever toggled by site.js's "Navbar — Transparent Over Hero" module,
+   scoped to pages whose Hero carries .hero--overlap-navbar — so this class
+   never applies on Projects/About/etc., which have no such Hero. Text/icon
+   colors flip to white while transparent; the logo is left unchanged, per
+   the brief. Reverts smoothly (.navbar's own transition, above) once the
+   Hero scrolls out of view. */
+
+.navbar--transparent {
+  background-color: transparent;
+}
+
+.navbar--transparent .nav-link,
+.navbar--transparent .nav-link--active,
+.navbar--transparent .lang-option--active,
+.navbar--transparent .lang-option--disabled,
+.navbar--transparent .navbar-search-trigger {
+  color: var(--color-white);
+}
+
+.navbar--transparent .lang-option--active::after {
+  color: color-mix(in srgb, var(--color-white) 50%, transparent);
+}
+
+.navbar--transparent .navbar-toggle-bar {
+  background-color: var(--color-white);
+}
+
+.navbar--transparent .nav-chevron {
+  border-color: var(--color-white);
+}
+
+/* Only .navbar-logo and .navbar-actions take part in this flex row —
+   .navbar-nav is absolutely centered independently of both (see its
+   own ≥1024px rule below), so the menu stays perfectly centered
+   regardless of how wide the logo or the actions cluster are. */
 .navbar-inner {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding-block: var(--space-md);
+  /* Height pinned explicitly to --navbar-height (the token every other
+     consumer, e.g. the Search Overlay, already assumes is constant) so the
+     enlarged logo below centers within a fixed-height bar instead of
+     growing it — logo size and bar height are deliberately decoupled. */
+  height: var(--navbar-height);
 }
 
 .navbar-logo {
@@ -892,9 +1028,28 @@ select[aria-invalid='true'] {
 }
 
 .navbar-logo img {
-  height: 4.5rem; /* 48px — sized up from 40px so the mark reads clearly on the white bar */
+  /* Slightly enlarged (2026-08-07 logo refresh, 4.5rem → 4.8rem) — the new
+     mark (ancin-logo-removebg-preview.png) reads a touch smaller at the old
+     size. .navbar-inner's pinned height (--navbar-height) absorbs the
+     change with no bar-height/spacing impact, per the note below. */
+  height: 4.8rem;
   width: auto;
   display: block;
+}
+
+@media (min-width: 768px) {
+  .navbar-logo img {
+    /* Sized up from 4.5rem for more visual presence — only from the
+       tablet breakpoint up: at mobile widths the logo's own aspect ratio
+       (roughly 2.45:1) means 5.5rem already collides with .navbar-actions
+       (confirmed: 216px logo + ~172px actions cluster > a 375px viewport's
+       343px inner width, forcing horizontal scroll). .navbar-inner's
+       pinned height keeps the bar itself pixel-perfect at every size.
+       2026-08-07: bumped to 5.8rem alongside the mobile-tier increase
+       above, same rationale — still comfortably clears .navbar-actions at
+       this breakpoint's wider viewport. */
+    height: 5.8rem;
+  }
 }
 
 /* ---- Mobile Menu Toggle ----
@@ -953,6 +1108,86 @@ select[aria-invalid='true'] {
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+/* True centering, independent of .navbar-logo/.navbar-actions widths:
+   absolutely positioned against .navbar-inner (position: relative,
+   above) and centered on its own midpoint rather than relying on flex
+   space-between, which would only center it when both side clusters
+   happen to be equal width. */
+@media (min-width: 1024px) {
+  .navbar-nav {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* ---- Navbar Actions (Language Selector, Search, Mobile Toggle) ---- */
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-shrink: 0;
+}
+
+/* ---- Language Selector ----
+   Architecture prepared for future localisation (docs/14_Decisions.md,
+   Global Navigation & Search milestone): TR is the only active locale,
+   ENG is visible but inert — no route, no resource files, no
+   localization middleware. Plain text, not buttons, since neither
+   option is currently interactive. */
+
+.navbar-lang {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-small);
+}
+
+.lang-option--active {
+  color: var(--color-text-primary);
+}
+
+.lang-option--disabled {
+  color: var(--color-text-secondary);
+  opacity: 0.6;
+  cursor: default;
+}
+
+.lang-option--active::after {
+  content: '|';
+  margin-inline-start: var(--space-2xs);
+  color: var(--color-border);
+  font-weight: var(--font-weight-regular);
+}
+
+/* ---- Search Trigger ----
+   Same icon-button shape/touch-target as .navbar-toggle, opacity-dim
+   hover matching .nav-link so it reads as part of the same nav
+   affordance family. */
+
+.navbar-search-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: opacity var(--transition-fast) var(--ease-standard);
+}
+
+.navbar-search-trigger:hover {
+  opacity: 0.72;
 }
 
 /* ---- Mobile Nav Panel ----
@@ -1163,19 +1398,25 @@ select[aria-invalid='true'] {
 /* ==========================================================================
    10. Social Media Component
    Milestone 2 · Rebuild — see docs/14_Decisions.md (CSS recovery,
-   2026-07-27). Circular, outlined icon buttons. Two contexts, selected
-   by the `onLight` flag on SocialMediaViewComponent: the default
-   (near-black Footer) and an `--on-light` modifier reserved for future
-   light-section use. Accent red is never used here — at 2.29:1 against
-   --color-near-black it fails WCAG's 3:1 non-text contrast minimum
-   (same measurement documented in Section 9's Navbar notes) — so both
-   variants rely on the monochrome tokens instead.
+   2026-07-27). Flat, borderless glyph icons set close together
+   (Inspirationals/Folkart footer reference, 2026-08-04) — no circular
+   button background, matching the flat treatment Section "Hero — Social
+   Navigation" already established for this same component in the
+   Project Detail hero. Icon size is untouched (20x20, set in the view);
+   padding supplies the touch target instead of a visible circle. Two
+   contexts, selected by the `onLight` flag on SocialMediaViewComponent:
+   the default (near-black Footer) and an `--on-light` modifier for
+   light sections (Contact page). Accent red is never used at rest here
+   — at 2.29:1 against --color-near-black it fails WCAG's 3:1 non-text
+   contrast minimum (same measurement documented in Section 9's Navbar
+   notes) — it only appears transiently on hover/focus, mirroring the
+   Hero Social Navigation's precedent.
    ========================================================================== */
 
 .social-links {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
+  gap: var(--space-2xs);
   list-style: none;
   margin: 0;
   margin-block-start: var(--space-md);
@@ -1186,38 +1427,32 @@ select[aria-invalid='true'] {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.75rem;  /* 44px minimum touch target */
-  height: 2.75rem;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: var(--space-xs);  /* icon (20px) + padding ≈ 36px touch target */
   color: var(--color-white);
   transition:
-    background-color var(--transition-fast) var(--ease-standard),
-    border-color var(--transition-fast) var(--ease-standard);
+    color var(--transition-fast) var(--ease-standard),
+    transform var(--transition-fast) var(--ease-standard);
 }
 
-.social-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: var(--color-white);
+.social-link:hover,
+.social-link:focus-visible {
+  color: var(--color-accent);
+  transform: scale(1.1);
 }
 
 .social-link:focus-visible {
   outline-color: var(--color-white);
 }
 
-/* --on-light: same shape, monochrome-on-white tokens. Not yet invoked
-   anywhere (Footer always renders the default), but the component's
-   own onLight parameter anticipates it, so it is styled in full. */
+/* --on-light: same flat shape, monochrome-on-white tokens. */
 
 .social-links--on-light .social-link {
-  border-color: var(--color-dark-gray);
   color: var(--color-text-secondary);
 }
 
-.social-links--on-light .social-link:hover {
-  background-color: var(--color-surface);
-  border-color: var(--color-text-primary);
-  color: var(--color-text-primary);
+.social-links--on-light .social-link:hover,
+.social-links--on-light .social-link:focus-visible {
+  color: var(--color-accent);
 }
 
 .social-links--on-light .social-link:focus-visible {
@@ -1242,12 +1477,12 @@ select[aria-invalid='true'] {
 }
 
 .footer-inner {
-  padding-block: var(--space-3xl);
+  padding-block: var(--space-lg);
 }
 
 @media (min-width: 1024px) {
   .footer-inner {
-    padding-block: var(--space-4xl);
+    padding-block: var(--space-xl);
   }
 }
 
@@ -1343,6 +1578,15 @@ select[aria-invalid='true'] {
    Accent red is appropriate here — a small circular control, not a
    large background, matching the "Primary CTA buttons" usage documented
    in 02_DesignSystem.md. White-on-accent contrast is ~7.4:1 (AA/AAA safe).
+
+   2026-08-04 revision: the 2x size-up (48px/56px → 96px/112px) read as
+   too dramatic per client feedback — scaled back to 64px/72px, still
+   larger than the original but proportionate. Hover was simplified to a
+   pure background-opacity softening (no scale/lift/glow — client wanted
+   no "flashy" motion). This also fixes a real bug: the global `a:hover`
+   rule (Section 4) has higher specificity than the base `.floating-contact`
+   color, so without an explicit color here the icon was silently turning
+   near-black on hover — `color` is now pinned in the hover state too.
    ========================================================================== */
 
 .floating-contact {
@@ -1353,21 +1597,26 @@ select[aria-invalid='true'] {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 3rem;    /* 48px */
-  height: 3rem;
+  width: 4rem;    /* 64px */
+  height: 4rem;
   border-radius: 50%;
   background-color: var(--color-accent);
   color: var(--color-white);
   box-shadow: var(--shadow-md);
   transform: translateY(-50%);
   transition:
-    transform var(--transition-fast) var(--ease-standard),
-    background-color var(--transition-fast) var(--ease-standard);
+    background-color var(--transition-fast) var(--ease-standard),
+    color var(--transition-fast) var(--ease-standard);
+}
+
+.floating-contact svg {
+  width: 2rem;
+  height: 2rem;
 }
 
 .floating-contact:hover {
-  background-color: color-mix(in srgb, var(--color-accent) 85%, black);
-  transform: translateY(-50%) scale(1.06);
+  background-color: color-mix(in srgb, var(--color-accent) 85%, transparent);
+  color: var(--color-white);
 }
 
 .floating-contact:focus-visible {
@@ -1378,8 +1627,8 @@ select[aria-invalid='true'] {
 @media (min-width: 768px) {
   .floating-contact {
     right: var(--space-lg);
-    width: 3.5rem;  /* 56px */
-    height: 3.5rem;
+    width: 4.5rem;  /* 72px */
+    height: 4.5rem;
   }
 }
 
@@ -1398,13 +1647,21 @@ select[aria-invalid='true'] {
    explicitly (soft off-white, not pure white) so it stays legible even
    though the global `a:hover` rule (Section 4) would otherwise darken
    it — only the link's background tints on hover.
+
+   2026-08-04 revision: background image switched to the real
+   skyscraper photo (images/logos/skyscrapper-2.jpg) in place of the
+   generated placeholder, with the dark overlay lightened (0.72 → 0.5
+   alpha) so the photo reads clearly behind the heading. The heading
+   size from the prior revision felt too dramatic per client feedback —
+   scaled back to a more modest step up from the original 1.25rem
+   (font-size-h4) baseline; family/weight/color/letter-spacing untouched.
    ========================================================================== */
 
 .cta-banner {
   background-color: var(--color-near-black);
   background-image:
-    linear-gradient(rgba(28, 28, 28, 0.72), rgba(28, 28, 28, 0.72)),
-    url('/images/projects/all-projects/skyscrapper-2.jpg');
+    linear-gradient(rgba(28, 28, 28, 0.5), rgba(28, 28, 28, 0.5)),
+    url('/images/logos/skyscrapper-2.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -1447,9 +1704,21 @@ select[aria-invalid='true'] {
 .cta-banner-heading {
   font-family: var(--font-heading);
   font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-h4);
+  font-size: 1.75rem;
   letter-spacing: 0.02em;
   color: rgba(255, 255, 255, 0.92);
+}
+
+@media (min-width: 768px) {
+  .cta-banner-heading {
+    font-size: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .cta-banner-heading {
+    font-size: 3.25rem;
+  }
 }
 
 
@@ -1583,9 +1852,14 @@ select[aria-invalid='true'] {
   gap: var(--partner-logos-gap);
 }
 
+.partner-logo-link {
+  display: flex;
+  flex: none;
+}
+
 .partner-logo {
   flex: none;
-  height: 2.5rem;
+  height: 5rem;
   width: auto;
   filter: invert(1);
   opacity: 0.7;
@@ -1611,7 +1885,7 @@ select[aria-invalid='true'] {
   }
 
   .partner-logo {
-    height: 3rem;
+    height: 6rem;
   }
 }
 
@@ -1621,7 +1895,7 @@ select[aria-invalid='true'] {
   }
 
   .partner-logo {
-    height: 4rem;
+    height: 8rem;
   }
 }
 
@@ -1713,6 +1987,32 @@ select[aria-invalid='true'] {
 
 .hero-content {
   max-width: 42rem;
+}
+
+/* ---- Hero — Standard Variant ----
+   Page-intro banner for every non-Home page (Projects, Project Detail, and
+   future About/Contact/Career pages) — shares .hero/.hero-bg's gradient +
+   zoom background treatment for visual consistency, but shorter, and
+   vertically centered rather than bottom-anchored since there is no
+   Project CTA / Scroll Indicator stack to reserve room for. */
+
+.hero--standard {
+  align-items: center;
+  min-height: 45vh;
+  min-height: 45svh;
+}
+
+.hero--standard .hero-inner {
+  padding-block: var(--space-3xl);
+}
+
+/* ---- Hero Status Badge ----
+   Project Detail's optional status badge (HeroBannerStandardViewModel),
+   rendered above the heading — reuses .project-status-badge as-is, this
+   modifier only adds the gap before .hero-heading. */
+
+.hero-status-badge {
+  margin-block-end: var(--space-md);
 }
 
 .hero-heading {
@@ -1869,6 +2169,44 @@ select[aria-invalid='true'] {
 .js [data-reveal].is-visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* ---- Reveal Direction Modifiers ----
+   Project Detail redesign (2026-07-31): data-reveal="left"/"right" swap the
+   default upward reveal for a horizontal one, for split layouts where the
+   two halves should visibly arrive from opposite sides (Concept, Location &
+   Distances, Social Facilities). Same opacity/transform/is-visible contract
+   as the base rule above — only the resting transform's axis changes — so
+   they inherit its transition timing, stagger and reduced-motion behaviour
+   for free. */
+
+.js [data-reveal='left'] {
+  transform: translateX(-32px);
+}
+
+.js [data-reveal='left'].is-visible {
+  transform: translateX(0);
+}
+
+.js [data-reveal='right'] {
+  transform: translateX(32px);
+}
+
+.js [data-reveal='right'].is-visible {
+  transform: translateX(0);
+}
+
+/* data-reveal="scale" — Floor Plans redesign (2026-08-01): the circular
+   Prev/Next apartment-type switcher scales in gently instead of arriving
+   on an axis, since it has no meaningful "from" direction. Same contract
+   as the other modifiers otherwise. */
+
+.js [data-reveal='scale'] {
+  transform: scale(0.82);
+}
+
+.js [data-reveal='scale'].is-visible {
+  transform: scale(1);
 }
 
 
@@ -2062,7 +2400,17 @@ select[aria-invalid='true'] {
    proportion-refinement request. */
 
 .company-history {
-  background-color: #F2EDEB;  
+  background-color: #F2EDEB;
+
+  /* Contains .timeline-header__decorative's intentional horizontal bleed
+     (Section 20a) without adding a page-wide horizontal scrollbar. Plain
+     overflow: hidden (both axes), not overflow-x alone — an x-only value
+     would leave overflow-y at its default visible, and per the CSS
+     Overflow spec a visible/non-visible axis pairing is computed as if
+     overflow-y were auto, turning this into an unintended vertical
+     scroll container. Harmless here either way since the section's
+     height is always intrinsic to its content, but explicit is safer. */
+  overflow: hidden;
 }
 
 /* ---- Video Showcase, compact modifier ----
@@ -2098,45 +2446,63 @@ select[aria-invalid='true'] {
 }
 
 /* ---- Section Layout ----
-   Decorative Title always leads, full width, its own row. Below it,
-   Info Column (Video -> small title -> arrows, nothing else) and
-   Carousel sit side by side from 1024px; mobile stacks Info Column
-   above Carousel. Column ratio and gaps per the project owner's
-   2026-07-28 layout-hierarchy request. */
+   Shared _TimelineHeader leads (own full-width row, styled below in
+   Section 20a) followed by this two-column grid: Info Column (Video ->
+   small title -> arrows, nothing else) beside Carousel. Column ratio
+   per the project owner's 2026-07-28 layout-hierarchy request.
+
+   2026-08-03 fix: always a two-column grid, at every breakpoint down to
+   mobile — never flex-column. Each child carries an explicit grid-column
+   (1 or 2), so with only two columns defined and two items placed, a
+   second row is structurally impossible regardless of content width;
+   previously this fell back to display: flex; flex-direction: column
+   below 1024px, which stacked Video above the Carousel instead of
+   keeping them side by side. The left column's minmax lower bound steps
+   down at the narrower breakpoints (rather than jumping straight to
+   240px) so the compact Video/nav shrink to fit instead of overflowing
+   at phone widths — the History Info Panel's two 44px nav buttons plus
+   their gap need roughly 6.5rem at minimum to avoid overlapping the
+   Carousel column. */
 
 .company-history-grid {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-xl);
+  display: grid;
+  grid-template-columns: minmax(6.5rem, 30%) minmax(0, 1fr);
+  column-gap: var(--space-md);
+  align-items: start;
 }
 
-.company-history-decorative-title,
 .company-history-info-col,
 .company-history-carousel-col {
   width: 100%;
   min-width: 0;
 }
 
+.company-history-info-col {
+  grid-column: 1;
+}
+
+.company-history-carousel-col {
+  grid-column: 2;
+}
+
+@media (min-width: 640px) {
+  .company-history-grid {
+    grid-template-columns: minmax(7.5rem, 28%) minmax(0, 1fr);
+    column-gap: var(--space-lg);
+  }
+}
+
+@media (min-width: 768px) {
+  .company-history-grid {
+    grid-template-columns: minmax(9rem, 28%) minmax(0, 1fr);
+    column-gap: var(--space-xl);
+  }
+}
+
 @media (min-width: 1024px) {
   .company-history-grid {
-    display: grid;
     grid-template-columns: minmax(240px, 28%) 1fr;
     column-gap: var(--space-3xl);
-    row-gap: var(--space-xl);
-    align-items: start;
-  }
-
-  .company-history-decorative-title {
-    grid-column: 1 / -1;
-  }
-
-  .company-history-info-col {
-    grid-column: 1;
-  }
-
-  .company-history-carousel-col {
-    grid-column: 2;
   }
 }
 
@@ -2151,47 +2517,116 @@ select[aria-invalid='true'] {
   flex-direction: column;
 }
 
-/* ---- Decorative Background Title ----
-   Real, visible <h2> (also the section's accessible name via
-   aria-labelledby) styled to read as oversized decorative type rather
-   than a functional heading — left-aligned, very low contrast so it
-   never competes with the Info Panel / Carousel below it, per the
-   project owner's explicit request. Regular weight (not the Bold used
-   elsewhere for headings) keeps it feeling light rather than shouty at
-   this size. Scaled down ~50% and slightly lower contrast 2026-07-28
-   (was clamp(3.5rem, 11vw, 9rem) at 6% mix) so it supports the layout
-   as a background element instead of dominating it. The negative
-   margin-top is tuned relative to `.section`'s own responsive
-   padding-block (Section 5) so the title keeps a small, consistent
-   gap under the sticky header at every breakpoint instead of a fixed
-   -60px overshooting the smaller mobile/tablet padding and clipping
-   under the header. */
 
-.company-history-decorative-title {
-  margin: 0;
-  margin-top: -30px;
-  margin-block-end: var(--space-lg);
-  font-weight: var(--font-weight-regular);
-  font-family: var(--font-decorative);
-  font-size: clamp(3rem, 8vw, 7rem);
-  line-height: 0.9;
-  letter-spacing: -0.01em;
+/* ==========================================================================
+   20a. Timeline Header (shared)
+   2026-08-03 redesign, revised same day at the project owner's request
+   for a Folkart/Terzioğlu-grade luxury treatment (see
+   Inspirationals/Terzioglu/terzioglu-zaman-tuneli-referans-2.png) — one
+   shared header for every Timeline/History usage (Home's Company
+   History above, About Us's Our Journey in Section 29). Reading order:
+   giant decorative watermark title bled to the viewport's left edge,
+   generous whitespace, centered uppercase subtitle, generous
+   whitespace, then the carousel (unchanged).
 
-  color: rgba(255, 255, 255, 0.9);
+   The first revision's watermark was Playfair Display at 10% opacity —
+   a serif, and too faint to read against this section's near-white
+   #F2EDEB background. This revision moves it to Inter (var(--font-
+   body)) at var(--font-weight-bold) — 700 is the heaviest weight this
+   project ships for Inter (Section 1's @font-face list tops out there;
+   there is no 800/900 file), so it stands in for the brief's requested
+   "800–900" feel as the boldest sans already available. Visibility
+   against the near-white background comes from a soft shadow (an
+   emboss/letterpress read, matching the reference) layered under
+   opacity 0.85, rather than from color contrast the background can't
+   supply. */
 
-  text-align: left;
+.timeline-header {
+  position: relative;
+  padding-block-start: var(--space-lg);
+  margin-block-end: var(--space-xl);
 }
 
 @media (min-width: 768px) {
-  .company-history-decorative-title {
-    margin-top: -40px;
+  .timeline-header {
+    padding-block-start: var(--space-xl);
   }
 }
 
 @media (min-width: 1024px) {
-  .company-history-decorative-title {
-    margin-top: -60px;
+  .timeline-header {
+    padding-block-start: var(--space-2xl);
+    margin-block-end: var(--space-3xl);
   }
+}
+
+/* ---- Decorative Watermark Title ----
+   aria-hidden — purely visual, so contrast/size are free to go as large
+   as the "background graphic, not a heading" brief calls for; the
+   section's real accessible name is .timeline-header__subtitle below.
+   Left-aligned, white-space: nowrap, and pulled left by a negative
+   margin-inline-start equal to .container's own inline padding (plus,
+   from 1024px, the extra margin-inline: auto centering gap once the
+   viewport exceeds --container-max-width) — the same amount .container
+   uses to inset its content, applied in reverse so this element's box
+   (auto width absorbs a negative margin by growing, per the CSS box
+   model, rather than shifting its sibling content) starts flush at the
+   viewport's true left edge instead of .container's inner edge. Still a
+   normal flow element, so its own generous margin-block-end (not
+   position: absolute) is what creates the whitespace before the
+   subtitle — no separate spacer needed. It still naturally overflows
+   past the container's right edge at wide viewports; .company-history/
+   .our-journey's own overflow: hidden (Sections 20 and 29) clips the
+   bleed on both sides at the section boundary instead of producing a
+   page-wide horizontal scrollbar. */
+
+.timeline-header__decorative {
+  margin: 0;
+  margin-block-end: var(--space-2xl);
+  margin-inline-start: calc(-1 * var(--container-padding-mobile));
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-bold);
+  font-size: clamp(3rem, 13vw, 10rem);
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+  color: var(--color-white);
+  opacity: 0.85;
+  text-shadow: 0 1px 1px rgba(28, 28, 28, 0.06), 0 14px 32px rgba(28, 28, 28, 0.08);
+  text-align: left;
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  .timeline-header__decorative {
+    margin-inline-start: calc(-1 * var(--container-padding-tablet));
+    margin-block-end: var(--space-3xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .timeline-header__decorative {
+    margin-inline-start: calc(-1 * var(--container-padding-desktop) - max(0px, (100vw - var(--container-max-width)) / 2));
+  }
+}
+
+/* ---- Readable Subtitle ----
+   The section's actual heading — centered, uppercase, bold, full-
+   contrast dark text. Switched from Playfair Display to Inter
+   alongside the watermark above (same 2026-08-03 revision) per the
+   brief's explicit "modern sans-serif" call for this element too, with
+   letter-spacing opened up further for the "hero-style", luxury-
+   corporate read the previous h2-scale treatment didn't have. */
+
+.timeline-header__subtitle {
+  position: relative;
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-bold);
+  font-size: clamp(1.15rem, 2.4vw, 1.65rem);
+  letter-spacing: 0.16em;
+  color: var(--color-text-primary);
 }
 
 /* ---- History Info Panel ----
@@ -2220,10 +2655,18 @@ select[aria-invalid='true'] {
 }
 
 /* ---- History Carousel ----
-   Horizontal snap-scroll of equal-size cards, synchronised with History
-   Info Panel by site.js. Native scroll-snap keeps touch dragging smooth
-   without a custom drag implementation; the Info Panel's Previous/Next
-   buttons drive the same scroll for mouse/keyboard users. */
+   Equal-size cards, synchronised with History Info Panel by site.js.
+   2026-08-03 revision: the track no longer accepts user-driven scroll
+   input at all — overflow: hidden (not auto) removes the scrollable
+   surface wheel, trackpad, touch-swipe and drag gestures would act on,
+   and touch-action: none tells touch input explicitly not to pan it,
+   per the project owner's explicit "Previous/Next buttons only"
+   request. The track remains scrollable from script: scrollLeft/
+   scrollTo/scrollIntoView all still work on an overflow: hidden box, so
+   the Info Panel's Previous/Next buttons (site.js's scrollToCard) keep
+   driving it exactly as before — scroll-snap-type still applies to that
+   programmatic scroll too, since it operates on any non-visible-
+   overflow scroll container regardless of what triggers the scroll. */
 
 .history-carousel {
   position: relative;
@@ -2232,10 +2675,10 @@ select[aria-invalid='true'] {
 .history-carousel-track {
   display: flex;
   gap: var(--space-md);
-  overflow-x: auto;
+  overflow: hidden;
+  touch-action: none;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
-  scrollbar-width: none;
   padding-block-end: var(--space-2xs);
 }
 
@@ -2243,10 +2686,6 @@ select[aria-invalid='true'] {
   .history-carousel-track {
     scroll-behavior: auto;
   }
-}
-
-.history-carousel-track::-webkit-scrollbar {
-  display: none;
 }
 
 .history-card {
@@ -2389,8 +2828,18 @@ select[aria-invalid='true'] {
    out from below the image into the hover overlay.
    ========================================================================== */
 
-.projects-showcase-header {
-  max-width: 640px;
+/* 2026-08-03 refinement: only the heading centers, per that request — the
+   eyebrow and (if ever added) description stay left-aligned, so this
+   targets the <h2> alone rather than reusing .section-header--center
+   (which also centers the eyebrow). No max-width on the header itself
+   (unlike the base .section-header): the eyebrow is a start-aligned flex
+   row regardless of its container's width, so it doesn't need one to
+   stay put, and the <h2> needs the header at the section's full width so
+   its text-align: center centers against the whole section rather than
+   a narrower left-hand box (2026-08-03 fix — it was previously centering
+   within a 640px-wide header box docked to the section's left edge). */
+.projects-showcase-header h2 {
+  text-align: center;
 }
 
 .projects-slider {
@@ -2405,25 +2854,36 @@ select[aria-invalid='true'] {
   overflow: hidden;
 }
 
+/* 2026-08-03 refinement: spacing moved off the flex `gap` and onto each
+   slide (padding-left) with a matching negative margin on the container.
+   Embla's loop engine clones/repositions slides by measuring each slide's
+   own box, not the container's `gap`, so with `gap` the wrap-around point
+   (last slide back to first) had no space applied and the two cards
+   visually touched. Padding-per-slide keeps the same var(--space-lg) gap
+   everywhere, including at the loop seam. */
 .projects-slider-container {
   display: flex;
-  gap: var(--space-lg);
+  margin-inline-start: calc(var(--space-lg) * -1);
 }
 
+/* box-sizing: border-box means padding eats into `width` — each breakpoint
+   adds var(--space-lg) to its old width so the card's own visible
+   (content-box) size is unchanged from before this refinement. */
 .projects-slider-slide {
   flex: 0 0 auto;
-  width: min(360px, 88vw);
+  width: calc(min(360px, 88vw) + var(--space-lg));
+  padding-inline-start: var(--space-lg);
 }
 
 @media (min-width: 768px) {
   .projects-slider-slide {
-    width: min(480px, 47vw);
+    width: calc(min(480px, 47vw) + var(--space-lg));
   }
 }
 
 @media (min-width: 1024px) {
   .projects-slider-slide {
-    width: 560px;
+    width: calc(560px + var(--space-lg));
   }
 }
 
@@ -2484,16 +2944,19 @@ select[aria-invalid='true'] {
    both gone — see docs/00_ProjectVision.md 2026-07-28 refinement). No
    line-clamp: a title is left to wrap onto a 3rd line rather than being
    cut off or shrunk, per that request; in practice the overlay's padding
-   leaves comfortable room for that without the card needing to resize. */
+   leaves comfortable room for that without the card needing to resize.
+
+   2026-08-03 refinement: the reveal (transform/opacity) stays on this
+   wrapper; the name's own typography moved onto .project-card-overlay-name
+   unchanged, with the new .project-card-overlay-number sitting above it,
+   reusing the eyebrow's small-label treatment rather than inventing a
+   fourth text style. */
 
 .project-card-overlay-title {
   max-width: 85%;
-  font-family: var(--font-heading);
-  font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-h3);
-  line-height: var(--line-height-heading);
-  text-align: left;
-  color: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
   transform: translateY(8px);
   opacity: 0;
   transition:
@@ -2501,8 +2964,25 @@ select[aria-invalid='true'] {
     opacity var(--transition-base) var(--ease-standard);
 }
 
+.project-card-overlay-number {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-small);
+  letter-spacing: 0.06em;
+  color: var(--color-white);
+}
+
+.project-card-overlay-name {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-h3);
+  line-height: var(--line-height-heading);
+  text-align: left;
+  color: var(--color-white);
+}
+
 @media (min-width: 1024px) {
-  .project-card-overlay-title {
+  .project-card-overlay-name {
     font-size: var(--font-size-h2);
   }
 }
@@ -2560,4 +3040,3596 @@ select[aria-invalid='true'] {
   justify-content: flex-end;
   gap: var(--space-sm);
   margin-block-start: var(--space-lg);
+}
+
+
+/* ==========================================================================
+   22. Projects Listing Page
+   /projects — the Breadcrumb sits directly above centered Category Tabs
+   (no page heading — removed 2026-08-04, breadcrumb is the only header
+   element) and two Filter Dropdowns (Project Type / Location), all three
+   combined into one client-side AND-filter (site.js) over a
+   .grid.grid-cols-3 of the Project Card Standard partial (Section 23).
+   Both empty states (no published projects at all; a filter combination
+   with no matches) share one .projects-grid-empty look.
+   ========================================================================== */
+
+/* ---- Category Tabs ----
+   Mobile-first: a horizontally scrollable row of auto-width tabs so long
+   labels never wrap or get crushed. The 768px override switches to three
+   equal-width (flex: 1) tabs centered as a group, matching the desktop-first
+   "large, evenly distributed" brief while staying usable on mobile — only
+   the sub-768px range keeps the scrollable form. */
+
+.projects-categories {
+  /* Top padding stands in for the removed page heading's breathing room
+     (was a much larger gap when the <h1> sat above this section); bottom
+     padding is intentionally tighter than the standard .section rhythm so
+     the grid sits close beneath the filters — see .projects-grid-section's
+     matching padding-block-start override below. */
+  padding-block-start: var(--space-xl);
+  padding-block-end: var(--space-lg);
+}
+
+@media (min-width: 768px) {
+  .projects-categories {
+    padding-block-start: var(--space-2xl);
+    padding-block-end: var(--space-xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .projects-categories {
+    padding-block-start: var(--space-3xl);
+    padding-block-end: var(--space-2xl);
+  }
+}
+
+.project-tabs {
+  display: flex;
+  gap: var(--space-2xl);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-bottom: 1px solid var(--color-border);
+}
+
+@media (min-width: 768px) {
+  .project-tabs {
+    max-width: 44rem;
+    margin-inline: auto;
+    overflow-x: visible;
+  }
+}
+
+.project-tab {
+  position: relative;
+  flex: 0 0 auto;
+  padding-block: var(--space-sm) var(--space-md);
+  border: none;
+  background: none;
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-medium);
+  font-size: 1.0625rem; /* 17px — was --font-size-body (16px), a slight bump */
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--transition-fast) var(--ease-standard);
+}
+
+@media (min-width: 768px) {
+  .project-tab {
+    flex: 1 1 0;
+    text-align: center;
+  }
+}
+
+.project-tab::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -1px;
+  width: 6.5rem;
+  height: 6px;
+  border-radius: 999px;
+  background-color: var(--color-accent);
+  transform: translateX(-50%) scaleX(0);
+  transition: transform var(--transition-base) var(--ease-standard);
+}
+
+.project-tab:hover {
+  color: var(--color-accent);
+}
+
+.project-tab.is-active {
+  font-weight: var(--font-weight-bold);
+  color: var(--color-accent);
+}
+
+.project-tab.is-active::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-tab::after {
+    transition: none;
+  }
+}
+
+/* ---- Filter Dropdowns (Project Type / Location) ----
+   Custom listbox popup, not a native <select> — see _FilterDropdown.cshtml
+   and site.js. Visual/motion pattern mirrors the Navbar's .nav-dropdown
+   (Section 9) for consistency: opacity + translateY + delayed visibility. */
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-lg);
+  margin-block-start: var(--space-md);
+}
+
+.filter-dropdown {
+  position: relative;
+  flex: 1 1 16rem;
+  max-width: 20rem;
+}
+
+.filter-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  width: 100%;
+  min-height: 3.25rem;
+  padding-inline: var(--space-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-white);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-body);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: border-color var(--transition-fast) var(--ease-standard);
+}
+
+.filter-dropdown-trigger:hover,
+.filter-dropdown-trigger[aria-expanded='true'] {
+  border-color: var(--color-accent);
+}
+
+.filter-dropdown-chevron {
+  flex: 0 0 auto;
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid var(--color-dark-gray);
+  border-bottom: 2px solid var(--color-dark-gray);
+  transform: rotate(45deg);
+  transition: transform var(--transition-fast) var(--ease-standard);
+}
+
+.filter-dropdown-trigger[aria-expanded='true'] .filter-dropdown-chevron {
+  transform: rotate(-135deg);
+}
+
+.filter-dropdown-menu {
+  position: absolute;
+  top: calc(100% + var(--space-xs));
+  left: 0;
+  right: 0;
+  z-index: 10;
+  max-height: 16rem;
+  overflow-y: auto;
+  margin: 0;
+  padding-block: var(--space-xs);
+  list-style: none;
+  background-color: var(--color-white);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-0.25rem);
+  transition:
+    opacity var(--transition-fast) var(--ease-standard),
+    transform var(--transition-fast) var(--ease-standard),
+    visibility 0s linear var(--transition-fast);
+}
+
+.filter-dropdown-menu.is-open {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity var(--transition-fast) var(--ease-standard),
+    transform var(--transition-fast) var(--ease-standard),
+    visibility 0s linear 0s;
+}
+
+.filter-dropdown-menu [role='option'] {
+  display: flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding-inline: var(--space-lg);
+  font-size: var(--font-size-body);
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+.filter-dropdown-menu [role='option']:hover,
+.filter-dropdown-menu [role='option']:focus-visible {
+  background-color: var(--color-surface);
+}
+
+.filter-dropdown-menu [role='option'][aria-selected='true'] {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .filter-dropdown-menu,
+  .filter-dropdown-chevron {
+    transition: none;
+  }
+}
+
+/* Tighter top padding than the standard .section rhythm so the grid sits
+   close beneath the filters — pairs with .projects-categories'
+   padding-block-end override above (Section 22). Bottom padding is
+   untouched, still the standard .section value. */
+.projects-grid-section {
+  padding-block-start: var(--space-md);
+}
+
+@media (min-width: 768px) {
+  .projects-grid-section {
+    padding-block-start: var(--space-lg);
+  }
+}
+
+@media (min-width: 1024px) {
+  .projects-grid-section {
+    padding-block-start: var(--space-xl);
+  }
+}
+
+.projects-grid-item {
+  height: 100%;
+}
+
+.projects-grid-empty {
+  padding-block: var(--space-2xl);
+  text-align: center;
+  font-size: var(--font-size-body);
+  color: var(--color-text-secondary);
+}
+
+
+/* ==========================================================================
+   23. Project Card Standard
+   Projects listing grid card — deliberately its own set of classes,
+   independent from Section 21's .project-card (Home's carousel, unchanged).
+   Portrait media with an always-visible name/location over a permanent
+   bottom scrim (unlike the carousel's hover-only title), intensifying
+   further on hover/focus alongside an image zoom, a card lift and an
+   arrow affordance.
+   ========================================================================== */
+
+.project-card-standard {
+  display: block;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+.project-card-standard-media {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  transition:
+    transform var(--transition-base) var(--ease-standard),
+    box-shadow var(--transition-base) var(--ease-standard);
+}
+
+.project-card-standard-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow) var(--ease-standard);
+}
+
+.project-card-standard-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(28, 28, 28, 0.85) 0%,
+    rgba(28, 28, 28, 0.35) 45%,
+    rgba(28, 28, 28, 0) 70%
+  );
+  opacity: 0.85;
+  transition: opacity var(--transition-base) var(--ease-standard);
+}
+
+.project-card-standard-media .project-status-badge {
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+}
+
+.project-card-standard-content {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  padding: var(--space-lg);
+  padding-inline-end: var(--space-3xl);
+}
+
+.project-card-standard-name {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-h4);
+  line-height: var(--line-height-heading);
+  color: rgba(255, 255, 255, 0.9);
+  transition: color var(--transition-base) var(--ease-standard);
+}
+
+.project-card-standard-location {
+  font-family: var(--font-body);
+  font-size: var(--font-size-small);
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.project-card-standard-arrow {
+  position: absolute;
+  bottom: var(--space-lg);
+  right: var(--space-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.16);
+  color: var(--color-white);
+  opacity: 0;
+  transform: translate(-0.25rem, 0.25rem);
+  transition:
+    opacity var(--transition-base) var(--ease-standard),
+    transform var(--transition-base) var(--ease-standard);
+}
+
+.project-card-standard:hover .project-card-standard-media,
+.project-card-standard:focus-visible .project-card-standard-media {
+  transform: translateY(-0.25rem);
+  box-shadow: var(--shadow-md);
+}
+
+.project-card-standard:hover .project-card-standard-image,
+.project-card-standard:focus-visible .project-card-standard-image {
+  transform: scale(1.06);
+}
+
+.project-card-standard:hover .project-card-standard-scrim,
+.project-card-standard:focus-visible .project-card-standard-scrim {
+  opacity: 1;
+}
+
+.project-card-standard:hover .project-card-standard-name,
+.project-card-standard:focus-visible .project-card-standard-name {
+  color: var(--color-white);
+}
+
+.project-card-standard:hover .project-card-standard-arrow,
+.project-card-standard:focus-visible .project-card-standard-arrow {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-card-standard-media,
+  .project-card-standard-image,
+  .project-card-standard-scrim,
+  .project-card-standard-name,
+  .project-card-standard-arrow {
+    transition: none;
+  }
+}
+
+
+/* ==========================================================================
+   24. Project Detail
+   /projects/{slug} — Hero Banner Standard (Section 16, now with the
+   optional .hero-status-badge slot) followed by one Project Overview
+   section: Section Header (Section 8's .section-header, via the shared
+   _SectionHeader partial) above a two-column grid pairing the full-length
+   description against the Project Information summary card. Single column
+   on mobile (description above the info card, matching source order).
+   Gallery, Floor Plans, Catalogue, Social Facilities and Business Partners
+   are reserved for a later phase — see the comment anchors in
+   Views/Projects/Details.cshtml — and intentionally have no styles here yet.
+   ========================================================================== */
+
+.project-overview-grid {
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .project-overview-grid {
+    grid-template-columns: 64% 1fr;
+  }
+}
+
+.project-description {
+  max-width: 68ch;
+  color: var(--color-text-primary);
+}
+
+.project-description p + p {
+  margin-block-start: var(--space-md);
+}
+
+/* ---- Project Information Panel ----
+   Reuses .card (Section 8) for the shell; only the definition-list layout
+   is new. Each row is its own labelled block rather than a two-column
+   table, so a long value (e.g. a long Location string) never fights a
+   fixed label column width. */
+
+.project-info-panel__title {
+  margin-block-end: var(--space-md);
+  font-size: var(--font-size-h4);
+}
+
+.project-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.project-info-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding-block-end: var(--space-sm);
+  border-block-end: 1px solid var(--color-border);
+}
+
+.project-info-row:last-child {
+  padding-block-end: 0;
+  border-block-end: none;
+}
+
+.project-info-row dt {
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+}
+
+.project-info-row dd {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  text-align: right;
+}
+
+
+/* ==========================================================================
+   25. Project Gallery, Floor Plans & Media Viewer
+   Project Detail's Gallery and Floor Plans sections (_ProjectGallery.cshtml,
+   _FloorPlans.cshtml) each open the same shared full-viewport Media Viewer
+   dialog (_MediaViewer.cshtml, one instance per page) — Gallery Lightbox
+   and Floor Plan Viewer share one JS module and one dialog markup (site.js),
+   keyed by each thumbnail's data-media-viewer-group. The overlay reuses
+   Section 19's Video Modal visual pattern (same backdrop tint, close-button
+   treatment) so the site has one consistent full-viewport dialog language.
+   ========================================================================== */
+
+/* ---- Gallery Grid ----
+   4:3 reuses .image-block's (Section 8) established "framed image" ratio
+   rather than introducing a second one. */
+
+.gallery-thumb {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+}
+
+.gallery-thumb-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-base) var(--ease-standard);
+}
+
+.gallery-thumb:hover .gallery-thumb-image,
+.gallery-thumb:focus-visible .gallery-thumb-image {
+  transform: scale(1.05);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-thumb-image {
+    transition: none;
+  }
+}
+
+/* ---- Media Viewer (Gallery Lightbox / Floor Plan Viewer) ----
+   Full-viewport fixed overlay — same shell as Section 19's Video Modal. */
+
+.media-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+}
+
+.media-viewer[hidden] {
+  display: none;
+}
+
+.media-viewer-backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(28, 28, 28, 0.9);
+}
+
+.media-viewer-panel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.media-viewer-figure {
+  margin: 0;
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.media-viewer-image {
+  display: block;
+  max-width: min(90vw, 28rem);
+  max-height: min(58vh, 32rem);
+  border-radius: var(--radius-md);
+  opacity: 0;
+  cursor: zoom-in;
+  touch-action: none;
+  transform-origin: center center;
+  transition: opacity var(--transition-fast) var(--ease-standard), transform var(--transition-fast) var(--ease-standard);
+}
+
+.media-viewer-image.is-zoomed {
+  cursor: grab;
+}
+
+.media-viewer-image.is-dragging {
+  cursor: grabbing;
+}
+
+@media (min-width: 768px) {
+  .media-viewer-image {
+    max-width: min(70vw, 38rem);
+    max-height: min(65vh, 42rem);
+  }
+}
+
+@media (min-width: 1024px) {
+  .media-viewer-image {
+    max-width: min(50vw, 46rem);
+    max-height: min(70vh, 48rem);
+  }
+}
+
+.media-viewer-image.is-loaded {
+  opacity: 1;
+}
+
+.media-viewer-close,
+.media-viewer-nav {
+  position: absolute;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: none;
+  border-radius: 50%;
+  background-color: rgba(28, 28, 28, 0.6);
+  color: var(--color-white);
+  transition: background-color var(--transition-fast) var(--ease-standard);
+}
+
+.media-viewer-close:hover,
+.media-viewer-nav:hover {
+  background-color: rgba(28, 28, 28, 0.85);
+}
+
+.media-viewer-close {
+  top: var(--space-sm);
+  right: var(--space-sm);
+}
+
+.media-viewer-toolbar {
+  position: absolute;
+  z-index: 1;
+  top: var(--space-sm);
+  left: var(--space-sm);
+  display: flex;
+  gap: var(--space-2xs);
+}
+
+.media-viewer-tool {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: none;
+  border-radius: 50%;
+  background-color: rgba(28, 28, 28, 0.6);
+  color: var(--color-white);
+  transition: background-color var(--transition-fast) var(--ease-standard);
+}
+
+.media-viewer-tool:hover:not(:disabled) {
+  background-color: rgba(28, 28, 28, 0.85);
+}
+
+.media-viewer-tool:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.media-viewer-tool.is-active {
+  background-color: var(--color-white);
+  color: var(--color-near-black);
+}
+
+.media-viewer-prev {
+  left: var(--space-sm);
+}
+
+.media-viewer-next {
+  right: var(--space-sm);
+}
+
+@media (min-width: 768px) {
+  .media-viewer-prev {
+    left: var(--space-xl);
+  }
+
+  .media-viewer-next {
+    right: var(--space-xl);
+  }
+}
+
+.media-viewer-counter {
+  position: absolute;
+  bottom: var(--space-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: var(--space-2xs) var(--space-md);
+  border-radius: var(--radius-sm);
+  background-color: rgba(28, 28, 28, 0.6);
+  color: var(--color-white);
+  font-size: var(--font-size-small);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media-viewer-image {
+    transition: none;
+  }
+}
+
+/* ---- Toast (La Fiore Karabağ 2. Etap Vaziyet Planı/Concept/Gallery
+   phase, 2026-08-09) — shared bottom-center status message, see
+   _Toast.cshtml/site.js. Hidden by default (no layout impact); fades in on
+   trigger, auto-dismisses after 3s. ---- */
+.toast {
+  position: fixed;
+  z-index: 300;
+  left: 50%;
+  bottom: var(--space-xl);
+  transform: translate(-50%, var(--space-sm));
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition-fast) var(--ease-standard), transform var(--transition-fast) var(--ease-standard);
+}
+
+.toast[hidden] {
+  display: none;
+}
+
+.toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.toast-message {
+  margin: 0;
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-near-black);
+  color: var(--color-white);
+  font-size: var(--font-size-small);
+  white-space: nowrap;
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.25);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    transition: opacity var(--transition-fast) var(--ease-standard);
+  }
+}
+
+
+/* ==========================================================================
+   26. Project Detail — Cinematic Redesign
+   2026-07-31. Inspired by (not copying) Inspirationals/Folkart's Orion
+   project page — layout/interaction feel only, restyled in Ançın's own
+   Design System (Section 2 tokens). Covers: Hero's third variant (full
+   viewport, centered, logo + two buttons), Concept, Location & Distances,
+   Gallery's header/category badge, Project Catalogue's cinematic CTA,
+   Social Facilities and the Floor Plans "presentation board" treatment.
+   See docs/14_Decisions.md for the full rationale.
+   ========================================================================== */
+
+/* ---- Hero — Project Detail Variant ----
+   Vertically centered (unlike Home's bottom-anchored content) — reuses
+   .hero/.hero-bg's gradient + zoom background as-is. Full-viewport height
+   comes from .hero--full-viewport below (shared with the Home Hero,
+   2026-08-10), not from this class. */
+
+.hero--project-detail {
+  align-items: center;
+}
+
+/* ---- Hero — Full Viewport Height (Project Detail, 2026-07-31; reused by
+   the Home Hero, 2026-08-10) ----
+   Makes the Hero's own box exactly fill the viewport height, so it hands
+   off to the next section with no gap once .hero--overlap-navbar (below)
+   has pulled it up underneath the Navbar — the Hero's height must reach
+   100vh from the true viewport top for its bottom edge to land exactly at
+   the viewport's bottom edge. Home previously carried .hero--overlap-navbar
+   without this class, leaving only the base .hero rule's 90vh: the Hero's
+   bottom landed 10vh short of the viewport, exposing a strip of the next
+   section's (white) background in the very first screen — the actual
+   defect, not a stray margin/padding. svh fallback for mobile browsers
+   whose dynamic toolbar makes 100vh taller than the actually-visible
+   viewport. */
+
+.hero--full-viewport {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+/* ---- Hero — Overlap Navbar (Nysa Gold Residence UI revision, 2026-08-07;
+   rolled out to every Project Detail Hero, 2026-08-08; reused as-is by the
+   Home Hero, 2026-08-10) ----
+   Pulls the Hero up by exactly --navbar-height so it starts at the true
+   viewport top, underneath the sticky Navbar, instead of following it in
+   normal flow. This is what actually puts the Hero image "behind" the
+   Navbar — the transparent/white toggle in site.js only flips a color;
+   without this negative margin the Navbar was never overlapping the Hero
+   in the first place. Depends on nothing sitting between the Navbar and the
+   Hero in the DOM (Project Detail: the breadcrumb was removed entirely,
+   Details.cshtml; Home: HeroBanner is already the first thing rendered in
+   <main>, Index.cshtml) — otherwise pulling the Hero up would clip or
+   overlap whatever came before it. */
+
+.hero--overlap-navbar {
+  margin-block-start: calc(-1 * var(--navbar-height));
+}
+
+/* ---- Hero Content — Start-Aligned (Nysa Gold Residence reference redesign,
+   2026-08-07; rolled out to every Project Detail Hero, 2026-08-08) ----
+   Left-aligned variant, now the only Project Detail Hero content layout —
+   see HeroBannerProjectDetail/Default.cshtml. padding-inline-start is extra
+   distance on top of .container's own inline padding
+   (--container-padding-mobile/tablet/desktop) so the combined offset clears
+   .hero-social-nav's icon column at each of ITS OWN breakpoints (640px/
+   1024px, intentionally matching .hero-social-nav rather than .container's
+   768px tier) with a comfortable gap. */
+
+.hero-content--start {
+  max-width: 46rem;
+  padding-inline-start: 3.5rem;
+  /* Clears .floating-contact (Section 12) — fixed, middle-right, on every
+     page — from the right edge (2026-08-07 fix). Below 1024px the wider
+     Hero heading (see .hero-heading--project) reached far enough right to
+     sit directly under that button; confirmed visually at 390px width. Not
+     needed from 1024px up, where .container's own max-width keeps the text
+     block well clear of it regardless. */
+  padding-inline-end: 5.5rem;
+}
+
+@media (min-width: 640px) {
+  .hero-content--start {
+    padding-inline-start: 4.5rem;
+    padding-inline-end: 6.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-content--start {
+    padding-inline-start: 5.5rem;
+    padding-inline-end: 0;
+  }
+}
+
+/* ---- Hero Heading — Project Detail Typography (Nysa Gold Residence UI
+   revision, 2026-08-07; generalised to every project + per-project font
+   mapping, 2026-08-08) ----
+   Sizing/wrapping rules only — font-family/weight/letter-spacing come from
+   one of the three .hero-heading--font-* modifiers below, chosen per slug
+   (HeroBannerProjectDetailViewComponent) to match each project's own logo
+   wordmark. Real HTML text, not a rasterized logo, for every project.
+
+   word wrapping: hyphens: none is deliberate — a title must only ever
+   break at a space, never mid-word (client requirement, 2026-08-08).
+   overflow-wrap/word-break are left at their normal defaults (not
+   break-word) so a long word is never split; the mobile font-size step
+   below is instead sized down so the longest single word across every
+   mapped project ("RESIDENCE", "VILLALAR") fits .hero-content--start's
+   available width at 375px without triggering a break. lang="en" on the
+   heading itself (HeroBannerProjectDetail/Default.cshtml) is what fixed
+   "RESİDENCE" — with <html lang="tr"> (_Layout.cshtml), text-transform:
+   uppercase alone was enough to trigger Turkish locale casing (i → İ) on
+   every project's title, not just Nysa Gold's. */
+
+.hero-heading--project {
+  max-width: 24rem;
+  text-transform: uppercase;
+  font-size: 2.25rem;
+  line-height: 1.15;
+  hyphens: none;
+}
+
+@media (min-width: 640px) {
+  .hero-heading--project {
+    max-width: 36rem;
+    font-size: 4.25rem;
+    line-height: 1.1;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-heading--project {
+    max-width: 44rem;
+    font-size: 5.5rem;
+    line-height: 1.05;
+  }
+}
+
+/* ---- Hero Heading — Font Mapping (2026-08-08) ----
+   Client-specified, per project family: Nlatis/Dlatis → Montserrat Light;
+   the four "Gold" projects → Poiret One; the Cormorant Garamond group
+   (La Fiore Karabağ x2, Le Jardin, La Via Villalar) → var(--font-decorative),
+   already used site-wide. Projects with no font specified (Ferhunde Hanım
+   Apt., La Via AVM) render no modifier class at all and fall back to
+   .hero-heading's own default (Playfair Display, var(--font-heading)). */
+
+.hero-heading--font-montserrat {
+  font-family: var(--font-hero-montserrat);
+  font-weight: 300;
+  letter-spacing: 0.10em;
+}
+
+.hero-heading--font-poiret {
+  font-family: var(--font-hero-poiret);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+}
+
+.hero-heading--font-cormorant {
+  font-family: var(--font-decorative);
+  font-weight: 400;
+}
+
+/* ---- Hero Actions — Attached Segment Bar (Nysa Gold Residence UI
+   revision, 2026-08-07) ----
+   Zero-gap, bottom-centered button group replacing the previous
+   under-title/wrapping-gap layout — matches the Folkart reference's
+   segmented CTA bar. Lives inside .hero-bottom, stacked above the Scroll
+   Indicator (both centered together by .hero-bottom's own transform).
+   overflow-x (rather than flex-wrap) keeps the group visually attached
+   even if the three labels can't all fit at very narrow widths, instead
+   of an individual segment breaking onto its own line. */
+
+.hero-actions--attached {
+  flex-wrap: nowrap;
+  gap: 0;
+  max-width: min(94vw, 40rem);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.btn-hero-segment {
+  flex-shrink: 0;
+  border-radius: 0;
+  border-color: transparent;
+  background-color: var(--color-near-black);
+  color: var(--color-white);
+  white-space: nowrap;
+}
+
+.hero-actions--attached .btn-hero-segment:first-child {
+  border-start-start-radius: var(--radius-sm);
+  border-end-start-radius: var(--radius-sm);
+}
+
+.hero-actions--attached .btn-hero-segment:last-child {
+  border-start-end-radius: var(--radius-sm);
+  border-end-end-radius: var(--radius-sm);
+}
+
+.btn-hero-segment:hover {
+  background-color: color-mix(in srgb, var(--color-near-black) 80%, white);
+  border-color: transparent;
+  color: var(--color-white);
+}
+
+/* ---- Hero Segment Bar — Per-Segment Colors (2026-08-07 refinement) ----
+   Each of the three segments carries its own brand color and its own
+   near-imperceptible hover tint (color-mix toward the segment's own color,
+   never toward white) — the brief's explicit "luxury UI, not a typical web
+   button" direction. Text stays white in every state so contrast never
+   dips as the background barely shifts. */
+
+.btn-hero-segment--siteplan {
+  background-color: #2F3B45;
+}
+
+.btn-hero-segment--siteplan:hover {
+  background-color: #40505D;
+}
+
+.btn-hero-segment--accent {
+  background-color: var(--color-accent);
+}
+
+.btn-hero-segment--accent:hover {
+  background-color: color-mix(in srgb, var(--color-accent) 92%, white);
+  color: var(--color-white);
+}
+
+.btn-hero-segment--contact {
+  background-color: #6C7A52;
+}
+
+.btn-hero-segment--contact:hover {
+  background-color: #809164;
+}
+
+/* ---- Hero — Social Navigation ----
+   Floating, icon-only social links pinned to the left edge of the Hero
+   only (never sticky, never a global nav) — lives inside .hero so it
+   scrolls away with the banner, matching the luxury real-estate
+   pattern the brief asked for. Reuses SocialMediaViewComponent's
+   markup/icons as-is (no duplicated markup per project); every visual
+   override (no circle, no border/background, wider vertical rhythm,
+   red hover) is scoped under .hero-social-nav so the Footer's own
+   .social-links treatment — and its documented contrast rationale for
+   never using accent red as a *default* icon color — is untouched.
+   Red only appears here on hover/focus, a transient state, not the
+   resting contrast case that rule guards against. */
+
+.hero-social-nav {
+  position: absolute;
+  left: var(--space-md);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.hero-social-nav .social-links {
+  flex-direction: column;
+  gap: 26px;
+  margin-block-start: 0;
+}
+
+.hero-social-nav .social-link {
+  width: auto;
+  height: auto;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: none;
+  transition:
+    transform 250ms ease,
+    color 250ms ease;
+}
+
+.hero-social-nav .social-link svg {
+  width: 28px;
+  height: 28px;
+}
+
+.hero-social-nav .social-link:hover,
+.hero-social-nav .social-link:focus-visible {
+  background: none;
+  color: var(--color-accent);
+  transform: scale(1.1);
+}
+
+@media (min-width: 640px) {
+  .hero-social-nav {
+    left: var(--space-lg);
+  }
+
+  .hero-social-nav .social-links {
+    gap: 32px;
+  }
+
+  .hero-social-nav .social-link svg {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-social-nav {
+    left: var(--space-xl);
+  }
+
+  .hero-social-nav .social-links {
+    gap: 38px;
+  }
+
+  .hero-social-nav .social-link svg {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* ---- Concept ----
+   Media left / text panel right on desktop, stacked media-then-panel on
+   mobile. .project-concept-media reuses .image-block's established 4:3
+   "framed image" ratio (Section 8) so this section's photo treatment
+   matches the rest of the site rather than introducing a new crop. */
+
+.project-concept {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  gap: var(--space-2xl);
+}
+
+@media (min-width: 1024px) {
+  .project-concept {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4xl);
+  }
+}
+
+.project-concept-media img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+.project-concept-intro {
+  margin-block-end: var(--space-md);
+  font-family: var(--font-decorative);
+  font-size: var(--font-size-h3);
+  font-style: italic;
+  color: var(--color-accent);
+}
+
+.project-concept-panel .project-info-panel {
+  margin-block-start: var(--space-xl);
+}
+
+/* ---- Concept — Featured (Nysa Gold Residence UI revision, 2026-08-07)
+   ----
+   Recomposed to match Inspirationals/Folkart/folkart-konsept-inspiration-
+   2.png's actual structure (the previous revision's watermark-behind-media
+   placement had drifted from it): "KONSEPT" is now a normal-flow heading
+   line sitting ABOVE the media/panel row — same decorative-watermark
+   typography as Timeline Header (Section 20a)/Gallery's title, just left
+   in place here as its own rule since the composition (heading above a
+   two-column row, not above a single centered column) is genuinely
+   different from either of those. Panel touches the media with zero
+   horizontal gap and is pulled left over it (negative inline margin) the
+   same as before; new this revision is a negative block margin that also
+   makes the panel taller than the media, overlapping its top and bottom
+   edges — the one piece of the reference this page didn't yet have. */
+
+/* No overflow: hidden here (2026-08-07 fix, was needed only by the
+   previous revision's viewport-edge-bled watermark, since removed below)
+   — the Concept section deliberately allows vertical overflow now, which
+   is what lets .project-concept-panel--featured's negative block margin
+   visually extend above/below the media card (see below) instead of
+   being clipped at the section boundary. .section's own generous
+   padding-block (Section 4) provides the buffer that overlap bleeds
+   into, same as it would in the Folkart reference. */
+
+.project-concept--featured {
+  position: relative;
+  /* Zero out the shared .project-concept grid gap (2026-08-07 fix) — at
+     6rem (--space-4xl, ≥1024px), .project-concept-panel--featured's
+     -3.5rem pull below left a visible ~2.5rem gap instead of the intended
+     flush/overlapping touch, and the same gap separated the stacked media
+     and panel below 1024px. Every other project keeps the base
+     .project-concept gap untouched. */
+  gap: 0;
+}
+
+/* 2026-08-07 fix: this section's actual background is plain white
+   (unlike Company History's near-white #F2EDEB, see Timeline Header's
+   own comment), so the previous white-text-plus-shadow "emboss" watermark
+   rendered essentially invisible here — confirmed visually, not just
+   inferred. Switched to the exact same solid var(--color-light-gray)
+   treatment already proven legible against white in Gallery's own title
+   (.project-gallery-title) — including its flush-left positioning (no
+   viewport-edge bleed), which is also what makes the outer section's
+   overflow: hidden unnecessary now. */
+.project-concept-watermark {
+  position: relative;
+  z-index: 0;
+  grid-column: 1 / -1;
+  margin: 0;
+  /* Nudged down (2026-08-07 refinement) — 24px, no other property touched. */
+  margin-block-start: 24px;
+  margin-block-end: var(--space-lg);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-bold);
+  font-size: clamp(2.4rem, 7vw, 4.8rem);
+  line-height: 0.9;
+  letter-spacing: 0.02em;
+  color: var(--color-light-gray);
+  text-align: left;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .project-concept-watermark {
+    margin-block-end: var(--space-xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .project-concept--featured {
+    grid-template-columns: 1.15fr 1fr;
+  }
+
+  .project-concept-watermark {
+    margin-block-end: var(--space-2xl);
+  }
+}
+
+.project-concept-media--featured {
+  position: relative;
+  z-index: 1;
+}
+
+/* Concept Video (Davutlar D Latis Media phase, 2026-08-09) — the <video>
+   gets the exact same framed treatment as .project-concept-media img
+   (Section 21) so swapping poster/video via the [hidden] attribute below
+   is visually seamless. The explicit [hidden] override is needed because
+   .project-concept-media img's own `display: block` (Section 21) would
+   otherwise tie with the UA stylesheet's `[hidden] { display: none }` on
+   specificity in some engines. */
+.project-concept-media--featured video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  background-color: var(--color-near-black);
+}
+
+.project-concept-media--featured img[hidden],
+.project-concept-media--featured video[hidden],
+.project-concept-play[hidden] {
+  display: none;
+}
+
+.project-concept-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4.25rem;
+  height: 4.25rem;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-white);
+  background-color: color-mix(in srgb, var(--color-near-black) 35%, transparent);
+  color: var(--color-white);
+  cursor: pointer;
+  transition:
+    transform var(--transition-fast) var(--ease-standard),
+    background-color var(--transition-fast) var(--ease-standard);
+}
+
+.project-concept-play:hover,
+.project-concept-play:focus-visible {
+  transform: translate(-50%, -50%) scale(1.08);
+  background-color: color-mix(in srgb, var(--color-near-black) 50%, transparent);
+}
+
+/* Terracotta fill (2026-08-07, replaces white) — a real, distinct warm
+   tone rather than --color-accent itself, which docs/02_DesignSystem.md
+   rules out as a large background; see --color-terracotta's definition
+   (Section 2.1) for why. Heading/intro text below are overridden to white
+   here since the panel is no longer light — every other project's plain
+   .project-concept-panel (not --featured) keeps its white background and
+   original dark/accent text untouched. */
+.project-concept-panel--featured {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: var(--color-terracotta);
+  color: var(--color-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-xl);
+}
+
+@media (min-width: 1024px) {
+  .project-concept-panel--featured {
+    /* align-self: stretch (2026-08-07 fix) — .project-concept's shared
+       align-items: center (Section 20) sizes every grid item to its own
+       content height, so a negative block margin alone only repositioned
+       the panel rather than growing it past the media's height (confirmed
+       visually: no overlap without this). Stretching first makes the
+       panel's own box match the media's height, and only then does the
+       negative margin push it out beyond that — top and bottom — by the
+       overlap amount. justify-content: center above keeps the heading/
+       intro/nav-group vertically centered inside the now-taller box
+       instead of pinned to its top. */
+    align-self: stretch;
+    /* Horizontal: pulls the panel left, flush over the media's edge (no
+       gap). Vertical: negative block margin makes the panel visually
+       taller than the media, overlapping its top and bottom — the
+       "overlapping content panel" the brief specifically calls out. */
+    margin-inline-start: -3.5rem;
+    margin-block: -2.5rem;
+    padding: var(--space-2xl);
+  }
+}
+
+.project-concept-heading-featured {
+  margin-block-end: var(--space-md);
+  color: var(--color-white);
+}
+
+.project-concept-panel--featured .project-concept-intro {
+  color: var(--color-white);
+  opacity: 0.92;
+}
+
+.project-concept-nav-group {
+  display: flex;
+  gap: var(--space-sm);
+  margin-block-start: var(--space-lg);
+}
+
+/* ---- Concept — Video Carousel (Davutlar D Latis Concept redesign,
+   2026-08-09) ----
+   A second, separately-scoped Concept composition — .concept-carousel-* —
+   sitting alongside .project-concept--featured above rather than editing
+   it, so every other project's Concept section (single video or photo
+   carousel) renders byte-for-byte as before. Matches Inspirationals/
+   Folkart/folkart-konsept-inspiration-2.png's actual proportions far more
+   closely than the shared pattern above: a compact ~1259:730 media card —
+   noticeably smaller than the 4:3 card every other project still uses —
+   beside a wide panel that overlaps its edge. .concept-carousel-track and
+   .concept-carousel-panel-track each hold one 100%-width slide per
+   ProjectConceptVideo row and slide via transform: translateX, driven
+   together (never independently) by site.js so Prev/Next always keeps the
+   visible poster/video paired with its own heading and paragraph. */
+
+.project-concept-carousel-section {
+  display: block;
+}
+
+.concept-carousel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.concept-carousel-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1259 / 730;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  background-color: var(--color-near-black);
+}
+
+.concept-carousel-track {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform var(--transition-slow) var(--ease-standard);
+}
+
+.concept-carousel-slide {
+  position: relative;
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+}
+
+.concept-carousel-poster {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Concept image slides (La Fiore Karabağ 2. Etap, 2026-08-09; positioned
+   absolute as of the Le Jardin Concept carousel generalization, 2026-08-09,
+   once this became a sibling overlay of .concept-carousel-poster rather than
+   its wrapper — mixed carousels render the poster <img> once per slide
+   regardless of media type, with either this trigger or .concept-carousel-
+   play layered on top). No play-icon overlay for image slides — same "whole
+   card is a plain, unstyled &lt;button&gt;" pattern as .gallery-card. */
+.concept-carousel-slide-trigger {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.concept-carousel-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4.25rem;
+  height: 4.25rem;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-white);
+  background-color: color-mix(in srgb, var(--color-near-black) 35%, transparent);
+  color: var(--color-white);
+  cursor: pointer;
+  transition:
+    transform var(--transition-fast) var(--ease-standard),
+    background-color var(--transition-fast) var(--ease-standard);
+}
+
+.concept-carousel-play:hover,
+.concept-carousel-play:focus-visible {
+  transform: translate(-50%, -50%) scale(1.08);
+  background-color: color-mix(in srgb, var(--color-near-black) 50%, transparent);
+}
+
+/* Blue sampled directly from the Folkart reference (#72A4BA — the
+   "--concept-blue-light" below), deepened to #3E6C81 for the panel's own
+   background: solid white text on the raw sample clears only ~2.7:1
+   contrast (fine on a compressed marketing screenshot, not this site's own
+   accessibility bar); the deepened tone clears 5.7:1 while staying
+   recognizably the same muted steel-blue family. The lighter, truer sample
+   is kept as --concept-blue-light for small non-text accents only (nav
+   button hover fill). */
+.concept-carousel-panel {
+  --concept-blue: #3E6C81;
+  --concept-blue-light: #72A4BA;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  overflow: hidden;
+  background-color: var(--concept-blue);
+  color: var(--color-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+.concept-carousel-panel-track {
+  display: flex;
+  width: 100%;
+  transition: transform var(--transition-slow) var(--ease-standard);
+}
+
+/* Padding lives on the slide, not .concept-carousel-panel itself — overflow:
+   hidden clips at the padding edge, so padding on the clipping element
+   would leave a padding-width sliver of the next slide visible through
+   that gutter whenever a slide's own content exactly fills the track. */
+.concept-carousel-panel-slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  padding: var(--space-xl);
+}
+
+.concept-carousel-eyebrow {
+  margin: 0 0 var(--space-xs);
+  font-family: var(--font-decorative);
+  font-size: var(--font-size-h3);
+  font-style: italic;
+  color: var(--color-white);
+}
+
+.concept-carousel-title {
+  margin: 0 0 var(--space-md);
+  color: var(--color-white);
+}
+
+.concept-carousel-desc {
+  max-width: 32rem;
+  margin: 0;
+  color: var(--color-white);
+  opacity: 0.92;
+}
+
+/* Position (La Fiore Karabağ 2. Etap Concept nav refinement, 2026-08-09,
+   promoted to the shared rule 2026-08-09) — nudges the arrows up and inward
+   from the panel's raw corner, which otherwise reads as crowded since this
+   group is a flex sibling of .concept-carousel-panel-track rather than
+   padded like the text above it. margin-inline-start indents it inward to
+   align with the slide text's own left edge; margin-block-end (combined
+   with .concept-carousel-panel's justify-content: center) shifts the whole
+   centered content block upward. This is now the standard position for
+   every project using this carousel, image or video variant alike — no
+   longer scoped per-project via [data-page-slug]. Size/color/hover
+   untouched — position only. */
+.concept-carousel-nav-group {
+  display: flex;
+  gap: var(--space-sm);
+  margin-block-start: var(--space-lg);
+  margin-inline-start: var(--space-lg);
+  margin-block-end: var(--space-lg);
+}
+
+.concept-carousel-nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background-color: transparent;
+  color: var(--color-white);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast) var(--ease-standard),
+    background-color var(--transition-fast) var(--ease-standard);
+}
+
+.concept-carousel-nav:hover {
+  border-color: var(--color-white);
+  background-color: color-mix(in srgb, var(--concept-blue-light) 35%, transparent);
+}
+
+/* .concept-carousel-nav focus-visible state is inherited from Section 5
+   (Accessible Focus States) and intentionally not repeated. */
+
+@media (min-width: 1024px) {
+  .concept-carousel {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .concept-carousel-media {
+    flex: 0 0 auto;
+    align-self: center;
+    /* Deliberately narrower than .project-concept-media--featured's own
+       column above (clamps to ~560px max here vs. that section's ~650px+)
+       — "noticeably smaller... do not stretch it to full width" per the
+       brief. */
+    width: clamp(23rem, 44vw, 35rem);
+  }
+
+  .concept-carousel-panel {
+    flex: 1 1 auto;
+    align-self: stretch;
+    /* Horizontal: pulls the panel left, flush over the media's edge (no
+       gap). Vertical: negative block margin overlaps the media's top/
+       bottom edges slightly — same proven mechanic as
+       .project-concept-panel--featured above, tuned down for this
+       section's smaller media card. */
+    margin-inline-start: -2rem;
+    margin-block: -1.5rem;
+  }
+
+  .concept-carousel-panel-slide {
+    padding: var(--space-2xl);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .concept-carousel-track,
+  .concept-carousel-panel-track {
+    transition: none;
+  }
+}
+
+/* ---- Concept Video Modal (Davutlar D Latis Concept redesign, 2026-08-09)
+   ----
+   Reuses .video-modal/.video-modal-backdrop/.video-modal-panel/
+   .video-modal-close as-is (Section 19) — only the frame is new, since this
+   modal's <video> has no fixed aspect-ratio the way _VideoShowcase's does
+   (the 5 source videos mix ~16:9 landscape and ~2:3 portrait), so it sizes
+   from its own intrinsic dimensions instead of a forced 16/9 box. */
+
+.concept-video-modal-panel {
+  max-width: 68rem;
+}
+
+.concept-video-modal-frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.concept-video-modal-video {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: 82vh;
+  border-radius: var(--radius-md);
+  background-color: var(--color-near-black);
+}
+
+/* ---- Location & Distances ---- */
+
+.project-location {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  gap: var(--space-2xl);
+}
+
+/* Nysa Gold Residence reference redesign (2026-08-07) — required so
+   _TimelineHeader's left-edge-bled decorative watermark clips cleanly
+   instead of causing horizontal overflow, matching .company-history/
+   .our-journey's identical requirement for the same shared header. */
+.project-location-section--decorative {
+  overflow: hidden;
+}
+
+/* ---- Location Heading — Reduced to Gallery's Scale (UI revision,
+   2026-08-07) ----
+   The brief asked only to shrink this heading, matching the Gallery
+   section's decorative title exactly (font/size/color/spacing — see
+   .project-gallery-title). Scoped to this section wrapper rather than
+   editing .timeline-header__decorative itself, so Home's Company History
+   and About's Our Journey — which reuse the same shared component — are
+   completely unaffected. The centered .timeline-header__subtitle line
+   ("Hayatın Yeni Merkezinde") is untouched, per "everything else remains
+   untouched". */
+.project-location-section--decorative .timeline-header__decorative {
+  /* Cancels the base rule's viewport-edge bleed (margin-inline-start) at
+     every breakpoint — Gallery's title has no such bleed, it sits flush
+     with the container's own left edge, so this zeroes it out for
+     "spacing" to match exactly, not just font/size/color. */
+  margin-inline-start: 0;
+  font-size: clamp(2.4rem, 7vw, 4.8rem);
+  line-height: 0.9;
+  letter-spacing: 0.02em;
+  color: var(--color-light-gray);
+  opacity: 1;
+  text-shadow: none;
+}
+
+@media (min-width: 1024px) {
+  .project-location {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4xl);
+  }
+}
+
+.project-location-summary {
+  max-width: 48ch;
+  margin-block-end: var(--space-lg);
+  color: var(--color-text-secondary);
+}
+
+.nearby-places-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nearby-place-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding-block-end: var(--space-sm);
+  border-block-end: 1px solid var(--color-border);
+}
+
+.nearby-place-row:last-child {
+  padding-block-end: 0;
+  border-block-end: none;
+}
+
+.nearby-place-name {
+  color: var(--color-text-primary);
+}
+
+.nearby-place-distance {
+  flex-shrink: 0;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-accent);
+}
+
+.project-location-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+}
+
+/* ---- Gallery Header ----
+   Section Header + category Filter Dropdown share one row on desktop
+   (dropdown pinned top-right, matching the reference's layout) and stack on
+   mobile. Reuses _FilterDropdown.cshtml's markup/CSS as-is (Section 22); see
+   site.js for this page's own scoped open/close + filter module. */
+
+.project-gallery-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-md);
+  margin-block-end: var(--space-xl);
+}
+
+.project-gallery-header .project-gallery-title {
+  margin-block-end: 0;
+}
+
+@media (min-width: 768px) {
+  .project-gallery-header {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+}
+
+/* ---- Decorative "GALERİ" Title ----
+   Large watermark-style heading, aria-hidden — the section's real
+   accessible name lives on a paired .sr-only <h2 id="project-gallery-
+   heading"> (_ProjectGallery.cshtml), same aria-hidden-decorative /
+   real-heading split as .timeline-header__decorative (Section 21), just
+   consolidated onto one visible line since this brief calls for no
+   second, readable heading. */
+
+.project-gallery-title {
+  margin: 0;
+  margin-block-end: var(--space-xl);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  font-size: clamp(2.4rem, 7vw, 4.8rem);
+  line-height: 0.9;
+  letter-spacing: 0.02em;
+  color: var(--color-light-gray);
+  text-align: left;
+}
+
+/* ---- Gallery Category Picker (Nysa Gold Residence UI revision,
+   2026-08-07) ----
+   Replaces the immediate merged grid under "Tüm Görseller" with a
+   continuously looping (right-to-left) row of category cards — see
+   _ProjectGallery.cshtml/site.js. The track's card set is duplicated 6×
+   server-side (was 2× — with only 2-3 categories that produced a track
+   shorter than many viewports, so the whole loop was visible at once and
+   read as a short repeating strip rather than an endless one); any even
+   rep count keeps translateX(-50%) landing exactly on an identical second
+   half, giving a seamless wrap with no visible reset. animation-duration
+   scaled from 24s to 72s (3× — matching the 2→6 rep increase) to keep the
+   same per-card scroll speed, just over a longer, less perceptible cycle.
+   A mask-image fade softens both edges instead of a hard clip. Paused on
+   hover/focus (so a card can actually be read/clicked) and disabled
+   entirely under prefers-reduced-motion, matching every other looping/
+   animated element on this page.
+
+   Card refinement (2026-08-07): each card in the track is now plain
+   .gallery-card markup (Section 26 below) — same width/height/border-
+   radius/typography/spacing as every Interior/Exterior card — so no
+   card-specific sizing rules live here anymore; only the track's own
+   layout (flex row, gap, marquee animation) does. */
+
+.project-gallery-category-picker {
+  overflow: hidden;
+  margin-block-end: var(--space-xl);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+}
+
+.project-gallery-category-track {
+  display: flex;
+  width: max-content;
+  gap: var(--space-lg);
+  animation: gallery-category-marquee 72s linear infinite;
+}
+
+.project-gallery-category-picker:hover .project-gallery-category-track,
+.project-gallery-category-picker:focus-within .project-gallery-category-track {
+  animation-play-state: paused;
+}
+
+@keyframes gallery-category-marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-gallery-category-track {
+    animation: none;
+  }
+}
+
+/* ---- Gallery Card ----
+   Extends Section 25's .gallery-thumb with a hover dark overlay and an
+   optional category badge, rather than duplicating the thumbnail shell. */
+
+.gallery-thumb-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(28, 28, 28, 0.65), rgba(28, 28, 28, 0) 55%);
+  opacity: 0;
+  transition: opacity var(--transition-base) var(--ease-standard);
+}
+
+.gallery-thumb:hover .gallery-thumb-overlay,
+.gallery-thumb:focus-visible .gallery-thumb-overlay {
+  opacity: 1;
+}
+
+.gallery-thumb-category {
+  position: absolute;
+  left: var(--space-md);
+  bottom: var(--space-md);
+  font-family: var(--font-decorative);
+  font-size: var(--font-size-h4);
+  font-style: italic;
+  color: var(--color-white);
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity var(--transition-base) var(--ease-standard),
+    transform var(--transition-base) var(--ease-standard);
+}
+
+.gallery-thumb:hover .gallery-thumb-category,
+.gallery-thumb:focus-visible .gallery-thumb-category {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* A hidden [hidden] thumbnail (site.js category filter) must not keep
+   grid space or count toward .project-gallery's [data-reveal-group]
+   stagger of still-visible siblings. */
+.gallery-thumb[hidden] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-thumb-overlay,
+  .gallery-thumb-category {
+    transition: none;
+  }
+}
+
+/* ---- Project Catalogue CTA ----
+   Full-bleed cinematic band — same gradient-over-photo + zoom language as
+   the Hero (Section 16), reused via its own CSS variable rather than
+   sharing --hero-bg-image, since this section is a sibling of the Hero, not
+   a descendant of it. */
+
+.project-catalogue-cta {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  min-height: 60svh;
+  padding-block: var(--space-4xl);
+  text-align: center;
+}
+
+.project-catalogue-cta-bg {
+  position: absolute;
+  z-index: -1;
+  inset: -5%;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--color-near-black) 60%, transparent), color-mix(in srgb, var(--color-near-black) 60%, transparent)),
+    var(--catalogue-bg-image, linear-gradient(160deg, var(--color-near-black) 0%, var(--color-dark-gray) 100%));
+  background-size: cover;
+  background-position: center;
+  animation: hero-bg-zoom 22s ease-in-out infinite;
+}
+
+.project-catalogue-cta-inner {
+  max-width: 40rem;
+}
+
+.project-catalogue-cta-eyebrow {
+  margin-block-end: var(--space-sm);
+  font-family: var(--font-decorative);
+  font-size: var(--font-size-h3);
+  font-style: italic;
+  color: var(--color-light-gray);
+}
+
+.project-catalogue-cta-heading {
+  margin-block-end: var(--space-xl);
+  color: var(--color-white);
+}
+
+/* ---- Project Catalogue CTA — Featured (Nysa Gold Residence reference
+   redesign, 2026-08-07) ----
+   Evolves the existing component in place for a true full-bleed Hero
+   moment — same .hero-bg-zoom animation and gradient overlay (no new
+   keyframe), just taller and with larger copy/button. Nysa-Gold-only, see
+   _ProjectCatalogue.cshtml's slug-gated class. */
+
+.project-catalogue-cta--featured {
+  min-height: 85vh;
+  min-height: 85svh;
+}
+
+.project-catalogue-cta--featured .project-catalogue-cta-inner {
+  max-width: 46rem;
+}
+
+.project-catalogue-cta--featured .project-catalogue-cta-heading {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+}
+
+.project-catalogue-cta--featured .project-catalogue-cta-button {
+  padding-inline: var(--space-2xl);
+  padding-block: var(--space-md);
+  font-size: var(--font-size-body);
+}
+
+/* Near-imperceptible red hover (2026-08-07 refinement) — same treatment as
+   the Hero's "Kataloğu İncele" segment (.btn-hero-segment--accent:hover):
+   the fill barely brightens toward white and the label stays white, rather
+   than flashing to a visibly lighter/pink fill with red text. Overrides
+   .btn-primary's shared white-flash hover; later in source order than that
+   rule, so no extra specificity is needed to win. */
+.project-catalogue-cta--featured .project-catalogue-cta-button:hover {
+  background-color: color-mix(in srgb, var(--color-accent) 92%, white);
+  border-color: var(--color-accent);
+  color: var(--color-white);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---- Social Facilities ---- */
+
+.social-facilities {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2xl);
+}
+
+@media (min-width: 1024px) {
+  .social-facilities {
+    grid-template-columns: minmax(0, 30%) 1fr;
+    align-items: center;
+    gap: var(--space-4xl);
+  }
+}
+
+.social-facilities-intro .section-header {
+  margin-block-end: var(--space-lg);
+}
+
+.social-facilities-nav {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.social-facilities-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background-color: transparent;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast) var(--ease-standard),
+    color var(--transition-fast) var(--ease-standard);
+}
+
+.social-facilities-nav-btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.social-facilities-track-wrapper {
+  overflow: hidden;
+}
+
+.social-facilities-track {
+  display: flex;
+  gap: var(--space-lg);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  /* Native scrollbar hidden — Previous/Next buttons are the intended
+     control; scroll-snap still allows direct touch/trackpad scrolling. */
+  scrollbar-width: none;
+}
+
+.social-facilities-track::-webkit-scrollbar {
+  display: none;
+}
+
+.social-facility-card {
+  position: relative;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+  width: 15rem;
+  height: 20rem;
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  scroll-snap-align: start;
+  background-color: var(--color-surface);
+  background-image:
+    linear-gradient(to top, rgba(28, 28, 28, 0.75), rgba(28, 28, 28, 0.05) 60%),
+    var(--facility-bg-image);
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.social-facility-card--text-only {
+  align-items: center;
+  justify-content: center;
+  background-image: none;
+  text-align: center;
+}
+
+.social-facility-name {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-h4);
+  color: var(--color-white);
+}
+
+.social-facility-card--text-only .social-facility-name {
+  color: var(--color-text-primary);
+}
+
+@media (min-width: 768px) {
+  .social-facility-card {
+    width: 18rem;
+    height: 24rem;
+  }
+}
+
+/* ---- Daire Planları (Floor Plans redesign, 2026-08-01) ----
+   Layout follows Inspirationals/Folkart's Orion floor-plan page almost
+   one-to-one for structure/spacing (colours/type are all Section 2
+   tokens — no Folkart branding). Two independent responsive pieces:
+
+   1. The outer split — .project-floorplans is a plain two-column grid at
+      tablet/desktop and a single stacked column on mobile. Because the
+      apartment type + catalogue button + stat boxes + room list are all
+      normal document-order children of .project-floorplans-text, mobile's
+      required stacking order (title → apartment info → catalogue button →
+      area boxes → room list) falls out for free — no reordering needed.
+
+   2. The visual side — .project-floorplans-visual reflows the placeholder
+      and its Prev/Next pair from "image, then a nav row below it" on
+      mobile (nav-group is a flex row occupying one grid area) to "prev |
+      image | next" flanking on tablet/desktop (nav-group becomes
+      display:contents so its two buttons drop straight into the parent
+      grid's own prev/next areas). When a project has only one apartment
+      type, _FloorPlans.cshtml omits the whole nav-group; the prev/next
+      tracks stay reserved as empty gutters rather than collapsing, so the
+      placeholder is the same size whether or not a project has multiple
+      apartment types. */
+
+.project-floorplans {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2xl);
+}
+
+/* Nysa Gold Residence reference redesign (2026-08-07) — same overflow:
+   hidden requirement as .project-location-section--decorative above. */
+.project-floorplans-section--decorative {
+  overflow: hidden;
+}
+
+/* ---- Floor Plans Heading — Reduced to Gallery's Scale (UI revision,
+   2026-08-07) ----
+   Same fix and same reasoning as .project-location-section--decorative's
+   override above — only the size/color/spacing token set changes, scoped
+   to this section wrapper so Home/About's Timeline Header is untouched. */
+.project-floorplans-section--decorative .timeline-header__decorative {
+  margin-inline-start: 0;
+  font-size: clamp(2.4rem, 7vw, 4.8rem);
+  line-height: 0.9;
+  letter-spacing: 0.02em;
+  color: var(--color-light-gray);
+  opacity: 1;
+  text-shadow: none;
+}
+
+@media (min-width: 768px) {
+  .project-floorplans {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    gap: var(--space-xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .project-floorplans {
+    grid-template-columns: 9fr 11fr;
+    align-items: center;
+    gap: var(--space-3xl);
+  }
+}
+
+.project-floorplans-text {
+  min-width: 0;
+}
+
+.project-floorplans-heading {
+  margin: 0;
+  font-weight: var(--font-weight-regular);
+}
+
+.project-floorplans-eyebrow {
+  display: block;
+  margin-block-end: var(--space-2xs);
+  font-family: var(--font-body);
+  font-size: var(--font-size-h4);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.03em;
+  color: var(--color-text-secondary);
+}
+
+.project-floorplans-title {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+  color: var(--color-text-primary);
+}
+
+.project-floorplans-panel[hidden] {
+  display: none;
+}
+
+.project-floorplans-type-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-md);
+  margin: var(--space-xl) 0;
+}
+
+@media (min-width: 768px) {
+  .project-floorplans-type-row {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-lg);
+  }
+}
+
+.project-floorplans-type {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-accent);
+}
+
+.project-floorplans-catalogue {
+  flex-shrink: 0;
+}
+
+.project-floorplans-stats {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin: 0 0 var(--space-xl);
+}
+
+.project-floorplans-stat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.project-floorplans-stat dt {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.project-floorplans-stat dd {
+  margin: 0;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.project-floorplans-rooms {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.project-floorplans-room {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding-block: var(--space-sm);
+}
+
+.project-floorplans-room-label {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+  color: var(--color-text-primary);
+}
+
+.project-floorplans-room-index {
+  min-width: 1.25em;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+}
+
+.project-floorplans-room-area {
+  flex-shrink: 0;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+}
+
+.project-floorplans-visual {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "image image"
+    "nav   nav";
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.project-floorplans-nav-group {
+  grid-area: nav;
+  display: flex;
+  justify-content: center;
+  gap: var(--space-lg);
+}
+
+.project-floorplans-prev {
+  grid-area: prev;
+  justify-self: center;
+}
+
+.project-floorplans-next {
+  grid-area: next;
+  justify-self: center;
+}
+
+@media (min-width: 768px) {
+  .project-floorplans-visual {
+    grid-template-columns: 3.5rem 1fr 3.5rem;
+    grid-template-areas: "prev image next";
+    gap: var(--space-md);
+  }
+
+  .project-floorplans-nav-group {
+    display: contents;
+  }
+}
+
+@media (min-width: 1024px) {
+  .project-floorplans-visual {
+    grid-template-columns: 4rem 1fr 4rem;
+    gap: var(--space-lg);
+  }
+}
+
+/* One [data-floorplan-visual] per floor plan (La Fiore Karabağ 2. Etap
+   Floor Plans pilot, 2026-08-06), all sharing the "image" grid area and
+   toggled by site.js's Apartment Type Switcher exactly like
+   [data-floorplan-panel] — only the active one isn't [hidden], so this
+   collapses back to the original single-static-placeholder layout whenever
+   a project has just one floor plan entry (every project except this
+   pilot, today). Sizing/shape/background that used to live directly on
+   .project-floorplans-placeholder now lives here, one level up, since the
+   placeholder and the real-photo trigger below are alternate contents of
+   the same slot. */
+.project-floorplans-visual-item {
+  grid-area: image;
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+}
+
+.project-floorplans-placeholder {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-surface);
+  text-align: center;
+}
+
+/* Real architectural drawing (only rendered when FloorPlanModel.Src is
+   set) — same reset-button-into-image-trigger shape as .gallery-card,
+   reused here rather than duplicated since both open the same Media
+   Viewer. */
+.project-floorplans-image-trigger {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.project-floorplans-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-base) var(--ease-standard);
+}
+
+.project-floorplans-image-trigger:hover .project-floorplans-image,
+.project-floorplans-image-trigger:focus-visible .project-floorplans-image {
+  transform: scale(1.03);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-floorplans-image {
+    transition: none;
+  }
+}
+
+.project-floorplans-placeholder-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--color-near-black) 8%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--color-near-black) 8%, transparent) 1px, transparent 1px);
+  background-size: 2rem 2rem;
+}
+
+.project-floorplans-placeholder-icon {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 50%;
+  background-color: var(--color-white);
+  color: var(--color-accent);
+  box-shadow: var(--shadow-sm);
+}
+
+.project-floorplans-placeholder-text {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+  color: var(--color-text-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-catalogue-cta-bg {
+    transition: none;
+    animation: none;
+  }
+}
+
+
+/* ==========================================================================
+   27. Contact Page
+   docs/03_PageBlueprints.md "Page — Contact": Hero Banner (Standard, Section
+   16) → Contact Information + Contact Form (below) → Office Location (Map)
+   → Social Media (Section 10's .social-links, reused as-is). Reveal
+   directions reuse Section 18's [data-reveal="left"/"right"/"scale"]
+   modifiers exactly as Project Detail's Concept/Location sections do — no
+   new animation engine.
+   ========================================================================== */
+
+/* ---- Contact Information + Contact Form split ---- */
+
+.contact-info-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2xl);
+}
+
+@media (min-width: 1024px) {
+  .contact-info-form {
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: var(--space-4xl);
+    align-items: start;
+  }
+}
+
+/* ---- Information Card (docs/04_ComponentLibrary.md, Icon variant) ----
+   Generic — also intended for future corporate pages, not Contact-only. */
+
+.information-card {
+  margin-block-start: var(--space-lg);
+}
+
+.information-card__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.information-card__item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  margin-block-end: 0;
+}
+
+.information-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background-color: var(--color-surface);
+  color: var(--color-accent);
+}
+
+.information-card__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  padding-block-start: var(--space-2xs);
+}
+
+.information-card__label {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.03em;
+  color: var(--color-text-secondary);
+}
+
+.information-card__value {
+  color: var(--color-text-primary);
+}
+
+a.information-card__value {
+  text-decoration-line: none;
+}
+
+a.information-card__value:hover {
+  color: var(--color-accent);
+  text-decoration-line: underline;
+}
+
+/* ---- Information Card — Grid layout (About Us Mission & Vision / Areas
+   of Expertise phase, 2026-08-01). Each item is its own standalone card —
+   icon, heading, description — inside the .grid-cols-N utility above
+   instead of List's single wrapping card + row list. Reuses .card and
+   .information-card__icon as-is; only the per-item shape changes. */
+
+.information-card-grid {
+  gap: var(--space-xl);
+}
+
+.information-card--grid-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-md);
+  padding: var(--space-xl);
+}
+
+.information-card--grid-item .information-card__icon {
+  width: 3.25rem;
+  height: 3.25rem;
+}
+
+.information-card__heading {
+  margin-block-end: 0;
+}
+
+.information-card__description {
+  margin-block-end: 0;
+  color: var(--color-text-secondary);
+  /* Preserves literal newlines (Career's Open Positions cards join a
+     department/location line and a description paragraph with a blank
+     line — see CareerController.BuildPositionSummary). A no-op for every
+     other Grid usage (About Us/Our Values), whose Value strings never
+     contain one. */
+  white-space: pre-line;
+}
+
+/* ---- Contact Form ----
+   Reuses Section 7/8's existing label/input/textarea/.form-field/.form-error
+   rules for every field — only layout (row pairing, spacing, honeypot,
+   submit button) is added here. */
+
+.contact-form__required-note {
+  margin-block-end: var(--space-lg);
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+}
+
+.required-mark {
+  color: var(--color-accent);
+}
+
+.form-summary-error {
+  padding: var(--space-sm) var(--space-md);
+  margin-block-end: var(--space-lg);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-sm);
+  background-color: color-mix(in srgb, var(--color-accent) 6%, var(--color-white));
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 var(--space-lg);
+}
+
+@media (min-width: 640px) {
+  .form-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* True off-screen hiding (not .sr-only) — a honeypot must vanish from
+   sighted AND assistive-tech users alike (the view already sets
+   aria-hidden + tabindex="-1"); .sr-only's clip-based technique is meant
+   for content that SHOULD still reach screen readers, the opposite of
+   what a spam trap needs. */
+.contact-form-honeypot {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  left: -9999px;
+}
+
+.contact-form__submit {
+  margin-block-start: var(--space-sm);
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .contact-form__submit {
+    width: auto;
+  }
+}
+
+/* ---- Success Message (docs/04_ComponentLibrary.md — Contact + future
+   Career). Deliberately colour-neutral: near-black/white card + an
+   accent-coloured check icon, not a green success colour that isn't in
+   the approved palette (see Section 7's Validation States note). */
+
+.success-message {
+  padding: var(--space-2xl) var(--space-xl);
+  border-radius: var(--radius-md);
+  background-color: var(--color-white);
+  box-shadow: var(--shadow-md);
+  text-align: center;
+}
+
+.success-message:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+.success-message__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-block-end: var(--space-md);
+  border-radius: 50%;
+  background-color: var(--color-surface);
+  color: var(--color-accent);
+}
+
+.success-message__title {
+  margin-block-end: var(--space-sm);
+}
+
+.success-message__description {
+  max-width: 48ch;
+  margin-inline: auto;
+  margin-block-end: 0;
+  color: var(--color-text-secondary);
+}
+
+/* ---- Map Component (docs/04_ComponentLibrary.md) ----
+   Two mutually-exclusive states, selected by MapViewComponent based on
+   whether a real embed URL exists: .map-component__embed (a live iframe,
+   16:9/21:9 so it never reflows the page while loading) or
+   .map-component__placeholder (the current state — a static on-brand
+   illustration at its native 4:3 ratio, same treatment as Project Detail's
+   .project-location-media). "Google Maps'te Aç" is a plain .btn below
+   either state rather than an overlay, so the same layout serves both
+   without a positioning special-case. */
+
+.map-component {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.map-component__embed {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+@media (min-width: 768px) {
+  .map-component__embed {
+    aspect-ratio: 21 / 9;
+  }
+}
+
+.map-component__embed iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.map-component__placeholder {
+  width: 100%;
+  max-width: 32rem;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.map-component__placeholder img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---- Social Media section ----
+   .social-links (Section 10) already supplies the row/icon styling —
+   this only centers it under the Section Header. */
+
+.contact-social-links {
+  display: flex;
+  justify-content: center;
+}
+
+.contact-social-links .social-links {
+  margin-block-start: 0;
+}
+
+
+/* ==========================================================================
+   28. About Us — Company Introduction
+   About Us Foundation phase, 2026-08-01 (CompanyIntroductionViewComponent).
+   Reuses .image-block/.section-header as-is (same pieces Company Overview
+   composes) but with its own identity: Image / Text left-to-right on
+   desktop — mirrored from Company Overview's Text / Image — a wider image
+   column (55/45 vs Company Overview's 35/65, since this page's Company
+   Introduction is the story-telling moment rather than a supporting
+   visual), and an offset accent-coloured frame behind the image as this
+   section's one deliberate flourish.
+
+   grid-template-areas (not the Company Overview's plain 2-column grid +
+   source order) is what makes the layout "easily reversible": swapping
+   which named area a track maps to needs one modifier class, not a
+   markup or column-width change — see .company-introduction--text-first
+   below and CompanyIntroductionViewModel.TextFirst.
+   ========================================================================== */
+
+.company-introduction-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: var(--space-xl);
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .company-introduction-grid {
+    grid-template-columns: 55% 45%;
+    column-gap: var(--space-3xl);
+    grid-template-areas: "media content";
+  }
+
+  .company-introduction--text-first .company-introduction-grid {
+    grid-template-areas: "content media";
+  }
+
+  /* grid-area only means anything once grid-template-areas defines "media"/
+     "content" as named areas (just above) — kept inside this same query so
+     the two stay in lockstep. Below 1024px the grid has no named areas at
+     all, so leaving these applied unconditionally made "media"/"content"
+     resolve as unmatched named grid lines instead of a no-op, collapsing
+     both items into the same auto-placed cell (visible as image/text
+     overlapping between 768–1024px). */
+  .company-introduction-media {
+    grid-area: media;
+  }
+
+  .company-introduction-content {
+    grid-area: content;
+  }
+}
+
+.company-introduction-media {
+  position: relative;
+}
+
+/* ---- Offset Accent Frame ----
+   The section's one signature touch: a thin accent-coloured rectangle
+   offset behind the image, peeking out at its bottom-right corner. Only
+   from the tablet breakpoint — on mobile the reserved offset space would
+   just crowd a full-width image with little visual payoff. */
+
+@media (min-width: 768px) {
+  .company-introduction-media {
+    padding-inline-end: var(--space-lg);
+    padding-block-end: var(--space-lg);
+  }
+
+  .company-introduction-media-frame {
+    position: absolute;
+    inset: var(--space-lg) 0 0 var(--space-lg);
+    border: 2px solid var(--color-accent);
+    border-radius: var(--radius-md);
+    z-index: 0;
+  }
+
+  .company-introduction-media .image-block {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.company-introduction-paragraph {
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-body);
+}
+
+.company-introduction-paragraph + .company-introduction-paragraph {
+  margin-block-start: var(--space-md);
+}
+
+
+/* ==========================================================================
+   29. About Us — Our Journey
+   About Us Foundation phase, 2026-08-01 (OurJourneyViewComponent). Reuses
+   Section 20's .history-info-panel / .history-carousel / .history-card
+   styles verbatim (already page-agnostic) with a section-level layout:
+   the shared _TimelineHeader (Section 20a) leads — same header as Home's
+   Company History since the 2026-08-03 redesign, replacing this page's
+   former standalone Section Header — then Info Panel and Carousel sit
+   side by side from 1024px in a narrower info column than Home's — there
+   is no Video Showcase stacked above it here. Same cream background as
+   .company-history (Section 20) — a deliberate repeat, not a coincidence,
+   so the colour itself reads as "company history content" across both
+   pages. */
+
+.our-journey {
+  background-color: #F2EDEB;
+  overflow: hidden; /* contains .timeline-header__decorative's intentional
+                        bleed, same as .company-history (Section 20) —
+                        see that rule's comment for why this is the
+                        both-axes shorthand rather than overflow-x alone */
+}
+
+/* 2026-08-03 fix: always a two-column grid, same reasoning as
+   .company-history-grid above — explicit grid-column per child keeps
+   Info Panel and Carousel side by side at every width instead of
+   stacking below 1024px, with the left column's minmax lower bound
+   stepped down at the narrower breakpoints (no Video here, so it only
+   needs to fit the two 44px nav buttons and their gap, roughly 6rem
+   minimum) instead of jumping straight to 200px. */
+
+.our-journey-grid {
+  display: grid;
+  grid-template-columns: minmax(6rem, 24%) minmax(0, 1fr);
+  column-gap: var(--space-md);
+  align-items: start;
+}
+
+.our-journey-info-col {
+  grid-column: 1;
+  min-width: 0;
+}
+
+.our-journey-carousel-col {
+  grid-column: 2;
+  min-width: 0;
+}
+
+@media (min-width: 640px) {
+  .our-journey-grid {
+    grid-template-columns: minmax(7rem, 22%) minmax(0, 1fr);
+    column-gap: var(--space-lg);
+  }
+}
+
+@media (min-width: 768px) {
+  .our-journey-grid {
+    grid-template-columns: minmax(8rem, 22%) minmax(0, 1fr);
+    column-gap: var(--space-xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .our-journey-grid {
+    grid-template-columns: minmax(200px, 22%) 1fr;
+    column-gap: var(--space-3xl);
+  }
+}
+
+
+/* ==========================================================================
+   30. Our Values — Introduction
+   Our Values Foundation phase, 2026-08-03 (ValuesIntroductionViewComponent).
+   Reuses the Section 7 .grid/.grid-cols-2 utility as-is for an even 50/50
+   split (unlike Company Overview's 65/35 override, this section has no
+   Image Block competing for space) — Section Header left, copy right, the
+   only rule needed top-aligns the two columns since they naturally differ
+   in height. The page's Core Values section needs no equivalent block: it
+   reuses Information Card's Grid layout with zero page-specific CSS, same
+   as About Us's Mission & Vision / Areas of Expertise.
+   ========================================================================== */
+
+.values-introduction-grid {
+  align-items: start;
+}
+
+.values-introduction-paragraph {
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-body);
+}
+
+.values-introduction-paragraph + .values-introduction-paragraph {
+  margin-block-start: var(--space-md);
+}
+
+
+/* ==========================================================================
+   31. Our Values — Quality Commitment
+   Our Values Foundation phase, 2026-08-03 (QualityCommitmentViewComponent).
+   Centered Section Header (.section-header--center, Section 8) above a
+   single narrow column of copy — max-width matches
+   .section-header__description's own 60ch measure so the two read as one
+   consistent column width.
+   ========================================================================== */
+
+.quality-commitment-copy {
+  max-width: 60ch;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.quality-commitment-paragraph {
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-body);
+}
+
+.quality-commitment-paragraph + .quality-commitment-paragraph {
+  margin-block-start: var(--space-md);
+}
+
+
+/* ==========================================================================
+   32. Career Page
+   docs/03_PageBlueprints.md "Page — Career": Hero Banner (Standard, no
+   dedicated image — same neutral-gradient precedent as Section 27's
+   Contact page) → Why Join Ançın (Information Card Grid, Section 8/27's
+   .information-card-grid, zero page-specific CSS) → Open Positions
+   (Information Card Grid again) → Application Form (below). The
+   Application Form reuses Section 7/8's label/input/select/textarea/
+   .form-field/.form-row/.form-error rules and Section 27's
+   .contact-form-honeypot (a genuinely page-agnostic off-screen technique,
+   not Contact-specific despite its name) for every field — only this
+   section's own layout (empty states, narrow form column, submit button)
+   is added here.
+   ========================================================================== */
+
+.career-positions-empty {
+  max-width: 48ch;
+  margin-inline: auto;
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.career-application-inner {
+  max-width: 40rem;
+}
+
+.career-form__required-note {
+  margin-block-end: var(--space-lg);
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+}
+
+.career-form__submit {
+  margin-block-start: var(--space-sm);
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .career-form__submit {
+    width: auto;
+  }
+}
+
+
+/* ==========================================================================
+   33. Statistics Card (docs/04_ComponentLibrary.md)
+   Reusable large-number card — a sibling to Section 8/27's Information
+   Card, not a replacement. Reuses .card and the Section 7 .grid/.grid-cols-N
+   utility as-is; only the inner value/label shape is new. First used by HR
+   Policy's Employee Development section (Section 34 below) but intentionally
+   page-agnostic for future reuse (e.g. About Us).
+   ========================================================================== */
+
+.statistics-card-grid {
+  gap: var(--space-xl);
+}
+
+.statistic-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2xs);
+  padding: var(--space-xl);
+  text-align: center;
+}
+
+.statistic-card__value {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-bold);
+  font-size: 2.5rem;
+  line-height: var(--line-height-heading);
+  color: var(--color-accent);
+}
+
+@media (min-width: 1024px) {
+  .statistic-card__value {
+    font-size: 3rem;
+  }
+}
+
+.statistic-card__label {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+
+/* ==========================================================================
+   34. HR Policy Page
+   docs/03_PageBlueprints.md "Page — HR Policy": Breadcrumb → Hero Banner
+   (Standard, dedicated placeholder image — same "always has its own
+   banner" precedent as About Us/Values, Section 28/30) → HR Philosophy
+   (Section Header + Image Block, Section 7's .grid/.grid-cols-2 utility,
+   same shape as Section 17's Company Overview) → Core Principles
+   (Information Card Grid, Section 8/27, zero page-specific CSS) →
+   Employee Development (Section Header + Statistics Card, Section 33,
+   above + prose). Career CTA / Social Media / Footer are already global
+   or intentionally omitted (docs/14_Decisions.md) — no section of their
+   own needed here.
+   ========================================================================== */
+
+.hr-philosophy-grid {
+  align-items: center;
+}
+
+.hr-philosophy-paragraph {
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-body);
+}
+
+.hr-philosophy-paragraph + .hr-philosophy-paragraph {
+  margin-block-start: var(--space-md);
+}
+
+.employee-development-copy {
+  max-width: 70ch;
+  margin-inline: auto;
+  margin-block-start: var(--space-2xl);
+}
+
+.employee-development-paragraph {
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-body);
+}
+
+.employee-development-paragraph + .employee-development-paragraph {
+  margin-block-start: var(--space-md);
+}
+
+
+/* ==========================================================================
+   35. KVKK Page
+   docs/03_PageBlueprints.md "Page — KVKK": Breadcrumb → Hero Banner
+   (Standard, dedicated placeholder image, Section 28/30/34) → KVKK Policy
+   (centered Section Header + narrow document column, same shape as
+   Employee Development's Section Header + copy, Section 34, just with
+   numbered h3 subsections in place of a Statistics Card) → Contact
+   Information (centered Section Header + single Information Card, List
+   layout, Section 27). No page-specific grid/media CSS — the document is a
+   single readable column, not a two-up layout.
+   ========================================================================== */
+
+.kvkk-policy-document {
+  max-width: 70ch;
+  margin-inline: auto;
+  margin-block-start: var(--space-2xl);
+}
+
+.kvkk-policy-paragraph {
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-body);
+}
+
+.kvkk-policy-heading {
+  font-size: var(--font-size-h4);
+  margin-block-start: var(--space-xl);
+}
+
+.kvkk-policy-heading:first-of-type {
+  margin-block-start: 0;
+}
+
+.kvkk-contact-card {
+  /* No margin-block-start here — the Information Card partial's own
+     .information-card rule (Section 27) already sets it relative to the
+     Section Header above; this wrapper only needs to constrain width. */
+  max-width: 32rem;
+  margin-inline: auto;
+}
+
+
+/* ==========================================================================
+   36. Global Search Overlay
+   Global Navigation & Search milestone (docs/14_Decisions.md). Opened by
+   the Navbar's search trigger (site.js): a premium panel that appears to
+   open directly below the Navbar purely through stacking order — z-index:
+   40 sits below the sticky Navbar's z-index: 50 (Section 9), the same
+   convention already used by the Floating Contact Button (Section 12), so
+   the opaque Navbar naturally clips the overlay's top edge with no
+   height calculation needed. Open/close motion reuses the exact
+   visibility/opacity/transition-delay pattern already established by
+   Section 9's Mobile Nav Panel and Navbar Dropdown, rather than a new
+   animation idiom. Results follow the WAI-ARIA combobox/listbox pattern:
+   focus stays on the input; site.js moves an .is-active option and
+   updates aria-activedescendant instead of moving real focus.
+   ========================================================================== */
+
+.search-overlay {
+  position: fixed;
+  inset: 0;
+  /* Above the Floating Contact Button (Section 12, also z-index: 40 —
+     same DOM-order-decides-ties stacking would otherwise let it float
+     over open search results) but still below the sticky Navbar's
+     z-index: 50, so the "opens below the Navbar" clipping trick above
+     Section 36's header comment still holds. */
+  z-index: 45;
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity var(--transition-base) var(--ease-standard),
+    visibility 0s linear var(--transition-base);
+}
+
+.search-overlay.is-open {
+  visibility: visible;
+  opacity: 1;
+  transition:
+    opacity var(--transition-base) var(--ease-standard),
+    visibility 0s linear 0s;
+}
+
+.search-overlay-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-color: rgba(28, 28, 28, 0.45);
+}
+
+.search-overlay-panel {
+  position: relative;
+  z-index: 1;
+  background-color: var(--color-white);
+  box-shadow: var(--shadow-md);
+  /* Pushes the panel's own top edge down to the Navbar's bottom edge —
+     the z-index: 40 trick above only clips the *painted* pixels behind
+     the opaque Navbar, it doesn't move this panel's content out from
+     under it on its own. */
+  margin-block-start: var(--navbar-height);
+  max-height: calc(100vh - var(--navbar-height));
+  overflow-y: auto;
+}
+
+.search-overlay-inner {
+  padding-block: var(--space-lg);
+}
+
+@media (min-width: 768px) {
+  .search-overlay-inner {
+    padding-block: var(--space-xl);
+  }
+}
+
+.search-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  border-bottom: 2px solid var(--color-border);
+  padding-block-end: var(--space-sm);
+}
+
+.search-field-icon {
+  flex-shrink: 0;
+  color: var(--color-text-secondary);
+}
+
+/* Overrides the global input rule (Section 8): no border/box of its own —
+   .search-field's border-bottom already frames the whole field, so a
+   second nested border would double up. */
+.search-input {
+  flex: 1 1 auto;
+  min-height: 2.75rem;
+  padding: 0;
+  border: none;
+  font-family: var(--font-heading);
+  font-size: var(--font-size-h4);
+  color: var(--color-text-primary);
+}
+
+.search-input:focus-visible {
+  outline: none;
+}
+
+.search-overlay-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: color var(--transition-fast) var(--ease-standard);
+}
+
+.search-overlay-close:hover {
+  color: var(--color-text-primary);
+}
+
+.search-results {
+  margin: 0;
+  margin-block-start: var(--space-md);
+  padding: 0;
+  list-style: none;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.search-result-link {
+  display: block;
+  padding-block: var(--space-sm);
+  padding-inline: var(--space-xs);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: background-color var(--transition-fast) var(--ease-standard);
+}
+
+.search-result + .search-result .search-result-link {
+  border-top: 1px solid var(--color-border);
+}
+
+.search-result-link:hover {
+  background-color: var(--color-surface);
+}
+
+.search-result.is-active .search-result-link {
+  background-color: var(--color-surface);
+}
+
+/* Reuses .section-header__eyebrow's label treatment (size, weight,
+   letter-spacing, secondary color) rather than a new colored badge — the
+   Search Engine Completion milestone (docs/14_Decisions.md) asked for a
+   Category on every result without redesigning the overlay's look. */
+.search-result-category {
+  display: block;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.search-result-title {
+  display: block;
+  margin-block-start: var(--space-2xs);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-body);
+  color: var(--color-text-primary);
+}
+
+.search-result-desc {
+  display: block;
+  margin-block-start: var(--space-2xs);
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+}
+
+/* Matched-keyword highlight (site.js highlight()) — same color-mix-over-
+   accent technique already used by .project-status-badge--ongoing, kept
+   subtle so it reads as emphasis rather than a new loud UI element. */
+.search-result-title mark,
+.search-result-desc mark {
+  background-color: color-mix(in srgb, var(--color-accent) 30%, transparent);
+  color: inherit;
+  border-radius: 2px;
+}
+
+.search-empty {
+  margin-block-start: var(--space-md);
+  color: var(--color-text-secondary);
+}
+
+
+/* ==========================================================================
+   37. Project Gallery — Category Cards
+   Gallery Category Cards redesign (2026-08-04). Inspired by, not copying,
+   Inspirationals/Folkart's Orion gallery: a top-right category selector
+   above a grid of image cards, restyled entirely in Ançın's own palette and
+   type system. Only #project-gallery's own dropdown is restyled here —
+   .filter-dropdown itself (Section 22) stays untouched for Projects/Index's
+   Project Type / Location filters.
+   ========================================================================== */
+
+/* ---- Category Selector ----
+   Trigger loses the boxed/bordered look of the base .filter-dropdown-trigger
+   in favour of a plain text value sitting on a thick accent underline —
+   the one "premium navigation indicator" touch the reference calls for.
+   Chevron rotation and menu open/close are unchanged (Section 22 CSS,
+   site.js) — only position and skin change here. */
+
+#project-gallery .filter-dropdown {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: none;
+  align-self: flex-end;
+}
+
+#project-gallery .filter-dropdown-trigger {
+  position: relative;
+  width: auto;
+  min-height: 0;
+  padding: 0 0 var(--space-md);
+  border: none;
+  background-color: transparent;
+  gap: var(--space-xl);
+  font-family: var(--font-body);
+  font-size: var(--font-size-h4);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.01em;
+}
+
+#project-gallery .filter-dropdown-trigger::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+  border-radius: 999px;
+  background-color: var(--color-accent);
+}
+
+#project-gallery .filter-dropdown-trigger:hover,
+#project-gallery .filter-dropdown-trigger[aria-expanded='true'] {
+  border-color: transparent;
+}
+
+#project-gallery .filter-dropdown-chevron {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-color: var(--color-text-primary);
+}
+
+#project-gallery .filter-dropdown-menu {
+  left: auto;
+  right: 0;
+  width: max-content;
+  min-width: 15rem;
+  padding-block: var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+#project-gallery .filter-dropdown-menu [role='option'] {
+  min-height: 3.25rem;
+  padding-inline: var(--space-xl);
+  font-size: var(--font-size-body);
+  letter-spacing: 0.01em;
+  /* Category labels ("Dış Mekan Görselleri", "Sosyal Alan Görselleri")
+     must always render on one line — the menu's own width: max-content
+     (above) grows to fit whichever option is longest instead of forcing
+     a wrap. */
+  white-space: nowrap;
+  transition: background-color var(--transition-fast) var(--ease-standard), color var(--transition-fast) var(--ease-standard);
+}
+
+#project-gallery .filter-dropdown-menu [role='option']:hover,
+#project-gallery .filter-dropdown-menu [role='option']:focus-visible {
+  background-color: color-mix(in srgb, var(--color-surface) 60%, transparent);
+}
+
+#project-gallery .filter-dropdown-menu [role='option'][aria-selected='true'] {
+  color: var(--color-accent);
+}
+
+/* ---- Gallery Card ----
+   Tall, portrait-leaning frame (vs. the flat grid's 4:3 .gallery-thumb,
+   Section 25) — one card per category under "Tüm Görseller", every image in
+   that category once it's selected (see _ProjectGallery.cshtml / site.js).
+   Always a single horizontal row — .project-gallery-cards never switches to
+   a grid or wraps, at any breakpoint (2026-08-04 refinement); narrower
+   viewports shrink .gallery-card's own width/gap instead, same "strip
+   scales down, never stacks" idiom as .social-facilities-track (Section
+   28) and .history-carousel-track (Section 21), just without their
+   Prev/Next buttons — native scroll/swipe only, nothing this brief asked
+   for beyond staying horizontal. */
+
+/* ---- Block / Apartment Type chip rows (La Fiore Karabağ 2. Etap Gallery
+   pilot, 2026-08-06) ----
+   Sit between the category dropdown and .project-gallery-cards, only ever
+   rendered for a project whose images carry GalleryImageModel.Block/
+   ApartmentType. A natural extension of the dropdown's own visual language
+   (same border/radius/font as .filter-dropdown-trigger) rather than a new
+   pattern — small horizontally-scrollable pill buttons, so an 8-block row
+   never wraps awkwardly on mobile. site.js toggles a chip's [hidden] and
+   .is-active state; the row itself collapses to [hidden] once fewer than 2
+   chips remain relevant, matching the dropdown's own "nothing meaningful to
+   filter" rule. */
+.project-gallery-chip-row {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--space-xs);
+  overflow-x: auto;
+  padding-block-end: var(--space-2xs);
+  margin-block-end: var(--space-lg);
+  scrollbar-width: none;
+}
+
+.project-gallery-chip-row::-webkit-scrollbar {
+  display: none;
+}
+
+.project-gallery-chip-row[hidden] {
+  display: none;
+}
+
+.project-gallery-chip {
+  flex: 0 0 auto;
+  min-height: 2.5rem;
+  padding-inline: var(--space-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-white);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-small);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast) var(--ease-standard),
+    background-color var(--transition-fast) var(--ease-standard),
+    color var(--transition-fast) var(--ease-standard);
+}
+
+.project-gallery-chip[hidden] {
+  display: none;
+}
+
+.project-gallery-chip:hover,
+.project-gallery-chip:focus-visible {
+  border-color: var(--color-accent);
+}
+
+.project-gallery-chip.is-active {
+  border-color: var(--color-accent);
+  background-color: var(--color-accent);
+  color: var(--color-white);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-gallery-chip {
+    transition: none;
+  }
+}
+
+.project-gallery-cards {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--space-sm);
+  overflow-x: auto;
+  /* overflow-x alone leaves overflow-y at its browser-computed 'auto' (a
+     lone non-'visible' axis forces the other to 'auto' too), which turns
+     this track into an accidental vertical scroll container whenever its
+     content is a few pixels taller than the row — the exact "Gallery
+     section becomes internally scrollable" bug already solved the same
+     way elsewhere in this file (Section 15's overflow: hidden note).
+     overflow-y: hidden keeps this axis purely horizontal. */
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding-block-end: var(--space-2xs);
+  scrollbar-width: none;
+  transition: opacity var(--transition-fast) var(--ease-standard);
+}
+
+.project-gallery-cards::-webkit-scrollbar {
+  display: none;
+}
+
+.project-gallery-cards.is-swapping {
+  opacity: 0;
+}
+
+/* Matches .gallery-card[hidden] etc. (same file) — a class-based `display`
+   always wins the cascade over the UA [hidden] rule at equal specificity,
+   so every element toggled via [hidden] in this codebase needs its own
+   override. Nysa Gold Residence reference redesign (2026-08-07): site.js
+   hides this whole track (not just individual cards) while the Category
+   Picker is showing. */
+.project-gallery-cards[hidden] {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .project-gallery-cards {
+    gap: var(--space-md);
+  }
+}
+
+@media (min-width: 1024px) {
+  .project-gallery-cards {
+    gap: var(--grid-gap-md);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-gallery-cards {
+    scroll-behavior: auto;
+  }
+}
+
+.gallery-card {
+  position: relative;
+  display: block;
+  flex: 0 0 auto;
+  width: min(12rem, 62vw);
+  aspect-ratio: 3 / 4;
+  scroll-snap-align: start;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+}
+
+@media (min-width: 640px) {
+  .gallery-card {
+    width: 15.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .gallery-card {
+    width: 19rem;
+  }
+}
+
+/* Matches .gallery-thumb[hidden] (Section 25): a hidden card must not keep
+   grid space or count toward .project-gallery-cards' [data-reveal-group]
+   stagger of still-visible siblings. */
+.gallery-card[hidden] {
+  display: none;
+}
+
+.gallery-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-base) var(--ease-standard);
+}
+
+.gallery-card:hover .gallery-card-image,
+.gallery-card:focus-visible .gallery-card-image {
+  transform: scale(1.05);
+}
+
+/* Gallery video card's Play icon (Gallery video support, 2026-08-09) —
+   same circular treatment as .concept-carousel-play, just scoped to a
+   .gallery-card instead of a concept slide (which is already
+   position: relative, same as .gallery-card above). */
+.gallery-card-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-white);
+  background-color: color-mix(in srgb, var(--color-near-black) 35%, transparent);
+  color: var(--color-white);
+  pointer-events: none;
+  transition: transform var(--transition-fast) var(--ease-standard);
+}
+
+.gallery-card--video:hover .gallery-card-play,
+.gallery-card--video:focus-visible .gallery-card-play {
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+/* Title sits over this gradient at rest (not hover-only, unlike
+   .gallery-thumb-overlay) — hover only deepens it slightly. */
+.gallery-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(28, 28, 28, 0.72) 0%, rgba(28, 28, 28, 0.18) 45%, rgba(28, 28, 28, 0) 68%);
+  transition: background var(--transition-base) var(--ease-standard);
+}
+
+.gallery-card:hover .gallery-card-overlay,
+.gallery-card:focus-visible .gallery-card-overlay {
+  background: linear-gradient(to top, rgba(28, 28, 28, 0.8) 0%, rgba(28, 28, 28, 0.28) 50%, rgba(28, 28, 28, 0.05) 70%);
+}
+
+.gallery-card-title {
+  position: absolute;
+  left: var(--space-lg);
+  right: var(--space-lg);
+  bottom: var(--space-lg);
+  font-family: var(--font-decorative);
+  font-size: var(--font-size-h3);
+  font-style: italic;
+  line-height: 1.15;
+  color: var(--color-white);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-gallery-cards,
+  .gallery-card-image,
+  .gallery-card-overlay {
+    transition: none;
+  }
+}
+
+/* ---- Gallery Nav Buttons (2026-08-04) ----
+   .history-nav-btn reused as-is (Section 21's shared Prev/Next button,
+   already reused by Floor Plans and Projects Showcase) — only this
+   wrapper's layout is new: one arrow pinned to each end of the row,
+   rather than the grouped-together flex-end pairing every other Prev/Next
+   instance on the site uses, per this brief's explicit bottom-left /
+   bottom-right spec. Drag/swipe/wheel scrolling on .project-gallery-cards
+   is untouched; these buttons just call scrollBy (site.js) and disable at
+   the ends the same way the History Carousel's do. */
+
+.project-gallery-nav-group {
+  display: flex;
+  justify-content: space-between;
+  margin-block-start: var(--space-lg);
+}
+
+/* Same [hidden]-vs-class-display cascade note as .project-gallery-cards
+   above. */
+.project-gallery-nav-group[hidden] {
+  display: none;
 }

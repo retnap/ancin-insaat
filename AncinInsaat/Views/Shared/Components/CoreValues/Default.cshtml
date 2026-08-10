@@ -1,0 +1,17 @@
+@model CoreValuesViewModel
+
+@*
+    Our Values "Core Values" (docs/03_PageBlueprints.md — Core Values phase,
+    2026-08-03). Reuses the Information Card component's Grid layout — a
+    responsive 3/2/1-column grid (Columns=3, the shared .grid-cols-3
+    utility) of icon+title+description cards, fading upward with the
+    default data-reveal-group stagger. No page-specific CSS needed, same as
+    About Us's Mission & Vision / Areas of Expertise.
+*@
+
+<section class="section core-values" id="core-values" aria-labelledby="@Model.SectionHeader.HeadingId">
+    <div class="container">
+        <partial name="_SectionHeader" model="Model.SectionHeader" />
+        <partial name="_InformationCard" model="Model.InformationCard" />
+    </div>
+</section>

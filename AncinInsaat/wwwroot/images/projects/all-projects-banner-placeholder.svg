@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-hidden="true">
+  <title>Ancın İnşaat — Tüm Projeler, yer tutucu banner görseli</title>
+  <rect width="1600" height="900" fill="#F0EEEB" />
+
+  <!-- Minimal architectural skyline line-art, same style/format as
+       hero/about-placeholder.svg but a distinct composition (4 towers,
+       different spacing/heights) so this CTA Banner doesn't visually
+       repeat About Us's hero. Sits behind a 72% near-black overlay
+       (see .cta-banner in site.css), so only the silhouette and floor
+       lines need to read through — no fine detail needed.
+       Placeholder only — replace with real project photography before
+       launch. -->
+  <g fill="none" stroke="#55504D" stroke-width="2.5">
+    <rect x="90" y="360" width="230" height="390" />
+    <line x1="148" y1="360" x2="148" y2="750" />
+    <line x1="206" y1="360" x2="206" y2="750" />
+    <line x1="264" y1="360" x2="264" y2="750" />
+    <line x1="90" y1="420" x2="320" y2="420" />
+    <line x1="90" y1="480" x2="320" y2="480" />
+    <line x1="90" y1="540" x2="320" y2="540" />
+    <line x1="90" y1="600" x2="320" y2="600" />
+    <line x1="90" y1="660" x2="320" y2="660" />
+    <line x1="90" y1="720" x2="320" y2="720" />
+
+    <rect x="420" y="180" width="270" height="570" />
+    <line x1="486" y1="180" x2="486" y2="750" />
+    <line x1="552" y1="180" x2="552" y2="750" />
+    <line x1="618" y1="180" x2="618" y2="750" />
+    <line x1="420" y1="240" x2="690" y2="240" />
+    <line x1="420" y1="300" x2="690" y2="300" />
+    <line x1="420" y1="360" x2="690" y2="360" />
+    <line x1="420" y1="420" x2="690" y2="420" />
+    <line x1="420" y1="480" x2="690" y2="480" />
+    <line x1="420" y1="540" x2="690" y2="540" />
+    <line x1="420" y1="600" x2="690" y2="600" />
+    <line x1="420" y1="660" x2="690" y2="660" />
+    <line x1="420" y1="720" x2="690" y2="720" />
+
+    <rect x="840" y="260" width="220" height="490" />
+    <line x1="898" y1="260" x2="898" y2="750" />
+    <line x1="956" y1="260" x2="956" y2="750" />
+    <line x1="1014" y1="260" x2="1014" y2="750" />
+    <line x1="840" y1="320" x2="1060" y2="320" />
+    <line x1="840" y1="380" x2="1060" y2="380" />
+    <line x1="840" y1="440" x2="1060" y2="440" />
+    <line x1="840" y1="500" x2="1060" y2="500" />
+    <line x1="840" y1="560" x2="1060" y2="560" />
+    <line x1="840" y1="620" x2="1060" y2="620" />
+    <line x1="840" y1="680" x2="1060" y2="680" />
+
+    <rect x="1160" y="440" width="260" height="310" />
+    <line x1="1224" y1="440" x2="1224" y2="750" />
+    <line x1="1288" y1="440" x2="1288" y2="750" />
+    <line x1="1352" y1="440" x2="1352" y2="750" />
+    <line x1="1160" y1="500" x2="1420" y2="500" />
+    <line x1="1160" y1="560" x2="1420" y2="560" />
+    <line x1="1160" y1="620" x2="1420" y2="620" />
+    <line x1="1160" y1="680" x2="1420" y2="680" />
+  </g>
+
+  <line x1="40" y1="750" x2="1500" y2="750" stroke="#9E2B25" stroke-width="4" />
+</svg>

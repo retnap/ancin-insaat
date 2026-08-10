@@ -1,0 +1,31 @@
+@model KvkkPolicyViewModel
+
+@*
+    KVKK "Aydınlatma Metni" document (docs/03_PageBlueprints.md — Page
+    KVKK, Introduction + Privacy Policy folded together per
+    KvkkPolicyViewComponent's comment). Centered Section Header above a
+    narrow copy column — same shape as HR Policy's Employee Development
+    (Section 34 of site.css), just with numbered h3 subsections instead of
+    a Statistics Card. Plain semantic headings/paragraphs only: no
+    Accordion, no Download Button (project owner's 2026-08-03 decision).
+*@
+
+<section class="section kvkk-policy" id="kvkk-policy" aria-labelledby="@Model.SectionHeader.HeadingId">
+    <div class="container">
+        <partial name="_SectionHeader" model="Model.SectionHeader" />
+        <div class="kvkk-policy-document" data-reveal>
+            @foreach (var paragraph in Model.IntroParagraphs)
+            {
+                <p class="kvkk-policy-paragraph">@paragraph</p>
+            }
+            @foreach (var policySection in Model.Sections)
+            {
+                <h3 class="kvkk-policy-heading">@policySection.Heading</h3>
+                @foreach (var paragraph in policySection.Paragraphs)
+                {
+                    <p class="kvkk-policy-paragraph">@paragraph</p>
+                }
+            }
+        </div>
+    </div>
+</section>

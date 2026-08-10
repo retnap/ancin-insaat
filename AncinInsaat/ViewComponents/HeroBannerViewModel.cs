@@ -18,4 +18,11 @@ public class HeroBannerViewModel
     public string? BackgroundImageUrl { get; init; }
     public string? ProjectCtaLabel { get; init; }
     public string? ProjectCtaUrl { get; init; }
+
+    // Resolved from the featured project's slug via ProjectHeroFontMap —
+    // the same map every Project Detail Hero uses (Home Hero title
+    // typography match, 2026-08-10). Null for any project outside that map
+    // (or when there is no featured project), in which case the heading
+    // renders exactly as before.
+    public string? HeadingFontModifierClass { get; init; }
 }

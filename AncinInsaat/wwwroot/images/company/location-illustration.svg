@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-hidden="true">
+  <title>Ancın İnşaat — konum illüstrasyonu</title>
+  <rect width="800" height="600" fill="#F0EEEB" />
+
+  <!-- Minimal line-art location graphic (not a real map — see
+       docs/14_Decisions.md, Location & Distances). Abstract street grid,
+       distance rings and a pin marker in the same visual language as
+       overview-placeholder.svg. -->
+  <g fill="none" stroke="#55504D" stroke-width="1.5" stroke-opacity="0.55">
+    <line x1="0" y1="150" x2="800" y2="120" />
+    <line x1="0" y1="330" x2="800" y2="360" />
+    <line x1="0" y1="470" x2="800" y2="500" />
+    <line x1="160" y1="0" x2="120" y2="600" />
+    <line x1="420" y1="0" x2="440" y2="600" />
+    <line x1="660" y1="0" x2="690" y2="600" />
+  </g>
+
+  <g fill="none" stroke="#55504D" stroke-width="1.5" stroke-dasharray="6 10">
+    <circle cx="400" cy="300" r="90" />
+    <circle cx="400" cy="300" r="150" />
+    <circle cx="400" cy="300" r="210" />
+  </g>
+
+  <g>
+    <ellipse cx="400" cy="410" rx="26" ry="8" fill="#1C1C1C" opacity="0.12" />
+    <path d="M400 200c-38 0-68 30-68 68 0 51 68 122 68 122s68-71 68-122c0-38-30-68-68-68z" fill="#9E2B25" />
+    <circle cx="400" cy="268" r="26" fill="#F0EEEB" />
+  </g>
+</svg>

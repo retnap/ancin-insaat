@@ -1,0 +1,28 @@
+@model OurJourneyViewModel
+
+@*
+    About Us's own take on the Company History pieces Home already built:
+    the shared _TimelineHeader leads (2026-08-03 redesign — same oversized
+    decorative watermark + centered heading as Home's Company History,
+    replacing this page's former standalone Section Header), then Info
+    Panel (small title + prev/next) and Carousel sit side by side from
+    1024px, narrower info column than Home's since there is no Video
+    Showcase stacked above it here. Same milestone data as Home
+    (AncinInsaat.Data.CompanyHistoryData via OurJourneyViewComponent), same
+    cream section background, so the two pages read as one connected
+    feature rather than unrelated sections.
+*@
+
+<section class="section our-journey" id="our-journey" aria-labelledby="@Model.Header.HeadingId">
+    <div class="container">
+        <partial name="_TimelineHeader" model="Model.Header" />
+        <div class="our-journey-grid" data-reveal-group>
+            <div class="our-journey-info-col" data-reveal>
+                <partial name="_HistoryInfoPanel" model="Model.InfoPanel" />
+            </div>
+            <div class="our-journey-carousel-col" data-reveal>
+                <partial name="_HistoryCarousel" model="Model.Carousel" />
+            </div>
+        </div>
+    </div>
+</section>

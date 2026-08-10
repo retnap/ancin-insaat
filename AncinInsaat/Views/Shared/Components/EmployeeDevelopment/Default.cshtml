@@ -1,0 +1,14 @@
+@model EmployeeDevelopmentViewModel
+
+<section class="section employee-development" id="employee-development" aria-labelledby="@Model.SectionHeader.HeadingId">
+    <div class="container">
+        <partial name="_SectionHeader" model="Model.SectionHeader" />
+        <partial name="_StatisticsCard" model="Model.Statistics" />
+        <div class="employee-development-copy">
+            @foreach (var paragraph in Model.Paragraphs)
+            {
+                <p class="employee-development-paragraph">@paragraph</p>
+            }
+        </div>
+    </div>
+</section>

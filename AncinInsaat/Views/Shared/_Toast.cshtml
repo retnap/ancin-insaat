@@ -1,0 +1,13 @@
+@* Shared bottom-center Toast (La Fiore Karabağ 2. Etap Vaziyet Planı/
+   Concept/Gallery phase, 2026-08-09) — one instance per page, same shape as
+   _MediaViewer.cshtml: markup-only, entirely data-driven from whichever
+   [data-toast-trigger] was clicked (see site.js), so it carries no @model.
+   Non-modal status message (role="status", aria-live="polite") — no
+   focus-trap, no Esc/backdrop-close, unlike the Media Viewer's dialog. Sits
+   inert on every page unless a trigger exists (today only
+   _ProjectCatalogue.cshtml's button when Model.CatalogueComingSoon is
+   true). *@
+
+<div class="toast" id="toast" hidden data-toast role="status" aria-live="polite">
+    <p class="toast-message" data-toast-message></p>
+</div>

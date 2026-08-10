@@ -4,6 +4,7 @@ public class PartnerLogoItem
 {
     public required string ImageSrc { get; init; }
     public required string ImageAlt { get; init; }
+    public required string DetailUrl { get; init; }
 }
 
 public class PartnerLogosViewModel

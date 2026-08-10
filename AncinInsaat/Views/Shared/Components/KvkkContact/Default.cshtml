@@ -1,0 +1,18 @@
+@model KvkkContactViewModel
+
+@*
+    KVKK "Contact Information" (docs/03_PageBlueprints.md — Page KVKK).
+    Centered Section Header above a single, centered Information Card
+    (List layout, Section 27 of site.css) sourced from SiteSettings — no
+    page-specific CSS needed beyond width constraint, matching the "reuse
+    existing components" instruction.
+*@
+
+<section class="section kvkk-contact" id="kvkk-contact" aria-labelledby="@Model.SectionHeader.HeadingId">
+    <div class="container">
+        <partial name="_SectionHeader" model="Model.SectionHeader" />
+        <div class="kvkk-contact-card" data-reveal>
+            <partial name="_InformationCard" model="Model.InformationCard" />
+        </div>
+    </div>
+</section>

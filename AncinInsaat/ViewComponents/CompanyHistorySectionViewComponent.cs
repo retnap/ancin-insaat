@@ -1,3 +1,4 @@
+using AncinInsaat.Data;
 using AncinInsaat.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,83 +22,42 @@ namespace AncinInsaat.ViewComponents;
 // HistoryCarousel), with HistoryInfoPanel/HistoryCarousel intended for
 // later reuse on About Us "Our Journey" and eventual Admin Panel data.
 //
-// PLACEHOLDER copy, video and history entries — the client has not yet
-// supplied the real promotional video or company history. Years are
-// kept consistent with the "53 Yıllık Tecrübe" headline already
-// supplied by the project owner in Company Overview (founded ~1973),
-// but the milestone descriptions themselves are generic corporate
-// placeholder text, not researched or invented company facts. Card
-// images reuse Company Overview's abstract placeholder graphic rather
-// than inventing per-era photography. Replace all of it, including
-// VideoSrc, before launch.
+// About Us Foundation phase (2026-08-01): the milestone list itself moved
+// out to AncinInsaat.Data.CompanyHistoryData, now shared with the new
+// OurJourneyViewComponent, so Home and About Us read one source instead of
+// each keeping its own copy — see docs/14_Decisions.md.
+//
+// PLACEHOLDER video — the client has not yet supplied the real promotional
+// footage; VideoSrc stays null until it does.
+//
+// Timeline header redesign (2026-08-03): the section heading is now the
+// shared TimelineHeaderModel/_TimelineHeader partial (also used by
+// OurJourneyViewComponent) instead of this component's own DecorativeTitle
+// string, per the project owner's request that every Timeline usage share
+// exactly one header design.
 public class CompanyHistorySectionViewComponent : ViewComponent
 {
-    private static readonly IReadOnlyList<HistoryEntryModel> PlaceholderHistory = new List<HistoryEntryModel>
-    {
-        new()
-        {
-            Year = "1973",
-            Title = "Temellerin Atılması",
-            Description = "Ançın İnşaat, Denizli'de ilk projeleriyle inşaat sektöründeki yolculuğuna başladı.",
-            ImageSrc = "/images/company/overview-placeholder.svg",
-            ImageAlt = "",
-            LinkUrl = "/projects",
-            LinkLabel = "devamı"
-        },
-        new()
-        {
-            Year = "1990",
-            Title = "Kurumsal Büyüme",
-            Description = "Artan proje hacmiyle birlikte kurumsal yapı ve saha organizasyonu güçlendirildi.",
-            ImageSrc = "/images/company/overview-placeholder.svg",
-            ImageAlt = "",
-            LinkUrl = "/projects",
-            LinkLabel = "devamı"
-        },
-        new()
-        {
-            Year = "2005",
-            Title = "Yeni Nesil Konut Anlayışı",
-            Description = "Modern mimari yaklaşımlar ve daha yüksek yapı standartları projelere yansıtıldı.",
-            ImageSrc = "/images/company/overview-placeholder.svg",
-            ImageAlt = "",
-            LinkUrl = "/projects",
-            LinkLabel = "devamı"
-        },
-        new()
-        {
-            Year = "2015",
-            Title = "Bölgesel Genişleme",
-            Description = "Farklı bölgelerdeki yeni projelerle şirketin proje portföyü genişledi.",
-            ImageSrc = "/images/company/overview-placeholder.svg",
-            ImageAlt = "",
-            LinkUrl = "/projects",
-            LinkLabel = "devamı"
-        },
-        new()
-        {
-            Year = "2026",
-            Title = "Bugün",
-            Description = "Ançın İnşaat, güven ve kaliteyi önceliklendirerek yoluna kararlılıkla devam ediyor.",
-            ImageSrc = "/images/company/overview-placeholder.svg",
-            ImageAlt = "",
-            LinkUrl = "/projects",
-            LinkLabel = "devamı"
-        }
-    };
-
     public IViewComponentResult Invoke()
     {
         const string sectionTitle = "Zaman Tüneli";
 
         var model = new CompanyHistorySectionViewModel
         {
-            HeadingId = "company-history-heading",
-            DecorativeTitle = sectionTitle,
+            Header = new TimelineHeaderModel
+            {
+                HeadingId = "company-history-heading",
+
+                // Lowercase on purpose (2026-08-03 header redesign) — the
+                // giant background watermark keeps its natural casing
+                // rather than sectionTitle's Title Case, which stays on
+                // InfoPanel.Title below for that smaller, ordinary heading.
+                DecorativeTitle = "zaman tüneli",
+                Subtitle = "İlklerin Mimarı"
+            },
             Video = new VideoShowcaseModel
             {
                 Id = "company-history",
-                Title = "Ançın İnşaat Tanıtım Filmi",
+                Title = "Ancın İnşaat Tanıtım Filmi",
                 PosterSrc = "/images/company/video-poster-placeholder.svg",
 
                 // Empty on purpose — abstract placeholder graphic, decorative
@@ -115,7 +75,7 @@ public class CompanyHistorySectionViewComponent : ViewComponent
             Carousel = new HistoryCarouselModel
             {
                 Id = "company-history",
-                Entries = PlaceholderHistory
+                Entries = CompanyHistoryData.Milestones
             }
         };
 

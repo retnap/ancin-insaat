@@ -34,7 +34,13 @@ public class ProjectsShowcaseViewComponent : ViewComponent
     {
         var projects = await _projectQueryService.GetPublishedProjectsAsync();
 
-        var cards = projects.Select(project => new ProjectShowcaseCardModel
+        // Home page shows ongoing projects only (2026-08-03 request) — this
+        // filters the shared published list locally rather than adding a
+        // new IProjectQueryService method, so /projects and its own
+        // filtering stay untouched.
+        var ongoingProjects = projects.Where(project => project.Status == ProjectStatus.Ongoing);
+
+        var cards = ongoingProjects.Select(project => new ProjectShowcaseCardModel
         {
             Name = project.Name,
             CoverImageSrc = ResolveCoverImage(project.CoverImage),
@@ -60,20 +66,28 @@ public class ProjectsShowcaseViewComponent : ViewComponent
     }
 
     // Falls back to the shared placeholder cover whenever a project's real
-    // photo has not been supplied yet (currently every project besides
-    // nysa-gold), rather than hardcoding which slugs have real media — once
-    // a real /images/projects/{slug}/cover.webp is dropped in, this starts
-    // rendering it automatically with no code change.
+    // photo has not been supplied yet, rather than hardcoding which slugs
+    // have real media — once a real CoverImage is dropped in, this starts
+    // rendering it automatically with no code change. Prefers the generated
+    // WebP thumbnail (docs/07_AssetStructure.md) over the full original,
+    // same derivation as ProjectsController.ResolveCoverImage — duplicated
+    // rather than shared, per this component's existing precedent of not
+    // touching the completed Home milestone's architecture.
     private string ResolveCoverImage(string coverImage)
     {
-        if (string.IsNullOrWhiteSpace(coverImage))
+        if (string.IsNullOrWhiteSpace(coverImage) || !FileExists(coverImage))
         {
             return FallbackCoverImage;
         }
 
-        var relativePath = coverImage.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
-        var absolutePath = Path.Combine(_webHostEnvironment.WebRootPath, relativePath);
+        var thumbnailPath = ImagePathHelper.GetThumbnailPath(coverImage);
+        return FileExists(thumbnailPath) ? thumbnailPath : coverImage;
+    }
 
-        return File.Exists(absolutePath) ? coverImage : FallbackCoverImage;
+    private bool FileExists(string relativePath)
+    {
+        var normalizedPath = relativePath.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
+        var absolutePath = Path.Combine(_webHostEnvironment.WebRootPath, normalizedPath);
+        return File.Exists(absolutePath);
     }
 }

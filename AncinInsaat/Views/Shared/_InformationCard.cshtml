@@ -1,0 +1,58 @@
+@model InformationCardModel
+
+@* Information Card, Icon variant (docs/04_ComponentLibrary.md — Corporate
+   pages, Contact, HR Policy). Icons are hand-authored inline SVG using
+   currentColor, same convention as SocialMediaViewComponent.IconMarkup.
+
+   Two layouts share this one partial (InformationCardModel.Layout):
+   - List (default): one wrapping card, items stacked as icon+label+value
+     rows — Contact Information's original shape.
+   - Grid: each item is its own standalone icon+heading+description card
+     inside the .grid/.grid-cols-N utility — About Us Mission & Vision /
+     Areas of Expertise. *@
+
+@if (Model.Layout == InformationCardLayout.Grid)
+{
+    <div class="grid grid-cols-@Model.Columns information-card-grid" data-reveal-group>
+        @foreach (var item in Model.Items)
+        {
+            <div class="card information-card information-card--grid-item" data-reveal="@item.Reveal">
+                <span class="information-card__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="28" height="28">
+                        @Html.Raw(item.IconMarkup)
+                    </svg>
+                </span>
+                <h3 class="information-card__heading">@item.Label</h3>
+                <p class="information-card__description">@item.Value</p>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="card information-card">
+        <ul class="information-card__list">
+            @foreach (var item in Model.Items)
+            {
+                <li class="information-card__item">
+                    <span class="information-card__icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="22" height="22">
+                            @Html.Raw(item.IconMarkup)
+                        </svg>
+                    </span>
+                    <span class="information-card__text">
+                        <span class="information-card__label">@item.Label</span>
+                        @if (!string.IsNullOrWhiteSpace(item.Href))
+                        {
+                            <a class="information-card__value" href="@item.Href">@item.Value</a>
+                        }
+                        else
+                        {
+                            <span class="information-card__value">@item.Value</span>
+                        }
+                    </span>
+                </li>
+            }
+        </ul>
+    </div>
+}

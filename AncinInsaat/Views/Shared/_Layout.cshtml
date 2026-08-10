@@ -3,7 +3,14 @@
     // Error) for any page that hasn't been wired to ISeoService yet — only
     // Home sets ViewData["Seo"] so far (docs/14_Decisions.md).
     var seo = ViewData["Seo"] as AncinInsaat.Models.SeoModel;
-    var pageTitle = seo?.Title ?? ViewData["Title"] as string ?? "Ançın İnşaat";
+    var pageTitle = seo?.Title ?? ViewData["Title"] as string ?? "Ancın İnşaat";
+
+    // Set only by ProjectsController.Details — a harmless no-op attribute on
+    // every other page. Lets site.js/CSS scope the transparent-navbar
+    // behavior (Nysa Gold Residence reference redesign, 2026-08-07, rolled
+    // out to every Project Detail page 2026-08-08) without threading
+    // Project Detail's ViewModel through NavbarViewComponent.
+    var pageSlug = ViewData["ProjectSlug"] as string;
 }
 <!DOCTYPE html>
 <html lang="tr" class="no-js">
@@ -28,7 +35,7 @@
         <meta name="twitter:description" content="@seo.Description" />
         <meta name="twitter:image" content="@seo.OgImageUrl" />
     }
-    @await Component.InvokeAsync("SeoStructuredData")
+    @await Component.InvokeAsync("SeoStructuredData", new { pageSeo = seo, pageSchemaType = ViewData["SeoPageType"] as string })
     <link rel="stylesheet" href="~/css/site.css" />
     @* Blocking, before any body content paints: flips no-js -> js so
        [data-reveal] can start hidden in CSS (site.css Section 18) only
@@ -38,12 +45,14 @@
        animations are disabled." *@
     <script>document.documentElement.classList.replace('no-js', 'js');</script>
 </head>
-<body>
-    <a href="#main-content" class="skip-link">Skip to content</a>
+<body data-page-slug="@pageSlug">
+    <a href="#main-content" class="skip-link">İçeriğe geç</a>
 
     <header class="navbar">
         @await Component.InvokeAsync("Navbar")
     </header>
+
+    @await Html.PartialAsync("_SearchOverlay")
 
     <main id="main-content" tabindex="-1">
         @RenderBody()

@@ -1,0 +1,50 @@
+@model AncinInsaat.Models.ProjectDetailViewModel
+
+@* Location & Distances (Project Detail redesign, 2026-07-31) — split layout:
+   location copy + nearby-places list left, a static on-brand illustration
+   right (no interactive map/coordinates — see docs/14_Decisions.md). Only
+   composed by Details.cshtml when the project has a Location and/or
+   NearbyPlaces to show. *@
+
+<div class="project-location">
+    <div class="project-location-info" data-reveal="left">
+        @* Nysa Gold Residence reference redesign (2026-08-07), rolled out to
+           every project (2026-08-08): decorative watermark header pattern
+           shared with Gallery/Timeline, via the shared _TimelineHeader
+           component (see _FloorPlans.cshtml for the identical treatment). *@
+        <partial name="_TimelineHeader" model="@(new TimelineHeaderModel
+        {
+            DecorativeTitle = "LOKASYON",
+            Subtitle = "Hayatın Yeni Merkezinde",
+            HeadingId = "project-location-heading"
+        })" />
+
+        @if (!string.IsNullOrWhiteSpace(Model.Information.Location))
+        {
+            <p class="project-location-summary">@Model.Information.Location</p>
+        }
+
+        @if (Model.NearbyPlaces.Count > 0)
+        {
+            <ul class="nearby-places-list">
+                @foreach (var place in Model.NearbyPlaces)
+                {
+                    <li class="nearby-place-row">
+                        <span class="nearby-place-name">@place.Name</span>
+                        <span class="nearby-place-distance">@place.Distance</span>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+    <div class="project-location-media" data-reveal="right">
+        @if (!string.IsNullOrWhiteSpace(Model.LocationImageUrl))
+        {
+            <img src="@Model.LocationImageUrl" alt="@(Model.Name) konum görseli" loading="lazy" decoding="async" />
+        }
+        else
+        {
+            <img src="/images/company/location-illustration.svg" alt="Konum illüstrasyonu" loading="lazy" decoding="async" />
+        }
+    </div>
+</div>

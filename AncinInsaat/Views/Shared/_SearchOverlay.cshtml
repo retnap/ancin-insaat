@@ -1,0 +1,43 @@
+@* Global Search overlay (docs/04_ComponentLibrary.md) — one instance per
+   page, opened by the Navbar's search trigger (site.js). Populated
+   entirely client-side from GET /api/search/index, so it carries no
+   @model — matching _MediaViewer.cshtml's precedent for a shared,
+   markup-only global dialog. WAI-ARIA combobox/listbox pattern: focus
+   stays on the input, ArrowUp/ArrowDown move an active option via
+   aria-activedescendant, Enter navigates to it. *@
+
+<div class="search-overlay" id="search-overlay" data-search-overlay>
+    <div class="search-overlay-backdrop" data-search-close></div>
+    <div class="search-overlay-panel" role="dialog" aria-modal="true" aria-label="Site içinde ara">
+        <div class="container search-overlay-inner">
+
+            <div class="search-field">
+                <svg class="search-field-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                    <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8" />
+                    <path d="M19.5 19.5l-4.3-4.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                </svg>
+                <input type="text"
+                       id="search-input"
+                       class="search-input"
+                       data-search-input
+                       role="combobox"
+                       aria-expanded="false"
+                       aria-controls="search-results"
+                       aria-autocomplete="list"
+                       aria-label="Sayfa veya proje ara"
+                       placeholder="Sayfa veya proje ara..."
+                       autocomplete="off" />
+                <button type="button" class="search-overlay-close" data-search-close aria-label="Aramayı kapat">
+                    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                        <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+            </div>
+
+            <ul class="search-results" id="search-results" role="listbox" aria-label="Arama sonuçları" data-search-results></ul>
+
+            <p class="search-empty" data-search-empty hidden>“<span data-search-empty-query></span>” için sonuç bulunamadı.</p>
+
+        </div>
+    </div>
+</div>

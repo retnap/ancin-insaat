@@ -33,7 +33,7 @@ Examples:
 
 about-us
 
-our-values
+values
 
 projects
 

@@ -1,0 +1,101 @@
+@model ContactPageViewModel
+
+@* Contact Information + Contact Form (docs/03_PageBlueprints.md "Page —
+   Contact"). Split layout — info card left, form (or its success state)
+   right — same data-reveal="left"/"right" pair Project Detail's Concept/
+   Location sections already use, so the arrival direction convention stays
+   consistent site-wide rather than introducing a page-specific animation.
+   ContactController re-renders this same partial (via Views/Contact/Index)
+   on an invalid POST, so ModelState errors below reflect the submitted
+   values. *@
+
+@{
+    bool IsInvalid(string key) => ViewData.ModelState.TryGetValue(key, out var entry) && entry.Errors.Count > 0;
+}
+
+<div class="contact-info-form">
+    <div class="contact-info-panel" data-reveal="left">
+        <partial name="_SectionHeader" model="@(new SectionHeaderModel
+        {
+            Eyebrow = "İletişim Bilgileri",
+            Title = "Bize Ulaşın",
+            Description = "Sorularınız ve proje talepleriniz için aşağıdaki kanallardan bize ulaşabilir ya da yandaki formu doldurabilirsiniz.",
+            HeadingId = "contact-info-heading"
+        })" />
+
+        <partial name="_InformationCard" model="Model.InformationCard" />
+    </div>
+
+    <div class="contact-form-panel" data-reveal="right">
+        @if (Model.ShowSuccess)
+        {
+            <partial name="_SuccessMessage" model="@(new SuccessMessageModel
+            {
+                Title = "Mesajınız Alındı",
+                Description = "İlginiz için teşekkür ederiz. Ekibimiz en kısa sürede sizinle iletişime geçecektir."
+            })" />
+        }
+        else
+        {
+            <form class="contact-form" asp-controller="Contact" asp-action="Submit" method="post" aria-labelledby="contact-form-heading">
+                <h2 id="contact-form-heading" class="sr-only">İletişim Formu</h2>
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <p class="form-error form-summary-error" role="alert">Lütfen formdaki hataları düzeltip tekrar deneyin.</p>
+                }
+
+                <p class="contact-form__required-note"><span aria-hidden="true">*</span> işaretli alanlar zorunludur.</p>
+
+                <div class="form-field">
+                    <label asp-for="Form.FullName">Ad Soyad <span class="required-mark" aria-hidden="true">*</span></label>
+                    <input asp-for="Form.FullName" type="text" autocomplete="name" required maxlength="200" minlength="2"
+                           aria-invalid="@(IsInvalid("Form.FullName") ? "true" : "false")" aria-describedby="FullName-error" />
+                    <span asp-validation-for="Form.FullName" id="FullName-error" class="form-error"></span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-field">
+                        <label asp-for="Form.Email">E-posta <span class="required-mark" aria-hidden="true">*</span></label>
+                        <input asp-for="Form.Email" type="email" autocomplete="email" required maxlength="320"
+                               aria-invalid="@(IsInvalid("Form.Email") ? "true" : "false")" aria-describedby="Email-error" />
+                        <span asp-validation-for="Form.Email" id="Email-error" class="form-error"></span>
+                    </div>
+
+                    <div class="form-field">
+                        <label asp-for="Form.Phone">Telefon</label>
+                        <input asp-for="Form.Phone" type="tel" autocomplete="tel" maxlength="50"
+                               aria-invalid="@(IsInvalid("Form.Phone") ? "true" : "false")" aria-describedby="Phone-error" />
+                        <span asp-validation-for="Form.Phone" id="Phone-error" class="form-error"></span>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label asp-for="Form.Subject">Konu</label>
+                    <input asp-for="Form.Subject" type="text" maxlength="200"
+                           aria-invalid="@(IsInvalid("Form.Subject") ? "true" : "false")" aria-describedby="Subject-error" />
+                    <span asp-validation-for="Form.Subject" id="Subject-error" class="form-error"></span>
+                </div>
+
+                <div class="form-field">
+                    <label asp-for="Form.Message">Mesajınız <span class="required-mark" aria-hidden="true">*</span></label>
+                    <textarea asp-for="Form.Message" required maxlength="2000" minlength="10" rows="6"
+                              aria-invalid="@(IsInvalid("Form.Message") ? "true" : "false")" aria-describedby="Message-error"></textarea>
+                    <span asp-validation-for="Form.Message" id="Message-error" class="form-error"></span>
+                </div>
+
+                @* Honeypot — aria-hidden removes the whole block from the accessibility
+                   tree and tabindex="-1" keeps it out of keyboard tab order, so a real
+                   (sighted or assistive-tech) visitor can never reach or fill it; a bot
+                   that blindly fills every <input> does. See ContactFormViewModel.Website
+                   and ContactController.Submit. *@
+                <div class="contact-form-honeypot" aria-hidden="true">
+                    <label asp-for="Form.Website">Website</label>
+                    <input asp-for="Form.Website" type="text" tabindex="-1" autocomplete="off" />
+                </div>
+
+                <button type="submit" class="btn btn-primary contact-form__submit" data-contact-form-submit>Mesajı Gönder</button>
+            </form>
+        }
+    </div>
+</div>

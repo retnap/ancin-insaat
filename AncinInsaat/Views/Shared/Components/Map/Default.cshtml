@@ -1,0 +1,36 @@
+@model MapViewModel
+
+<div class="map-component">
+    @if (!string.IsNullOrWhiteSpace(Model.EmbedUrl))
+    {
+        <div class="map-component__embed">
+            <iframe
+                src="@Model.EmbedUrl"
+                title="Ancın İnşaat konumu — Google Haritalar"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </div>
+    }
+    else
+    {
+        @* Temporary placeholder — reuses Project Detail's Location &
+           Distances illustration/style until the client supplies a real
+           office address and Google Maps embed URL (see
+           docs/14_Decisions.md). Not a real map: aria-hidden on the image
+           itself (its own <title> already marks it decorative) so screen
+           readers rely on the visible heading + "Google Maps'te Aç" link
+           for the actual location instead of a graphic that conveys none. *@
+        <div class="map-component__placeholder">
+            <img src="/images/company/location-illustration.svg" alt="" loading="lazy" decoding="async" />
+        </div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Model.LinkUrl))
+    {
+        <a class="btn btn-secondary map-component__link" href="@Model.LinkUrl" target="_blank" rel="noopener noreferrer">
+            Google Maps'te Aç
+            <span class="sr-only">— yeni sekmede açılır</span>
+        </a>
+    }
+</div>

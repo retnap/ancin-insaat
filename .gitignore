@@ -10,13 +10,19 @@ out/
 *.user
 *.suo
 
-## SQLite databases (never commit runtime data)
-*.db
+## SQLite runtime artifacts (never commit WAL/journal state)
 *.db-shm
 *.db-wal
+*.db-journal
 
-## App_Data (runtime SQLite storage)
-App_Data/
+## App_Data: ignore everything except the seeded demo database,
+## which the deployed demo depends on (see docs/14_Decisions.md).
+## Backups and user-uploaded content (e.g. career application CVs)
+## must never be committed.
+AncinInsaat/App_Data/*
+!AncinInsaat/App_Data/ancinInsaat.db
+AncinInsaat/App_Data/uploads/
+AncinInsaat/App_Data/*.bak*
 
 ## OS files
 .DS_Store
@@ -30,3 +36,15 @@ Thumbs.db
 *.nupkg
 **/[Pp]ackages/*
 !**/[Pp]ackages/build/
+
+## Local tooling / scratch (not part of the deployable project)
+.playwright-mcp/
+ProjectAssets/
+
+## Ad-hoc verification screenshots taken during development
+/company-history-after-next.png
+/company-history-section-full.png
+/company-history-section-full2.png
+/gallery-dropdown.png
+/lafiore-*.png
+/lafiore2etap-regression-check.png

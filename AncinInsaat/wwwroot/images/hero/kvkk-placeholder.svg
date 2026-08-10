@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-hidden="true">
+  <title>Ancın İnşaat — KVKK Aydınlatma Metni, yer tutucu banner görseli</title>
+  <rect width="1600" height="900" fill="#F0EEEB" />
+
+  <!-- Abstract "document + protection" line-art — a centered document
+       sheet with text-line rules, overlaid by a shield badge in the lower
+       right corner, reading as a data-protection/legal composition
+       distinct from HR Policy's campus and Values' pillars. Placeholder
+       only — replace with real banner photography before launch (see
+       wwwroot/images/hero). -->
+  <g fill="none" stroke="#55504D" stroke-width="2.5">
+    <!-- Document sheet -->
+    <path d="M600 190 h300 l110 110 v420 a10 10 0 0 1 -10 10 h-400 a10 10 0 0 1 -10 -10 v-520 a10 10 0 0 1 10 -10 z" />
+    <path d="M900 190 v110 h110" />
+
+    <!-- Text-line rules -->
+    <line x1="650" y1="400" x2="950" y2="400" />
+    <line x1="650" y1="450" x2="950" y2="450" />
+    <line x1="650" y1="500" x2="950" y2="500" />
+    <line x1="650" y1="550" x2="880" y2="550" />
+    <line x1="650" y1="330" x2="820" y2="330" />
+  </g>
+
+  <!-- Shield badge -->
+  <g fill="none" stroke="#9E2B25" stroke-width="3">
+    <path d="M960 560 l90 -34 90 34 v90 c0 70 -46 118 -90 140 c-44 -22 -90 -70 -90 -140 z" fill="#F0EEEB" />
+    <path d="M1010 660 l28 28 60 -64" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+
+  <line x1="120" y1="750" x2="1480" y2="750" stroke="#9E2B25" stroke-width="4" />
+</svg>

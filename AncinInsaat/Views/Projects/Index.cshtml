@@ -1,0 +1,60 @@
+@model AncinInsaat.Models.ProjectsIndexViewModel
+
+@* Title/description/canonical/OG/CollectionPage schema come from
+   ViewData["Seo"] + ViewData["SeoPageType"], set in
+   ProjectsController.Index via ISeoService — see _Layout.cshtml's <head>
+   and SeoStructuredDataViewComponent. *@
+
+@{
+    var breadcrumbTrail = new List<AncinInsaat.ViewComponents.BreadcrumbItem>
+    {
+        new() { Label = "Projeler" }
+    };
+}
+@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail, homeLabel = "Anasayfa" })
+
+<section class="section projects-categories" aria-label="Proje filtreleri">
+    <div class="container">
+        @if (Model.Cards.Count > 0)
+        {
+            <div class="project-tabs" role="group" aria-label="Projeleri durumlarına göre filtrele" data-project-filter-group>
+                <button type="button" class="project-tab is-active" data-project-filter="all" aria-pressed="true">Tümü</button>
+                <button type="button" class="project-tab" data-project-filter="ongoing" aria-pressed="false">Devam Eden</button>
+                <button type="button" class="project-tab" data-project-filter="completed" aria-pressed="false">Tamamlanan</button>
+            </div>
+
+            <div class="filter-row">
+                <partial name="_FilterDropdown" model="@(new AncinInsaat.Models.FilterDropdownModel { FilterKey = "type", Placeholder = "Proje Tipi", Options = Model.ProjectTypeOptions })" />
+                <partial name="_FilterDropdown" model="@(new AncinInsaat.Models.FilterDropdownModel { FilterKey = "location", Placeholder = "Lokasyon", Options = Model.LocationOptions })" />
+            </div>
+        }
+    </div>
+</section>
+
+<section class="section projects-grid-section" aria-label="Proje listesi">
+    <div class="container">
+        @if (Model.Cards.Count == 0)
+        {
+            <p class="projects-grid-empty">Şu anda listelenecek bir proje bulunmuyor. Yakında burada olacağız.</p>
+        }
+        else
+        {
+            <div class="grid grid-cols-3 projects-grid" data-project-grid data-reveal-group>
+                @foreach (var card in Model.Cards)
+                {
+                    <div class="projects-grid-item"
+                         data-project-status="@card.StatusFilterValue"
+                         data-project-type="@card.ProjectType"
+                         data-project-location="@card.Location"
+                         data-reveal>
+                        <partial name="_ProjectCard" model="card" />
+                    </div>
+                }
+            </div>
+
+            <p class="projects-grid-empty projects-grid-empty--filtered" hidden data-project-filter-empty>
+                Bu kategoride henüz bir proje bulunmuyor.
+            </p>
+        }
+    </div>
+</section>

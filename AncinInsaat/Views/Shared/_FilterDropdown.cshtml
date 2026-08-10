@@ -1,0 +1,28 @@
+@model AncinInsaat.Models.FilterDropdownModel
+
+@* Custom single-select listbox (see docs/04_ComponentLibrary.md's Filter
+   Dropdown entry). Behaviour — open/close, arrow-key roving, selection — is
+   wired in site.js off data-filter-dropdown / data-filter-key, following the
+   same button+popup interaction the Navbar's dropdown already uses. *@
+
+<div class="filter-dropdown" data-filter-dropdown data-filter-key="@Model.FilterKey" data-filter-value="all">
+    <button type="button"
+            class="filter-dropdown-trigger"
+            id="filter-dropdown-trigger-@Model.FilterKey"
+            aria-haspopup="listbox"
+            aria-expanded="false"
+            aria-controls="filter-dropdown-menu-@Model.FilterKey">
+        <span class="filter-dropdown-value" data-filter-dropdown-value>@Model.Placeholder</span>
+        <span class="filter-dropdown-chevron" aria-hidden="true"></span>
+    </button>
+    <ul class="filter-dropdown-menu"
+        id="filter-dropdown-menu-@Model.FilterKey"
+        role="listbox"
+        aria-labelledby="filter-dropdown-trigger-@Model.FilterKey">
+        <li role="option" aria-selected="true" data-filter-value="all" tabindex="0">@Model.Placeholder</li>
+        @foreach (var option in Model.Options)
+        {
+            <li role="option" aria-selected="false" data-filter-value="@option" tabindex="-1">@option</li>
+        }
+    </ul>
+</div>

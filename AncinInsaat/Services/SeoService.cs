@@ -9,8 +9,8 @@ public class SeoService : ISeoService
     // Used only when a page has no SeoMetadata row yet (e.g. a new page
     // wired before its copy is seeded) — keeps the site indexable with
     // generic-but-safe tags instead of a missing-metadata crash.
-    private const string DefaultTitle = "Ançın İnşaat";
-    private const string DefaultDescription = "Ançın İnşaat — Aydın merkezli, güven ve zanaatkârlıkla şekillenen konut projeleri.";
+    private const string DefaultTitle = "Ancın İnşaat";
+    private const string DefaultDescription = "Ancın İnşaat — Aydın merkezli, güven ve zanaatkârlıkla şekillenen konut projeleri.";
     private const string DefaultOgImage = "/images/seo/og-home.webp";
 
     private readonly AppDbContext _context;

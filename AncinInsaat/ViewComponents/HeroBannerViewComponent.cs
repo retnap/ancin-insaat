@@ -36,7 +36,7 @@ public class HeroBannerViewComponent : ViewComponent
         var model = new HeroBannerViewModel
         {
             Heading = "NYSA GOLD RESIDENCE",
-            Subheading = "Ançın İnşaat, güven ve zanaatkârlıkla şekillenen projeleriyle yaşam alanlarını geleceğe taşıyor.",
+            Subheading = "Ancın İnşaat, güven ve zanaatkârlıkla şekillenen projeleriyle yaşam alanlarını geleceğe taşıyor.",
             PrimaryCtaLabel = "Projelerimizi İnceleyin",
             PrimaryCtaUrl = "/projects",
             SecondaryCtaLabel = "Bize Ulaşın",
@@ -50,7 +50,10 @@ public class HeroBannerViewComponent : ViewComponent
                 ? $"/images/projects/{latestProject.Slug}/banner.webp"
                 : null,
             ProjectCtaLabel = latestProject is not null ? "Projeye Git" : null,
-            ProjectCtaUrl = latestProject is not null ? $"/projects/{latestProject.Slug}" : null
+            ProjectCtaUrl = latestProject is not null ? $"/projects/{latestProject.Slug}" : null,
+            HeadingFontModifierClass = latestProject is not null
+                ? ProjectHeroFontMap.HeadingFontModifierClasses.GetValueOrDefault(latestProject.Slug)
+                : null
         };
 
         return View(model);

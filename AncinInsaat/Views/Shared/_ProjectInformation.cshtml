@@ -1,0 +1,34 @@
+@model AncinInsaat.Models.ProjectInformationModel
+
+@* Project Information "Standard" variant (docs/04_ComponentLibrary.md) — a
+   plain partial rather than a ViewComponent, matching _ProjectCard's
+   precedent: purely presentational, driven entirely by data the calling
+   page already has, no DI or cross-page invocation needed. *@
+
+<div class="card project-info-panel" aria-labelledby="project-info-heading">
+    <h3 id="project-info-heading" class="project-info-panel__title">Proje Bilgileri</h3>
+    <dl class="project-info-list">
+        <div class="project-info-row">
+            <dt>Proje Adı</dt>
+            <dd>@Model.Name</dd>
+        </div>
+        @if (!string.IsNullOrWhiteSpace(Model.Location))
+        {
+            <div class="project-info-row">
+                <dt>Konum</dt>
+                <dd>@Model.Location</dd>
+            </div>
+        }
+        <div class="project-info-row">
+            <dt>Durum</dt>
+            <dd>@Model.StatusLabel</dd>
+        </div>
+        @if (!string.IsNullOrWhiteSpace(Model.CompletionDateLabel))
+        {
+            <div class="project-info-row">
+                <dt>Tamamlanma Tarihi</dt>
+                <dd>@Model.CompletionDateLabel</dd>
+            </div>
+        }
+    </dl>
+</div>

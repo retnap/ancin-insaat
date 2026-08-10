@@ -1,33 +1,97 @@
-@model AncinInsaat.Data.Entities.Project
-
-@{
-    ViewData["Title"] = $"{Model.Name} — Ançın İnşaat";
-    var statusLabel = Model.Status == AncinInsaat.Data.Entities.ProjectStatus.Completed ? "Tamamlandı" : "Devam Ediyor";
-}
+@model AncinInsaat.Models.ProjectDetailViewModel
 
 @*
-    Placeholder detail page — routing only for now (project owner's
-    Projects Showcase request, 2026-07-28). Full layout (Gallery, Floor
-    Plans, Business Partners, Catalogue — docs/03_PageBlueprints.md "Page —
-    Project Detail") is a separate, not-yet-requested milestone.
+    Project Detail — cinematic redesign (2026-07-31), inspired by (not
+    copying) Inspirationals/Folkart's Orion project page: layout, section
+    ordering and interaction feel only, restyled entirely in Ançın's own
+    Design System. Title/description/canonical/OG/RealEstateListing schema
+    come from ViewData["Seo"] + ViewData["SeoPageType"], set in
+    ProjectsController.Details via ISeoService — see _Layout.cshtml's <head>
+    and SeoStructuredDataViewComponent.
+
+    Page flow: Breadcrumb → Hero (full-viewport, HeroBannerProjectDetail) →
+    Concept (media + text panel, folds in Project Information) → Location &
+    Distances (conditional) → Gallery (category-filterable) → Project
+    Catalogue (conditional) → Social Facilities (conditional) → Floor Plans
+    (conditional) → shared Media Viewer dialog. See docs/14_Decisions.md for
+    the full rationale and the data model additions (ProjectImage.Category,
+    ProjectNearbyPlace) this redesign introduced.
 *@
 
-@{
-    var breadcrumbTrail = new List<AncinInsaat.ViewComponents.BreadcrumbItem>
-    {
-        new() { Label = Model.Name }
-    };
-}
-@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail })
+@* Nysa Gold Residence reference redesign (2026-08-07), rolled out to every
+   project (2026-08-08): breadcrumb removed entirely so the Hero is the very
+   first visual element after the navbar (Folkart-style cinematic open,
+   transparent navbar over the Hero image — see .hero--overlap-navbar in
+   site.css). Every section below now uses the same design language that
+   was validated on Nysa Gold; only the underlying project data (images,
+   copy, floor plans, catalogue, etc.) still varies per project. *@
 
-<section class="section project-detail-placeholder">
+@await Component.InvokeAsync("HeroBannerProjectDetail", new
+{
+    slug = Model.Slug,
+    heading = Model.Name,
+    subheading = Model.ShortDescription,
+    backgroundImageUrl = Model.HeroBackgroundImageUrl,
+    statusLabel = Model.StatusLabel,
+    statusModifierClass = Model.StatusModifierClass,
+    catalogueUrl = Model.CatalogueUrl,
+    catalogueComingSoonHeroToast = Model.CatalogueComingSoonHeroToast,
+    sitePlanImageUrls = Model.SitePlanImageUrls,
+    sitePlanComingSoon = Model.SitePlanComingSoon,
+    scrollTargetId = "project-concept"
+})
+
+<section class="section project-concept-section" id="project-concept" aria-labelledby="project-concept-heading">
     <div class="container">
-        <span class="project-status-badge @(Model.Status == AncinInsaat.Data.Entities.ProjectStatus.Completed ? "project-status-badge--completed" : "project-status-badge--ongoing")">@statusLabel</span>
-        <h1>@Model.Name</h1>
-        @if (!string.IsNullOrWhiteSpace(Model.ShortDescription))
-        {
-            <p class="section-header__description">@Model.ShortDescription</p>
-        }
-        <p>Bu projenin detay sayfası hazırlanmaktadır.</p>
+        <partial name="_ProjectConcept" model="Model" />
     </div>
 </section>
+
+@if (!string.IsNullOrWhiteSpace(Model.Information.Location) || Model.NearbyPlaces.Count > 0)
+{
+    <section class="section project-location-section project-location-section--decorative" id="project-location" aria-labelledby="project-location-heading">
+        <div class="container">
+            <partial name="_ProjectLocation" model="Model" />
+        </div>
+    </section>
+}
+
+<section class="section project-gallery-section" id="project-gallery" aria-labelledby="project-gallery-heading">
+    <div class="container">
+        <partial name="_ProjectGallery" model="Model" />
+    </div>
+</section>
+
+@if (!string.IsNullOrWhiteSpace(Model.CatalogueUrl))
+{
+    <partial name="_ProjectCatalogue" model="Model" />
+}
+
+@* Nysa Gold Residence reference redesign (2026-08-07), rolled out to every
+   project (2026-08-08): Social Facilities no longer gets a standalone
+   section for any project — that content now lives only inside Gallery's
+   "Sosyal Alan Görselleri" category (see _ProjectGallery.cshtml).
+   _SocialFacilities.cshtml and Model.SocialFacilities are left in place
+   (unused by this page) rather than deleted, since Project.Amenities
+   remains meaningful business data that may resurface elsewhere (e.g. a
+   future Admin Panel). *@
+
+@* Floor Plans always renders, same as Gallery — a project with zero real
+   FloorPlan rows gets _FloorPlans.cshtml's own empty state ("Planlar yakında
+   eklenecektir.") instead of the section disappearing (Hacıfeyzullah -
+   Q-Latis, 2026-08-10; see _FloorPlans.cshtml's FloorPlans.Count == 0
+   branch). Every other project already has 1+ FloorPlan rows (real or the
+   existing BuildPlaceholderFloorPlans stand-in), so this is purely additive
+   — none of them can reach the new branch. *@
+<section class="section project-floorplans-section project-floorplans-section--decorative" id="project-floor-plans" aria-labelledby="project-floorplans-heading">
+    <div class="container">
+        <partial name="_FloorPlans" model="Model" />
+    </div>
+</section>
+
+<partial name="_MediaViewer" />
+<partial name="_Toast" />
+
+@* ---- Reserved: Business Partners (later phase) ----
+   <section id="project-business-partners"> ... </section>
+*@

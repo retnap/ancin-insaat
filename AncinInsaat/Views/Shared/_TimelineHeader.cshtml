@@ -1,0 +1,30 @@
+@model TimelineHeaderModel
+
+@*
+    Shared Timeline/History section header — used identically by Home's
+    Company History and About Us's Our Journey (2026-08-03 redesign
+    request, revised same day for a Folkart/Terzioğlu-grade luxury
+    treatment: one Timeline design across the whole site). The oversized
+    background title is purely decorative (aria-hidden), bled to the
+    viewport's left edge; the centered <h2> beneath it is the section's
+    real, readable heading and the target of the section's own
+    aria-labelledby. See site.css's "Timeline Header (shared)" section
+    for the left-edge bleed math and the .company-history/.our-journey
+    overflow: hidden rule it depends on to clip cleanly.
+
+    Subtitle may be blank (Davutlar D Latis Floor Plans heading request,
+    2026-08-09 — see _FloorPlans.cshtml) when a caller wants only the
+    decorative title visible. The <h2> still always renders, falling back to
+    DecorativeTitle as its accessible text and visually hidden via
+    .sr-only, so Model.HeadingId keeps naming a real, non-empty heading for
+    the section's own aria-labelledby.
+*@
+
+@{
+    var hasVisibleSubtitle = !string.IsNullOrWhiteSpace(Model.Subtitle);
+}
+
+<div class="timeline-header" data-reveal>
+    <p class="timeline-header__decorative" aria-hidden="true">@Model.DecorativeTitle</p>
+    <h2 id="@Model.HeadingId" class="@(hasVisibleSubtitle ? "timeline-header__subtitle" : "timeline-header__subtitle sr-only")">@(hasVisibleSubtitle ? Model.Subtitle : Model.DecorativeTitle)</h2>
+</div>

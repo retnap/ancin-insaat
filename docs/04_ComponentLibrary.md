@@ -135,13 +135,32 @@ Project Detail
 
 **Purpose**
 
-Filter project listings.
+Filter project listings by status.
 
 **Variants**
 
 - All
 - Ongoing
 - Completed
+
+**Used In**
+
+Projects
+
+---
+
+## Filter Dropdown
+
+**Purpose**
+
+Filter project listings by a single attribute (Project Type, Location) via
+a custom single-select listbox popup. Combines with Category Tabs and any
+other active Filter Dropdown using AND logic — a project must match every
+active filter to remain visible.
+
+**Variants**
+
+- Default (button trigger + listbox popup)
 
 **Used In**
 
@@ -161,6 +180,7 @@ Show the current page location.
 
 **Used In**
 
+Projects
 Project Detail
 
 ---
@@ -241,7 +261,13 @@ Our Values
 
 **Purpose**
 
-Highlight important numerical information.
+Highlight important numerical information. A sibling to Information Card,
+not a replacement: Information Card pairs an icon with a heading/
+description, Statistics Card pairs one large numeric value with a short
+label. Implemented (2026-08-03) as `StatisticsCardModel` +
+`Views/Shared/_StatisticsCard.cshtml`, reusing the existing `.card`
+primitive and `.grid`/`.grid-cols-N` utility exactly as Information Card's
+Grid layout does.
 
 **Variants**
 
@@ -250,8 +276,8 @@ Highlight important numerical information.
 
 **Used In**
 
-HR Policy
-About Us
+HR Policy (Employee Development)
+About Us (planned)
 
 ---
 
@@ -401,12 +427,13 @@ Project Detail
 
 **Purpose**
 
-Display project images.
+Display project images in a responsive grid. Each thumbnail opens the
+Lightbox. When a project has no gallery photos yet, shows an empty-state
+message instead of an empty or broken layout.
 
 **Variants**
 
 - Grid
-- Carousel
 
 **Used In**
 
@@ -418,7 +445,10 @@ Project Detail
 
 **Purpose**
 
-Display images in fullscreen.
+Display images in fullscreen: Previous/Next navigation, keyboard support
+(arrow keys, Escape), click-outside-to-close, swipe on touch devices, an
+image counter and a focus trap. One shared dialog instance per page,
+reused by both the Image Gallery and the Floor Plan Viewer.
 
 **Variants**
 
@@ -434,12 +464,13 @@ Project Detail
 
 **Purpose**
 
-Present project floor plans.
+Present project floor plans as thumbnails; opens the same Lightbox as the
+Image Gallery for a larger view. Section only appears when a project has
+real floor plan artwork.
 
 **Variants**
 
 - Grid
-- Preview
 
 **Used In**
 
@@ -642,6 +673,48 @@ Inform users that data is loading.
 
 Projects
 Forms
+
+---
+
+## Company Introduction
+
+**Purpose**
+
+Present the company's story on About Us — the same Section Header + Image
+Block pieces Company Overview already uses, composed with its own
+image/text ratio and column order so the page reads with its own identity
+(see docs/14_Decisions.md, "About Us Foundation"). Reversible: which side
+the image/text sit on is a single flag (CompanyIntroductionViewModel.TextFirst),
+not a markup change.
+
+**Variants**
+
+- Default
+
+**Used In**
+
+About Us
+
+---
+
+## Our Journey
+
+**Purpose**
+
+Present company milestones on About Us — reuses History Info Panel and
+History Carousel exactly as Company History (Home) does, both reading the
+same shared `AncinInsaat.Data.CompanyHistoryData` source rather than each
+page keeping its own copy. Unlike Company History, leads with a real
+Section Header instead of an oversized decorative title and has no Video
+Showcase.
+
+**Variants**
+
+- Default
+
+**Used In**
+
+About Us
 
 ---
 

@@ -1,0 +1,43 @@
+@*
+    HR Policy (docs/03_PageBlueprints.md "Page — HR Policy"). Title/
+    description/canonical/OG/AboutPage schema come from ViewData["Seo"] +
+    ViewData["SeoPageType"], set in HrPolicyController.Index via
+    ISeoService — see _Layout.cshtml's <head> and
+    SeoStructuredDataViewComponent.
+
+    Page flow (approved plan, 2026-08-03): Breadcrumb → Hero Banner
+    (Standard, dedicated placeholder image — same "always has its own
+    banner" precedent as About Us/Values) → HR Philosophy (Section Header +
+    Image Block + copy, HrPhilosophyViewComponent) → Core Principles
+    (Information Card Grid, CorePrinciplesViewComponent) → Employee
+    Development (Section Header + Statistics Card + copy,
+    EmployeeDevelopmentViewComponent). Career CTA is intentionally not
+    reintroduced as a page-specific section — the global CTA Banner
+    (_Layout.cshtml, docs/14_Decisions.md 2026-07-28) already renders on
+    every page and the single-global-CTA architecture is kept as-is per
+    project owner's approval. Social Media is likewise intentionally
+    omitted, consistent with About Us/Our Values — the global Footer
+    already covers it. Projects CTA / Partner Logos / Footer / Floating
+    Contact Button are already global.
+*@
+
+@{
+    var breadcrumbTrail = new List<AncinInsaat.ViewComponents.BreadcrumbItem>
+    {
+        new() { Label = "İnsan Kaynakları Politikası" }
+    };
+}
+@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail })
+
+@await Component.InvokeAsync("HeroBannerStandard", new
+{
+    heading = "İnsan Kaynakları Politikası",
+    subheading = "Ancın İnşaat'ta insana değer veren, güvene dayalı bir kurum kültürü.",
+    backgroundImageUrl = "/images/hero/hr-policy-placeholder.svg"
+})
+
+@await Component.InvokeAsync("HrPhilosophy")
+
+@await Component.InvokeAsync("CorePrinciples")
+
+@await Component.InvokeAsync("EmployeeDevelopment")

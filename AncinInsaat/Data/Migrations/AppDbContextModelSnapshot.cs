@@ -96,19 +96,31 @@ namespace AncinInsaat.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("ApartmentType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("GrossAreaM2")
+                        .HasPrecision(6, 2)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ImagePath")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<decimal>("NetAreaM2")
+                        .HasPrecision(6, 2)
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("ProjectId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
+                    b.Property<decimal>("SalesGrossAreaM2")
+                        .HasPrecision(6, 2)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -116,6 +128,34 @@ namespace AncinInsaat.Data.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("FloorPlans");
+                });
+
+            modelBuilder.Entity("AncinInsaat.Data.Entities.FloorPlanRoom", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("AreaM2")
+                        .HasPrecision(6, 2)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("FloorPlanId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FloorPlanId");
+
+                    b.ToTable("FloorPlanRooms");
                 });
 
             modelBuilder.Entity("AncinInsaat.Data.Entities.JobApplication", b =>
@@ -194,7 +234,31 @@ namespace AncinInsaat.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Amenities")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("CatalogueComingSoon")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("CatalogueComingSoonHeroToast")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CataloguePath")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CatalogueTitle")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime?>("CompletionDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ConceptDescription")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ConceptVideoPath")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ConceptVideoPosterPath")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CoverImage")
@@ -221,14 +285,23 @@ namespace AncinInsaat.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("LocationImagePath")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("ProjectType")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("ShortDescription")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("SitePlanComingSoon")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Slug")
                         .IsRequired()
@@ -255,7 +328,153 @@ namespace AncinInsaat.Data.Migrations
                     b.ToTable("Projects");
                 });
 
+            modelBuilder.Entity("AncinInsaat.Data.Entities.ProjectConceptImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Eyebrow")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId", "DisplayOrder");
+
+                    b.ToTable("ProjectConceptImages");
+                });
+
+            modelBuilder.Entity("AncinInsaat.Data.Entities.ProjectConceptVideo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Eyebrow")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PosterPath")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("VideoPath")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId", "DisplayOrder");
+
+                    b.ToTable("ProjectConceptVideos");
+                });
+
             modelBuilder.Entity("AncinInsaat.Data.Entities.ProjectImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AltText")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ApartmentType")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Block")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Category")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("VideoPath")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjectImages");
+                });
+
+            modelBuilder.Entity("AncinInsaat.Data.Entities.ProjectNearbyPlace", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Distance")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjectNearbyPlaces");
+                });
+
+            modelBuilder.Entity("AncinInsaat.Data.Entities.ProjectSitePlanImage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -277,9 +496,9 @@ namespace AncinInsaat.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("ProjectId", "DisplayOrder");
 
-                    b.ToTable("ProjectImages");
+                    b.ToTable("ProjectSitePlanImages");
                 });
 
             modelBuilder.Entity("AncinInsaat.Data.Entities.SeoMetadata", b =>
@@ -383,6 +602,17 @@ namespace AncinInsaat.Data.Migrations
                     b.Navigation("Project");
                 });
 
+            modelBuilder.Entity("AncinInsaat.Data.Entities.FloorPlanRoom", b =>
+                {
+                    b.HasOne("AncinInsaat.Data.Entities.FloorPlan", "FloorPlan")
+                        .WithMany("Rooms")
+                        .HasForeignKey("FloorPlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FloorPlan");
+                });
+
             modelBuilder.Entity("AncinInsaat.Data.Entities.JobApplication", b =>
                 {
                     b.HasOne("AncinInsaat.Data.Entities.CareerPosition", "CareerPosition")
@@ -405,10 +635,54 @@ namespace AncinInsaat.Data.Migrations
                     b.Navigation("Project");
                 });
 
+            modelBuilder.Entity("AncinInsaat.Data.Entities.ProjectConceptImage", b =>
+                {
+                    b.HasOne("AncinInsaat.Data.Entities.Project", "Project")
+                        .WithMany("ConceptImages")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("AncinInsaat.Data.Entities.ProjectConceptVideo", b =>
+                {
+                    b.HasOne("AncinInsaat.Data.Entities.Project", "Project")
+                        .WithMany("ConceptVideos")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
             modelBuilder.Entity("AncinInsaat.Data.Entities.ProjectImage", b =>
                 {
                     b.HasOne("AncinInsaat.Data.Entities.Project", "Project")
                         .WithMany("Images")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("AncinInsaat.Data.Entities.ProjectNearbyPlace", b =>
+                {
+                    b.HasOne("AncinInsaat.Data.Entities.Project", "Project")
+                        .WithMany("NearbyPlaces")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("AncinInsaat.Data.Entities.ProjectSitePlanImage", b =>
+                {
+                    b.HasOne("AncinInsaat.Data.Entities.Project", "Project")
+                        .WithMany("SitePlanImages")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -421,13 +695,26 @@ namespace AncinInsaat.Data.Migrations
                     b.Navigation("Applications");
                 });
 
+            modelBuilder.Entity("AncinInsaat.Data.Entities.FloorPlan", b =>
+                {
+                    b.Navigation("Rooms");
+                });
+
             modelBuilder.Entity("AncinInsaat.Data.Entities.Project", b =>
                 {
+                    b.Navigation("ConceptImages");
+
+                    b.Navigation("ConceptVideos");
+
                     b.Navigation("FloorPlans");
 
                     b.Navigation("Images");
 
+                    b.Navigation("NearbyPlaces");
+
                     b.Navigation("Partners");
+
+                    b.Navigation("SitePlanImages");
                 });
 #pragma warning restore 612, 618
         }

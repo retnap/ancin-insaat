@@ -1,0 +1,49 @@
+@model AncinInsaat.Models.ProjectDetailViewModel
+
+@* Social Facilities (docs/03_PageBlueprints.md) — Project Detail redesign,
+   2026-07-31. Left: title, description, Previous/Next controls. Right: a
+   horizontally-scrolling row of large facility cards, one per
+   Project.Amenities line, each optionally showing a "Social Areas" gallery
+   photo (see SocialFacilityModel / ProjectsController.Details). Details.cshtml
+   only composes this partial when Model.SocialFacilities is non-empty. *@
+
+<div class="social-facilities">
+    <div class="social-facilities-intro" data-reveal="left">
+        <partial name="_SectionHeader" model="@(new AncinInsaat.Models.SectionHeaderModel
+        {
+            Eyebrow = "Sosyal Olanaklar",
+            Title = "Sosyal Olanaklar",
+            Description = "Projenin sunduğu ortak yaşam alanlarını keşfedin.",
+            HeadingId = "project-social-facilities-heading"
+        })" />
+
+        @if (Model.SocialFacilities.Count > 1)
+        {
+            <div class="social-facilities-nav">
+                <button type="button" class="social-facilities-nav-btn" data-social-facilities-prev aria-label="Önceki olanak">
+                    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                        <path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+                <button type="button" class="social-facilities-nav-btn" data-social-facilities-next aria-label="Sonraki olanak">
+                    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                        <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+            </div>
+        }
+    </div>
+
+    <div class="social-facilities-track-wrapper" data-reveal="right">
+        <ul class="social-facilities-track" data-social-facilities-track>
+            @foreach (var facility in Model.SocialFacilities)
+            {
+                var cardStyle = facility.ImageSrc is not null ? $"--facility-bg-image: url('{facility.ImageSrc}')" : null;
+
+                <li class="social-facility-card @(facility.ImageSrc is null ? "social-facility-card--text-only" : "")" style="@cardStyle">
+                    <span class="social-facility-name">@facility.Name</span>
+                </li>
+            }
+        </ul>
+    </div>
+</div>

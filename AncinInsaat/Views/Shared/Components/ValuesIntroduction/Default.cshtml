@@ -1,0 +1,24 @@
+@model ValuesIntroductionViewModel
+
+@*
+    Our Values "Introduction" (docs/03_PageBlueprints.md — Introduction
+    phase, 2026-08-03). Even 50/50 split via the shared .grid-cols-2 utility
+    (Section 7 of site.css) — Section Header left / copy right, each with
+    its own reveal direction (left/right) inside one data-reveal-group, same
+    left/right split convention Mission & Vision already established, just
+    without cards.
+*@
+
+<section class="section values-introduction" id="values-introduction" aria-labelledby="@Model.SectionHeader.HeadingId">
+    <div class="container grid grid-cols-2 values-introduction-grid" data-reveal-group>
+        <div class="values-introduction-header" data-reveal="left">
+            <partial name="_SectionHeader" model="Model.SectionHeader" />
+        </div>
+        <div class="values-introduction-content" data-reveal="right">
+            @foreach (var paragraph in Model.Paragraphs)
+            {
+                <p class="values-introduction-paragraph">@paragraph</p>
+            }
+        </div>
+    </div>
+</section>

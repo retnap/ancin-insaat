@@ -1,0 +1,26 @@
+@model ProjectCardModel
+
+@* Project Card "Standard" — dedicated project-card-standard* classes so the
+   Home page's carousel cards (ProjectsShowcaseViewComponent's own markup,
+   still on the original .project-card / .project-card-overlay classes) stay
+   completely untouched. See docs/04_ComponentLibrary.md. *@
+
+<a class="project-card-standard" href="@Model.DetailUrl" aria-label="@Model.Name">
+    <span class="project-card-standard-media">
+        <img class="project-card-standard-image" src="@Model.CoverImageSrc" alt="" loading="lazy" decoding="async" />
+        <span class="project-card-standard-scrim" aria-hidden="true"></span>
+        <span class="project-status-badge @Model.StatusModifierClass">@Model.StatusLabel</span>
+        <span class="project-card-standard-content">
+            <span class="project-card-standard-name">@Model.Name</span>
+            @if (!string.IsNullOrWhiteSpace(Model.Location))
+            {
+                <span class="project-card-standard-location">@Model.Location</span>
+            }
+        </span>
+        <span class="project-card-standard-arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18">
+                <path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </span>
+    </span>
+</a>

@@ -1,0 +1,21 @@
+@model SuccessMessageModel
+
+@* Reusable premium confirmation card (docs/04_ComponentLibrary.md's Success
+   Message, Contact + future Career). role="status" + tabindex="-1" +
+   [data-success-message] let site.js move focus here on load so screen
+   reader users are told the submission succeeded without relying on a
+   plain-text message (see docs/05_Animations.md "Forms" — feedback must be
+   immediate). Styled from the approved palette only (near-black/white +
+   accent checkmark) rather than introducing an unapproved success green —
+   see site.css Section 8 note. *@
+
+<div class="success-message" role="status" tabindex="-1" data-success-message>
+    <span class="success-message__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="28" height="28">
+            <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.6" />
+            <path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+    </span>
+    <h3 class="success-message__title">@Model.Title</h3>
+    <p class="success-message__description">@Model.Description</p>
+</div>

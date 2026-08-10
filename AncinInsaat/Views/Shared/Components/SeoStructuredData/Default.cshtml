@@ -2,3 +2,7 @@
 
 <script type="application/ld+json">@Html.Raw(Model.OrganizationJsonLd)</script>
 <script type="application/ld+json">@Html.Raw(Model.WebSiteJsonLd)</script>
+@if (Model.PageJsonLd is not null)
+{
+    <script type="application/ld+json">@Html.Raw(Model.PageJsonLd)</script>
+}

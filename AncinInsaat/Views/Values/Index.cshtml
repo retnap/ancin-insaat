@@ -1,0 +1,47 @@
+@*
+    Our Values (2026-08-03) — docs/03_PageBlueprints.md "Page — Our Values".
+    Title/description/canonical/OG/AboutPage schema come from
+    ViewData["Seo"] + ViewData["SeoPageType"], set in ValuesController.Index
+    via ISeoService — see _Layout.cshtml's <head> and
+    SeoStructuredDataViewComponent.
+
+    Page flow (project owner's 2026-08-03 approval, narrower than
+    03_PageBlueprints.md's fuller section list): Breadcrumb → Hero Banner
+    (Standard) → Introduction → Core Values → Quality Commitment. Projects
+    CTA / Partner Logos / Footer / Floating Contact Button are already
+    global (_Layout.cshtml); Social Media is out of this milestone's scope
+    per the project owner — same "global pieces need no section of their
+    own" reasoning as About Us's Foundation phase.
+
+    Hero Banner uses a dedicated placeholder banner image
+    (wwwroot/images/hero/values-placeholder.svg), matching About Us/Project
+    Detail's "always has its own banner" precedent rather than the neutral
+    gradient HeroBannerStandard falls back to.
+
+    Introduction / Core Values / Quality Commitment each reuse existing
+    building blocks only (Section Header, Information Card's Grid layout)
+    — no new Value Card/Introduction Card component, per project owner's
+    explicit instruction — see ValuesIntroductionViewComponent /
+    CoreValuesViewComponent / QualityCommitmentViewComponent.
+*@
+
+@{
+    var breadcrumbTrail = new List<AncinInsaat.ViewComponents.BreadcrumbItem>
+    {
+        new() { Label = "Değerlerimiz" }
+    };
+}
+@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail })
+
+@await Component.InvokeAsync("HeroBannerStandard", new
+{
+    heading = "Değerlerimiz",
+    subheading = "Yarım asra yaklaşan yolculuğumuzda bize yön veren ilkeler.",
+    backgroundImageUrl = "/images/hero/values-placeholder.svg"
+})
+
+@await Component.InvokeAsync("ValuesIntroduction")
+
+@await Component.InvokeAsync("CoreValues")
+
+@await Component.InvokeAsync("QualityCommitment")

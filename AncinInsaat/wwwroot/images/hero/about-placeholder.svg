@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-hidden="true">
+  <title>Ancın İnşaat — Hakkımızda, yer tutucu banner görseli</title>
+  <rect width="1600" height="900" fill="#F0EEEB" />
+
+  <!-- Minimal architectural skyline line-art, wider composition than
+       Company Overview's single-elevation placeholder since this is a
+       full-bleed hero background. Placeholder only — replace with real
+       banner photography before launch (see wwwroot/images/hero). -->
+  <g fill="none" stroke="#55504D" stroke-width="2.5">
+    <rect x="140" y="420" width="220" height="330" />
+    <line x1="196" y1="420" x2="196" y2="750" />
+    <line x1="252" y1="420" x2="252" y2="750" />
+    <line x1="308" y1="420" x2="308" y2="750" />
+    <line x1="140" y1="480" x2="360" y2="480" />
+    <line x1="140" y1="540" x2="360" y2="540" />
+    <line x1="140" y1="600" x2="360" y2="600" />
+    <line x1="140" y1="660" x2="360" y2="660" />
+    <line x1="140" y1="720" x2="360" y2="720" />
+
+    <rect x="420" y="300" width="260" height="450" />
+    <line x1="484" y1="300" x2="484" y2="750" />
+    <line x1="548" y1="300" x2="548" y2="750" />
+    <line x1="612" y1="300" x2="612" y2="750" />
+    <line x1="420" y1="360" x2="680" y2="360" />
+    <line x1="420" y1="420" x2="680" y2="420" />
+    <line x1="420" y1="480" x2="680" y2="480" />
+    <line x1="420" y1="540" x2="680" y2="540" />
+    <line x1="420" y1="600" x2="680" y2="600" />
+    <line x1="420" y1="660" x2="680" y2="660" />
+    <line x1="420" y1="720" x2="680" y2="720" />
+
+    <rect x="760" y="220" width="230" height="530" />
+    <line x1="818" y1="220" x2="818" y2="750" />
+    <line x1="876" y1="220" x2="876" y2="750" />
+    <line x1="934" y1="220" x2="934" y2="750" />
+    <line x1="760" y1="280" x2="990" y2="280" />
+    <line x1="760" y1="340" x2="990" y2="340" />
+    <line x1="760" y1="400" x2="990" y2="400" />
+    <line x1="760" y1="460" x2="990" y2="460" />
+    <line x1="760" y1="520" x2="990" y2="520" />
+    <line x1="760" y1="580" x2="990" y2="580" />
+    <line x1="760" y1="640" x2="990" y2="640" />
+    <line x1="760" y1="700" x2="990" y2="700" />
+
+    <rect x="1060" y="380" width="240" height="370" />
+    <line x1="1120" y1="380" x2="1120" y2="750" />
+    <line x1="1180" y1="380" x2="1180" y2="750" />
+    <line x1="1240" y1="380" x2="1240" y2="750" />
+    <line x1="1060" y1="440" x2="1300" y2="440" />
+    <line x1="1060" y1="500" x2="1300" y2="500" />
+    <line x1="1060" y1="560" x2="1300" y2="560" />
+    <line x1="1060" y1="620" x2="1300" y2="620" />
+    <line x1="1060" y1="680" x2="1300" y2="680" />
+
+    <rect x="1330" y="500" width="150" height="250" />
+    <line x1="1372" y1="500" x2="1372" y2="750" />
+    <line x1="1414" y1="500" x2="1414" y2="750" />
+    <line x1="1330" y1="560" x2="1480" y2="560" />
+    <line x1="1330" y1="620" x2="1480" y2="620" />
+    <line x1="1330" y1="680" x2="1480" y2="680" />
+  </g>
+
+  <line x1="60" y1="750" x2="1540" y2="750" stroke="#9E2B25" stroke-width="4" />
+</svg>

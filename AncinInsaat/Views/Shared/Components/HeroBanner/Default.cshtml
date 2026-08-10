@@ -4,13 +4,38 @@
     var heroStyle = Model.BackgroundImageUrl is not null
         ? $"--hero-bg-image: url('{Model.BackgroundImageUrl}')"
         : null;
+
+    // Home Hero title typography match (Home Page revision #2, 2026-08-10):
+    // when the featured project has a mapped heading font (ProjectHeroFontMap
+    // — the same map every Project Detail Hero resolves from), the title
+    // reuses that Hero's exact typography classes (font/weight/letter-
+    // spacing/case/line-height/max-width/wrapping) and left inset. Today
+    // only Nysa Gold is mapped, so this applies to it and no other project;
+    // a project with no entry renders exactly as before. Only the title and
+    // its immediate wrapper are affected — Home's own bottom-anchored
+    // layout, background, buttons and Scroll Indicator stay untouched.
+    var hasProjectHeadingStyle = !string.IsNullOrWhiteSpace(Model.HeadingFontModifierClass);
+    var headingClass = "hero-heading" + (hasProjectHeadingStyle ? $" hero-heading--project {Model.HeadingFontModifierClass}" : "");
+    var contentClass = "hero-content" + (hasProjectHeadingStyle ? " hero-content--start" : "");
+    var headingLang = hasProjectHeadingStyle ? "en" : null;
 }
 
-<section class="hero" style="@heroStyle" aria-labelledby="hero-heading">
+@* Nysa Gold Residence reference redesign (2026-08-07), reused on the Home
+   Hero (2026-08-10): hero--overlap-navbar pulls the Hero up under the
+   sticky Navbar so site.js's "Navbar — Transparent Over Hero" observer
+   (scoped by this class, not by page) can toggle it transparent while the
+   Hero is in view — same architecture as every Project Detail Hero, no
+   second implementation. *@
+<section class="hero hero--overlap-navbar hero--full-viewport" style="@heroStyle" aria-labelledby="hero-heading">
     <div class="hero-bg" aria-hidden="true"></div>
+
+    <nav class="hero-social-nav" aria-label="Sosyal medya">
+        @await Component.InvokeAsync("SocialMedia")
+    </nav>
+
     <div class="container hero-inner">
-        <div class="hero-content">
-            <h1 id="hero-heading" class="hero-heading">@Model.Heading</h1>
+        <div class="@contentClass">
+            <h1 id="hero-heading" class="@headingClass" lang="@headingLang">@Model.Heading</h1>
             <p class="hero-subheading">@Model.Subheading</p>
         </div>
     </div>

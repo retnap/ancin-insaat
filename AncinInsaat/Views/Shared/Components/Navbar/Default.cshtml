@@ -2,34 +2,35 @@
 
 <div class="container navbar-inner">
 
-    <a href="/" class="navbar-logo" aria-label="Ançın İnşaat — Home">
-        <img src="~/images/logos/ancin-logo.png" alt="Ançın İnşaat" width="114" height="40" />
+    <a href="/" class="navbar-logo" aria-label="Ancın İnşaat — Anasayfa">
+        @* Nysa Gold Residence UI revision (2026-08-07), rolled out to every
+           Project Detail page (2026-08-08) — data-navbar-logo/
+           data-logo-src-solid/data-logo-src-transparent let site.js's
+           "Navbar — Transparent Over Hero" module swap the logo image src
+           alongside the .navbar--transparent class it toggles, with no
+           server-side branching here: pages with no Project Detail Hero
+           simply never set .navbar--transparent, so the solid logo below is
+           what always renders for them. *@
+        <img data-navbar-logo
+             src="~/images/logos/ancin-logo-removebg-preview.png"
+             data-logo-src-solid="@Url.Content("~/images/logos/ancin-logo-removebg-preview.png")"
+             data-logo-src-transparent="@Url.Content("~/images/logos/ancin-logo-siyah-removebg-preview.png")"
+             alt="Ancın İnşaat" width="132" height="46" />
     </a>
 
-    <button type="button"
-            id="navbar-toggle"
-            class="navbar-toggle"
-            aria-expanded="false"
-            aria-controls="navbar-nav"
-            aria-label="Open menu">
-        <span class="navbar-toggle-bar"></span>
-        <span class="navbar-toggle-bar"></span>
-        <span class="navbar-toggle-bar"></span>
-    </button>
-
-    <nav class="navbar-nav" id="navbar-nav" aria-label="Main navigation">
+    <nav class="navbar-nav" id="navbar-nav" aria-label="Ana menü">
         <ul class="navbar-nav-list">
             <li>
-                <a href="/" class="nav-link @(Model.IsHomeActive ? "nav-link--active" : "")">Home</a>
+                <a href="/" class="nav-link @(Model.IsHomeActive ? "nav-link--active" : "")">Anasayfa</a>
             </li>
             <li class="nav-item-dropdown">
                 <button type="button"
                         id="nav-dropdown-trigger-corporate"
-                        class="nav-link nav-link--parent"
+                        class="nav-link nav-link--parent @(Model.IsCorporateActive ? "nav-link--active" : "")"
                         aria-haspopup="true"
                         aria-expanded="false"
                         aria-controls="nav-dropdown-menu-corporate">
-                    Corporate
+                    Kurumsal
                     <span class="nav-chevron" aria-hidden="true"></span>
                 </button>
                 <ul class="nav-dropdown"
@@ -37,10 +38,13 @@
                     role="menu"
                     aria-labelledby="nav-dropdown-trigger-corporate">
                     <li role="none">
-                        <a role="menuitem" tabindex="-1" class="nav-dropdown-link" href="/about">About Us</a>
+                        <a role="menuitem" tabindex="-1" class="nav-dropdown-link" href="/about-us">Hakkımızda</a>
                     </li>
                     <li role="none">
-                        <a role="menuitem" tabindex="-1" class="nav-dropdown-link" href="/values">Our Values</a>
+                        <a role="menuitem" tabindex="-1" class="nav-dropdown-link" href="/values">Değerlerimiz</a>
+                    </li>
+                    <li role="none">
+                        <a role="menuitem" tabindex="-1" class="nav-dropdown-link" href="/hr-policy">İnsan Kaynakları Politikası</a>
                     </li>
                     <li role="none">
                         <a role="menuitem" tabindex="-1" class="nav-dropdown-link" href="/kvkk">KVKK</a>
@@ -48,34 +52,48 @@
                 </ul>
             </li>
             <li>
-                <a href="/projects" class="nav-link @(Model.IsProjectsActive ? "nav-link--active" : "")">Projects</a>
-            </li>
-            <li class="nav-item-dropdown">
-                <button type="button"
-                        id="nav-dropdown-trigger-people-first"
-                        class="nav-link nav-link--parent"
-                        aria-haspopup="true"
-                        aria-expanded="false"
-                        aria-controls="nav-dropdown-menu-people-first">
-                    People First
-                    <span class="nav-chevron" aria-hidden="true"></span>
-                </button>
-                <ul class="nav-dropdown"
-                    id="nav-dropdown-menu-people-first"
-                    role="menu"
-                    aria-labelledby="nav-dropdown-trigger-people-first">
-                    <li role="none">
-                        <a role="menuitem" tabindex="-1" class="nav-dropdown-link" href="/career">Career</a>
-                    </li>
-                    <li role="none">
-                        <a role="menuitem" tabindex="-1" class="nav-dropdown-link" href="/hr-policy">HR Policy</a>
-                    </li>
-                </ul>
+                <a href="/projects" class="nav-link @(Model.IsProjectsActive ? "nav-link--active" : "")">Projeler</a>
             </li>
             <li>
-                <a href="/contact" class="nav-link @(Model.IsContactActive ? "nav-link--active" : "")">Contact</a>
+                <a href="/career" class="nav-link @(Model.IsCareerActive ? "nav-link--active" : "")">Kariyer</a>
+            </li>
+            <li>
+                <a href="/contact" class="nav-link @(Model.IsContactActive ? "nav-link--active" : "")">İletişim</a>
             </li>
         </ul>
     </nav>
+
+    <div class="navbar-actions">
+
+        <div class="navbar-lang" role="group" aria-label="Dil seçimi">
+            <span class="lang-option lang-option--active" aria-current="true">TR</span>
+            <span class="lang-option lang-option--disabled" aria-disabled="true" title="Çok yakında">ENG</span>
+        </div>
+
+        <button type="button"
+                id="search-trigger"
+                class="navbar-search-trigger"
+                aria-haspopup="dialog"
+                aria-expanded="false"
+                aria-controls="search-overlay"
+                aria-label="Ara">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8" />
+                <path d="M19.5 19.5l-4.3-4.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            </svg>
+        </button>
+
+        <button type="button"
+                id="navbar-toggle"
+                class="navbar-toggle"
+                aria-expanded="false"
+                aria-controls="navbar-nav"
+                aria-label="Menüyü aç">
+            <span class="navbar-toggle-bar"></span>
+            <span class="navbar-toggle-bar"></span>
+            <span class="navbar-toggle-bar"></span>
+        </button>
+
+    </div>
 
 </div>

@@ -139,7 +139,7 @@ Project Detail Page
 
 /
 
-/about
+/about-us
 
 /values
 

@@ -1,0 +1,163 @@
+@model AncinInsaat.Models.CareerPageViewModel
+
+@*
+    Career (docs/03_PageBlueprints.md "Page — Career"). Title/description/
+    canonical/OG/WebPage schema come from ViewData["Seo"] +
+    ViewData["SeoPageType"], set in CareerController.Index via ISeoService —
+    see _Layout.cshtml's <head> and SeoStructuredDataViewComponent. JobPosting
+    structured data (one per published CareerPosition) is a second, additive
+    component — JobPostingStructuredDataViewComponent — invoked directly
+    below, alongside (not instead of) SeoStructuredData; it renders nothing
+    when Model.Positions is empty.
+
+    Page flow (project owner's approval): Breadcrumb ("Home → Kariyer", no
+    extra intermediate level) → Hero Banner (Standard, no dedicated image —
+    same neutral-gradient precedent as Contact, another form-oriented
+    utility page) → Why Join Ançın (WhyJoinAncinViewComponent, Information
+    Card Grid) → Open Positions (Information Card Grid, controller-built
+    the same way Contact builds its Info Card — no wrapper ViewComponent
+    needed for per-request DB data) → Application Form (Career Form,
+    honeypot + PRG, same shape as Contact's form) → Success Message after
+    PRG. CTA Banner / Partner Logos / Footer / Floating Contact Button are
+    already global (_Layout.cshtml).
+*@
+
+@{
+    bool IsInvalid(string key) => ViewData.ModelState.TryGetValue(key, out var entry) && entry.Errors.Count > 0;
+
+    var breadcrumbTrail = new List<AncinInsaat.ViewComponents.BreadcrumbItem>
+    {
+        new() { Label = "Kariyer" }
+    };
+}
+@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail })
+@await Component.InvokeAsync("JobPostingStructuredData", new { positions = Model.Positions })
+
+@await Component.InvokeAsync("HeroBannerStandard", new
+{
+    heading = "Kariyer",
+    subheading = "Ancın İnşaat ailesine katılın, Aydın'ın geleceğini birlikte inşa edelim."
+})
+
+@await Component.InvokeAsync("WhyJoinAncin")
+
+<section class="section career-open-positions" id="career-positions" aria-labelledby="career-positions-heading">
+    <div class="container">
+        <partial name="_SectionHeader" model="@(new AncinInsaat.Models.SectionHeaderModel
+        {
+            Eyebrow = "AÇIK POZİSYONLAR",
+            Title = "Açık Pozisyonlarımız",
+            Description = "Ekibimize katılabileceğiniz güncel pozisyonları inceleyin.",
+            HeadingId = "career-positions-heading"
+        })" />
+
+        @if (Model.Positions.Count > 0)
+        {
+            <partial name="_InformationCard" model="Model.OpenPositions" />
+        }
+        else
+        {
+            <p class="career-positions-empty">Şu anda açık pozisyonumuz bulunmamaktadır. Güncel ilanlar için lütfen tekrar ziyaret edin.</p>
+        }
+    </div>
+</section>
+
+<section class="section career-application" id="career-application-form" aria-labelledby="career-application-heading">
+    <div class="container career-application-inner">
+        <partial name="_SectionHeader" model="@(new AncinInsaat.Models.SectionHeaderModel
+        {
+            Eyebrow = "BAŞVUR",
+            Title = "Hemen Başvurun",
+            Description = "Açık pozisyonlarımızdan birini seçip formu doldurarak başvurunuzu iletebilirsiniz.",
+            CssClass = "section-header--center",
+            HeadingId = "career-application-heading"
+        })" />
+
+        @if (Model.ShowSuccess)
+        {
+            <partial name="_SuccessMessage" model="@(new AncinInsaat.Models.SuccessMessageModel
+            {
+                Title = "Başvurunuz Alındı",
+                Description = "İlginiz için teşekkür ederiz. Başvurunuzu inceleyip en kısa sürede sizinle iletişime geçeceğiz."
+            })" />
+        }
+        else if (Model.Positions.Count == 0)
+        {
+            <p class="career-positions-empty">Şu anda başvurabileceğiniz bir pozisyon bulunmamaktadır.</p>
+        }
+        else
+        {
+            <form class="career-form" asp-controller="Career" asp-action="Submit" method="post" enctype="multipart/form-data" aria-labelledby="career-application-heading">
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <p class="form-error form-summary-error" role="alert">Lütfen formdaki hataları düzeltip tekrar deneyin.</p>
+                }
+
+                <p class="career-form__required-note"><span aria-hidden="true">*</span> işaretli alanlar zorunludur.</p>
+
+                <div class="form-field">
+                    <label asp-for="Form.CareerPositionId">Pozisyon <span class="required-mark" aria-hidden="true">*</span></label>
+                    <select asp-for="Form.CareerPositionId" required
+                            aria-invalid="@(IsInvalid("Form.CareerPositionId") ? "true" : "false")" aria-describedby="CareerPositionId-error">
+                        <option value="">Pozisyon seçiniz</option>
+                        @foreach (var option in Model.PositionOptions)
+                        {
+                            <option value="@option.Value">@option.Text</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Form.CareerPositionId" id="CareerPositionId-error" class="form-error"></span>
+                </div>
+
+                <div class="form-field">
+                    <label asp-for="Form.FullName">Ad Soyad <span class="required-mark" aria-hidden="true">*</span></label>
+                    <input asp-for="Form.FullName" type="text" autocomplete="name" required maxlength="200" minlength="2"
+                           aria-invalid="@(IsInvalid("Form.FullName") ? "true" : "false")" aria-describedby="FullName-error" />
+                    <span asp-validation-for="Form.FullName" id="FullName-error" class="form-error"></span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-field">
+                        <label asp-for="Form.Email">E-posta <span class="required-mark" aria-hidden="true">*</span></label>
+                        <input asp-for="Form.Email" type="email" autocomplete="email" required maxlength="320"
+                               aria-invalid="@(IsInvalid("Form.Email") ? "true" : "false")" aria-describedby="Email-error" />
+                        <span asp-validation-for="Form.Email" id="Email-error" class="form-error"></span>
+                    </div>
+
+                    <div class="form-field">
+                        <label asp-for="Form.Phone">Telefon</label>
+                        <input asp-for="Form.Phone" type="tel" autocomplete="tel" maxlength="50"
+                               aria-invalid="@(IsInvalid("Form.Phone") ? "true" : "false")" aria-describedby="Phone-error" />
+                        <span asp-validation-for="Form.Phone" id="Phone-error" class="form-error"></span>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label asp-for="Form.CV">CV (PDF) <span class="required-mark" aria-hidden="true">*</span></label>
+                    <input asp-for="Form.CV" type="file" accept="application/pdf,.pdf" required
+                           aria-invalid="@(IsInvalid("Form.CV") ? "true" : "false")" aria-describedby="CV-error CV-hint" />
+                    <span id="CV-hint" class="form-hint">Yalnızca PDF, maksimum 5 MB.</span>
+                    <span asp-validation-for="Form.CV" id="CV-error" class="form-error"></span>
+                </div>
+
+                <div class="form-field">
+                    <label asp-for="Form.Message">Mesajınız</label>
+                    <textarea asp-for="Form.Message" maxlength="2000" rows="6"
+                              aria-invalid="@(IsInvalid("Form.Message") ? "true" : "false")" aria-describedby="Message-error"></textarea>
+                    <span asp-validation-for="Form.Message" id="Message-error" class="form-error"></span>
+                </div>
+
+                @* Honeypot — identical off-screen technique/rationale to _ContactInfo.cshtml
+                   (aria-hidden + tabindex="-1"); see CareerFormViewModel.Website and
+                   CareerController.Submit. Reuses .contact-form-honeypot's CSS as-is
+                   rather than duplicating the off-screen rule under a Career-specific
+                   class name. *@
+                <div class="contact-form-honeypot" aria-hidden="true">
+                    <label asp-for="Form.Website">Website</label>
+                    <input asp-for="Form.Website" type="text" tabindex="-1" autocomplete="off" />
+                </div>
+
+                <button type="submit" class="btn btn-primary career-form__submit" data-career-form-submit>Başvuruyu Gönder</button>
+            </form>
+        }
+    </div>
+</section>

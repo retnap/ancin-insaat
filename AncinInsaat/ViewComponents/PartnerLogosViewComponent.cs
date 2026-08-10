@@ -1,3 +1,4 @@
+using AncinInsaat.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AncinInsaat.ViewComponents;
@@ -13,25 +14,50 @@ namespace AncinInsaat.ViewComponents;
 // inventing a label. Part of the shared layout (renders on every page
 // below the CTA Banner), so content here must stay generic rather than
 // page-specific.
+//
+// 2026-08-03: each logo now links to its project detail page. The slug
+// isn't duplicated here — ImageAlt is matched against Project.Name via
+// IProjectQueryService (the same source ProjectsShowcaseViewComponent
+// reads) to build the DetailUrl, so Project stays the single source of
+// truth for slugs.
 public class PartnerLogosViewComponent : ViewComponent
 {
-    private static readonly IReadOnlyList<PartnerLogoItem> Partners = new List<PartnerLogoItem>
+    private static readonly IReadOnlyList<(string ImageSrc, string ImageAlt)> Partners = new List<(string ImageSrc, string ImageAlt)>
     {
-        new() { ImageSrc = "/images/logos/project-logos/logo_02-removebg-preview.png", ImageAlt = "Nlatis" },
-        new() { ImageSrc = "/images/logos/project-logos/logo_03-removebg-preview.png", ImageAlt = "Tralles Gold Residence" },
-        new() { ImageSrc = "/images/logos/project-logos/logo_04-removebg-preview.png", ImageAlt = "Alinda Gold Residence" },
-        new() { ImageSrc = "/images/logos/project-logos/logo_05-removebg-preview.png", ImageAlt = "Magnesia Gold Residence" },
-        new() { ImageSrc = "/images/logos/project-logos/logo_06-removebg-preview.png", ImageAlt = "La Fiore Karabağ" },
-        new() { ImageSrc = "/images/logos/project-logos/logo_07-removebg-preview.png", ImageAlt = "La Fiore Karabağ 2. Etap" },
-        new() { ImageSrc = "/images/logos/project-logos/logo_08-removebg-preview.png", ImageAlt = "Le Jardin" },
-        new() { ImageSrc = "/images/logos/project-logos/logo_09-removebg-preview.png", ImageAlt = "Lavia Kuyulu" },
-        new() { ImageSrc = "/images/logos/project-logos/logo_10-removebg-preview.png", ImageAlt = "Nysa Gold Residence" },
-        new() { ImageSrc = "/images/logos/project-logos/logo_11-removebg-preview.png", ImageAlt = "Dlatis Thermal Wellness Residence" }
+        ("/images/logos/project-logos/logo_02-removebg-preview.png", "Nlatis"),
+        ("/images/logos/project-logos/logo_03-removebg-preview.png", "Tralles Gold Residence"),
+        ("/images/logos/project-logos/logo_04-removebg-preview.png", "Alinda Gold Residence"),
+        ("/images/logos/project-logos/logo_05-removebg-preview.png", "Magnesia Gold Residence"),
+        ("/images/logos/project-logos/logo_06-removebg-preview.png", "La Fiore Karabağ"),
+        ("/images/logos/project-logos/logo_07-removebg-preview.png", "La Fiore Karabağ 2. Etap"),
+        ("/images/logos/project-logos/logo_08-removebg-preview.png", "Le Jardin"),
+        ("/images/logos/project-logos/logo_09-removebg-preview.png", "La Via Villalar 1. Etap"),
+        ("/images/logos/project-logos/logo_10-removebg-preview.png", "Nysa Gold Residence"),
+        ("/images/logos/project-logos/logo_11-removebg-preview.png", "Davutlar D Latis")
     };
 
-    public IViewComponentResult Invoke()
+    private readonly IProjectQueryService _projectQueryService;
+
+    public PartnerLogosViewComponent(IProjectQueryService projectQueryService)
     {
-        var model = new PartnerLogosViewModel { Partners = Partners };
+        _projectQueryService = projectQueryService;
+    }
+
+    public async Task<IViewComponentResult> InvokeAsync()
+    {
+        var projects = await _projectQueryService.GetPublishedProjectsAsync();
+        var slugsByName = projects.ToDictionary(project => project.Name, project => project.Slug);
+
+        var items = Partners
+            .Select(partner => new PartnerLogoItem
+            {
+                ImageSrc = partner.ImageSrc,
+                ImageAlt = partner.ImageAlt,
+                DetailUrl = $"/projects/{slugsByName[partner.ImageAlt]}"
+            })
+            .ToList();
+
+        var model = new PartnerLogosViewModel { Partners = items };
         return View(model);
     }
 }

@@ -1,0 +1,22 @@
+@model QualityCommitmentViewModel
+
+@*
+    Our Values "Quality Commitment" (docs/03_PageBlueprints.md — Quality
+    Commitment phase, 2026-08-03). Centered Section Header above a single
+    narrow column of copy — paragraphs fade upward one after another via
+    one data-reveal-group, rather than the Introduction's left/right split,
+    since this section has no second column to split against
+    (03_PageBlueprints.md: Section Header + Rich Text only).
+*@
+
+<section class="section quality-commitment" id="quality-commitment" aria-labelledby="@Model.SectionHeader.HeadingId">
+    <div class="container">
+        <partial name="_SectionHeader" model="Model.SectionHeader" />
+        <div class="quality-commitment-copy" data-reveal-group>
+            @foreach (var paragraph in Model.Paragraphs)
+            {
+                <p class="quality-commitment-paragraph" data-reveal>@paragraph</p>
+            }
+        </div>
+    </div>
+</section>

@@ -1,0 +1,24 @@
+@model CompanyIntroductionViewModel
+
+@{
+    var mediaReveal = Model.TextFirst ? "right" : "left";
+    var contentReveal = Model.TextFirst ? "left" : "right";
+}
+
+<section class="section company-introduction @(Model.TextFirst ? "company-introduction--text-first" : "")" id="company-introduction" aria-labelledby="@Model.SectionHeader.HeadingId">
+    <div class="container">
+        <div class="company-introduction-grid" data-reveal-group>
+            <div class="company-introduction-media" data-reveal="@mediaReveal">
+                <div class="company-introduction-media-frame" aria-hidden="true"></div>
+                <partial name="_ImageBlock" model="Model.Image" />
+            </div>
+            <div class="company-introduction-content" data-reveal="@contentReveal">
+                <partial name="_SectionHeader" model="Model.SectionHeader" />
+                @foreach (var paragraph in Model.Paragraphs)
+                {
+                    <p class="company-introduction-paragraph">@paragraph</p>
+                }
+            </div>
+        </div>
+    </div>
+</section>

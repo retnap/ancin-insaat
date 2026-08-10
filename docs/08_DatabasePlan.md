@@ -75,8 +75,11 @@ Stores construction project information.
 - Description
 - Status
 - Location
+- ProjectType (nullable)
 - CompletionDate
 - CoverImage
+- CataloguePath (nullable)
+- Amenities (nullable)
 - DisplayOrder
 - IsFeatured
 - IsPublished
@@ -90,6 +93,22 @@ One Project
 - Many ProjectImages
 - Many FloorPlans
 - Many Partners
+
+## ProjectType
+
+Free-text field (not an enum) so the taxonomy can grow without a migration.
+
+Initial reference values:
+
+- Residence
+- Villa
+- Commercial
+- Office
+- Mixed Use
+
+The Projects listing's Project Type filter only ever shows values that are
+actually in use — a project with no ProjectType assigned simply does not
+appear in that filter until one is assigned.
 
 ---
 

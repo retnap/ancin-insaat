@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using AncinInsaat.Models;
 using AncinInsaat.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +10,14 @@ namespace AncinInsaat.ViewComponents;
 // every page gets it without repeating the wiring — unlike SeoModel's
 // per-page title/description/canonical, this data (company identity) is
 // the same on every page, sourced from SiteSettings (docs/14_Decisions.md).
+//
+// Optionally also renders one page-specific schema (CollectionPage,
+// RealEstateListing, ...) when the calling page passes pageSeo +
+// pageSchemaType — _Layout reads both from ViewData (the same ViewData a
+// controller action already sets for SeoModel) and forwards them here, so
+// a new page opts in without this component needing to know about that
+// page's own data source. Keeps JSON-LD authoring in this one component
+// rather than a second, parallel place per page.
 public class SeoStructuredDataViewComponent : ViewComponent
 {
     // Default encoder (not UnsafeRelaxedJsonEscaping) so any HTML-sensitive
@@ -29,7 +38,7 @@ public class SeoStructuredDataViewComponent : ViewComponent
         _siteSettingsService = siteSettingsService;
     }
 
-    public async Task<IViewComponentResult> InvokeAsync()
+    public async Task<IViewComponentResult> InvokeAsync(SeoModel? pageSeo = null, string? pageSchemaType = null)
     {
         var settings = await _siteSettingsService.GetAsync();
         if (settings is null)
@@ -65,10 +74,25 @@ public class SeoStructuredDataViewComponent : ViewComponent
             Url = siteUrl
         };
 
+        string? pageJsonLd = null;
+        if (pageSeo is not null && !string.IsNullOrWhiteSpace(pageSchemaType))
+        {
+            var pageSchema = new PageSchema
+            {
+                Type = pageSchemaType,
+                Name = pageSeo.Title,
+                Description = pageSeo.Description,
+                Url = pageSeo.CanonicalUrl
+            };
+
+            pageJsonLd = JsonSerializer.Serialize(pageSchema, JsonOptions);
+        }
+
         var model = new SeoStructuredDataViewModel
         {
             OrganizationJsonLd = JsonSerializer.Serialize(organization, JsonOptions),
-            WebSiteJsonLd = JsonSerializer.Serialize(website, JsonOptions)
+            WebSiteJsonLd = JsonSerializer.Serialize(website, JsonOptions),
+            PageJsonLd = pageJsonLd
         };
 
         return View(model);
@@ -108,6 +132,24 @@ public class SeoStructuredDataViewComponent : ViewComponent
         public string Type { get; } = "WebSite";
 
         public required string Name { get; init; }
+        public required string Url { get; init; }
+    }
+
+    // Deliberately generic (name/description/url only) rather than one
+    // strongly-typed class per schema.org type — CollectionPage today,
+    // RealEstateListing/ContactPage/JobPosting later all reduce to this
+    // same shape from what SeoModel already resolves, with no page-specific
+    // data fetching required here.
+    private class PageSchema
+    {
+        [JsonPropertyName("@context")]
+        public string Context { get; } = "https://schema.org";
+
+        [JsonPropertyName("@type")]
+        public required string Type { get; init; }
+
+        public required string Name { get; init; }
+        public required string Description { get; init; }
         public required string Url { get; init; }
     }
 }

@@ -6,10 +6,15 @@
     rather than a shared timeline rail. Previous/Next controls live in
     the paired _HistoryInfoPanel (same Model.Id), not here; site.js pairs
     them at runtime via data-history-carousel / data-history-info-panel.
+
+    2026-08-03: the track's aria-label dropped "kaydırılabilir" ("scroll-
+    able") — no longer true once site.css's History Carousel section
+    switched the track to overflow: hidden, since Previous/Next are now
+    the only way to move it.
 *@
 
 <div class="history-carousel" data-history-carousel="@Model.Id">
-    <div class="history-carousel-track" data-history-track tabindex="0" role="group" aria-label="Zaman tüneli, kaydırılabilir" data-reveal-group>
+    <div class="history-carousel-track" data-history-track tabindex="0" role="group" aria-label="Zaman tüneli" data-reveal-group>
         @for (var i = 0; i < Model.Entries.Count; i++)
         {
             var entry = Model.Entries[i];

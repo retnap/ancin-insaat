@@ -1,0 +1,16 @@
+@model WhyJoinAncinViewModel
+
+@*
+    Career page "Why Join Ançın" (docs/03_PageBlueprints.md — Page Career).
+    Reuses the Information Card component's Grid layout, same shape as
+    About Us's Areas of Expertise — a responsive 4/2/1-column grid
+    (Columns=4, the shared .grid-cols-4 utility) of icon+title+description
+    cards, fading upward with the default data-reveal-group stagger.
+*@
+
+<section class="section why-join-ancin" id="career-why-join" aria-labelledby="@Model.SectionHeader.HeadingId">
+    <div class="container">
+        <partial name="_SectionHeader" model="Model.SectionHeader" />
+        <partial name="_InformationCard" model="Model.InformationCard" />
+    </div>
+</section>

@@ -1,0 +1,64 @@
+@model AncinInsaat.Models.ContactPageViewModel
+
+@* Title/description/canonical/OG/ContactPage schema come from
+   ViewData["Seo"] + ViewData["SeoPageType"], set in ContactController.Index
+   via ISeoService — see _Layout.cshtml's <head> and
+   SeoStructuredDataViewComponent. Page flow follows docs/03_PageBlueprints.md
+   "Page — Contact": Breadcrumb → Hero Banner (Standard) → Contact
+   Information + Contact Form → Office Location (Map) → Social Media.
+   Footer/CTA Banner/Partner Logos/Floating Contact Button are global,
+   rendered once by _Layout.cshtml. *@
+
+@{
+    var breadcrumbTrail = new List<AncinInsaat.ViewComponents.BreadcrumbItem>
+    {
+        new() { Label = "İletişim" }
+    };
+}
+@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail })
+
+@await Component.InvokeAsync("HeroBannerStandard", new
+{
+    heading = "Bize Ulaşın",
+    subheading = "Projeleriniz ve sorularınız için ekibimiz sizi dinlemeye hazır."
+})
+
+<section class="section contact-section" id="contact-form" aria-label="İletişim bilgileri ve formu">
+    <div class="container">
+        <partial name="_ContactInfo" model="Model" />
+    </div>
+</section>
+
+@if (!string.IsNullOrWhiteSpace(Model.MapEmbedUrl) || !string.IsNullOrWhiteSpace(Model.MapLinkUrl))
+{
+    <section class="section contact-map-section" aria-labelledby="contact-map-heading">
+        <div class="container">
+            <partial name="_SectionHeader" model="@(new AncinInsaat.Models.SectionHeaderModel
+            {
+                Eyebrow = "Konum",
+                Title = "Ofisimizi Ziyaret Edin",
+                HeadingId = "contact-map-heading"
+            })" />
+
+            <div data-reveal>
+                @await Component.InvokeAsync("Map", new { embedUrl = Model.MapEmbedUrl, linkUrl = Model.MapLinkUrl })
+            </div>
+        </div>
+    </section>
+}
+
+<section class="section contact-social-section" aria-labelledby="contact-social-heading">
+    <div class="container">
+        <partial name="_SectionHeader" model="@(new AncinInsaat.Models.SectionHeaderModel
+        {
+            Eyebrow = "Sosyal Medya",
+            Title = "Bizi Takip Edin",
+            CssClass = "section-header--center",
+            HeadingId = "contact-social-heading"
+        })" />
+
+        <div class="contact-social-links" data-reveal="scale">
+            @await Component.InvokeAsync("SocialMedia", new { onLight = true })
+        </div>
+    </div>
+</section>

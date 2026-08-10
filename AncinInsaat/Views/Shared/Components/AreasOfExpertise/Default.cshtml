@@ -1,0 +1,18 @@
+@model AreasOfExpertiseViewModel
+
+@*
+    About Us "Areas of Expertise" (docs/03_PageBlueprints.md — Areas of
+    Expertise phase, 2026-08-01). Reuses the Information Card component's
+    Grid layout — a responsive 3/2/1-column grid (Columns=3, the shared
+    .grid-cols-3 utility) of icon+title+description cards, fading upward
+    with the default data-reveal-group stagger (no per-item Reveal set —
+    unlike Mission & Vision's fixed left/right pair, these cards have no
+    meaningful "from" side).
+*@
+
+<section class="section areas-of-expertise" id="about-areas-of-expertise" aria-labelledby="@Model.SectionHeader.HeadingId">
+    <div class="container">
+        <partial name="_SectionHeader" model="Model.SectionHeader" />
+        <partial name="_InformationCard" model="Model.InformationCard" />
+    </div>
+</section>

@@ -1,0 +1,121 @@
+@model AncinInsaat.ViewComponents.HeroBannerProjectDetailViewModel
+
+@{
+    var heroStyle = $"--hero-bg-image: url('{Model.BackgroundImageUrl}')";
+    var headingClass = "hero-heading hero-heading--project" + (string.IsNullOrWhiteSpace(Model.HeadingFontModifierClass) ? "" : $" {Model.HeadingFontModifierClass}");
+}
+
+@* Nysa Gold Residence reference redesign (2026-08-07), rolled out as the
+   single Hero architecture for every Project Detail page (2026-08-08):
+   transparent navbar overlapping the Hero image, left-aligned content,
+   floating social icons, segmented bottom-center CTA bar, cinematic
+   full-bleed presentation. lang="en" on the heading (not "tr", the page's
+   own language — see _Layout.cshtml) is required for text-transform:
+   uppercase to render an ASCII "I" — with Turkish casing rules a lowercase
+   "i" instead becomes "İ" (dotted capital I), the cause of the
+   "RESİDENCE" defect. Project names are brand names, not Turkish prose, so
+   overriding the language here is correct rather than a workaround. *@
+<section class="hero hero--project-detail hero--overlap-navbar hero--full-viewport" style="@heroStyle" aria-labelledby="hero-heading">
+    <div class="hero-bg" aria-hidden="true"></div>
+
+    <nav class="hero-social-nav" aria-label="Sosyal medya">
+        @await Component.InvokeAsync("SocialMedia")
+    </nav>
+
+    <div class="container hero-inner">
+        <div class="hero-content hero-content--start">
+            @if (!string.IsNullOrWhiteSpace(Model.StatusLabel))
+            {
+                <span class="project-status-badge @Model.StatusModifierClass hero-status-badge">@Model.StatusLabel</span>
+            }
+            <h1 id="hero-heading" class="@headingClass" lang="en">@Model.Heading</h1>
+            @if (!string.IsNullOrWhiteSpace(Model.Subheading))
+            {
+                <p class="hero-subheading">@Model.Subheading</p>
+            }
+        </div>
+    </div>
+
+    <div class="hero-bottom">
+        <div class="hero-actions hero-actions--attached">
+            @if (Model.SitePlanImageUrls.Count > 0)
+            {
+                @* La Fiore Karabağ 2. Etap Vaziyet Planı/Concept/Gallery
+                   phase (2026-08-09) — only the first image renders as the
+                   visible button; any remaining images render as hidden
+                   same-group trigger elements purely so the Media Viewer's
+                   generic group mechanism (see site.js) discovers them and
+                   activates Prev/Next/counter. Every other project still has
+                   exactly 1 SitePlanImageUrls entry, so no hidden elements
+                   render and this is byte-identical to before. *@
+                <button type="button"
+                        class="btn btn-hero-segment btn-hero-segment--siteplan"
+                        data-media-viewer-trigger
+                        data-media-viewer-group="site-plan"
+                        data-media-viewer-src="@Model.SitePlanImageUrls[0]"
+                        data-media-viewer-alt="@(Model.Heading) vaziyet planı">
+                    Vaziyet Planı
+                </button>
+                @for (var sitePlanIndex = 1; sitePlanIndex < Model.SitePlanImageUrls.Count; sitePlanIndex++)
+                {
+                    <button type="button"
+                            hidden
+                            tabindex="-1"
+                            aria-hidden="true"
+                            data-media-viewer-trigger
+                            data-media-viewer-group="site-plan"
+                            data-media-viewer-src="@Model.SitePlanImageUrls[sitePlanIndex]"
+                            data-media-viewer-alt="@(Model.Heading) vaziyet planı @(sitePlanIndex + 1)"></button>
+                }
+            }
+            else if (Model.SitePlanComingSoon)
+            {
+                @* Alinda Gold Residence revision (2026-08-10) — no site plan
+                   supplied yet. Renders the same button in the same
+                   position instead of omitting it, showing a Coming Soon
+                   toast on click via the shared _Toast.cshtml/site.js
+                   architecture (same mechanism as the Catalogue toast
+                   below). SitePlanComingSoon is false for every other
+                   project, so this branch never runs for them. *@
+                <button type="button"
+                        class="btn btn-hero-segment btn-hero-segment--siteplan"
+                        data-toast-trigger
+                        data-toast-message="Vaziyet planı yakında eklenecektir.">
+                    Vaziyet Planı
+                </button>
+            }
+            @if (!string.IsNullOrWhiteSpace(Model.CatalogueUrl))
+            {
+                @* Alinda Gold Residence revision (2026-08-10) —
+                   CatalogueComingSoonHeroToast opts a project into also
+                   firing the toast straight from the Hero, on top of the
+                   existing anchor scroll (both attributes coexist on the
+                   same <a>; the toast's click listener never calls
+                   preventDefault, so the browser still navigates to
+                   #project-catalogue). False for every other project
+                   (including La Fiore Karabağ 2. Etap/Kuyulu AVM, whose
+                   CatalogueComingSoon is true but this flag is not), so
+                   their Hero button keeps its original scroll-only
+                   behavior, byte-identical to before. *@
+                if (Model.CatalogueComingSoonHeroToast)
+                {
+                    <a class="btn btn-hero-segment btn-hero-segment--accent" href="#project-catalogue" data-toast-trigger data-toast-message="Proje kataloğu yakında eklenecektir.">Kataloğu İncele</a>
+                }
+                else
+                {
+                    <a class="btn btn-hero-segment btn-hero-segment--accent" href="#project-catalogue">Kataloğu İncele</a>
+                }
+            }
+            <a class="btn btn-hero-segment btn-hero-segment--contact" href="/contact">Size Ulaşalım</a>
+        </div>
+        @{
+            var scrollIndicatorModel = new AncinInsaat.Models.ScrollIndicatorModel
+            {
+                TargetId = Model.ScrollTargetId,
+                Label = "Aşağı kaydır",
+                CssClass = "scroll-indicator--on-dark"
+            };
+        }
+        <partial name="_ScrollIndicator" model="scrollIndicatorModel" />
+    </div>
+</section>

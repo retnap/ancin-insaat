@@ -1,0 +1,24 @@
+@model HeroBannerStandardViewModel
+
+@{
+    var heroStyle = Model.BackgroundImageUrl is not null
+        ? $"--hero-bg-image: url('{Model.BackgroundImageUrl}')"
+        : null;
+}
+
+<section class="hero hero--standard" style="@heroStyle" aria-labelledby="hero-heading">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container hero-inner">
+        <div class="hero-content">
+            @if (!string.IsNullOrWhiteSpace(Model.StatusLabel))
+            {
+                <span class="project-status-badge @Model.StatusModifierClass hero-status-badge">@Model.StatusLabel</span>
+            }
+            <h1 id="hero-heading" class="hero-heading">@Model.Heading</h1>
+            @if (!string.IsNullOrWhiteSpace(Model.Subheading))
+            {
+                <p class="hero-subheading">@Model.Subheading</p>
+            }
+        </div>
+    </div>
+</section>

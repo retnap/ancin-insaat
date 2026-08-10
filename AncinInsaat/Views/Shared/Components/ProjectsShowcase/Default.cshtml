@@ -30,14 +30,19 @@
         <div class="projects-slider" data-projects-slider data-reveal>
             <div class="projects-slider-viewport" data-projects-viewport>
                 <div class="projects-slider-container" data-projects-container role="group" aria-label="Projeler, kaydırılabilir" data-reveal-group>
+                    @{ var cardNumber = 0; }
                     @foreach (var card in Model.Cards)
                     {
+                        cardNumber++;
                         <div class="projects-slider-slide">
                             <a class="project-card" href="@card.DetailUrl" aria-label="@card.Name" data-reveal>
                                 <span class="project-card-media">
                                     <img class="project-card-image" src="@card.CoverImageSrc" alt="@card.Name" loading="lazy" decoding="async" />
                                     <span class="project-card-overlay" aria-hidden="true">
-                                        <span class="project-card-overlay-title">@card.Name</span>
+                                        <span class="project-card-overlay-title">
+                                            <span class="project-card-overlay-number">@cardNumber.ToString("D2") &ndash;</span>
+                                            <span class="project-card-overlay-name">@card.Name</span>
+                                        </span>
                                     </span>
                                     <span class="project-status-badge @card.StatusModifierClass">@card.StatusLabel</span>
                                 </span>

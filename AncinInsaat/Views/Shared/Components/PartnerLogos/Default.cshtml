@@ -14,7 +14,9 @@
                     <div class="partner-logos-set" aria-hidden="@(copy == 1 ? "true" : null)">
                         @foreach (var partner in Model.Partners)
                         {
-                            <img class="partner-logo" src="@partner.ImageSrc" alt="@(copy == 0 ? partner.ImageAlt : "")" loading="lazy" decoding="async" />
+                            <a class="partner-logo-link" href="@partner.DetailUrl" aria-label="@partner.ImageAlt" tabindex="@(copy == 1 ? "-1" : null)">
+                                <img class="partner-logo" src="@partner.ImageSrc" alt="@(copy == 0 ? partner.ImageAlt : "")" loading="lazy" decoding="async" />
+                            </a>
                         }
                     </div>
                 }

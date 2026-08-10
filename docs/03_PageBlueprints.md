@@ -345,7 +345,7 @@ Present the principles that define Ançın İnşaat's corporate culture and appr
 
 ## Route
 
-/our-values
+/values
 
 ---
 

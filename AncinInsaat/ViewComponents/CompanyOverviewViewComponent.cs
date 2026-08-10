@@ -18,9 +18,10 @@ namespace AncinInsaat.ViewComponents;
 // heading + supporting paragraph + CTA" structure from
 // Inspirationals/Terzioglu/terzioglu-48-yillik-tecrube.png as inspiration
 // only — typography, color and spacing stay on our own Design System
-// tokens rather than that reference's gold/sans-serif treatment. "53
-// Yıllık Tecrübe" is a placeholder headline supplied directly by the
-// project owner, not a researched or invented company fact.
+// tokens rather than that reference's gold/sans-serif treatment. "50
+// Yıllık Tecrübe" (corrected from "53", Home Page revision #3, 2026-08-10)
+// is a placeholder headline supplied directly by the project owner, not a
+// researched or invented company fact.
 public class CompanyOverviewViewComponent : ViewComponent
 {
     public IViewComponentResult Invoke()
@@ -31,21 +32,26 @@ public class CompanyOverviewViewComponent : ViewComponent
             {
                 HeadingId = "company-overview-heading",
                 Eyebrow = "HAKKIMIZDA",
-                Title = "53 Yıllık Tecrübe",
-                Description = "Ançın İnşaat; güvenilirlik, zanaatkârlık ve modern mimari " +
+                Title = "50 Yıllık Tecrübe",
+                Description = "Ancın İnşaat; güvenilirlik, zanaatkârlık ve modern mimari " +
                     "anlayışını bir araya getirerek yaşam alanları üretir. Her projede " +
                     "uzun soluklu değer yaratmayı ve sakinlerine huzurlu, işlevsel bir " +
                     "yaşam sunmayı hedefleriz."
             },
             Image = new ImageBlockModel
             {
-                Src = "/images/company/overview-placeholder.svg",
+                // Temporary "50 yıl" visual (Home Page revision #3,
+                // 2026-08-10) supplied directly by the project owner to
+                // replace the abstract placeholder graphic until the final
+                // 50-year photography is ready — the original
+                // overview-placeholder.svg asset is left in place, unused,
+                // rather than deleted.
+                Src = "/images/logos/50-yil-gecici.jpg",
 
-                // Empty on purpose: this is an abstract placeholder graphic
-                // (no photography supplied yet) that conveys no information
-                // beyond what the heading/description already state, so it
-                // is decorative for screen-reader purposes. Give it a real
-                // descriptive alt once actual company photography replaces it.
+                // Empty on purpose: this is a decorative stand-in graphic
+                // that conveys no information beyond what the heading/
+                // description already state. Give it a real descriptive alt
+                // once the final company photography replaces it.
                 Alt = ""
             },
             CtaLabel = "Devamını Oku",

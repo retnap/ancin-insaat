@@ -1,0 +1,221 @@
+@model AncinInsaat.Models.ProjectDetailViewModel
+
+@*
+    Daire Planları (Project Detail Floor Plans redesign, 2026-08-01) —
+    layout follows Inspirationals/Folkart/folkart-orion-proje-detay-daire-
+    plani.png almost one-to-one for structure/spacing/interaction, restyled
+    entirely in Ançın's own Design System (no Folkart colours/branding).
+    Takes the full ProjectDetailViewModel (not just FloorPlans), matching
+    _ProjectConcept/_ProjectGallery/_SocialFacilities, since the Catalogue
+    button needs Model.CatalogueUrl. Always invoked with a non-empty
+    Model.FloorPlans — Details.cshtml only renders the section at all when
+    the project has real FloorPlan rows (see docs/14_Decisions.md).
+
+    This is the permanent Floor Plans component for every project detail
+    page — not a placeholder layout. Only the real floor plan artwork was
+    originally deferred; every project without it still shows the static
+    premium placeholder below (see .project-floorplans-placeholder).
+
+    One [data-floorplan-panel] per apartment type, all server-rendered;
+    site.js's Floor Plan Type Switcher just toggles [hidden] between them —
+    no client-side templating or JSON payload. The catalogue button lives
+    inside each panel (same href for every apartment type) purely so it
+    always renders on the same row as that panel's apartment-type heading,
+    per the reference layout.
+
+    Visual side (La Fiore Karabağ 2. Etap Floor Plans pilot, 2026-08-06): one
+    [data-floorplan-visual] per floor plan, same count/order as the text
+    panels, toggled together by the same switcher (index-aligned — see
+    site.js). FloorPlanModel.Src is null whenever the project has no real
+    architectural drawing for that entry (every project except this pilot,
+    today), in which case the visual renders the exact same static
+    placeholder as before — zero behavioural change for everyone else. Where
+    Src exists, the drawing is a Media Viewer trigger sharing the
+    "floorplans" group, so Prev/Next in the lightbox pages through every
+    floor plan drawing on the project regardless of which panel is currently
+    switched to.
+*@
+
+@{
+    Func<decimal, string> m2 = value => value.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture) + " m²";
+    var floorPlans = Model.FloorPlans;
+    var hasMultipleTypes = floorPlans.Count > 1;
+}
+
+@if (floorPlans.Count == 0)
+{
+    @* Empty state (Hacıfeyzullah - Q-Latis, 2026-08-10) — a project with no
+       real floor plan artwork yet gets this instead of
+       BuildPlaceholderFloorPlans' invented 2+1/68m² stand-in, so nothing
+       fabricated ever reaches the page. Same bare "PLANLAR" heading as the
+       other projects in that group, no subtitle. *@
+    <div class="project-floorplans">
+        <partial name="_TimelineHeader" model="@(new TimelineHeaderModel
+        {
+            DecorativeTitle = "PLANLAR",
+            Subtitle = string.Empty,
+            HeadingId = "project-floorplans-heading"
+        })" />
+        <p class="projects-grid-empty">Planlar yakında eklenecektir.</p>
+    </div>
+}
+else
+{
+<div class="project-floorplans">
+    <div class="project-floorplans-text" data-reveal="left">
+        @* Nysa Gold Residence reference redesign (2026-08-07), rolled out to
+           every project (2026-08-08): decorative watermark pattern shared
+           with Gallery/Location, via the shared _TimelineHeader component. *@
+        @* Davutlar D Latis Concept redesign (2026-08-09) — that project's
+           heading reads as "PLANLAR" alone, per an explicit client request
+           scoped to this one project only; every other project keeps its
+           "Daire Planları" subtitle exactly as before (see
+           _TimelineHeader.cshtml for how a blank Subtitle renders). La Via
+           AVM update (2026-08-09) — same bare "PLANLAR" heading, since
+           "Daire Planları" ("Apartment Plans") doesn't fit this commercial
+           AVM's per-floor drawings either. La Via Villalar 1. Etap revision
+           (2026-08-09) — same bare "PLANLAR" heading, per an explicit
+           client request scoped to this project. Le Jardin revision
+           (2026-08-09) — same bare "PLANLAR" heading and, since this reuses
+           the exact same shared _TimelineHeader/.timeline-header__subtitle.
+           sr-only path as those other projects, byte-identical vertical
+           spacing too — no separate CSS change needed. Nysa Gold revision /
+           La Fiore Karabağ 2. Etap alignment (2026-08-09) — both projects
+           join the same bare "PLANLAR" group, per explicit client request,
+           so every project using per-floor (not per-apartment-type)
+           drawings now shares the same heading treatment. La Fiore Karabağ
+           revision (2026-08-10) joins the same bare "PLANLAR" group, same
+           reasoning as Alinda Gold Residence/Magnesia Gold Residence/
+           Tralles Gold Residence/Nlatis. *@
+        <partial name="_TimelineHeader" model="@(new TimelineHeaderModel
+        {
+            DecorativeTitle = "PLANLAR",
+            Subtitle = Model.Slug is "davutlar-d-latis" or "kuyulu-avm" or "kuyulu-la-via-villalar-birinci-etap" or "le-jardin" or "nysa-gold" or "la-fiore-karabag-2-etap" or "ferhunde-hanim-apt" or "alinda-gold" or "magnesia-gold" or "tralles-gold" or "nlatis" or "la-fiore-karabag" ? string.Empty : "Daire Planları",
+            HeadingId = "project-floorplans-heading"
+        })" />
+
+        @for (var i = 0; i < floorPlans.Count; i++)
+        {
+            var floorPlan = floorPlans[i];
+            <div class="project-floorplans-panel" data-floorplan-panel @(i == 0 ? null : "hidden")>
+                <div class="project-floorplans-type-row">
+                    <p class="project-floorplans-type">@floorPlan.ApartmentType</p>
+
+                    @* La Fiore Karabağ 2. Etap Media Viewer/Catalogue phase
+                       (2026-08-09) — mirrors _ProjectCatalogue.cshtml's own
+                       CatalogueComingSoon branch, which this button
+                       previously ignored (it only checked CatalogueUrl),
+                       so this project's real-but-not-yet-published PDF was
+                       downloadable here even though the main Catalogue CTA
+                       already shows the "coming soon" toast. Every other
+                       project still has CatalogueComingSoon = false, so
+                       they keep the real download link exactly as before. *@
+                    @if (Model.CatalogueComingSoon)
+                    {
+                        <button type="button" class="btn btn-primary project-floorplans-catalogue" data-toast-trigger data-toast-message="Proje kataloğu yakında eklenecektir.">Proje Kataloğunu İndir</button>
+                    }
+                    else if (!string.IsNullOrWhiteSpace(Model.CatalogueUrl))
+                    {
+                        <a class="btn btn-primary project-floorplans-catalogue" href="@Model.CatalogueUrl" download>Proje Kataloğunu İndir</a>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary project-floorplans-catalogue" disabled aria-disabled="true">Proje Kataloğunu İndir</button>
+                    }
+                </div>
+
+                @* A floor plan with no real Net/Gross/Sales-Gross figures yet
+                   (FloorPlanModel's area fields all null, see
+                   ProjectsController.Details) omits this stats row entirely
+                   rather than showing invented numbers. Every seeded project,
+                   including La Via AVM (68/95/78 placeholder, same as the
+                   rest — see BuildKuyuluAvmFloorPlans), already has figures,
+                   so this only matters once a real project has none. *@
+                @if (floorPlan.NetAreaM2.HasValue && floorPlan.GrossAreaM2.HasValue && floorPlan.SalesGrossAreaM2.HasValue)
+                {
+                    <dl class="project-floorplans-stats" data-reveal-group>
+                        <div class="project-floorplans-stat" data-reveal>
+                            <dt>Net Alan</dt>
+                            <dd>@m2(floorPlan.NetAreaM2.Value)</dd>
+                        </div>
+                        <div class="project-floorplans-stat" data-reveal>
+                            <dt>Brüt Alan</dt>
+                            <dd>@m2(floorPlan.GrossAreaM2.Value)</dd>
+                        </div>
+                        <div class="project-floorplans-stat" data-reveal>
+                            <dt>Satışa Esas Brüt Alan</dt>
+                            <dd>@m2(floorPlan.SalesGrossAreaM2.Value)</dd>
+                        </div>
+                    </dl>
+                }
+
+                <ol class="project-floorplans-rooms">
+                    @for (var r = 0; r < floorPlan.Rooms.Count; r++)
+                    {
+                        var room = floorPlan.Rooms[r];
+                        <li class="project-floorplans-room">
+                            <span class="project-floorplans-room-label">
+                                <span class="project-floorplans-room-index" aria-hidden="true">@(r + 1)</span>
+                                @room.Name
+                            </span>
+                            <span class="project-floorplans-room-area">@m2(room.AreaM2)</span>
+                        </li>
+                    }
+                </ol>
+            </div>
+        }
+    </div>
+
+    <div class="project-floorplans-visual">
+        @for (var i = 0; i < floorPlans.Count; i++)
+        {
+            var floorPlan = floorPlans[i];
+            <div class="project-floorplans-visual-item" data-floorplan-visual data-reveal="right" @(i == 0 ? null : "hidden")>
+                @if (floorPlan.Src is not null)
+                {
+                    <button type="button"
+                            class="project-floorplans-image-trigger"
+                            data-media-viewer-trigger
+                            data-media-viewer-group="floorplans"
+                            data-media-viewer-src="@floorPlan.Src"
+                            data-media-viewer-alt="@floorPlan.ApartmentType"
+                            aria-label="@($"{floorPlan.ApartmentType} — büyüt")">
+                        <img class="project-floorplans-image" src="@floorPlan.ThumbnailSrc" alt="@floorPlan.ApartmentType" loading="lazy" decoding="async" />
+                    </button>
+                }
+                else
+                {
+                    <div class="project-floorplans-placeholder">
+                        <div class="project-floorplans-placeholder-grid" aria-hidden="true"></div>
+                        <span class="project-floorplans-placeholder-icon">
+                            <svg viewBox="0 0 48 48" width="32" height="32" aria-hidden="true">
+                                <rect x="6" y="6" width="36" height="36" rx="2" fill="none" stroke="currentColor" stroke-width="2" />
+                                <path d="M6 26h16v16" fill="none" stroke="currentColor" stroke-width="2" />
+                                <path d="M26 6v16h16" fill="none" stroke="currentColor" stroke-width="2" />
+                                <circle cx="16" cy="16" r="2.5" fill="currentColor" />
+                            </svg>
+                        </span>
+                        <p class="project-floorplans-placeholder-text">Kat planı görseli<br />daha sonra eklenecek.</p>
+                    </div>
+                }
+            </div>
+        }
+
+        @if (hasMultipleTypes)
+        {
+            <div class="project-floorplans-nav-group">
+                <button type="button" class="history-nav-btn project-floorplans-nav project-floorplans-prev" data-floorplan-prev data-reveal="scale" aria-label="Önceki daire tipi">
+                    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                        <path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+                <button type="button" class="history-nav-btn project-floorplans-nav project-floorplans-next" data-floorplan-next data-reveal="scale" aria-label="Sonraki daire tipi">
+                    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                        <path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+            </div>
+        }
+    </div>
+</div>
+}

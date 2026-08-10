@@ -1,0 +1,31 @@
+@model AncinInsaat.Models.ProjectDetailViewModel
+
+@* Project Catalogue (docs/03_PageBlueprints.md) — full-bleed cinematic CTA,
+   Project Detail redesign 2026-07-31. Reuses the Hero's own banner image for
+   the background (bookending the page) rather than requiring a dedicated
+   asset. Details.cshtml only composes this partial when Model.CatalogueUrl
+   is present. Taller "featured" treatment (Nysa Gold Residence reference
+   redesign, 2026-08-07) rolled out to every project (2026-08-08). *@
+
+<section class="project-catalogue-cta project-catalogue-cta--featured" id="project-catalogue" style="--catalogue-bg-image: url('@Model.HeroBackgroundImageUrl')" aria-labelledby="project-catalogue-heading">
+    <div class="project-catalogue-cta-bg" aria-hidden="true"></div>
+    <div class="container project-catalogue-cta-inner" data-reveal>
+        <p class="project-catalogue-cta-eyebrow">@Model.Name</p>
+        <h2 id="project-catalogue-heading" class="project-catalogue-cta-heading">Projeyi Detaylıca Keşfedin</h2>
+        @if (Model.CatalogueComingSoon)
+        {
+            @* La Fiore Karabağ 2. Etap Vaziyet Planı/Concept/Gallery phase
+               (2026-08-09) — this project's real catalogue file exists on
+               disk (CatalogueUrl is non-null, which is why this section
+               renders at all — see Details.cshtml), but the client wants the
+               button to announce it's coming soon rather than download it
+               yet. CatalogueComingSoon is false for every other project, so
+               they keep the real download link below unchanged. *@
+            <button type="button" class="btn btn-primary project-catalogue-cta-button" data-toast-trigger data-toast-message="Proje kataloğu yakında eklenecektir.">Proje Kataloğunu İndir</button>
+        }
+        else
+        {
+            <a class="btn btn-primary project-catalogue-cta-button" href="@Model.CatalogueUrl" download>Proje Kataloğunu İndir</a>
+        }
+    </div>
+</section>

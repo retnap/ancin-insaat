@@ -1,0 +1,46 @@
+@*
+    About Us Foundation phase (2026-08-01) — docs/03_PageBlueprints.md
+    "Page — About Us". Title/description/canonical/OG/AboutPage schema come
+    from ViewData["Seo"] + ViewData["SeoPageType"], set in
+    AboutController.Index via ISeoService — see _Layout.cshtml's <head> and
+    SeoStructuredDataViewComponent.
+
+    Foundation phase built the first three sections — Hero Banner, Company
+    Introduction, Our Journey — mirroring Project Detail's phased approach
+    (docs/14_Decisions.md, "Project Detail Foundation"), with Mission &
+    Vision and Areas of Expertise reserved as HTML comment anchors so the
+    page never needed reshaping when they landed. Both are now implemented
+    (2026-08-01) — see MissionVisionViewComponent / AreasOfExpertiseViewComponent,
+    both built on Information Card's Grid layout (InformationCardModel.Layout)
+    rather than new Mission Card/Vision Card/Expertise Card components.
+    Projects CTA / Partner Logos / Footer are already global
+    (_Layout.cshtml), so this page needs no section of its own for them.
+
+    Hero Banner uses a dedicated placeholder banner image
+    (wwwroot/images/hero/about-placeholder.svg) rather than the neutral
+    gradient HeroBannerStandard falls back to when no image is supplied —
+    project owner's explicit 2026-08-01 request, matching Project Detail's
+    "always has its own banner" precedent. Company Introduction and Our
+    Journey both reuse existing reusable pieces (Section Header, Image
+    Block, History Info Panel, History Carousel) rather than introducing
+    new ones — see CompanyIntroductionViewComponent / OurJourneyViewComponent.
+*@
+
+@{
+    var breadcrumbTrail = new List<AncinInsaat.ViewComponents.BreadcrumbItem>
+    {
+        new() { Label = "Hakkımızda" }
+    };
+}
+@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail })
+
+@await Component.InvokeAsync("HeroBannerStandard", new
+{
+    heading = "Hakkımızda",
+    subheading = "Aydın'da yarım asra yaklaşan bir yolculuk: güven, zanaatkârlık ve kalıcı yaşam alanları.",
+    backgroundImageUrl = "/images/hero/about-placeholder.svg"
+})
+
+@await Component.InvokeAsync("CompanyIntroduction")
+
+@await Component.InvokeAsync("OurJourney")

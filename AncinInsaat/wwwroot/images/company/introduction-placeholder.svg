@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-hidden="true">
+  <title>Ancın İnşaat — Hakkımızda, yer tutucu mimari çizim</title>
+  <rect width="800" height="600" fill="#F0EEEB" />
+
+  <!-- Minimal architectural line-art, distinct composition from Company
+       Overview's overview-placeholder.svg (facade with balcony
+       projections rather than a plain grid elevation) so About Us reads
+       with its own identity rather than repeating Home's image.
+       Placeholder only — replace with real company/project photography
+       before launch. -->
+  <g fill="none" stroke="#55504D" stroke-width="2">
+    <rect x="220" y="100" width="360" height="400" />
+    <line x1="220" y1="180" x2="580" y2="180" />
+    <line x1="220" y1="260" x2="580" y2="260" />
+    <line x1="220" y1="340" x2="580" y2="340" />
+    <line x1="220" y1="420" x2="580" y2="420" />
+
+    <rect x="252" y="140" width="70" height="34" />
+    <rect x="368" y="140" width="70" height="34" />
+    <rect x="484" y="140" width="70" height="34" />
+
+    <rect x="252" y="220" width="70" height="34" />
+    <rect x="368" y="220" width="70" height="34" />
+    <rect x="484" y="220" width="70" height="34" />
+
+    <rect x="252" y="300" width="70" height="34" />
+    <rect x="368" y="300" width="70" height="34" />
+    <rect x="484" y="300" width="70" height="34" />
+
+    <rect x="252" y="380" width="70" height="34" />
+    <rect x="368" y="380" width="70" height="34" />
+    <rect x="484" y="380" width="70" height="34" />
+
+    <rect x="368" y="452" width="64" height="48" />
+  </g>
+
+  <line x1="140" y1="500" x2="660" y2="500" stroke="#9E2B25" stroke-width="3" />
+</svg>

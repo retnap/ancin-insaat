@@ -1,0 +1,6 @@
+@model JobPostingStructuredDataViewModel
+
+@foreach (var jobPostingJsonLd in Model.JobPostingsJsonLd)
+{
+    <script type="application/ld+json">@Html.Raw(jobPostingJsonLd)</script>
+}
