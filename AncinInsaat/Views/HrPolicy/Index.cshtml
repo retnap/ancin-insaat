@@ -5,39 +5,47 @@
     ISeoService — see _Layout.cshtml's <head> and
     SeoStructuredDataViewComponent.
 
-    Page flow (approved plan, 2026-08-03): Breadcrumb → Hero Banner
-    (Standard, dedicated placeholder image — same "always has its own
-    banner" precedent as About Us/Values) → HR Philosophy (Section Header +
-    Image Block + copy, HrPhilosophyViewComponent) → Core Principles
-    (Information Card Grid, CorePrinciplesViewComponent) → Employee
-    Development (Section Header + Statistics Card + copy,
-    EmployeeDevelopmentViewComponent). Career CTA is intentionally not
-    reintroduced as a page-specific section — the global CTA Banner
-    (_Layout.cshtml, docs/14_Decisions.md 2026-07-28) already renders on
-    every page and the single-global-CTA architecture is kept as-is per
-    project owner's approval. Social Media is likewise intentionally
-    omitted, consistent with About Us/Our Values — the global Footer
-    already covers it. Projects CTA / Partner Logos / Footer / Floating
-    Contact Button are already global.
+    Folkart-reference revision (2026-08-17, project owner-approved) — page
+    flow: Breadcrumb (Anasayfa → İnsan Kaynakları Politikamız) → plain page
+    heading (small eyebrow + "İK Politikaları" H1) + one intro paragraph →
+    eight heading/bullet-list content sections (HrPolicySectionsViewComponent).
+    Same "no Hero Banner, plain bold sans-serif H1 + full-width paragraph
+    column" pattern as About/Values/Career/Contact's own Folkart-reference
+    revisions. HeroBannerStandard and the HrPhilosophy/CorePrinciples/
+    EmployeeDevelopment view components are intentionally not invoked here
+    — neither component nor its assets were modified or deleted, they are
+    simply unused by this page now, same "leave unused, don't delete"
+    precedent as Career's WhyJoinAncin.
+
+    2026-08-17 correction: the breadcrumb trail is now a single item
+    ("İnsan Kaynakları Politikamız"), matching every other page's
+    single-level trail — the earlier three-level "Önce İnsan" trail and its
+    accompanying page-scoped separator-fix wrapper have been removed. The
+    horizontal banner image that previously sat between the intro paragraph
+    and the first content section has also been removed outright (project
+    owner's explicit correction), not replaced.
+
+    The reference's eyebrow text reads "Saya Holding" — Folkart's own
+    parent holding company, a real, unrelated business. Reproducing that
+    literal name here would misrepresent Ançın's own corporate identity, so
+    it is replaced with "Ancın İnşaat" (project owner-confirmed 2026-08-17)
+    while keeping the reference's small-text-above-heading structure.
 *@
 
 @{
     var breadcrumbTrail = new List<AncinInsaat.ViewComponents.BreadcrumbItem>
     {
-        new() { Label = "İnsan Kaynakları Politikası" }
+        new() { Label = "İnsan Kaynakları Politikamız" }
     };
 }
-@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail })
+@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail, homeLabel = "Anasayfa" })
 
-@await Component.InvokeAsync("HeroBannerStandard", new
-{
-    heading = "İnsan Kaynakları Politikası",
-    subheading = "Ancın İnşaat'ta insana değer veren, güvene dayalı bir kurum kültürü.",
-    backgroundImageUrl = "/images/hero/hr-policy-placeholder.svg"
-})
+<section class="section hr-policy-heading-section">
+    <div class="container">
+        <p class="hr-policy-eyebrow">Ancın İnşaat</p>
+        <h1 id="hr-policy-heading" class="hr-policy-heading">İK Politikaları</h1>
+        <p class="hr-policy-intro">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat, duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+    </div>
+</section>
 
-@await Component.InvokeAsync("HrPhilosophy")
-
-@await Component.InvokeAsync("CorePrinciples")
-
-@await Component.InvokeAsync("EmployeeDevelopment")
+@await Component.InvokeAsync("HrPolicySections")

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500" role="img" aria-hidden="true">
+  <title>Ancın İnşaat — Misyon &amp; Vizyon, yer tutucu görsel</title>
+
+  <!-- TEMPORARY PLACEHOLDER (2026-08-13) — no Mission/Vision photography
+       has been supplied yet. Panel background only; Misyon/Vizyon text is
+       set by MissionVision/Default.cshtml, not baked into this artwork, so
+       replacing this single file with a real photo (same path, see
+       MissionVisionViewComponent.PlaceholderImageUrl) is a drop-in swap
+       that needs no section redesign. Dark near-black gradient (matches
+       the site's own no-image Hero fallback) with a minimal skyline
+       silhouette — same hand-drawn-line convention as the other
+       placeholder SVGs in this folder, adapted to a dark ground so
+       overlaid white text stays legible. Replace before launch. -->
+
+  <defs>
+    <linearGradient id="mvBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#242220" />
+      <stop offset="100%" stop-color="#1C1C1C" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="500" fill="url(#mvBg)" />
+
+  <g fill="none" stroke="#4A4642" stroke-width="2" opacity="0.85">
+    <rect x="120" y="220" width="90" height="220" />
+    <rect x="230" y="160" width="110" height="280" />
+    <rect x="360" y="260" width="80" height="180" />
+    <rect x="760" y="240" width="85" height="200" />
+    <rect x="865" y="150" width="115" height="290" />
+    <rect x="1000" y="270" width="80" height="170" />
+  </g>
+
+  <line x1="0" y1="440" x2="1200" y2="440" stroke="#4A4642" stroke-width="1.5" opacity="0.6" />
+  <line x1="140" y1="472" x2="1060" y2="472" stroke="#9E2B25" stroke-width="2" opacity="0.9" />
+</svg>

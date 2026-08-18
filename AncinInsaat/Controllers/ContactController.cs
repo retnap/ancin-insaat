@@ -138,6 +138,17 @@ public class ContactController : Controller
                     Value = settings.Email,
                     Href = $"mailto:{settings.Email}"
                 });
+
+                // Reuses the same site Email — SiteSettings has no separate
+                // job-application address, so this is the only existing
+                // email the project has to point job applicants at.
+                items.Add(new InformationCardItem
+                {
+                    IconMarkup = EmailIconMarkup,
+                    Label = "İş Başvuruları İçin",
+                    Value = settings.Email,
+                    Href = $"mailto:{settings.Email}"
+                });
             }
 
             if (!string.IsNullOrWhiteSpace(settings.WorkingHours))

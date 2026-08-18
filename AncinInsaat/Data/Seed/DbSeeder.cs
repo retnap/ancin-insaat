@@ -2682,6 +2682,16 @@ public static class DbSeeder
         await ReconcileTrallesGoldResidenceRevisionAsync(context);
         await ReconcileNlatisRevisionAsync(context);
         await ReconcileLaFioreKarabagRevisionAsync(context);
+        await ReconcileDavutlarDLatisRemoveSitePlanAsync(context);
+        await ReconcileFerhundeHanimAptRemoveCatalogueAsync(context);
+        await ReconcileLaFioreKarabag2EtapRemoveCatalogueAsync(context);
+        await ReconcileKuyuluAvmUnpublishAsync(context);
+        await ReconcileRemoveCatalogueAndSitePlanAsync(context, "alinda-gold");
+        await ReconcileRemoveCatalogueAndSitePlanAsync(context, "magnesia-gold");
+        await ReconcileRemoveCatalogueAndSitePlanAsync(context, "tralles-gold");
+        await ReconcileRemoveCatalogueAndSitePlanAsync(context, "nlatis");
+        await ReconcileRemoveCatalogueAndSitePlanAsync(context, "la-fiore-karabag");
+        await ReconcileQLatisRemoveSitePlanAsync(context);
 
         var existingSlugs = new HashSet<string>(await context.Projects.Select(p => p.Slug).ToListAsync());
 
@@ -3019,13 +3029,12 @@ public static class DbSeeder
                 // — see Davutlar D Latis's CoverImage above for why a
                 // dedicated file replaces the gallery-original path.
                 CoverImage = "/images/projects/la-fiore-karabag-2-etap/cover.webp",
-                // Real catalogue file exists (la-fiore-karabag-2-etap-katalog.pdf),
-                // but the client wants the Hero/Catalogue button to announce
-                // it's coming soon rather than download it yet (Vaziyet
-                // Planı/Concept/Gallery phase, 2026-08-09) — see
-                // CatalogueComingSoon below.
-                CataloguePath = "/documents/catalogues/la-fiore-karabag-2-etap-katalog.pdf",
-                CatalogueComingSoon = true,
+                // No Proje Kataloğu for this project (Project Asset Audit,
+                // 2026-08-17) — no real catalogue exists, and the client
+                // asked for the button/section to be removed entirely
+                // rather than shown as "coming soon" (previous behavior via
+                // CatalogueComingSoon, see ReconcileLaFioreKarabag2EtapRemoveCatalogueAsync
+                // for the same fix applied to an already-seeded row).
                 DisplayOrder = 8,
                 IsFeatured = false,
                 IsPublished = true,
@@ -3130,15 +3139,15 @@ public static class DbSeeder
                 // same as every other project's raw-folder precedent.
                 ConceptVideoPath = "/images/projects/davutlar-d-latis/concept/video.mp4",
                 ConceptVideoPosterPath = "/images/projects/davutlar-d-latis/concept/poster.webp",
-                // Vaziyet Planı (2026-08-09) — kat-planlari/genel-planlar/'s
-                // Zemin Kat drawing (the whole site, all 3 blocks + shared
-                // amenities, in one image) converted to WebP via
-                // ThumbnailTool --single (1600w/88q), activating the Hero's
-                // existing but previously dormant "Vaziyet Planı" button.
-                SitePlanImages = new List<ProjectSitePlanImage>
-                {
-                    new() { ImagePath = "/images/projects/davutlar-d-latis/site-plan.webp", DisplayOrder = 1 }
-                },
+                // No Vaziyet Planı for this project (client revision,
+                // 2026-08-17) — the kat-planlari/genel-planlar/ Zemin Kat
+                // drawing previously used here is a single floor's plan, not
+                // a true site/master plan, so the Hero's "Vaziyet Planı"
+                // button should not display for this project. See
+                // ReconcileDavutlarDLatisRemoveSitePlanAsync, which removes
+                // any already-seeded SitePlanImages row the same way. Proje
+                // Kataloğu/Daire Planları/Videolar are untouched by this
+                // change.
                 // Location photo (2026-08-09) — konum/d-latis-konum.png
                 // converted to WebP via ThumbnailTool --single (1200w/88q),
                 // replacing the shared location illustration for this
@@ -3188,12 +3197,12 @@ public static class DbSeeder
                 // The Detail Hero itself (banner.webp, per ProjectsController's
                 // {slug}/banner.webp convention) is untouched by this.
                 CoverImage = "/images/projects/ferhunde-hanim-apt/cover.webp",
-                // Placeholder catalogue file exists, but the client wants the
-                // Hero/Catalogue button to announce it's coming soon rather
-                // than download it yet (2026-08-10) — same as La Fiore
-                // Karabağ 2. Etap above.
-                CataloguePath = "/documents/catalogues/ferhunde-hanim-apt-katalog.pdf",
-                CatalogueComingSoon = true,
+                // No Proje Kataloğu for this project (Project Asset Audit,
+                // 2026-08-17) — no real catalogue exists, and the client
+                // asked for the button/section to be removed entirely
+                // rather than shown as "coming soon" (previous behavior via
+                // CatalogueComingSoon, see ReconcileFerhundeHanimAptRemoveCatalogueAsync
+                // for the same fix applied to an already-seeded row).
                 // Location & Distances section photo (2026-08-10) — see
                 // BuildFerhundeHanimAptSitePlanImages above for why this
                 // shares its source photo with the site plan.
@@ -3257,7 +3266,14 @@ public static class DbSeeder
                 CatalogueComingSoon = true,
                 DisplayOrder = 12,
                 IsFeatured = false,
-                IsPublished = true,
+                // Unpublished (Project Asset Audit, 2026-08-17) — removed
+                // from the live site at the client's request using the
+                // application's existing editorial gate (see
+                // IProjectQueryService), without deleting the row, its
+                // images or Git history. See
+                // ReconcileKuyuluAvmUnpublishAsync for the same fix applied
+                // to an already-seeded row.
+                IsPublished = false,
                 CreatedAt = now,
                 UpdatedAt = now,
                 Images = BuildKuyuluAvmImages(),
@@ -3577,12 +3593,13 @@ public static class DbSeeder
     }
 
     // Not a seed — backfills an already-seeded Davutlar D Latis row with the
-    // Media phase's real floor plans, concept video, concept copy, site
-    // plan and location photo (2026-08-09), same targeted-swap shape as
+    // Media phase's real floor plans, concept video, concept copy and
+    // location photo (2026-08-09), same targeted-swap shape as
     // ReconcileLaFioreKarabag2EtapFloorPlansAsync below. Each field is
     // independently guarded (only replaced while it still looks like the
     // original seed value), so this never overwrites real edits made after
-    // this ran once, and running it twice is a no-op.
+    // this ran once, and running it twice is a no-op. Site plan backfill
+    // removed (2026-08-17) — see ReconcileDavutlarDLatisRemoveSitePlanAsync.
     private static async Task ReconcileDavutlarDLatisMediaAsync(AppDbContext context)
     {
         var project = await context.Projects
@@ -3638,17 +3655,6 @@ public static class DbSeeder
         {
             project.ConceptVideoPath = "/images/projects/davutlar-d-latis/concept/video.mp4";
             project.ConceptVideoPosterPath = "/images/projects/davutlar-d-latis/concept/poster.webp";
-            changed = true;
-        }
-
-        if (project.SitePlanImages.Count == 0)
-        {
-            context.ProjectSitePlanImages.Add(new ProjectSitePlanImage
-            {
-                ProjectId = project.Id,
-                ImagePath = "/images/projects/davutlar-d-latis/site-plan.webp",
-                DisplayOrder = 1
-            });
             changed = true;
         }
 
@@ -5134,6 +5140,171 @@ public static class DbSeeder
         project.CatalogueComingSoonHeroToast = true;
         project.SitePlanComingSoon = true;
 
+        await context.SaveChangesAsync();
+    }
+
+    // Not a seed — removes Davutlar D Latis's already-seeded Vaziyet Planı
+    // (Project Asset Audit, 2026-08-17): the kat-planlari/genel-planlar/
+    // Zemin Kat drawing ReconcileDavutlarDLatisMediaAsync previously backfilled
+    // here is a single floor's plan, not a true site/master plan, so the
+    // client asked for the Hero's "Vaziyet Planı" button to stop rendering
+    // for this project. Proje Kataloğu/Daire Planları/Videolar are untouched.
+    // Safe to run every startup: a no-op once no SitePlanImages rows remain.
+    private static async Task ReconcileDavutlarDLatisRemoveSitePlanAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.SitePlanImages)
+            .FirstOrDefaultAsync(p => p.Slug == "davutlar-d-latis");
+
+        if (project is null || project.SitePlanImages.Count == 0)
+        {
+            return;
+        }
+
+        context.ProjectSitePlanImages.RemoveRange(project.SitePlanImages);
+        await context.SaveChangesAsync();
+    }
+
+    // Not a seed — removes Ferhunde Hanım Apt.'s Proje Kataloğu entirely
+    // (Project Asset Audit, 2026-08-17), per explicit client instruction:
+    // no real catalogue exists for this project, and the client wants the
+    // button/section gone rather than showing a "coming soon" toast.
+    // Clearing CataloguePath makes CatalogueUrl null, which already hides
+    // the Hero button and the lower Project Catalogue CTA section; clearing
+    // CatalogueComingSoon (and its Hero-toast opt-in) too, since leaving it
+    // true would otherwise still show a "coming soon" toast button inside
+    // the Floor Plans panel — see _FloorPlans.cshtml. Vaziyet Planı/Daire
+    // Planları are untouched. Safe to run every startup: a no-op once
+    // CataloguePath is already null.
+    private static async Task ReconcileFerhundeHanimAptRemoveCatalogueAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .FirstOrDefaultAsync(p => p.Slug == "ferhunde-hanim-apt");
+
+        if (project is null || project.CataloguePath is null)
+        {
+            return;
+        }
+
+        project.CataloguePath = null;
+        project.CatalogueComingSoon = false;
+        project.CatalogueComingSoonHeroToast = false;
+        await context.SaveChangesAsync();
+    }
+
+    // Not a seed — removes La Fiore Karabağ 2. Etap's Proje Kataloğu
+    // entirely (Project Asset Audit, 2026-08-17), same reasoning and shape
+    // as ReconcileFerhundeHanimAptRemoveCatalogueAsync above: no real
+    // catalogue exists for this project, so the button/section is removed
+    // rather than left showing a "coming soon" toast. Vaziyet Planı/Daire
+    // Planları are untouched. Safe to run every startup: a no-op once
+    // CataloguePath is already null.
+    private static async Task ReconcileLaFioreKarabag2EtapRemoveCatalogueAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .FirstOrDefaultAsync(p => p.Slug == "la-fiore-karabag-2-etap");
+
+        if (project is null || project.CataloguePath is null)
+        {
+            return;
+        }
+
+        project.CataloguePath = null;
+        project.CatalogueComingSoon = false;
+        project.CatalogueComingSoonHeroToast = false;
+        await context.SaveChangesAsync();
+    }
+
+    // Not a seed — unpublishes "Kuyulu La Via AVM" (Project Asset Audit,
+    // 2026-08-17), per explicit client instruction to remove the project
+    // from the live site without deleting its row, images or Git history.
+    // IsPublished is the application's existing editorial gate (see
+    // IProjectQueryService) — every published-project surface (Projects
+    // listing, Home page showcase, site search, and the /projects/{slug}
+    // detail route) already filters on it, so flipping this one flag hides
+    // the project everywhere with no other code change. Reversible by
+    // flipping IsPublished back to true. Safe to run every startup: a
+    // no-op once already unpublished.
+    private static async Task ReconcileKuyuluAvmUnpublishAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .FirstOrDefaultAsync(p => p.Slug == "kuyulu-avm");
+
+        if (project is null || !project.IsPublished)
+        {
+            return;
+        }
+
+        project.IsPublished = false;
+        await context.SaveChangesAsync();
+    }
+
+    // Not a seed — removes Proje Kataloğu and Vaziyet Planı for a project
+    // currently showing both as "Coming Soon" (Project Asset Audit
+    // follow-up, 2026-08-17). Alinda Gold Residence, Magnesia Gold
+    // Residence, Tralles Gold Residence, N Latis and Karabağ La Fiore 1.
+    // Etap all got CatalogueComingSoon/CatalogueComingSoonHeroToast/
+    // SitePlanComingSoon = true from their own ReconcileXxxRevisionAsync
+    // method (2026-08-10); the client now wants both buttons/sections fully
+    // removed for these five projects specifically, rather than shown as
+    // "coming soon". Clearing CataloguePath makes CatalogueUrl null, which
+    // already hides the Hero Katalog button, the Project Catalogue CTA
+    // section and (since the Floor Plans panel's no-catalogue branch was
+    // changed to render nothing) the Floor Plans panel's Katalog button
+    // too. Daire Planları (Floor Plans) and the Concept image carousel
+    // ("Videolar") are untouched — only these two flags/fields change.
+    // Shared across the five projects (identical operation) rather than
+    // five near-duplicate methods. Safe to run every startup: a no-op once
+    // already applied.
+    private static async Task ReconcileRemoveCatalogueAndSitePlanAsync(AppDbContext context, string slug)
+    {
+        var project = await context.Projects.FirstOrDefaultAsync(p => p.Slug == slug);
+
+        if (project is null)
+        {
+            return;
+        }
+
+        var changed = false;
+
+        if (project.CataloguePath is not null)
+        {
+            project.CataloguePath = null;
+            project.CatalogueComingSoon = false;
+            project.CatalogueComingSoonHeroToast = false;
+            changed = true;
+        }
+
+        if (project.SitePlanComingSoon)
+        {
+            project.SitePlanComingSoon = false;
+            changed = true;
+        }
+
+        if (changed)
+        {
+            await context.SaveChangesAsync();
+        }
+    }
+
+    // Not a seed — removes Vaziyet Planı for Hacıfeyzullah Q-Latis (Project
+    // Asset Audit follow-up, 2026-08-17): SitePlanComingSoon previously
+    // showed the Hero's "Vaziyet Planı" button with a Coming Soon toast
+    // (see BuildQLatisImages's seed comment); the client wants it removed
+    // while Proje Kataloğu (real, downloadable), Daire Planları (already
+    // empty — untouched) and the Concept video carousel ("Videolar") stay
+    // exactly as they are. Safe to run every startup: a no-op once already
+    // applied.
+    private static async Task ReconcileQLatisRemoveSitePlanAsync(AppDbContext context)
+    {
+        var project = await context.Projects.FirstOrDefaultAsync(p => p.Slug == "q-latis");
+
+        if (project is null || !project.SitePlanComingSoon)
+        {
+            return;
+        }
+
+        project.SitePlanComingSoon = false;
         await context.SaveChangesAsync();
     }
 }

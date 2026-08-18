@@ -5,24 +5,23 @@
     via ISeoService — see _Layout.cshtml's <head> and
     SeoStructuredDataViewComponent.
 
-    Page flow (project owner's 2026-08-03 approval, narrower than
-    03_PageBlueprints.md's fuller section list): Breadcrumb → Hero Banner
-    (Standard) → Introduction → Core Values → Quality Commitment. Projects
-    CTA / Partner Logos / Footer / Floating Contact Button are already
-    global (_Layout.cshtml); Social Media is out of this milestone's scope
-    per the project owner — same "global pieces need no section of their
-    own" reasoning as About Us's Foundation phase.
+    Folkart-reference revision (2026-08-16, project owner-approved) — page
+    flow rebuilt to follow the supplied Folkart "Değerlerimiz" screenshot's
+    layout: Breadcrumb → plain page heading (no Hero Banner) → Introduction
+    → Core Values → Footer. Same pattern as About/Index.cshtml's own
+    Folkart-reference revision (2026-08-13). HeroBannerStandard and
+    QualityCommitmentViewComponent are intentionally not invoked here — the
+    project owner asked for no hero area and no section beyond the value
+    items on this page. Neither component nor its assets were modified or
+    deleted; both are simply unused by this page now.
 
-    Hero Banner uses a dedicated placeholder banner image
-    (wwwroot/images/hero/values-placeholder.svg), matching About Us/Project
-    Detail's "always has its own banner" precedent rather than the neutral
-    gradient HeroBannerStandard falls back to.
-
-    Introduction / Core Values / Quality Commitment each reuse existing
-    building blocks only (Section Header, Information Card's Grid layout)
-    — no new Value Card/Introduction Card component, per project owner's
-    explicit instruction — see ValuesIntroductionViewComponent /
-    CoreValuesViewComponent / QualityCommitmentViewComponent.
+    Project owner's 2026-08-16 decision: the reference's four value
+    headings (İnsan Merkezli Yaklaşım / İnovasyon / Çeşitlilik / Fayda) do
+    not correspond to this site's six existing values (Güven / Kalite /
+    Şeffaflık / Sürdürülebilirlik / Yenilikçilik / Müşteri Odaklılık), so
+    the six existing headings/copy are kept as-is — only the presentation
+    (plain underlined heading + full-width paragraph, no cards/icons)
+    follows the reference. See CoreValuesViewComponent.
 *@
 
 @{
@@ -31,17 +30,14 @@
         new() { Label = "Değerlerimiz" }
     };
 }
-@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail })
+@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail, homeLabel = "Anasayfa" })
 
-@await Component.InvokeAsync("HeroBannerStandard", new
-{
-    heading = "Değerlerimiz",
-    subheading = "Yarım asra yaklaşan yolculuğumuzda bize yön veren ilkeler.",
-    backgroundImageUrl = "/images/hero/values-placeholder.svg"
-})
+<section class="section values-heading-section">
+    <div class="container">
+        <h1 id="values-heading" class="values-heading">Değerlerimiz</h1>
+    </div>
+</section>
 
 @await Component.InvokeAsync("ValuesIntroduction")
 
 @await Component.InvokeAsync("CoreValues")
-
-@await Component.InvokeAsync("QualityCommitment")

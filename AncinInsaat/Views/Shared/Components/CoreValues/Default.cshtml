@@ -2,16 +2,22 @@
 
 @*
     Our Values "Core Values" (docs/03_PageBlueprints.md — Core Values phase,
-    2026-08-03). Reuses the Information Card component's Grid layout — a
-    responsive 3/2/1-column grid (Columns=3, the shared .grid-cols-3
-    utility) of icon+title+description cards, fading upward with the
-    default data-reveal-group stagger. No page-specific CSS needed, same as
-    About Us's Mission & Vision / Areas of Expertise.
+    2026-08-03). Folkart-reference revision, 2026-08-16 (project owner-
+    approved): no Section Header, no Information Card grid/icons — each
+    existing value renders as a plain underlined heading followed by its
+    full-width paragraph, with generous space before each new value,
+    matching the reference's text-only value list. IconMarkup on
+    CoreValuesViewComponent's items is intentionally unused here (kept in
+    the component in case a future revision restores icons); this view
+    reads only Label/Value from each item.
 *@
 
-<section class="section core-values" id="core-values" aria-labelledby="@Model.SectionHeader.HeadingId">
-    <div class="container">
-        <partial name="_SectionHeader" model="Model.SectionHeader" />
-        <partial name="_InformationCard" model="Model.InformationCard" />
-    </div>
+<section class="section core-values" id="core-values">
+    @foreach (var item in Model.InformationCard.Items)
+    {
+        <div class="container core-value-item">
+            <h2 class="core-value-heading">@item.Label</h2>
+            <p class="core-value-paragraph">@item.Value</p>
+        </div>
+    }
 </section>

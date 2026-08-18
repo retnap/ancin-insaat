@@ -3,6 +3,14 @@
 @{
     var heroStyle = $"--hero-bg-image: url('{Model.BackgroundImageUrl}')";
     var headingClass = "hero-heading hero-heading--project" + (string.IsNullOrWhiteSpace(Model.HeadingFontModifierClass) ? "" : $" {Model.HeadingFontModifierClass}");
+
+    // Alinda Gold Residence, Magnesia Gold Residence, Tralles Gold Residence
+    // and N Latis (client request, 2026-08-17) — the Hero's "Kataloğu
+    // İncele" button is hidden for these four projects specifically, while
+    // CatalogueUrl itself stays untouched so the Katalog download inside
+    // Daire Planları (_FloorPlans.cshtml) keeps working. Same slug-gated
+    // pattern already used by _FloorPlans.cshtml's PLANLAR heading.
+    var hideCatalogueHeroButton = Model.Slug is "alinda-gold" or "magnesia-gold" or "tralles-gold" or "nlatis";
 }
 
 @* Nysa Gold Residence reference redesign (2026-08-07), rolled out as the
@@ -84,7 +92,7 @@
                     Vaziyet Planı
                 </button>
             }
-            @if (!string.IsNullOrWhiteSpace(Model.CatalogueUrl))
+            @if (!string.IsNullOrWhiteSpace(Model.CatalogueUrl) && !hideCatalogueHeroButton)
             {
                 @* Alinda Gold Residence revision (2026-08-10) —
                    CatalogueComingSoonHeroToast opts a project into also

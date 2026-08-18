@@ -1231,6 +1231,16 @@ select[aria-invalid='true'] {
     overflow-y: auto;
     padding: var(--space-xs) var(--container-padding-mobile) var(--space-md);
   }
+
+  /* The open mobile panel always sits on an opaque white background (see
+     .navbar-nav above), so it must never inherit .navbar--transparent's
+     white text — regardless of hover/focus/active state — even while the
+     Home Hero navbar itself is still in its transparent, white-text state. */
+  .navbar--transparent .navbar-nav .nav-link,
+  .navbar--transparent .navbar-nav .nav-link:hover,
+  .navbar--transparent .navbar-nav .nav-link--active {
+    color: var(--color-text-primary);
+  }
 }
 
 .nav-link {
@@ -1597,8 +1607,8 @@ select[aria-invalid='true'] {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 4rem;    /* 64px */
-  height: 4rem;
+  width: 3rem;    /* 48px */
+  height: 3rem;
   border-radius: 50%;
   background-color: var(--color-accent);
   color: var(--color-white);
@@ -1627,8 +1637,8 @@ select[aria-invalid='true'] {
 @media (min-width: 768px) {
   .floating-contact {
     right: var(--space-lg);
-    width: 4.5rem;  /* 72px */
-    height: 4.5rem;
+    width: 3rem;    /* 48px */
+    height: 3rem;
   }
 }
 
@@ -2828,17 +2838,52 @@ select[aria-invalid='true'] {
    out from below the image into the hover overlay.
    ========================================================================== */
 
-/* 2026-08-03 refinement: only the heading centers, per that request — the
-   eyebrow and (if ever added) description stay left-aligned, so this
-   targets the <h2> alone rather than reusing .section-header--center
-   (which also centers the eyebrow). No max-width on the header itself
-   (unlike the base .section-header): the eyebrow is a start-aligned flex
-   row regardless of its container's width, so it doesn't need one to
-   stay put, and the <h2> needs the header at the section's full width so
-   its text-align: center centers against the whole section rather than
-   a narrower left-hand box (2026-08-03 fix — it was previously centering
-   within a 640px-wide header box docked to the section's left edge). */
+/* 2026-08-16 revision: heading swapped to the slogan/title pairing from
+   Inspirationals/Terzioglu/terzioglu-projeler-referans.png ("Hayallerinizi
+   Yaşatır" / "Tamamlanan Projeler"), replacing the 2026-08-03 h2-only
+   centering above — both lines now center as one block, so this scopes
+   .section-header itself (still only within .projects-showcase-header,
+   leaving the shared _SectionHeader partial's default left-aligned
+   behaviour untouched for every other section that uses it). Widths
+   approximate the reference's heading container (960px), inner content
+   area (480px) and each line (450px) — kept as max-width so smaller
+   viewports shrink to 100% instead of overflowing. */
+.projects-showcase-header {
+  max-width: 60rem; /* ~960px reference heading container */
+  margin-inline: auto;
+}
+
+.projects-showcase-header .section-header {
+  max-width: 30rem; /* ~480px reference heading content area */
+  margin-inline: auto;
+  text-align: center;
+}
+
+/* Reference eyebrow has no decorative mark before the slogan text — hidden
+   here rather than in the shared partial, so every other section's eyebrow
+   keeps its accent line. */
+.projects-showcase-header .section-header__eyebrow-line {
+  display: none;
+}
+
+.projects-showcase-header .section-header__eyebrow {
+  max-width: 28.125rem; /* ~450px reference slogan width */
+  margin-inline: auto;
+  justify-content: center;
+  color: var(--color-accent);
+  font-weight: var(--font-weight-regular);
+}
+
+/* Reference title reads as a bold sans-serif, not the site's serif
+   heading font — var(--font-body) (Inter) is already an approved token,
+   so this borrows an existing family rather than introducing a new one. */
 .projects-showcase-header h2 {
+  max-width: 28.125rem; /* ~450px reference title width */
+  margin-inline: auto;
+  font-family: var(--font-body);
+  font-size: var(--font-size-h3);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
   text-align: center;
 }
 
@@ -4044,7 +4089,7 @@ select[aria-invalid='true'] {
 
 .hero-social-nav .social-links {
   flex-direction: column;
-  gap: 26px;
+  gap: 10px;
   margin-block-start: 0;
 }
 
@@ -4061,8 +4106,8 @@ select[aria-invalid='true'] {
 }
 
 .hero-social-nav .social-link svg {
-  width: 28px;
-  height: 28px;
+  width: 20px;
+  height: 20px;
 }
 
 .hero-social-nav .social-link:hover,
@@ -4078,12 +4123,12 @@ select[aria-invalid='true'] {
   }
 
   .hero-social-nav .social-links {
-    gap: 32px;
+    gap: 13px;
   }
 
   .hero-social-nav .social-link svg {
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
   }
 }
 
@@ -4093,12 +4138,12 @@ select[aria-invalid='true'] {
   }
 
   .hero-social-nav .social-links {
-    gap: 38px;
+    gap: 16px;
   }
 
   .hero-social-nav .social-link svg {
-    width: 36px;
-    height: 36px;
+    width: 28px;
+    height: 28px;
   }
 }
 
@@ -5420,7 +5465,11 @@ select[aria-invalid='true'] {
 
 @media (min-width: 1024px) {
   .contact-info-form {
-    grid-template-columns: 0.9fr 1.1fr;
+    /* Folkart-reference revision (2026-08-17): form now leads (left),
+       information follows (right) — fr values kept the same as before the
+       swap (the wider column stays with the form, which has more fields
+       to breathe; only which side gets which value changed). */
+    grid-template-columns: 1.1fr 0.9fr;
     gap: var(--space-4xl);
     align-items: start;
   }
@@ -5695,94 +5744,118 @@ a.information-card__value:hover {
 
 
 /* ==========================================================================
-   28. About Us — Company Introduction
-   About Us Foundation phase, 2026-08-01 (CompanyIntroductionViewComponent).
-   Reuses .image-block/.section-header as-is (same pieces Company Overview
-   composes) but with its own identity: Image / Text left-to-right on
-   desktop — mirrored from Company Overview's Text / Image — a wider image
-   column (55/45 vs Company Overview's 35/65, since this page's Company
-   Introduction is the story-telling moment rather than a supporting
-   visual), and an offset accent-coloured frame behind the image as this
-   section's one deliberate flourish.
+   28. About Us — Heading & Text
+   Folkart-reference revision, 2026-08-13 (docs/14_Decisions.md), corrected
+   the same day per the project owner's literal re-read of the reference.
+   Replaces the former Company Introduction image+grid section: the
+   reference has no Hero Banner and no side image on this page at all,
+   just a plain page heading followed by a wide text column, split around
+   Mission & Vision (Section 28a) into two calls of
+   CompanyIntroductionViewComponent ("intro"/"closing").
 
-   grid-template-areas (not the Company Overview's plain 2-column grid +
-   source order) is what makes the layout "easily reversible": swapping
-   which named area a track maps to needs one modifier class, not a
-   markup or column-width change — see .company-introduction--text-first
-   below and CompanyIntroductionViewModel.TextFirst.
-   ========================================================================== */
+   .about-heading-section has no bottom padding of its own — .about-text's
+   top padding (inherited from .section) already provides the gap to the
+   first paragraph, so the two don't stack into a too-wide gap between the
+   H1 and the text beneath it. .about-heading overrides the sitewide H1's
+   decorative serif (--font-heading, Playfair Display) with the plain bold
+   sans-serif body font — the reference's heading is a clean bold
+   sans-serif, not a decorative serif. .about-text-column intentionally has
+   no measure cap (unlike the ~60–68ch caps used elsewhere on the site,
+   e.g. Section 1's lead paragraph): the reference uses a wide editorial
+   column that fills the container, not a narrow article column. */
 
-.company-introduction-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  row-gap: var(--space-xl);
-  align-items: center;
+.about-heading-section {
+  padding-block-end: 0;
 }
 
-@media (min-width: 1024px) {
-  .company-introduction-grid {
-    grid-template-columns: 55% 45%;
-    column-gap: var(--space-3xl);
-    grid-template-areas: "media content";
-  }
-
-  .company-introduction--text-first .company-introduction-grid {
-    grid-template-areas: "content media";
-  }
-
-  /* grid-area only means anything once grid-template-areas defines "media"/
-     "content" as named areas (just above) — kept inside this same query so
-     the two stay in lockstep. Below 1024px the grid has no named areas at
-     all, so leaving these applied unconditionally made "media"/"content"
-     resolve as unmatched named grid lines instead of a no-op, collapsing
-     both items into the same auto-placed cell (visible as image/text
-     overlapping between 768–1024px). */
-  .company-introduction-media {
-    grid-area: media;
-  }
-
-  .company-introduction-content {
-    grid-area: content;
-  }
+.about-heading {
+  max-width: 40ch;
+  margin-block-end: var(--space-lg);
+  font-family: var(--font-body);
 }
 
-.company-introduction-media {
-  position: relative;
+.about-text-column {
+  max-width: none;
 }
 
-/* ---- Offset Accent Frame ----
-   The section's one signature touch: a thin accent-coloured rectangle
-   offset behind the image, peeking out at its bottom-right corner. Only
-   from the tablet breakpoint — on mobile the reserved offset space would
-   just crowd a full-width image with little visual payoff. */
-
-@media (min-width: 768px) {
-  .company-introduction-media {
-    padding-inline-end: var(--space-lg);
-    padding-block-end: var(--space-lg);
-  }
-
-  .company-introduction-media-frame {
-    position: absolute;
-    inset: var(--space-lg) 0 0 var(--space-lg);
-    border: 2px solid var(--color-accent);
-    border-radius: var(--radius-md);
-    z-index: 0;
-  }
-
-  .company-introduction-media .image-block {
-    position: relative;
-    z-index: 1;
-  }
-}
-
-.company-introduction-paragraph {
+.about-text-paragraph {
   color: var(--color-text-secondary);
   line-height: var(--line-height-body);
 }
 
-.company-introduction-paragraph + .company-introduction-paragraph {
+.about-text-paragraph + .about-text-paragraph {
   margin-block-start: var(--space-md);
+}
+
+/* The "intro" call's own .section top padding would double up against
+   .about-heading-section's above it — collapse it away so the H1 sits
+   directly above the first paragraph, matching the reference's tight
+   heading-to-text relationship. .about-text always still gets its own
+   bottom padding (unset here), so "closing" (which isn't preceded by the
+   heading section) keeps its normal top padding. */
+.about-heading-section + .about-text {
+  padding-block-start: 0;
+}
+
+
+/* ==========================================================================
+   28a. About Us — Mission & Vision
+   Folkart-reference revision, 2026-08-13. A single darkened image panel —
+   MissionVisionViewComponent no longer reuses Information Card's Grid
+   layout, since the reference has no icon cards, just Misyon/Vizyon set
+   directly over a photo. --mv-bg-image is read the same way Hero Banner's
+   --hero-bg-image is: an inline custom property set in Default.cshtml, so
+   swapping MissionVisionViewComponent.PlaceholderImageUrl for a real photo
+   later needs no change here. The gradient overlay (not the image itself)
+   guarantees the white text stays legible regardless of what photo lands
+   in that slot. */
+
+.mission-vision-panel {
+  border-radius: var(--radius-md);
+  background-color: var(--color-near-black);
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--color-near-black) 55%, transparent), color-mix(in srgb, var(--color-near-black) 55%, transparent)),
+    var(--mv-bg-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: var(--space-2xl) var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+}
+
+@media (min-width: 768px) {
+  .mission-vision-panel {
+    padding: var(--space-4xl) var(--space-2xl);
+    gap: var(--space-3xl);
+  }
+}
+
+.mission-vision-block {
+  text-align: center;
+  max-width: 44rem;
+  margin-inline: auto;
+}
+
+.mission-vision-label {
+  font-family: var(--font-decorative);
+  font-weight: var(--font-weight-medium);
+  font-style: italic;
+  font-size: 2.5rem;
+  color: var(--color-white);
+  margin-block-end: var(--space-md);
+}
+
+@media (min-width: 768px) {
+  .mission-vision-label {
+    font-size: 3.25rem;
+  }
+}
+
+.mission-vision-text {
+  color: rgba(255, 255, 255, 0.85);
+  line-height: var(--line-height-body);
 }
 
 
@@ -5856,19 +5929,43 @@ a.information-card__value:hover {
 
 
 /* ==========================================================================
-   30. Our Values — Introduction
-   Our Values Foundation phase, 2026-08-03 (ValuesIntroductionViewComponent).
-   Reuses the Section 7 .grid/.grid-cols-2 utility as-is for an even 50/50
-   split (unlike Company Overview's 65/35 override, this section has no
-   Image Block competing for space) — Section Header left, copy right, the
-   only rule needed top-aligns the two columns since they naturally differ
-   in height. The page's Core Values section needs no equivalent block: it
-   reuses Information Card's Grid layout with zero page-specific CSS, same
-   as About Us's Mission & Vision / Areas of Expertise.
+   30. Our Values — Page Heading
+   Folkart-reference revision, 2026-08-16 (project owner-approved). Same
+   pattern as Section 28's About Us heading: no Hero Banner, a plain page
+   heading directly below the breadcrumb. .values-heading-section has no
+   bottom padding of its own — .values-introduction's own top padding
+   already provides the gap to the first paragraph. .values-heading
+   overrides the sitewide H1's decorative serif (--font-heading, Playfair
+   Display) with the plain bold sans-serif body font, matching the
+   reference's clean bold sans-serif title (same override as
+   .about-heading).
    ========================================================================== */
 
-.values-introduction-grid {
-  align-items: start;
+.values-heading-section {
+  padding-block-end: 0;
+}
+
+.values-heading {
+  font-family: var(--font-body);
+}
+
+.values-heading-section + .values-introduction {
+  padding-block-start: 0;
+}
+
+
+/* ==========================================================================
+   30a. Our Values — Introduction
+   Our Values Foundation phase, 2026-08-03 (ValuesIntroductionViewComponent),
+   revised 2026-08-16 for the Folkart reference: no Section Header, just a
+   full-width paragraph column directly under the page heading —
+   .values-introduction-column intentionally has no measure cap (unlike the
+   ~60–68ch caps used elsewhere on the site), matching the reference's wide
+   editorial column, same "no cap" treatment as .about-text-column.
+   ========================================================================== */
+
+.values-introduction-column {
+  max-width: none;
 }
 
 .values-introduction-paragraph {
@@ -5878,6 +5975,45 @@ a.information-card__value:hover {
 
 .values-introduction-paragraph + .values-introduction-paragraph {
   margin-block-start: var(--space-md);
+}
+
+/* Collapses the doubled section-padding gap (.values-introduction's own
+   bottom padding + .core-values' top padding) down to a single instance —
+   2026-08-16 spacing correction, project owner-approved: the gap to the
+   first value heading read as too large. */
+.values-introduction + .core-values {
+  padding-block-start: 0;
+}
+
+
+/* ==========================================================================
+   30b. Our Values — Core Values
+   Folkart-reference revision, 2026-08-16 (project owner-approved). Replaces
+   the former Information Card icon grid: the reference has no cards, icons
+   or background — each value is a bold underlined heading (plain body
+   font, considerably smaller than the page title) followed directly by a
+   full-width paragraph, with generous vertical space ahead of every value
+   after the first. See CoreValues/Default.cshtml.
+   ========================================================================== */
+
+/* Tightened 2026-08-16 (project owner-approved): var(--space-4xl) (96px)
+   read as too loose/disconnected between value sections — var(--space-lg)
+   (24px) keeps items visually distinct while sitting close together, closer
+   to the reference's rhythm. */
+.core-value-item + .core-value-item {
+  margin-block-start: var(--space-lg);
+}
+
+.core-value-heading {
+  font-family: var(--font-body);
+  font-size: var(--font-size-h4);
+  text-decoration-line: underline;
+  text-underline-offset: 0.15em;
+}
+
+.core-value-paragraph {
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-body);
 }
 
 
@@ -5908,18 +6044,48 @@ a.information-card__value:hover {
 
 /* ==========================================================================
    32. Career Page
-   docs/03_PageBlueprints.md "Page — Career": Hero Banner (Standard, no
-   dedicated image — same neutral-gradient precedent as Section 27's
-   Contact page) → Why Join Ançın (Information Card Grid, Section 8/27's
-   .information-card-grid, zero page-specific CSS) → Open Positions
-   (Information Card Grid again) → Application Form (below). The
-   Application Form reuses Section 7/8's label/input/select/textarea/
-   .form-field/.form-row/.form-error rules and Section 27's
-   .contact-form-honeypot (a genuinely page-agnostic off-screen technique,
-   not Contact-specific despite its name) for every field — only this
-   section's own layout (empty states, narrow form column, submit button)
-   is added here.
+   Folkart-reference revision (2026-08-17, project owner-approved): Hero
+   Banner and Why Join Ançın (WhyJoinAncinViewComponent) were dropped from
+   this page; the Open Positions listing section was removed outright. Page
+   flow is now: plain page heading "Ancın'da Kariyer" + wide placeholder
+   text column (.career-heading-section/.career-heading/.career-intro-*,
+   same "no Hero Banner, plain bold sans-serif H1 + full-width paragraph
+   column" pattern as Section 28's About Us and Section 30's Our Values) →
+   Application Form (below). The Application Form reuses Section 7/8's
+   label/input/select/textarea/.form-field/.form-row/.form-error rules and
+   Section 27's .contact-form-honeypot (a genuinely page-agnostic off-screen
+   technique, not Contact-specific despite its name) for every field — only
+   this section's own layout (empty state, narrow form column, submit
+   button) is added here. .career-positions-empty is still used by the
+   Application section's own empty state (Model.Positions.Count == 0).
    ========================================================================== */
+
+.career-heading-section {
+  padding-block-end: 0;
+}
+
+.career-heading {
+  max-width: 40ch;
+  margin-block-end: var(--space-lg);
+  font-family: var(--font-body);
+}
+
+.career-heading-section + .career-intro {
+  padding-block-start: 0;
+}
+
+.career-intro-column {
+  max-width: none;
+}
+
+.career-intro-paragraph {
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-body);
+}
+
+.career-intro-paragraph + .career-intro-paragraph {
+  margin-block-start: var(--space-md);
+}
 
 .career-positions-empty {
   max-width: 48ch;
@@ -6632,4 +6798,305 @@ a.information-card__value:hover {
    above. */
 .project-gallery-nav-group[hidden] {
   display: none;
+}
+
+
+/* ==========================================================================
+   38. Contact Page — Folkart-reference revision
+   Project owner-supplied "İletişim" screenshot, 2026-08-17. Same "no Hero
+   Banner, plain page heading" pattern Section 28 (About Us) and Section 30
+   (Our Values) already established for their own Folkart-reference
+   revisions. Everything here is scoped to selectors that only ever render
+   on Views/Contact/Index.cshtml (.contact-*, or existing shared classes
+   qualified under a .contact-* ancestor) — no shared component's own rule
+   (Sections 7, 8, 27) is edited in place, so Career/KVKK/AreasOfExpertise/
+   CorePrinciples/WhyJoinAncin — the _InformationCard partial's other
+   callers — are unaffected.
+   ========================================================================== */
+
+/* ---- Page heading + intro ----
+   The reference keeps "İletişim", its one-line intro, and the Form/
+   Information split close together — stacking two full .section paddings
+   between each (2026-08-17: measured as excessive) read as far too loose.
+   Tightened here: heading-to-intro gap is still just the H1's own default
+   margin-block-end (small); .contact-heading-section's own bottom padding
+   and the following sections' top paddings are cut down to a single
+   moderate gap instead of doubling up two full .section paddings.
+   .contact-heading overrides the sitewide H1's decorative serif with the
+   plain bold sans-serif body font, same override as .about-heading/
+   .values-heading. */
+
+.contact-heading {
+  font-family: var(--font-body);
+}
+
+.contact-intro {
+  max-width: 60ch;
+  color: var(--color-text-secondary);
+}
+
+.contact-heading-section {
+  padding-block-end: var(--space-sm);
+}
+
+.contact-heading-section + .contact-section {
+  padding-block-start: var(--space-lg);
+}
+
+/* Same tightening one level down — the Map section followed the same
+   doubled-padding pattern below the Form/Information split. */
+.contact-section + .contact-map-section {
+  padding-block-start: var(--space-lg);
+}
+
+/* ---- Contact Form — reference's minimal underline fields ----
+   Reuses every shared .form-field/label/input rule (Sections 7–8) as the
+   base; only scoped inside .contact-form to swap the boxed border for a
+   bottom-only line and lighten the label, per the reference. The
+   :focus-visible and [aria-invalid] pairs re-assert the accent border
+   colour Sections 5 and 7 already give every input sitewide — without
+   them the plain (unconditional) border-bottom override above would
+   silently win the cascade on every focus/error state and mute both. */
+
+.contact-form label {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-secondary);
+}
+
+.contact-form input,
+.contact-form textarea {
+  border: none;
+  border-bottom: 1px solid var(--color-dark-gray);
+  border-radius: 0;
+  background-color: transparent;
+  padding-inline: 0;
+}
+
+.contact-form input:focus-visible,
+.contact-form textarea:focus-visible {
+  border-bottom-color: var(--color-accent);
+}
+
+.contact-form input[aria-invalid='true'],
+.contact-form textarea[aria-invalid='true'] {
+  border-bottom-width: 2px;
+  border-bottom-color: var(--color-accent);
+}
+
+/* ---- Submit — red fill, white text, no icon (2026-08-17 revision) ----
+   Replaces the earlier text-only treatment. Uses the site's existing
+   accent red as-is (no new colour); hover is a subtle lighten rather than
+   .btn-primary's sitewide invert-to-white hover, per this request, so it
+   sets colours directly instead of reusing .btn-primary. */
+
+.contact-form__submit {
+  display: block;
+  width: auto;
+  margin-inline: auto;
+  margin-block-start: var(--space-lg);
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-white);
+  font-weight: var(--font-weight-semibold);
+}
+
+.contact-form__submit:hover {
+  background-color: color-mix(in srgb, var(--color-accent) 92%, white);
+  border-color: color-mix(in srgb, var(--color-accent) 92%, white);
+  color: var(--color-white);
+}
+
+/* ---- Contact Information — plain category list, no icons/card ----
+   The reference has no icon circles and no surrounding card: each
+   category is a bold label directly above a plain gray value, stacked
+   with generous vertical space. Overrides target .information-card's own
+   classes (Section 27) but only when nested under .contact-info-panel, so
+   Career/KVKK/AreasOfExpertise/CorePrinciples/WhyJoinAncin — the same
+   partial's other callers — keep their existing icon+card presentation. */
+
+.contact-info-panel .information-card {
+  margin-block-start: 0;
+}
+
+.contact-info-panel .information-card.card {
+  background-color: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+.contact-info-panel .information-card__list {
+  gap: var(--space-xl);
+}
+
+.contact-info-panel .information-card__icon {
+  display: none;
+}
+
+.contact-info-panel .information-card__text {
+  padding-block-start: 0;
+}
+
+.contact-info-panel .information-card__label {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+}
+
+.contact-info-panel .information-card__value {
+  color: var(--color-text-secondary);
+}
+
+/* ---- Map — full-width, substantial height ----
+   The reference's map sits as a wide, tall full-bleed block below the
+   Form/Information split, not the placeholder's default small centered
+   box. Same responsive aspect ratio already used by the live embed state
+   (.map-component__embed, Section 27) for visual/behavioural consistency
+   between the two mutually-exclusive states. Illustration and location
+   data are unchanged — only this page's sizing of the existing component. */
+
+.contact-map-section .map-component__placeholder {
+  max-width: none;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+@media (min-width: 768px) {
+  .contact-map-section .map-component__placeholder {
+    aspect-ratio: 21 / 9;
+  }
+}
+
+
+/* ==========================================================================
+   39. HR Policy Page — Folkart-reference revision
+   Project owner-supplied "İK Politikamız" screenshot, 2026-08-17. Same "no
+   Hero Banner, plain page heading" pattern Sections 28/30/32/38 (About Us,
+   Our Values, Career, Contact) already established for their own
+   Folkart-reference revisions. Everything here is scoped to selectors that
+   only ever render on Views/HrPolicy/Index.cshtml and its
+   HrPolicySectionsViewComponent partial — no shared component's own rule
+   is edited in place.
+
+   2026-08-17 correction pass: breadcrumb reverted to a single trail item
+   (no separator-fix hack needed any more — see Index.cshtml), the banner
+   image was removed outright, the eyebrow/title/section-heading typography
+   was re-measured against the reference, and vertical rhythm was opened up
+   throughout. */
+
+/* ---- Page heading + intro ----
+   .hr-policy-heading overrides the sitewide H1's decorative serif
+   (--font-heading, Playfair Display) with the plain bold sans-serif body
+   font, same override as .about-heading/.values-heading/.career-heading/
+   .contact-heading — confirmed against the reference screenshot: its
+   title is a plain sans-serif, not a serif, and Inter is the only
+   general-purpose sans already loaded site-wide (Montserrat is scoped to
+   Project Detail Hero titles only, per its own token comment, so is not
+   reused here). .hr-policy-heading-section has no bottom padding of its
+   own; .hr-policy-content's own generous top padding (plain .section
+   default, unmodified) plus .hr-policy-intro's own margin below provide
+   the gap to the first content heading. */
+
+.hr-policy-heading-section {
+  padding-block-end: 0;
+}
+
+/* Eyebrow re-measured against the reference's ~930×38.4px text box:
+   38.4px is exactly 24px × 1.6 — a font-size of 1.5rem at the sitewide
+   --line-height-body (1.6), not the small caption size used previously.
+   Plain/regular weight; colour changed to black per 2026-08-17 correction
+   (was secondary gray). */
+.hr-policy-eyebrow {
+  margin-block-end: var(--space-sm);
+  font-size: 1.5rem;
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-body);
+  color: var(--color-text-primary);
+}
+
+/* Title kept at the sitewide --font-size-h1 (already close to the
+   reference's ~618×112px box at this heading's line-height) but now
+   explicitly bold, and given more breathing room before the intro
+   paragraph per the project owner's spacing correction. Colour set
+   explicitly to black (2026-08-17) — was already inherited from the base
+   h1 rule, made explicit here for this page's own control. */
+.hr-policy-heading {
+  max-width: 40ch;
+  margin-block-end: var(--space-xl);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.hr-policy-intro {
+  max-width: none;
+  margin-block-end: var(--space-2xl);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-body);
+}
+
+/* ---- Content sections — plain black heading + bullet list ----
+   No cards, icons or numbering, matching the reference. Colour changed to
+   black (2026-08-17 correction) — was --hr-policy-navy (#1B3A63), a
+   scoped one-off sampled from the reference; that custom property is now
+   removed as unused. */
+
+/* Section-to-section gap ("final bullet → next heading") opened up from
+   the previous var(--space-2xl) to the sitewide --space-4xl — the largest
+   standard spacing token, not an invented value — for the relaxed
+   editorial rhythm the reference shows. */
+.hr-policy-content-item + .hr-policy-content-item {
+  margin-block-start: var(--space-4xl);
+}
+
+/* font-weight is explicitly semibold (not the inherited bold h2 default)
+   so every section heading reads clearly lighter than the main "İK
+   Politikaları" title — the reference's two-tier heading hierarchy.
+   margin-block-end (heading → its bullet list) doubled from
+   var(--space-md) to var(--space-xl) per the same spacing correction. */
+.hr-policy-content-heading {
+  margin-block-end: var(--space-xl);
+  font-family: var(--font-body);
+  font-size: var(--font-size-h4);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.hr-policy-bullet-list {
+  margin-block-end: 0;
+  padding-inline-start: var(--space-lg);
+}
+
+.hr-policy-bullet-item {
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-body);
+}
+
+.hr-policy-bullet-item + .hr-policy-bullet-item {
+  margin-block-start: var(--space-sm);
+}
+
+
+/* ==========================================================================
+   40. KVKK Page — Hero Banner removal, 2026-08-17
+   HeroBannerStandard (and its background image) removed; the heading and
+   subheading it used to render now sit in a plain heading section instead,
+   styled identically to Section 39's finalized .hr-policy-heading (same
+   font family, weight, colour, spacing). Scoped to .kvkk-heading-section/
+   .kvkk-heading only — KvkkPolicy's own centered Section Header
+   ("KİŞİSEL VERİLERİN KORUNMASI" / "Aydınlatma Metni") and everything below
+   it is untouched. */
+
+.kvkk-heading-section {
+  padding-block-end: 0;
+}
+
+.kvkk-heading {
+  max-width: 40ch;
+  margin-block-end: var(--space-xl);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
 }

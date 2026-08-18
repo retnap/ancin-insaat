@@ -55,8 +55,14 @@ public class ProjectsShowcaseViewComponent : ViewComponent
         {
             Header = new SectionHeaderModel
             {
-                Eyebrow = "PORTFÖYÜMÜZ",
-                Title = "PROJELER",
+                // 2026-08-16 revision: heading swapped to match
+                // Inspirationals/Terzioglu/terzioglu-projeler-referans.png's
+                // slogan/title pairing (styling only, via .projects-showcase-header
+                // in site.css Section 21 — see comment there for why the eyebrow's
+                // shared decorative line is hidden and why the title's font
+                // diverges from the default h2 treatment).
+                Eyebrow = "İlklerin Mimarı - Ancın İnşaat",
+                Title = "Devam Eden Projeler",
                 HeadingId = "projects-showcase-heading"
             },
             Cards = cards

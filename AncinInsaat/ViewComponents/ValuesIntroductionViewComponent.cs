@@ -1,19 +1,17 @@
-using AncinInsaat.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AncinInsaat.ViewComponents;
 
 // Our Values "Introduction" section (docs/03_PageBlueprints.md — Our
-// Values, Introduction phase, 2026-08-03). Section Header (left, reveals
-// from the left) beside its own copy (right, reveals from the right) — an
-// even 50/50 split via the shared .grid-cols-2 utility (Section 7 of
-// site.css), the same utility Company Overview/Company Introduction already
-// use for a two-up section, just without an Image Block: this Introduction
-// has no photography slot per 03_PageBlueprints.md (Section Header + Rich
-// Text only), so the left column carries the heading instead of a media
-// block. Static content, same hardcoded-copy precedent as
-// CompanyIntroductionViewComponent — Our Values has exactly one
-// Introduction, so no calling page needs to pass data in.
+// Values, Introduction phase, 2026-08-03). Folkart-reference revision
+// (2026-08-16, project owner-approved): the reference has no separate
+// section heading here, just a full-width introductory paragraph directly
+// under the "Değerlerimiz" page title — same "drop the extra heading, keep
+// the paragraphs" treatment as About/CompanyIntroductionViewComponent's own
+// 2026-08-13 Folkart-reference revision. Static content, same
+// hardcoded-copy precedent as CompanyIntroductionViewComponent — Our
+// Values has exactly one Introduction, so no calling page needs to pass
+// data in.
 //
 // PLACEHOLDER copy — the client has not yet supplied the real philosophy
 // statement. Built only from facts already established on About Us (1973
@@ -24,12 +22,6 @@ public class ValuesIntroductionViewComponent : ViewComponent
     {
         var model = new ValuesIntroductionViewModel
         {
-            SectionHeader = new SectionHeaderModel
-            {
-                HeadingId = "values-introduction-heading",
-                Eyebrow = "FELSEFEMİZ",
-                Title = "Her Projede Aynı Özen"
-            },
             Paragraphs = new List<string>
             {
                 "Ancın İnşaat için değerler, duvara asılı bir ilke listesi değil; her " +

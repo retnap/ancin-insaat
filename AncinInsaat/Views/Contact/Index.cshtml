@@ -3,11 +3,20 @@
 @* Title/description/canonical/OG/ContactPage schema come from
    ViewData["Seo"] + ViewData["SeoPageType"], set in ContactController.Index
    via ISeoService — see _Layout.cshtml's <head> and
-   SeoStructuredDataViewComponent. Page flow follows docs/03_PageBlueprints.md
-   "Page — Contact": Breadcrumb → Hero Banner (Standard) → Contact
-   Information + Contact Form → Office Location (Map) → Social Media.
-   Footer/CTA Banner/Partner Logos/Floating Contact Button are global,
-   rendered once by _Layout.cshtml. *@
+   SeoStructuredDataViewComponent.
+
+   Folkart-reference revision (2026-08-17, project owner-supplied
+   "İletişim" screenshot) — page flow rebuilt to match that reference:
+   Breadcrumb → plain page heading + short intro (no Hero Banner) →
+   Contact Form + Contact Information → Office Location (Map, no heading,
+   full-width) → Social Media. Same "no Hero Banner, plain heading" pattern
+   About/Index.cshtml and Values/Index.cshtml already established for their
+   own Folkart-reference revisions. HeroBannerStandard is intentionally not
+   invoked here — neither the component nor its assets were modified;
+   it's simply unused by this page now. Social Media section, Footer, CTA
+   Banner, Partner Logos and Floating Contact Button are untouched — the
+   reference is only a source for this page's own content layout, not for
+   the shared chrome around it. *@
 
 @{
     var breadcrumbTrail = new List<AncinInsaat.ViewComponents.BreadcrumbItem>
@@ -15,13 +24,14 @@
         new() { Label = "İletişim" }
     };
 }
-@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail })
+@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail, homeLabel = "Anasayfa" })
 
-@await Component.InvokeAsync("HeroBannerStandard", new
-{
-    heading = "Bize Ulaşın",
-    subheading = "Projeleriniz ve sorularınız için ekibimiz sizi dinlemeye hazır."
-})
+<section class="section contact-heading-section">
+    <div class="container">
+        <h1 id="contact-heading" class="contact-heading">İletişim</h1>
+        <p class="contact-intro">Projeleriniz ve sorularınız için ekibimiz sizi dinlemeye hazır.</p>
+    </div>
+</section>
 
 <section class="section contact-section" id="contact-form" aria-label="İletişim bilgileri ve formu">
     <div class="container">
@@ -31,15 +41,8 @@
 
 @if (!string.IsNullOrWhiteSpace(Model.MapEmbedUrl) || !string.IsNullOrWhiteSpace(Model.MapLinkUrl))
 {
-    <section class="section contact-map-section" aria-labelledby="contact-map-heading">
+    <section class="section contact-map-section" aria-label="Konum">
         <div class="container">
-            <partial name="_SectionHeader" model="@(new AncinInsaat.Models.SectionHeaderModel
-            {
-                Eyebrow = "Konum",
-                Title = "Ofisimizi Ziyaret Edin",
-                HeadingId = "contact-map-heading"
-            })" />
-
             <div data-reveal>
                 @await Component.InvokeAsync("Map", new { embedUrl = Model.MapEmbedUrl, linkUrl = Model.MapLinkUrl })
             </div>
@@ -47,18 +50,7 @@
     </section>
 }
 
-<section class="section contact-social-section" aria-labelledby="contact-social-heading">
-    <div class="container">
-        <partial name="_SectionHeader" model="@(new AncinInsaat.Models.SectionHeaderModel
-        {
-            Eyebrow = "Sosyal Medya",
-            Title = "Bizi Takip Edin",
-            CssClass = "section-header--center",
-            HeadingId = "contact-social-heading"
-        })" />
-
-        <div class="contact-social-links" data-reveal="scale">
-            @await Component.InvokeAsync("SocialMedia", new { onLight = true })
-        </div>
-    </div>
-</section>
+@* "Bizi Takip Edin" social-media section removed from this page only
+   (2026-08-17, project owner-requested) — the SocialMediaViewComponent
+   itself, the global Footer's own social icons, and every other page that
+   still calls this section are untouched. *@

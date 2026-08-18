@@ -62,7 +62,13 @@
     </div>
 </section>
 
-@if (!string.IsNullOrWhiteSpace(Model.CatalogueUrl))
+@* Alinda Gold Residence, Magnesia Gold Residence, Tralles Gold Residence and
+   N Latis (client request, 2026-08-17) — the "Projeyi Detaylıca Keşfedin"
+   section is hidden for these four projects specifically, while
+   Model.CatalogueUrl stays untouched so Daire Planları's own Katalog
+   download button (_FloorPlans.cshtml) is unaffected. Same slug-gated
+   pattern already used by _FloorPlans.cshtml's PLANLAR heading. *@
+@if (!string.IsNullOrWhiteSpace(Model.CatalogueUrl) && Model.Slug is not ("alinda-gold" or "magnesia-gold" or "tralles-gold" or "nlatis"))
 {
     <partial name="_ProjectCatalogue" model="Model" />
 }

@@ -1,0 +1,25 @@
+@model HrPolicySectionsViewModel
+
+@*
+    HR Policy content sections — Folkart-reference revision, 2026-08-17.
+    Plain uppercase navy heading + bullet list per section, no cards, icons
+    or numbering. See HrPolicySectionsViewComponent for the "no invention"
+    rationale and the heading/bullet-count sourcing from the reference.
+*@
+
+<section class="section hr-policy-content">
+    <div class="container">
+        @foreach (var item in Model.Sections)
+        {
+            <div class="hr-policy-content-item">
+                <h2 class="hr-policy-content-heading">@item.Heading</h2>
+                <ul class="hr-policy-bullet-list">
+                    @foreach (var bullet in item.Bullets)
+                    {
+                        <li class="hr-policy-bullet-item">@bullet</li>
+                    }
+                </ul>
+            </div>
+        }
+    </div>
+</section>

@@ -1,18 +1,23 @@
 @model MissionVisionViewModel
 
 @*
-    About Us "Mission & Vision" (docs/03_PageBlueprints.md — Mission & Vision
-    phase, 2026-08-01). Reuses the Information Card component's Grid layout
-    (Views/Shared/_InformationCard.cshtml) — two equally sized cards, Mission
-    left / Vision right, each with its own reveal direction set on the item
-    itself (MissionVisionViewComponent). Same cream-free, default section
-    background as Company Introduction — Our Journey already carries the
-    page's one background accent, so this section stays quiet.
+    About Us "Mission & Vision" (2026-08-13 Folkart-reference revision).
+    A single darkened image panel — --mv-bg-image is read by .mission-vision-panel
+    in site.css the same way Hero Banner reads --hero-bg-image, so replacing
+    Model.BackgroundImageUrl with a real photo later needs no markup change.
 *@
 
-<section class="section mission-vision" id="about-mission-vision" aria-labelledby="@Model.SectionHeader.HeadingId">
+<section class="section mission-vision" id="about-mission-vision" aria-label="Misyon ve Vizyon">
     <div class="container">
-        <partial name="_SectionHeader" model="Model.SectionHeader" />
-        <partial name="_InformationCard" model="Model.InformationCard" />
+        <div class="mission-vision-panel" style="--mv-bg-image: url('@Model.BackgroundImageUrl')">
+            <div class="mission-vision-block">
+                <h2 class="mission-vision-label">@Model.MissionLabel</h2>
+                <p class="mission-vision-text">@Model.MissionText</p>
+            </div>
+            <div class="mission-vision-block">
+                <h2 class="mission-vision-label">@Model.VisionLabel</h2>
+                <p class="mission-vision-text">@Model.VisionText</p>
+            </div>
+        </div>
     </div>
 </section>

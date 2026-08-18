@@ -118,10 +118,13 @@ else
                     {
                         <a class="btn btn-primary project-floorplans-catalogue" href="@Model.CatalogueUrl" download>Proje Kataloğunu İndir</a>
                     }
-                    else
-                    {
-                        <button type="button" class="btn btn-primary project-floorplans-catalogue" disabled aria-disabled="true">Proje Kataloğunu İndir</button>
-                    }
+                    @* No CatalogueUrl and not Coming Soon (Project Asset
+                       Audit, 2026-08-17) — a project with no catalogue at
+                       all (Ferhunde Hanım Apt., La Fiore Karabağ 2. Etap)
+                       omits this button entirely, matching the Hero and the
+                       Project Catalogue CTA section (both already hide
+                       themselves under this exact condition) instead of
+                       showing a disabled stand-in. *@
                 </div>
 
                 @* A floor plan with no real Net/Gross/Sales-Gross figures yet

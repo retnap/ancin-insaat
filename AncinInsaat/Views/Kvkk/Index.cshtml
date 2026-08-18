@@ -4,15 +4,21 @@
     ViewData["SeoPageType"], set in KvkkController.Index via ISeoService —
     see _Layout.cshtml's <head> and SeoStructuredDataViewComponent.
 
-    Page flow (project owner's 2026-08-03 approval): Breadcrumb → Hero
-    Banner (Standard, dedicated placeholder image — same "always has its
-    own banner" precedent as About Us/Values/HR Policy) → KVKK Policy
-    (Introduction + Privacy Policy folded into one document,
-    KvkkPolicyViewComponent — see that component's comment for why) →
-    Contact Information (Information Card List layout reusing SiteSettings,
-    KvkkContactViewComponent). Accordion and Download Button are explicitly
-    out of scope per the same approval. Footer / CTA Banner / Floating
-    Contact Button are already global (_Layout.cshtml).
+    Page flow: Breadcrumb → plain page heading (same text/subheading Hero
+    Banner previously rendered, now a plain heading section styled like HR
+    Policy's own page title — see site.css) → KVKK Policy (Introduction +
+    Privacy Policy folded into one document, KvkkPolicyViewComponent — see
+    that component's comment for why) → Contact Information (Information
+    Card List layout reusing SiteSettings, KvkkContactViewComponent).
+    Accordion and Download Button are explicitly out of scope (project
+    owner's 2026-08-03 approval). Footer / CTA Banner / Floating Contact
+    Button are already global (_Layout.cshtml).
+
+    2026-08-17 correction: HeroBannerStandard (and its background image)
+    removed outright, not replaced — same "no Hero Banner, plain page
+    heading" pattern About/Values/Career/Contact/HR Policy already use.
+    The heading and subheading text themselves are unchanged from what the
+    Hero Banner rendered.
 *@
 
 @{
@@ -23,12 +29,12 @@
 }
 @await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail })
 
-@await Component.InvokeAsync("HeroBannerStandard", new
-{
-    heading = "KVKK Aydınlatma Metni",
-    subheading = "Kişisel verilerinizin işlenmesine ilişkin aydınlatma metnimiz.",
-    backgroundImageUrl = "/images/hero/kvkk-placeholder.svg"
-})
+<section class="section kvkk-heading-section">
+    <div class="container">
+        <h1 id="kvkk-heading" class="kvkk-heading">KVKK Aydınlatma Metni</h1>
+        <p class="kvkk-subheading">Kişisel verilerinizin işlenmesine ilişkin aydınlatma metnimiz.</p>
+    </div>
+</section>
 
 @await Component.InvokeAsync("KvkkPolicy")
 

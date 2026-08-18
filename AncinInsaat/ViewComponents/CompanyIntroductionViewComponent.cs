@@ -3,53 +3,53 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AncinInsaat.ViewComponents;
 
-// About Us "Company Introduction" section (docs/03_PageBlueprints.md —
-// About Us Foundation phase, 2026-08-01). Reuses the exact building blocks
-// Company Overview already established for this same "Section Header +
-// Image Block + copy" shape (docs/02_DesignSystem.md's ".image-block"
-// comment already anticipates this as "Company Story"), but composed with
-// its own image/text ratio and column order (see CompanyIntroductionViewModel.TextFirst)
-// so the page reads as About Us's own presentation rather than a repeat of
-// Home. Static content per CLAUDE.md's Placeholder Content rules, same
-// hardcoded-copy precedent as CompanyOverviewViewComponent — About Us has
-// exactly one Company Introduction, so no calling page needs to pass data in.
+// About Us "existing text content", now split around Mission & Vision
+// (2026-08-13 Folkart-reference corrective revision — docs/14_Decisions.md).
+// Renders in two calls — "intro" (before the panel) and "closing" (after
+// it) — each with three paragraphs, matching the project owner's explicit
+// "multiple paragraphs before / multiple paragraphs after" requirement.
 //
-// PLACEHOLDER copy and image — the client has not yet supplied the real
-// company story text or photography. Realistic-but-fictional, deliberately
-// avoids any invented business fact beyond the founding year (1973) and the
-// "53 Yıllık Tecrübe" figure the project owner already supplied for Company
-// Overview. Replace both before launch.
+// PLACEHOLDER copy — the client has not yet supplied the real company
+// story text, and the project owner explicitly instructed against
+// inventing additional corporate copy to fill the page. Standard Lorem
+// Ipsum is used here instead until real content is provided; no heading
+// accompanies it per the same instruction (the "KİMİZ" / "Aydın'da Yarım
+// Asırlık Bir Yolculuk" heading has been removed, not renamed).
 public class CompanyIntroductionViewComponent : ViewComponent
 {
-    public IViewComponentResult Invoke()
+    private static readonly IReadOnlyList<string> IntroParagraphs = new List<string>
     {
-        var model = new CompanyIntroductionViewModel
-        {
-            SectionHeader = new SectionHeaderModel
-            {
-                HeadingId = "company-introduction-heading",
-                Eyebrow = "KİMİZ",
-                Title = "Aydın'da Yarım Asırlık Bir Yolculuk"
-            },
-            Paragraphs = new List<string>
-            {
-                "Ancın İnşaat, 1973 yılından bu yana Aydın'da yaşam alanları inşa ediyor. " +
-                    "Yarım asra yaklaşan bu yolculukta değişmeyen tek şey, her projeye aynı " +
-                    "özenle yaklaşma prensibimiz oldu.",
-                "Bugün de aynı anlayışla; sağlam mühendislik, modern mimari ve insana değer " +
-                    "veren bir yaklaşımı bir araya getirerek, sakinlerine uzun yıllar boyunca " +
-                    "güvenle yaşayabilecekleri alanlar sunmaya devam ediyoruz."
-            },
-            Image = new ImageBlockModel
-            {
-                Src = "/images/company/introduction-placeholder.svg",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor " +
+            "incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud " +
+            "exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu " +
+            "fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in " +
+            "culpa qui officia deserunt mollit anim id est laborum.",
+        "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium " +
+            "doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore " +
+            "veritatis et quasi architecto beatae vitae dicta sunt explicabo."
+    };
 
-                // Empty on purpose, same reasoning as Company Overview's image:
-                // an abstract placeholder graphic that conveys no information
-                // beyond what the heading/paragraphs already state.
-                Alt = ""
-            },
-            TextFirst = false
+    private static readonly IReadOnlyList<string> ClosingParagraphs = new List<string>
+    {
+        "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed " +
+            "quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. " +
+            "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet.",
+        "Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit " +
+            "laboriosam, nisi ut aliquid ex ea commodi consequatur. Quis autem vel eum iure " +
+            "reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur.",
+        "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis " +
+            "praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias " +
+            "excepturi sint occaecati cupiditate non provident."
+    };
+
+    public IViewComponentResult Invoke(string part)
+    {
+        var model = part switch
+        {
+            "intro" => new CompanyIntroductionViewModel { SectionId = "about-intro", Paragraphs = IntroParagraphs },
+            "closing" => new CompanyIntroductionViewModel { SectionId = "about-closing", Paragraphs = ClosingParagraphs },
+            _ => throw new ArgumentOutOfRangeException(nameof(part), part, "Expected \"intro\" or \"closing\".")
         };
 
         return View(model);
