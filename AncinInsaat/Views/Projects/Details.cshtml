@@ -88,12 +88,23 @@
    Q-Latis, 2026-08-10; see _FloorPlans.cshtml's FloorPlans.Count == 0
    branch). Every other project already has 1+ FloorPlan rows (real or the
    existing BuildPlaceholderFloorPlans stand-in), so this is purely additive
-   — none of them can reach the new branch. *@
-<section class="section project-floorplans-section project-floorplans-section--decorative" id="project-floor-plans" aria-labelledby="project-floorplans-heading">
-    <div class="container">
-        <partial name="_FloorPlans" model="Model" />
-    </div>
-</section>
+   — none of them can reach the new branch.
+
+   Tralles Gold Residence, N Latis, Alinda Gold Residence, Magnesia Gold
+   Residence and La Fiore Karabağ (client request, 2026-08-19) — none of
+   these five projects have floor plans, so the entire Planlar section is
+   hidden for them specifically. Same slug-gated pattern already used above
+   for the Projeyi Detaylıca Keşfedin section (Model.CatalogueUrl check).
+   FloorPlans data/seed rows are untouched — only the section's rendering is
+   suppressed. *@
+@if (Model.Slug is not ("tralles-gold" or "nlatis" or "alinda-gold" or "magnesia-gold" or "la-fiore-karabag"))
+{
+    <section class="section project-floorplans-section project-floorplans-section--decorative" id="project-floor-plans" aria-labelledby="project-floorplans-heading">
+        <div class="container">
+            <partial name="_FloorPlans" model="Model" />
+        </div>
+    </section>
+}
 
 <partial name="_MediaViewer" />
 <partial name="_Toast" />
