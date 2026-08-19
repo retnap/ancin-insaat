@@ -23,9 +23,14 @@ namespace AncinInsaat.ViewComponents;
 // later reuse on About Us "Our Journey" and eventual Admin Panel data.
 //
 // About Us Foundation phase (2026-08-01): the milestone list itself moved
-// out to AncinInsaat.Data.CompanyHistoryData, now shared with the new
-// OurJourneyViewComponent, so Home and About Us read one source instead of
-// each keeping its own copy — see docs/14_Decisions.md.
+// out to AncinInsaat.Data.CompanyHistoryData, shared with OurJourneyViewComponent
+// — see docs/14_Decisions.md. Superseded here 2026-08-19: the project owner
+// supplied Home's four real "Zaman Tüneli" milestones directly, with an
+// in-card expand/collapse read-more instead of the shared card's outbound
+// link, so this component now reads its own AncinInsaat.Data.HomeTimelineData
+// via _HomeTimelineCarousel rather than the shared CompanyHistoryData /
+// _HistoryCarousel. About Us's "Our Journey" keeps reading the original
+// shared source unchanged.
 //
 // PLACEHOLDER video — the client has not yet supplied the real promotional
 // footage; VideoSrc stays null until it does.
@@ -72,10 +77,10 @@ public class CompanyHistorySectionViewComponent : ViewComponent
                 Id = "company-history",
                 Title = sectionTitle
             },
-            Carousel = new HistoryCarouselModel
+            Carousel = new HomeTimelineCarouselModel
             {
                 Id = "company-history",
-                Entries = CompanyHistoryData.Milestones
+                Entries = HomeTimelineData.Entries
             }
         };
 

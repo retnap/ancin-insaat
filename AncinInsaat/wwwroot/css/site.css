@@ -2785,6 +2785,60 @@ select[aria-invalid='true'] {
   transform: translateX(3px);
 }
 
+/* ---- Home Timeline (Zaman Tüneli) devamı/gizle expand-collapse ----
+   Home-only, additive: _HomeTimelineCarousel reuses the .history-card*
+   classes above unmodified for visual parity, and adds these new classes
+   for its own toggle/expand markup. Nothing here touches an existing
+   selector, so About Us's shared _HistoryCarousel cards (same
+   .history-card class, no .home-timeline-* markup) are unaffected.
+   .home-timeline-card overrides the track's default flex stretch so an
+   expanded card grows on its own without pulling its siblings taller;
+   the grid-template-rows 0fr/1fr pair animates the reveal without a
+   fixed max-height guess. */
+
+.home-timeline-card {
+  align-self: flex-start;
+}
+
+.home-timeline-more {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--transition-base) var(--ease-standard);
+}
+
+.home-timeline-more-inner {
+  overflow: hidden;
+}
+
+.home-timeline-card.is-expanded .home-timeline-more {
+  grid-template-rows: 1fr;
+}
+
+.home-timeline-detail {
+  margin: 0;
+  padding-block-start: var(--space-2xs);
+  padding-block-end: var(--space-sm);
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+}
+
+.home-timeline-toggle {
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-accent);
+  font-family: inherit;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+}
+
+.home-timeline-toggle:hover {
+  text-decoration: underline;
+}
+
 /* ---- Shared Prev/Next Button ----
    Lives in History Info Panel, not History Carousel (the panel is the
    dedicated navigation surface) — kept as its own class since a future

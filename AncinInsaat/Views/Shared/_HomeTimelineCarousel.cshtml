@@ -1,0 +1,37 @@
+@model HomeTimelineCarouselModel
+
+@*
+    Home-only fork of _HistoryCarousel (2026-08-19) — same card layout,
+    reusing the .history-card* design tokens for visual parity, but with
+    a per-card "devamı..." / "<- gizle" expand toggle instead of the
+    shared partial's outbound link, driven by HomeTimelineData rather
+    than the shared CompanyHistoryData. Kept as its own file so About
+    Us's "Our Journey" (still on _HistoryCarousel + CompanyHistoryData)
+    is untouched. Same data-history-* attributes as the shared partial so
+    the existing History Info Panel Prev/Next + active-card sync in
+    site.js keeps working unchanged.
+*@
+
+<div class="history-carousel" data-history-carousel="@Model.Id">
+    <div class="history-carousel-track" data-history-track tabindex="0" role="group" aria-label="Zaman tüneli" data-reveal-group>
+        @for (var i = 0; i < Model.Entries.Count; i++)
+        {
+            var entry = Model.Entries[i];
+            var moreId = $"{Model.Id}-timeline-more-{i}";
+            <article class="history-card home-timeline-card@(i == 0 ? " is-active" : "")" data-history-index="@i" data-reveal>
+                <img class="history-card-image" src="@entry.ImageSrc" alt="@entry.ImageAlt" loading="lazy" decoding="async" />
+                <div class="history-card-body">
+                    <span class="history-card-year">@entry.Year</span>
+                    <h3 class="history-card-title">@entry.Title</h3>
+                    <p class="history-card-description">@entry.Summary</p>
+                    <div class="home-timeline-more" id="@moreId">
+                        <div class="home-timeline-more-inner">
+                            <p class="home-timeline-detail">@entry.Detail</p>
+                        </div>
+                    </div>
+                    <button type="button" class="home-timeline-toggle" data-timeline-toggle aria-expanded="false" aria-controls="@moreId">devamı...</button>
+                </div>
+            </article>
+        }
+    </div>
+</div>

@@ -665,6 +665,36 @@
 
 
 // ==========================================================================
+// Home Timeline (Zaman Tüneli) devamı/gizle toggle
+// Home-only _HomeTimelineCarousel cards. Each card's [data-timeline-toggle]
+// button independently shows/hides that card's .home-timeline-more block
+// (site.css animates the reveal via grid-template-rows) and swaps its own
+// label between "devamı..." and "<- gizle" — unrelated to the History Info
+// Panel sync above, and never touches About Us's shared _HistoryCarousel
+// cards, which have no [data-timeline-toggle] markup.
+// ==========================================================================
+
+(function () {
+  'use strict';
+
+  var toggles = Array.prototype.slice.call(document.querySelectorAll('[data-timeline-toggle]'));
+
+  toggles.forEach(function (toggle) {
+    var card = toggle.closest('.home-timeline-card');
+    if (!card) {
+      return;
+    }
+
+    toggle.addEventListener('click', function () {
+      var expanded = card.classList.toggle('is-expanded');
+      toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      toggle.textContent = expanded ? '<- gizle' : 'devamı...';
+    });
+  });
+})();
+
+
+// ==========================================================================
 // Projects Showcase slider
 // Home page, directly below Company History. Embla Carousel (+ its
 // Autoplay plugin) drives panning, infinite loop and touch drag — vendored
