@@ -25,4 +25,22 @@ public class HeroBannerViewModel
     // (or when there is no featured project), in which case the heading
     // renders exactly as before.
     public string? HeadingFontModifierClass { get; init; }
+
+    // La Fiore Karabağ 2. Etap heading identity match (2026-08-20 request)
+    // — when the featured project is this slug, Default.cshtml renders
+    // this logo image plus HeadingBadgeImageUrl in a .hero-heading-lockup
+    // instead of the plain Heading text, exactly like the Project Detail
+    // Hero's own HeadingLogoImageUrl/HeadingBadgeImageUrl pair
+    // (HeroBannerProjectDetailViewComponent). Null for every other
+    // featured project, whose heading and CTA render exactly as before —
+    // see HeroBannerViewComponent for the slug gate.
+    public string? HeadingLogoImageUrl { get; init; }
+    public string? HeadingBadgeImageUrl { get; init; }
+    public string? HeadingLogoImgModifierClass { get; init; }
+
+    // First Vaziyet Planı image for the featured project, if any (Home Hero
+    // "Vaziyet Planı" button, 2026-08-20 request). Null omits the button —
+    // true for every project other than La Fiore Karabağ 2. Etap today,
+    // same as the Project Detail Hero when SitePlanImageUrls is empty.
+    public string? SitePlanImageUrl { get; init; }
 }

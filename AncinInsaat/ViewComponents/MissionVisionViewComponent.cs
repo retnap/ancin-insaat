@@ -17,11 +17,12 @@ namespace AncinInsaat.ViewComponents;
 // statements); replace before launch.
 public class MissionVisionViewComponent : ViewComponent
 {
-    // Temporary — no real photography exists yet for this section
-    // (project owner's 2026-08-13 instruction). Replace this single path
-    // with the real image once supplied; nothing else in the panel needs
-    // to change.
-    private const string PlaceholderImageUrl = "/images/company/mission-vision-placeholder.svg";
+    // Real photo supplied 2026-08-20 (project owner request) — replaces the
+    // placeholder SVG that stood in for it since 2026-08-13. Nothing else in
+    // the panel needs to change: background-size: cover on
+    // .mission-vision-panel (site.css) already crops any image to the
+    // panel's own dimensions without distorting it.
+    private const string PlaceholderImageUrl = "/images/company/ancın misyon 1.png";
 
     public IViewComponentResult Invoke()
     {

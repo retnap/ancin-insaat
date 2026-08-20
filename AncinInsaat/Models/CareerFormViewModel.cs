@@ -11,9 +11,10 @@ namespace AncinInsaat.Models;
 // not here — DataAnnotations has no built-in way to inspect file bytes.
 public class CareerFormViewModel
 {
-    [Required(ErrorMessage = "Lütfen bir pozisyon seçiniz.")]
+    [Required(ErrorMessage = "Pozisyon alanı zorunludur.")]
+    [StringLength(200, MinimumLength = 2, ErrorMessage = "Pozisyon 2-200 karakter arasında olmalıdır.")]
     [Display(Name = "Pozisyon")]
-    public int? CareerPositionId { get; set; }
+    public string Position { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Ad soyad alanı zorunludur.")]
     [StringLength(200, MinimumLength = 2, ErrorMessage = "Ad soyad 2-200 karakter arasında olmalıdır.")]

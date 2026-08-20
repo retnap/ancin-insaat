@@ -13,7 +13,7 @@ public interface IJobApplicationService
 
 public class JobApplicationSubmission
 {
-    public required int CareerPositionId { get; init; }
+    public required string Position { get; init; }
     public required string FullName { get; init; }
     public required string Email { get; init; }
     public string? Phone { get; init; }
@@ -24,12 +24,6 @@ public class JobApplicationSubmission
 public enum JobApplicationSubmitStatus
 {
     Success,
-
-    // CareerPositionId does not match a real, published position — the
-    // <select> only ever lists real published positions, so this only
-    // fires against a tampered request (docs/12_Security.md "Never trust
-    // client-side data").
-    InvalidPosition,
 
     // Wrong extension and/or wrong declared Content-Type.
     InvalidCvType,

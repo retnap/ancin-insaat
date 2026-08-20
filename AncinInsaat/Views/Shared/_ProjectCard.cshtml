@@ -8,15 +8,26 @@
 <a class="project-card-standard" href="@Model.DetailUrl" aria-label="@Model.Name">
     <span class="project-card-standard-media">
         <img class="project-card-standard-image" src="@Model.CoverImageSrc" alt="" loading="lazy" decoding="async" />
+        @if (!string.IsNullOrWhiteSpace(Model.LogoImageUrl))
+        {
+            <img class="project-card-standard-logo" src="@Model.LogoImageUrl" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+        }
+        else if (!string.IsNullOrWhiteSpace(Model.TitleOverlayText))
+        {
+            <span class="project-card-standard-title-overlay" lang="en" aria-hidden="true">@Model.TitleOverlayText</span>
+        }
         <span class="project-card-standard-scrim" aria-hidden="true"></span>
         <span class="project-status-badge @Model.StatusModifierClass">@Model.StatusLabel</span>
-        <span class="project-card-standard-content">
-            <span class="project-card-standard-name">@Model.Name</span>
-            @if (!string.IsNullOrWhiteSpace(Model.Location))
-            {
-                <span class="project-card-standard-location">@Model.Location</span>
-            }
-        </span>
+        @if (!Model.HideCaption)
+        {
+            <span class="project-card-standard-content">
+                <span class="project-card-standard-name">@Model.Name</span>
+                @if (!string.IsNullOrWhiteSpace(Model.Location))
+                {
+                    <span class="project-card-standard-location">@Model.Location</span>
+                }
+            </span>
+        }
         <span class="project-card-standard-arrow" aria-hidden="true">
             <svg viewBox="0 0 24 24" width="18" height="18">
                 <path d="M7 17L17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />

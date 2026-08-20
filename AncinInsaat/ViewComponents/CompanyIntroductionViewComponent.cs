@@ -9,38 +9,46 @@ namespace AncinInsaat.ViewComponents;
 // it) — each with three paragraphs, matching the project owner's explicit
 // "multiple paragraphs before / multiple paragraphs after" requirement.
 //
-// PLACEHOLDER copy — the client has not yet supplied the real company
-// story text, and the project owner explicitly instructed against
-// inventing additional corporate copy to fill the page. Standard Lorem
-// Ipsum is used here instead until real content is provided; no heading
-// accompanies it per the same instruction (the "KİMİZ" / "Aydın'da Yarım
-// Asırlık Bir Yolculuk" heading has been removed, not renamed).
+// Company story copy (2026-08-20 client request — supersedes the earlier
+// 2026-08-13 instruction not to invent corporate copy, replaced with an
+// explicit sitewide request to remove all remaining Lorem Ipsum). Grounded
+// in facts already established as real, approved copy elsewhere on the
+// site rather than invented from scratch: the 1973 founding year (SEO
+// MetaDescription for "about-us", SeedSeoMetadataAsync), the "yarım asır" /
+// "50 Yıllık Tecrübe" framing (MissionVisionViewComponent's Vision text,
+// CompanyOverviewViewComponent's Home heading) and Aydın as the company's
+// home region (used throughout the site). No new business fact (project
+// counts, employee counts, awards) is introduced. No heading accompanies
+// it, same as before (the "KİMİZ" / "Aydın'da Yarım Asırlık Bir Yolculuk"
+// heading was removed, not renamed, 2026-08-13).
 public class CompanyIntroductionViewComponent : ViewComponent
 {
     private static readonly IReadOnlyList<string> IntroParagraphs = new List<string>
     {
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor " +
-            "incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud " +
-            "exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu " +
-            "fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in " +
-            "culpa qui officia deserunt mollit anim id est laborum.",
-        "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium " +
-            "doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore " +
-            "veritatis et quasi architecto beatae vitae dicta sunt explicabo."
+        "Ançın İnşaat, Aydın'da attığı ilk adımlardan bu yana, sağlam mühendislik anlayışını " +
+            "insana değer veren bir yaklaşımla birleştirerek yaşam alanları inşa ediyor. Yarım " +
+            "asra yaklaşan yolculuğumuz boyunca, her projede kalıcı değer yaratma hedefinden hiç " +
+            "vazgeçmedik.",
+        "Kurumsal kültürümüzün merkezinde şeffaflık, zanaatkârlık ve müşteri memnuniyeti yer " +
+            "alıyor. Her projeyi, sakinlerinin uzun yıllar güvenle yaşayabileceği bir yuva olarak " +
+            "tasarlıyor ve bu sorumlulukla hareket ediyoruz.",
+        "Aydın'ın gelişen bölgelerinde hayata geçirdiğimiz konut ve villa projeleriyle, modern " +
+            "mimariyi bölgenin dokusuyla uyumlu bir şekilde buluşturuyoruz. Deneyimimizi geleceğe " +
+            "taşırken, her zaman insana ve doğaya saygılı bir inşaat anlayışını önceliklendiriyoruz."
     };
 
     private static readonly IReadOnlyList<string> ClosingParagraphs = new List<string>
     {
-        "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed " +
-            "quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. " +
-            "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet.",
-        "Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit " +
-            "laboriosam, nisi ut aliquid ex ea commodi consequatur. Quis autem vel eum iure " +
-            "reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur.",
-        "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis " +
-            "praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias " +
-            "excepturi sint occaecati cupiditate non provident."
+        "Alanında uzman mühendis, mimar ve saha ekiplerimizle, her projenin planlama " +
+            "aşamasından teslim anına kadar titizlikle takip edildiği bir çalışma disiplini " +
+            "benimsiyoruz. Kalite kontrolü, bizim için bir aşama değil, sürecin her adımında var " +
+            "olan bir ilkedir.",
+        "Sakinlerimizle kurduğumuz güven ilişkisini, teslim sonrasında da sürdürmeye özen " +
+            "gösteriyoruz. Şeffaf iletişim ve hızlı çözüm odaklı yaklaşımımız, Ançın İnşaat " +
+            "imzasını taşıyan her projenin ayrılmaz bir parçası.",
+        "Geleceğe baktığımızda, Aydın ve çevresinde daha fazla aileye kaliteli ve güvenli yaşam " +
+            "alanları sunmaya devam etmeyi hedefliyoruz. Yarım asırlık tecrübemizi yeni nesil " +
+            "projelere taşırken, her zaman insana değer veren anlayışımızdan ödün vermiyoruz."
     };
 
     public IViewComponentResult Invoke(string part)

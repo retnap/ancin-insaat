@@ -21,6 +21,86 @@ public class ProjectsShowcaseViewComponent : ViewComponent
 {
     private const string FallbackCoverImage = "/images/projects/project-cover-placeholder.webp";
 
+    // Card hover-title overrides (2026-08-20 request) — the client wants
+    // these six exact strings on the Home carousel card only, verbatim
+    // (including "VİLLALAR"'s Turkish dotted İ), independent of each
+    // Project entity's own Name. Scoped to this component/dictionary only:
+    // Project.Name (DB/seed data) and every other page that reads it —
+    // Project Detail, /projects, admin — are untouched.
+    private static readonly IReadOnlyDictionary<string, string> CardDisplayNameOverridesBySlug =
+        new Dictionary<string, string>
+        {
+            ["nysa-gold"] = "NYSA GOLD",
+            ["le-jardin"] = "LE JARDIN",
+            ["la-fiore-karabag-2-etap"] = "LA FIORE 2. ETAP",
+            ["kuyulu-la-via-villalar-birinci-etap"] = "LA VIA VİLLALAR 1. ETAP",
+            ["davutlar-d-latis"] = "D-LATIS",
+            ["q-latis"] = "Q-LATIS"
+        };
+
+    // Nysa Gold Home-carousel card branding refresh (2026-08-20 client
+    // request) — swaps this one card's background image for the client's
+    // new proje-karti asset and overlays the project's full logo, both
+    // scoped to this Home carousel only via these slug-keyed dictionaries
+    // (same pattern as CardDisplayNameOverridesBySlug above). Every other
+    // slug falls through to the normal CoverImage-derived image below and
+    // gets no LogoImageUrl, so Default.cshtml renders nothing extra for
+    // them. Project.CoverImage itself, and every other page that reads it
+    // (Projects listing, SEO OpenGraph image), stay untouched.
+    // La Via Villalar 1. Etap and D-Latis (2026-08-20 client request) —
+    // same card treatment extended to these two projects' newly supplied
+    // assets, added as further entries rather than touching the Nysa
+    // Gold/Le Jardin lines above. La Fiore Karabağ 1. Etap is Completed, so
+    // it never appears in this Ongoing-only carousel and needs no entry
+    // here (its Home-carousel display name above is likewise absent).
+    // Tralles Gold Residence, Alinda Gold Residence, Magnesia Gold
+    // Residence and Nlatis (2026-08-20 client request) — same treatment
+    // extended again. All four are Completed, so like La Fiore Karabağ 1.
+    // Etap above they never render in this Ongoing-only carousel today;
+    // the entries are kept here anyway so the treatment applies
+    // automatically if any of them is ever marked Ongoing, with no further
+    // code change.
+    // Ferhunde Hanım Apt. (2026-08-20 client request) — card image only, no
+    // logo asset exists, so no CardLogoImageUrlsBySlug entry below. Also
+    // Completed, so (like the four projects above) this is a no-op today
+    // and only takes effect if the project is ever marked Ongoing.
+    // La Fiore Karabağ 2. Etap (2026-08-20 client request) — full card
+    // treatment (image + logo); this project is Ongoing, so both entries
+    // render immediately in this carousel.
+    private static readonly IReadOnlyDictionary<string, string> CardImageOverridesBySlug =
+        new Dictionary<string, string>
+        {
+            ["nysa-gold"] = "/images/projects/nysa-gold/proje-karti/card-background.webp",
+            ["le-jardin"] = "/images/projects/le-jardin/proje-karti/card-background.webp",
+            ["kuyulu-la-via-villalar-birinci-etap"] = "/images/projects/kuyulu-la-via-villalar-birinci-etap/proje-karti/card-background.webp",
+            ["davutlar-d-latis"] = "/images/projects/davutlar-d-latis/proje-karti/card-background.webp",
+            ["tralles-gold"] = "/images/projects/tralles-gold/proje-karti/card-background.webp",
+            ["alinda-gold"] = "/images/projects/alinda-gold/proje-karti/card-background.webp",
+            ["magnesia-gold"] = "/images/projects/magnesia-gold/proje-karti/card-background.webp",
+            ["nlatis"] = "/images/projects/nlatis/proje-karti/card-background.webp",
+            ["ferhunde-hanim-apt"] = "/images/projects/ferhunde-hanim-apt/proje-karti/card-background.webp",
+            ["la-fiore-karabag-2-etap"] = "/images/projects/la-fiore-karabag-2-etap/proje-karti/card-background.webp",
+            // Hacıfeyzullah - Q-Latis (2026-08-20 client request) — same
+            // raw-file treatment as ProjectsController's own override (no
+            // logo overlay supplied, so it is intentionally absent from
+            // CardLogoImageUrlsBySlug below and keeps its normal caption).
+            ["q-latis"] = "/images/projects/q-latis/proje-karti/hacıfeyzullah proje kartı.png"
+        };
+
+    private static readonly IReadOnlyDictionary<string, string> CardLogoImageUrlsBySlug =
+        new Dictionary<string, string>
+        {
+            ["nysa-gold"] = "/images/projects/nysa-gold/proje-karti/logo.png",
+            ["le-jardin"] = "/images/projects/le-jardin/proje-karti/logo.png",
+            ["kuyulu-la-via-villalar-birinci-etap"] = "/images/projects/kuyulu-la-via-villalar-birinci-etap/proje-karti/logo.png",
+            ["davutlar-d-latis"] = "/images/projects/davutlar-d-latis/proje-karti/logo.png",
+            ["tralles-gold"] = "/images/projects/tralles-gold/proje-karti/logo.png",
+            ["alinda-gold"] = "/images/projects/alinda-gold/proje-karti/logo.png",
+            ["magnesia-gold"] = "/images/projects/magnesia-gold/proje-karti/logo.png",
+            ["nlatis"] = "/images/projects/nlatis/proje-karti/logo.png",
+            ["la-fiore-karabag-2-etap"] = "/images/projects/la-fiore-karabag-2-etap/proje-karti/la fiore.png"
+        };
+
     private readonly IProjectQueryService _projectQueryService;
     private readonly IWebHostEnvironment _webHostEnvironment;
 
@@ -42,13 +122,18 @@ public class ProjectsShowcaseViewComponent : ViewComponent
 
         var cards = ongoingProjects.Select(project => new ProjectShowcaseCardModel
         {
-            Name = project.Name,
-            CoverImageSrc = ResolveCoverImage(project.CoverImage),
+            Name = CardDisplayNameOverridesBySlug.TryGetValue(project.Slug, out var displayNameOverride)
+                ? displayNameOverride
+                : project.Name,
+            CoverImageSrc = CardImageOverridesBySlug.TryGetValue(project.Slug, out var cardImageOverride)
+                ? cardImageOverride
+                : ResolveCoverImage(project.CoverImage),
             StatusLabel = project.Status == ProjectStatus.Completed ? "Tamamlandı" : "Devam Ediyor",
             StatusModifierClass = project.Status == ProjectStatus.Completed
                 ? "project-status-badge--completed"
                 : "project-status-badge--ongoing",
-            DetailUrl = $"/projects/{project.Slug}"
+            DetailUrl = $"/projects/{project.Slug}",
+            LogoImageUrl = CardLogoImageUrlsBySlug.GetValueOrDefault(project.Slug)
         }).ToList();
 
         var model = new ProjectsShowcaseViewModel

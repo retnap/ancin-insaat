@@ -27,14 +27,6 @@ public class JobApplicationService : IJobApplicationService
 
     public async Task<JobApplicationSubmitResult> SubmitAsync(JobApplicationSubmission submission, CancellationToken cancellationToken = default)
     {
-        var position = await _context.CareerPositions
-            .FirstOrDefaultAsync(c => c.Id == submission.CareerPositionId && c.IsPublished, cancellationToken);
-
-        if (position is null)
-        {
-            return JobApplicationSubmitResult.Failure(JobApplicationSubmitStatus.InvalidPosition);
-        }
-
         if (submission.Cv.Length > MaxCvSizeBytes)
         {
             return JobApplicationSubmitResult.Failure(JobApplicationSubmitStatus.CvTooLarge);
@@ -72,7 +64,7 @@ public class JobApplicationService : IJobApplicationService
 
         _context.JobApplications.Add(new JobApplication
         {
-            CareerPositionId = position.Id,
+            Position = submission.Position,
             FullName = submission.FullName,
             Email = submission.Email,
             Phone = submission.Phone,

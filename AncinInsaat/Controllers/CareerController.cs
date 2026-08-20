@@ -2,7 +2,6 @@ using AncinInsaat.Data.Entities;
 using AncinInsaat.Models;
 using AncinInsaat.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AncinInsaat.Controllers;
 
@@ -58,14 +57,6 @@ public class CareerController : Controller
 
         var positions = await _careerPositionQueryService.GetPublishedAsync();
 
-        if (positions.Count == 0)
-        {
-            // Nothing left to apply to — a submission reaching here has no
-            // valid CareerPositionId to bind to, so treat it the same as an
-            // invalid model rather than attempting to persist it.
-            ModelState.AddModelError(string.Empty, "Şu anda açık bir pozisyon bulunmamaktadır.");
-        }
-
         if (!ModelState.IsValid)
         {
             var invalidModel = BuildPageModel(form, positions, showSuccess: false);
@@ -78,7 +69,7 @@ public class CareerController : Controller
 
         var result = await _jobApplicationService.SubmitAsync(new JobApplicationSubmission
         {
-            CareerPositionId = form.CareerPositionId!.Value,
+            Position = form.Position.Trim(),
             FullName = form.FullName.Trim(),
             Email = form.Email.Trim(),
             Phone = string.IsNullOrWhiteSpace(form.Phone) ? null : form.Phone.Trim(),
@@ -106,7 +97,6 @@ public class CareerController : Controller
     {
         var message = status switch
         {
-            JobApplicationSubmitStatus.InvalidPosition => "Seçilen pozisyon artık geçerli değil. Lütfen sayfayı yenileyip tekrar deneyin.",
             JobApplicationSubmitStatus.InvalidCvType => "CV yalnızca PDF formatında yüklenebilir.",
             JobApplicationSubmitStatus.InvalidCvSignature => "Yüklenen dosya geçerli bir PDF değil.",
             JobApplicationSubmitStatus.CvTooLarge => "CV dosyası 5 MB'tan büyük olamaz.",
@@ -127,14 +117,6 @@ public class CareerController : Controller
             })
             .ToList();
 
-        var positionOptions = positions
-            .Select(p => new SelectListItem
-            {
-                Value = p.Id.ToString(),
-                Text = string.IsNullOrWhiteSpace(p.Department) ? p.Title : $"{p.Title} — {p.Department}"
-            })
-            .ToList();
-
         return new CareerPageViewModel
         {
             Form = form,
@@ -145,7 +127,6 @@ public class CareerController : Controller
                 Columns = 3,
                 Items = informationCardItems
             },
-            PositionOptions = positionOptions,
             ShowSuccess = showSuccess
         };
     }

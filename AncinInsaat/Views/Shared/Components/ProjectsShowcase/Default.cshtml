@@ -38,6 +38,10 @@
                             <a class="project-card" href="@card.DetailUrl" aria-label="@card.Name" data-reveal>
                                 <span class="project-card-media">
                                     <img class="project-card-image" src="@card.CoverImageSrc" alt="@card.Name" loading="lazy" decoding="async" />
+                                    @if (!string.IsNullOrWhiteSpace(card.LogoImageUrl))
+                                    {
+                                        <img class="project-card-logo" src="@card.LogoImageUrl" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+                                    }
                                     <span class="project-card-overlay" aria-hidden="true">
                                         <span class="project-card-overlay-title">
                                             <span class="project-card-overlay-number">@cardNumber.ToString("D2") &ndash;</span>

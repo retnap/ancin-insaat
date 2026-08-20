@@ -9,6 +9,11 @@
 
 @await Component.InvokeAsync("ProjectsShowcase")
 
+@* Home Hero "Vaziyet Planı" button (2026-08-20 request) needs the shared
+   Media Viewer dialog present on the page, same as every Project Detail
+   page (Views/Projects/Details.cshtml). *@
+<partial name="_MediaViewer" />
+
 @section Scripts {
     @* Embla Carousel + Autoplay plugin (vendored at wwwroot/lib/embla-carousel,
        v8.6.0 UMD builds), Home-page-only since ProjectsShowcase is the only

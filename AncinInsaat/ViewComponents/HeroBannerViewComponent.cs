@@ -35,7 +35,7 @@ public class HeroBannerViewComponent : ViewComponent
 
         var model = new HeroBannerViewModel
         {
-            Heading = "NYSA GOLD RESIDENCE",
+            Heading = "LA FIORE KARABAĞ 2. ETAP",
             Subheading = "Ancın İnşaat, güven ve zanaatkârlıkla şekillenen projeleriyle yaşam alanlarını geleceğe taşıyor.",
             PrimaryCtaLabel = "Projelerimizi İnceleyin",
             PrimaryCtaUrl = "/projects",
@@ -46,14 +46,50 @@ public class HeroBannerViewComponent : ViewComponent
             // id="company-overview" for this anchor to resolve.
             ScrollTargetId = "company-overview",
 
+            // Nysa Gold temporarily points at the client's freshly uploaded
+            // banner asset (still its original PNG, not yet converted/renamed
+            // into the banner.webp slot every other project uses) per the
+            // 2026-08-20 request to preview it as-is before optimization.
+            // Le Jardin and La Fiore Karabağ 2. Etap follow the same
+            // approach (2026-08-20 requests) — same override ProjectsController
+            // already uses for La Fiore Karabağ 2. Etap's own Project Detail
+            // hero (HeroBannerImageOverridesBySlug).
             BackgroundImageUrl = latestProject is not null
-                ? $"/images/projects/{latestProject.Slug}/banner.webp"
+                ? latestProject.Slug == "nysa-gold"
+                    ? "/images/projects/nysa-gold/banner/nysa gold 4k.png"
+                    : latestProject.Slug == "le-jardin"
+                        ? "/images/projects/le-jardin/banner/le jardin banner.png"
+                        : latestProject.Slug == "la-fiore-karabag-2-etap"
+                            ? "/images/projects/la-fiore-karabag-2-etap/banner/lafiore 2.etap banner deneme.png"
+                            : $"/images/projects/{latestProject.Slug}/banner.webp"
                 : null,
             ProjectCtaLabel = latestProject is not null ? "Projeye Git" : null,
             ProjectCtaUrl = latestProject is not null ? $"/projects/{latestProject.Slug}" : null,
             HeadingFontModifierClass = latestProject is not null
                 ? ProjectHeroFontMap.HeadingFontModifierClasses.GetValueOrDefault(latestProject.Slug)
-                : null
+                : null,
+
+            // La Fiore Karabağ 2. Etap heading identity + 3-button hero
+            // actions (2026-08-20 request) — gated to this exact slug so
+            // no other featured project's heading or CTA changes if it is
+            // ever promoted here instead (Default.cshtml falls back to the
+            // plain text heading and single "Projeye Git" link unless
+            // HeadingLogoImageUrl is set). Same asset paths as the Project
+            // Detail Hero's own HeadingLogoImageUrls/HeadingBadgeImageUrls
+            // maps (HeroBannerProjectDetailViewComponent).
+            HeadingLogoImageUrl = latestProject?.Slug == "la-fiore-karabag-2-etap"
+                ? "/images/projects/la-fiore-karabag-2-etap/banner/lafiore -ikinci-logo.png"
+                : null,
+            HeadingBadgeImageUrl = latestProject?.Slug == "la-fiore-karabag-2-etap"
+                ? "/images/projects/la-fiore-karabag-2-etap/banner/2-etap.png"
+                : null,
+            HeadingLogoImgModifierClass = latestProject?.Slug == "la-fiore-karabag-2-etap"
+                ? "hero-heading-logo-img--la-fiore-karabag"
+                : null,
+            SitePlanImageUrl = latestProject?.SitePlanImages
+                .OrderBy(sitePlan => sitePlan.DisplayOrder)
+                .Select(sitePlan => sitePlan.ImagePath)
+                .FirstOrDefault()
         };
 
         return View(model);

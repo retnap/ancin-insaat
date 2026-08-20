@@ -20,6 +20,12 @@ internal static class ProjectHeroFontMap
         ["la-fiore-karabag"] = "hero-heading--font-cormorant",
         ["la-fiore-karabag-2-etap"] = "hero-heading--font-cormorant",
         ["le-jardin"] = "hero-heading--font-cormorant",
-        ["kuyulu-la-via-villalar-birinci-etap"] = "hero-heading--font-cormorant"
+        ["kuyulu-la-via-villalar-birinci-etap"] = "hero-heading--font-cormorant",
+        // Ferhunde Hanım Apt. and Q-Latis (2026-08-20 client request) —
+        // neither has a logo asset, so both render the real-HTML-text
+        // heading path; this puts that text in Montserrat Bold rather than
+        // falling back to .hero-heading's default (Playfair Display).
+        ["ferhunde-hanim-apt"] = "hero-heading--font-montserrat-bold",
+        ["q-latis"] = "hero-heading--font-montserrat-bold"
     };
 }

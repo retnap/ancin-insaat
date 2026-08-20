@@ -14,15 +14,14 @@
     }
     else
     {
-        @* Temporary placeholder — reuses Project Detail's Location &
-           Distances illustration/style until the client supplies a real
-           office address and Google Maps embed URL (see
-           docs/14_Decisions.md). Not a real map: aria-hidden on the image
-           itself (its own <title> already marks it decorative) so screen
-           readers rely on the visible heading + "Google Maps'te Aç" link
-           for the actual location instead of a graphic that conveys none. *@
+        @* Static location photo (project owner-supplied, 2026-08-20) shown
+           above the "Google Maps'te Aç" link until a real Google Maps
+           embed URL is configured (see docs/14_Decisions.md). Non-empty
+           alt: unlike the earlier generic illustration, this image is the
+           actual office location, so it carries information for screen
+           reader users too, alongside the visible link. *@
         <div class="map-component__placeholder">
-            <img src="/images/company/location-illustration.svg" alt="" loading="lazy" decoding="async" />
+            <img src="/images/company/ancin-konum.png" alt="Ançın İnşaat ofis konumu" loading="lazy" decoding="async" />
         </div>
     }
 

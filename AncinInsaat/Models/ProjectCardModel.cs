@@ -27,4 +27,27 @@ public class ProjectCardModel
     // dropdown via a data-project-type attribute on the card's wrapper.
     // Null for a project with no assigned type (see Project.ProjectType).
     public string? ProjectType { get; init; }
+
+    // Set only for the slugs in ProjectsController.CardLogoImageUrlsBySlug
+    // (currently Nysa Gold Residence only, mirroring
+    // ProjectsShowcaseViewComponent's Home-carousel treatment). When
+    // present, _ProjectCard.cshtml overlays this image, centered, on top
+    // of the card's background image. Null for every other project, which
+    // render no such element at all.
+    public string? LogoImageUrl { get; init; }
+
+    // Set only for the slugs in ProjectsController.CardTitleOverlayTextBySlug
+    // (Ferhunde Hanım Apt. and Q-Latis, 2026-08-20 client request — neither
+    // has a logo asset). When present, _ProjectCard.cshtml overlays this
+    // text, centered, on top of the card's background image, mirroring
+    // LogoImageUrl's own positioning but rendered as styled HTML text
+    // instead of an image. Null for every other project.
+    public string? TitleOverlayText { get; init; }
+
+    // True only for the slugs in ProjectsController.CardsWithCaptionHidden —
+    // the logo or title overlay above already carries the project's
+    // branding, so _ProjectCard.cshtml omits the name/location caption
+    // entirely for that card. False for every other project, whose caption
+    // renders exactly as before.
+    public bool HideCaption { get; init; }
 }

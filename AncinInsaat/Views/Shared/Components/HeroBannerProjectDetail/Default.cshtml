@@ -2,7 +2,40 @@
 
 @{
     var heroStyle = $"--hero-bg-image: url('{Model.BackgroundImageUrl}')";
-    var headingClass = "hero-heading hero-heading--project" + (string.IsNullOrWhiteSpace(Model.HeadingFontModifierClass) ? "" : $" {Model.HeadingFontModifierClass}");
+    var hasHeadingLogo = !string.IsNullOrWhiteSpace(Model.HeadingLogoImageUrl);
+
+    // Ferhunde Hanım Apt. (2026-08-21 follow-up client request) — even after
+    // the shared .hero-heading--font-montserrat-bold size reduction below,
+    // this project's own title still read slightly too large; Q-Latis
+    // (the only other project using that same font class) was already
+    // correct at that scale, so the further reduction is scoped to this
+    // slug only via its own modifier class (site.css) rather than lowering
+    // .hero-heading--font-montserrat-bold itself, which would also shrink
+    // Q-Latis. Project Detail only — the Home Hero resolves its own heading
+    // class straight from ProjectHeroFontMap, never from this file.
+    var headingSlugModifierClass = Model.Slug == "ferhunde-hanim-apt" ? " hero-heading--ferhunde-hanim-apt" : "";
+    var headingClass = "hero-heading hero-heading--project" + (hasHeadingLogo || string.IsNullOrWhiteSpace(Model.HeadingFontModifierClass) ? "" : $" {Model.HeadingFontModifierClass}") + headingSlugModifierClass;
+
+    // Several projects' supplied logo files have transparent padding baked
+    // in asymmetrically around their own canvas (unlike Nysa Gold's and
+    // D-Latis's tightly-trimmed files), so their visible artwork sits inset
+    // from the image element's own left edge. Each modifier below (site.css)
+    // nudges its project's rendered image left by that project's own
+    // measured padding percentage so the visible logo lines up with "Devam
+    // Ediyor"/"Tamamlandı"'s left edge — every project with no entry here
+    // keeps the base .hero-heading-logo-img rule unchanged.
+    var headingLogoImgModifierClass = Model.Slug switch
+    {
+        "le-jardin" => " hero-heading-logo-img--le-jardin",
+        "la-fiore-karabag" or "la-fiore-karabag-2-etap" => " hero-heading-logo-img--la-fiore-karabag",
+        "kuyulu-la-via-villalar-birinci-etap" => " hero-heading-logo-img--lavia",
+        "tralles-gold" => " hero-heading-logo-img--tralles-gold",
+        "alinda-gold" => " hero-heading-logo-img--alinda-gold",
+        "magnesia-gold" => " hero-heading-logo-img--magnesia-gold",
+        "nlatis" => " hero-heading-logo-img--nlatis",
+        _ => ""
+    };
+    var headingLogoImgClass = "hero-heading-logo-img" + headingLogoImgModifierClass;
 
     // Alinda Gold Residence, Magnesia Gold Residence, Tralles Gold Residence
     // and N Latis (client request, 2026-08-17) — the Hero's "Kataloğu
@@ -36,10 +69,25 @@
             {
                 <span class="project-status-badge @Model.StatusModifierClass hero-status-badge">@Model.StatusLabel</span>
             }
-            <h1 id="hero-heading" class="@headingClass" lang="en">@Model.Heading</h1>
-            @if (!string.IsNullOrWhiteSpace(Model.Subheading))
+            @if (hasHeadingLogo)
             {
-                <p class="hero-subheading">@Model.Subheading</p>
+                <h1 id="hero-heading" class="@headingClass">
+                    <span class="hero-heading-lockup">
+                        <img src="@Model.HeadingLogoImageUrl" alt="@Model.Heading" class="@headingLogoImgClass">
+                        @if (!string.IsNullOrWhiteSpace(Model.HeadingBadgeImageUrl))
+                        {
+                            <img src="@Model.HeadingBadgeImageUrl" alt="" aria-hidden="true" class="hero-heading-badge-img">
+                        }
+                    </span>
+                </h1>
+            }
+            else
+            {
+                <h1 id="hero-heading" class="@headingClass" lang="en">@Model.Heading</h1>
+                @if (!string.IsNullOrWhiteSpace(Model.Subheading))
+                {
+                    <p class="hero-subheading">@Model.Subheading</p>
+                }
             }
         </div>
     </div>

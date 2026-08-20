@@ -37,6 +37,13 @@ public class ProjectQueryService : IProjectQueryService
             .AsNoTracking()
             .Where(p => p.IsPublished && p.IsFeatured)
             .OrderBy(p => p.DisplayOrder)
+            // Home Hero "Vaziyet Planı" button (2026-08-20 request) — needs
+            // the featured project's own SitePlanImages, same as the
+            // Project Detail Hero's query (ProjectsController.Details)
+            // already includes. Every other Include on that query
+            // (Images, FloorPlans, etc.) is intentionally left out here —
+            // the Home Hero only ever needs this one relation.
+            .Include(p => p.SitePlanImages.OrderBy(s => s.DisplayOrder))
             .FirstOrDefaultAsync(cancellationToken);
     }
 

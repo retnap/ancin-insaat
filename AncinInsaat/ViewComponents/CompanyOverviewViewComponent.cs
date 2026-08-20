@@ -41,18 +41,23 @@ public class CompanyOverviewViewComponent : ViewComponent
             Image = new ImageBlockModel
             {
                 // Temporary "50 yıl" visual (Home Page revision #3,
-                // 2026-08-10) supplied directly by the project owner to
-                // replace the abstract placeholder graphic until the final
-                // 50-year photography is ready — the original
+                // 2026-08-10), replaced with the project owner's final
+                // supplied file (2026-08-20) — the original
                 // overview-placeholder.svg asset is left in place, unused,
                 // rather than deleted.
-                Src = "/images/logos/50-yil-gecici.jpg",
+                Src = "/images/logos/50-yil.jpeg",
 
                 // Empty on purpose: this is a decorative stand-in graphic
                 // that conveys no information beyond what the heading/
                 // description already state. Give it a real descriptive alt
                 // once the final company photography replaces it.
-                Alt = ""
+                Alt = "",
+
+                // 50-yil.jpeg is a tall/portrait source image; the shared
+                // .image-block 4:3 ratio crops too much of it away. This
+                // modifier gives the box a taller ratio and anchors it to
+                // the top of the grid row so it only grows downward.
+                CssClass = "company-overview-image"
             },
             CtaLabel = "Devamını Oku",
             CtaUrl = "/about-us"

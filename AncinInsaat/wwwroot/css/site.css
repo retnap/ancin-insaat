@@ -78,8 +78,7 @@
 
 /* ---- Montserrat Light (Project Detail Hero typography only, 2026-08-08) —
    used exclusively for the Nlatis/Dlatis Hero title, matching those two
-   projects' own logo wordmark. Only the 300 weight ships; nothing else on
-   the site references this family. ---- */
+   projects' own logo wordmark. ---- */
 
 @font-face {
   font-family: 'Montserrat';
@@ -96,6 +95,28 @@
   font-weight: 300;
   font-display: swap;
   src: url('/fonts/montserrat/montserrat-300-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ---- Montserrat Bold (Home "Devam Eden Projeler" card hover title only,
+   2026-08-20) — matches the Terzioğlu reference's bold uppercase title
+   treatment; nothing else on the site references this weight. ---- */
+
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/montserrat/montserrat-700-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/montserrat/montserrat-700-latin-ext.woff2') format('woff2');
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
@@ -1843,6 +1864,24 @@ select[aria-invalid='true'] {
   width: max-content;
   gap: var(--partner-logos-gap);
   animation: partner-logos-scroll 42s linear infinite;
+  /* Safari/WebKit stability fix (2026-08-21) — the parent's
+     -webkit-mask-image (fade edges, above) combined with an animated-
+     transform child that Safari hasn't promoted to its own GPU layer is a
+     known WebKit compositing bug: the mask's painted bounds can fall out of
+     sync with the child as it scrolls, surfacing as clipped/missing logos
+     or a stalled animation — until something forces a relayout (e.g. a
+     window resize), which is exactly the symptom reported. Chrome isn't
+     affected because it promotes the layer eagerly regardless.
+     will-change + a static translateZ(0) force that layer promotion up
+     front, independent of animation state, so the mask always composites
+     against a stable layer; translate3d in the keyframe (instead of
+     translateX) keeps every animated frame on that same GPU path. Purely a
+     Safari stability hint — scroll distance, speed, direction, size and
+     visuals are unchanged, and this is scoped to this marquee only. */
+  will-change: transform;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .partner-logos-carousel:hover .partner-logos-track {
@@ -1851,7 +1890,7 @@ select[aria-invalid='true'] {
 
 @keyframes partner-logos-scroll {
   to {
-    transform: translateX(calc(-50% - (var(--partner-logos-gap) / 2)));
+    transform: translate3d(calc(-50% - (var(--partner-logos-gap) / 2)), 0, 0);
   }
 }
 
@@ -2128,6 +2167,15 @@ select[aria-invalid='true'] {
   .company-overview-grid {
     grid-template-columns: 65% 35%;
   }
+}
+
+/* 50-yil.jpeg source is a tall/portrait graphic; the shared .image-block
+   4:3 ratio was cropping too much of it away. A taller ratio plus
+   align-self: start anchors the box to the top of the grid row so the
+   extra height is added toward the bottom, not the top. */
+.company-overview-image {
+  align-self: start;
+  aspect-ratio: 1 / 1;
 }
 
 /* Clears the sticky Navbar (Section 9, ~64–70px tall depending on
@@ -2926,6 +2974,8 @@ select[aria-invalid='true'] {
   justify-content: center;
   color: var(--color-accent);
   font-weight: var(--font-weight-regular);
+  font-size: 1rem; /* 16px — up from the shared eyebrow's 14px, this section only */
+  line-height: 1.875rem; /* 30px — matches Terzioğlu reference slogan height (450x30) */
 }
 
 /* Reference title reads as a bold sans-serif, not the site's serif
@@ -2935,7 +2985,8 @@ select[aria-invalid='true'] {
   max-width: 28.125rem; /* ~450px reference title width */
   margin-inline: auto;
   font-family: var(--font-body);
-  font-size: var(--font-size-h3);
+  font-size: 1.625rem; /* 26px — down from --font-size-h3's 28px, this section only */
+  line-height: 2.4375rem; /* 39px — matches Terzioğlu reference title height (450x39) */
   letter-spacing: 0.02em;
   text-transform: uppercase;
   text-align: center;
@@ -3015,11 +3066,32 @@ select[aria-invalid='true'] {
   transform: scale(1.06);
 }
 
-/* Semi-transparent Ançın red overlay, fading in on hover/focus only — the
-   accent colour used here as a large-area wash rather than its usual
-   small-highlight role. docs/02_DesignSystem.md's "never for large
-   backgrounds" concerns the section's resting state, which stays white;
-   this only ever appears as a transient interaction state on one card. */
+/* Nysa Gold card only (2026-08-20 client request) — full project logo
+   centered over the card's own image. z-index lifts it above the hover
+   overlay below (which has no explicit z-index, i.e. auto/0) so it stays
+   clearly visible both at rest and on hover/focus, rather than being
+   dimmed under the dark wash. Sized as a percentage of the card so it
+   scales down with the card itself at every breakpoint (see
+   .projects-slider-slide) without ever needing its own media queries.
+   ProjectShowcaseCardModel.LogoImageUrl is null for every other project,
+   so Default.cshtml never renders this element on any other card. */
+.project-card-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  width: 55%;
+  height: auto;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* Dark near-black wash, fading in on hover/focus only — tinted from
+   --color-near-black (the shadow tokens' cohesive neutral, see Section
+   2.5) rather than the brand accent. Intensity referenced against
+   Inspirationals/Terzioglu/terzioglu-hover.png: dark enough for the white
+   title to stand out, image still clearly visible underneath. */
 
 .project-card-overlay {
   position: absolute;
@@ -3028,9 +3100,9 @@ select[aria-invalid='true'] {
   align-items: flex-end;
   justify-content: flex-start;
   padding: var(--space-lg);
-  background-color: color-mix(in srgb, var(--color-accent) 78%, transparent);
+  background-color: color-mix(in srgb, var(--color-near-black) 45%, transparent);
   opacity: 0;
-  transition: opacity var(--transition-base) var(--ease-standard);
+  transition: opacity var(--transition-slow) var(--ease-standard);
 }
 
 .project-card:hover .project-card-overlay,
@@ -3059,8 +3131,8 @@ select[aria-invalid='true'] {
   transform: translateY(8px);
   opacity: 0;
   transition:
-    transform var(--transition-base) var(--ease-standard),
-    opacity var(--transition-base) var(--ease-standard);
+    transform var(--transition-slow) var(--ease-standard),
+    opacity var(--transition-slow) var(--ease-standard);
 }
 
 .project-card-overlay-number {
@@ -3072,9 +3144,13 @@ select[aria-invalid='true'] {
 }
 
 .project-card-overlay-name {
-  font-family: var(--font-heading);
-  font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-h3);
+  font-family: 'Montserrat', var(--font-heading);
+  font-weight: 700;
+  /* 2026-08-20: sized down one step from the previous 2rem/32px — the
+     ViewComponent now injects each name pre-uppercased verbatim (including
+     "VİLLALAR"'s Turkish İ), so no text-transform is applied here; it would
+     be redundant on already-uppercase strings and risks re-casing that İ. */
+  font-size: 1.125rem; /* 18px on narrow/mobile cards */
   line-height: var(--line-height-heading);
   text-align: left;
   color: var(--color-white);
@@ -3082,7 +3158,7 @@ select[aria-invalid='true'] {
 
 @media (min-width: 1024px) {
   .project-card-overlay-name {
-    font-size: var(--font-size-h2);
+    font-size: 1.375rem; /* 22px on the desktop-width card */
   }
 }
 
@@ -3439,6 +3515,62 @@ select[aria-invalid='true'] {
   height: 100%;
   object-fit: cover;
   transition: transform var(--transition-slow) var(--ease-standard);
+}
+
+/* Nysa Gold card only (2026-08-20 client request) — same treatment as the
+   Home carousel's .project-card-logo (Section 21), reusing the identical
+   asset. z-index lifts it above the always-on bottom scrim below (which
+   has no explicit z-index, i.e. auto/0) so it stays clearly visible at
+   rest and on hover, rather than being read against the darkened gradient.
+   Sized as a percentage of the card so it scales down with the card itself
+   at every grid breakpoint with no extra media queries needed — width-only
+   (height: auto) keeps the logo's own aspect ratio, and centering via
+   top/left 50% + translate(-50%, -50%) means enlarging `width` grows the
+   logo evenly from its exact center rather than shifting it toward any
+   edge. 55% raised to 78% (2026-08-20 revision, catalogue card only —
+   Section 21's Home carousel logo is untouched) per client request to
+   read more comfortably; still well short of the card's own width/height
+   at every breakpoint (this card's portrait 3:4 media, unlike the
+   carousel's landscape 4:3, has ample headroom above and below the logo's
+   own short/wide aspect ratio), so it can't overflow on desktop, tablet or
+   mobile. ProjectCardModel.LogoImageUrl is null for every other project,
+   so _ProjectCard.cshtml never renders this element on any other card. */
+.project-card-standard-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  width: 78%;
+  height: auto;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* Ferhunde Hanım Apt. and Q-Latis card treatment (2026-08-20 client
+   request) — same centered/covering position as .project-card-standard-logo
+   above, for the two projects with a text-based title instead of a logo
+   asset (ProjectCardModel.TitleOverlayText, null for every other project).
+   lang="en" on the element itself (_ProjectCard.cshtml), same reasoning as
+   the Project Detail Hero heading: text-transform: uppercase must not
+   trigger Turkish locale casing (i → İ) on either project's title. */
+.project-card-standard-title-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  width: 82%;
+  font-family: var(--font-hero-montserrat);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-h3);
+  line-height: var(--line-height-heading);
+  color: var(--color-white);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
 }
 
 .project-card-standard-scrim {
@@ -4021,13 +4153,127 @@ select[aria-invalid='true'] {
   }
 }
 
+/* ---- Hero Heading — Logo Image Variant (2026-08-20, Nysa Gold Residence
+   client-supplied logo lockup; folkart-orion-proje-detay-banner.png
+   reference, client-approved sizing rule; re-aligned same day to the
+   left-aligned reading of that reference) ----
+   The one exception to "Real HTML text, not a rasterized logo, for every
+   project" above (HeroBannerProjectDetailViewComponent.HeadingLogoImageUrls)
+   — the client's own logo file renders here instead of Model.Heading text,
+   and Default.cshtml omits .hero-subheading entirely alongside it. .hero-
+   heading--project's own responsive max-width steps above are reused
+   unchanged as this image's available width (kept exactly as before so the
+   floating-contact collision-avoidance they already handle still applies);
+   the logo itself renders at ~63% of that width (down from the initial 72.2%
+   — client felt that first pass too dominant, 2026-08-20 follow-up; ~12.5%
+   smaller, same ratio kept across every breakpoint since none is per-
+   breakpoint overridden) — with height: auto so its native proportions are
+   preserved (never stretched/cropped). No inline margin: the Folkart
+   reference keeps its logo flush with the status text's left edge rather
+   than centering it under that text, so this image stays at the h1's own
+   left edge (the same left edge "Devam Ediyor" sits at) instead of a
+   margin-inline: auto, which would center it and break that alignment. */
+
+.hero-heading-logo-img {
+  display: block;
+  width: 63.2%;
+  height: auto;
+}
+
+/* Le Jardin logo alignment correction (2026-08-20) — its supplied file has
+   ~7.14% transparent padding baked in symmetrically on both sides of its
+   own canvas (94px of 1316px total width), unlike Nysa Gold's tightly-
+   trimmed file, so the visible artwork sits inset from the <img>'s own
+   left edge rather than flush with it. translateX (a percentage of this
+   element's own width, unlike margin which would resolve against the
+   containing block) shifts the rendered image left by that same
+   percentage so its visible left edge lines up exactly with "Devam
+   Ediyor"'s left edge — width/height (size, aspect ratio) and vertical
+   position are untouched, and this is a pure visual transform so it
+   doesn't affect surrounding layout/spacing from the social icons. Scoped
+   to this modifier only; the base .hero-heading-logo-img rule above (used
+   by Nysa Gold and any future project) is unchanged. */
+.hero-heading-logo-img--le-jardin {
+  transform: translateX(-7.1429%);
+}
+
+/* La Fiore Karabağ 1. Etap and La Via Villalar 1. Etap logo alignment
+   corrections (2026-08-20 client request) — same mechanism as Le Jardin's
+   modifier above, each with its own measured left-edge padding percentage
+   (26px and 127px respectively, of the same 1316px canvas width their
+   supplied files share): 1.9757% and 9.6505%. D-Latis's supplied file is
+   tightly trimmed like Nysa Gold's (0px padding), so it uses the base
+   .hero-heading-logo-img rule unchanged with no modifier of its own. */
+.hero-heading-logo-img--la-fiore-karabag {
+  transform: translateX(-1.9757%);
+}
+
+.hero-heading-logo-img--lavia {
+  transform: translateX(-9.6505%);
+}
+
+/* Tralles Gold Residence, Alinda Gold Residence, Magnesia Gold Residence
+   and Nlatis logo alignment corrections (2026-08-20 client request) — same
+   mechanism as Le Jardin/La Fiore Karabağ/La Via Villalar above, each with
+   its own measured left-edge padding percentage (22px of 1316px, 30px of
+   1316px, 21px of 1695px, 64px of 1316px respectively). */
+.hero-heading-logo-img--tralles-gold {
+  transform: translateX(-1.6717%);
+}
+
+.hero-heading-logo-img--alinda-gold {
+  transform: translateX(-2.2796%);
+}
+
+.hero-heading-logo-img--magnesia-gold {
+  transform: translateX(-1.2389%);
+}
+
+.hero-heading-logo-img--nlatis {
+  transform: translateX(-4.8632%);
+}
+
+/* ---- Hero Heading — Logo + Phase Badge Lockup (La Fiore Karabağ 2. Etap
+   "2-etap.png" badge, 2026-08-20 client request) ----
+   Places the project's own wordmark logo (.hero-heading-logo-img) beside a
+   smaller secondary badge image inside the same <h1>, so together they
+   read as one heading — "LA FIORE  2. ETAP" — without needing a single
+   combined logo file. Shared identically by the Project Detail Hero
+   (HeroBannerProjectDetail/Default.cshtml) and the Home Hero
+   (HeroBanner/Default.cshtml). The badge is sized well under the logo's
+   own 63.2% so it reads as a supporting tag rather than an equal second
+   headline; flex-wrap lets it drop to its own line rather than shrinking
+   or overflowing on very narrow viewports. .hero-heading-logo-img's own
+   width/alignment rules above are reused unchanged — only flex-shrink is
+   pinned here so the lockup's flex context can't compress it. */
+
+.hero-heading-lockup {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  column-gap: 1rem;
+  row-gap: 0.5rem;
+}
+
+.hero-heading-lockup .hero-heading-logo-img {
+  flex: 0 0 auto;
+}
+
+.hero-heading-badge-img {
+  display: block;
+  flex: 0 0 auto;
+  width: 24%;
+  height: auto;
+}
+
 /* ---- Hero Heading — Font Mapping (2026-08-08) ----
    Client-specified, per project family: Nlatis/Dlatis → Montserrat Light;
    the four "Gold" projects → Poiret One; the Cormorant Garamond group
    (La Fiore Karabağ x2, Le Jardin, La Via Villalar) → var(--font-decorative),
-   already used site-wide. Projects with no font specified (Ferhunde Hanım
-   Apt., La Via AVM) render no modifier class at all and fall back to
-   .hero-heading's own default (Playfair Display, var(--font-heading)). */
+   already used site-wide. Ferhunde Hanım Apt. and Q-Latis → Montserrat Bold
+   (below). A slug with no entry at all (e.g. La Via AVM) renders no
+   modifier class and falls back to .hero-heading's own default (Playfair
+   Display, var(--font-heading)). */
 
 .hero-heading--font-montserrat {
   font-family: var(--font-hero-montserrat);
@@ -4044,6 +4290,70 @@ select[aria-invalid='true'] {
 .hero-heading--font-cormorant {
   font-family: var(--font-decorative);
   font-weight: 400;
+}
+
+/* Ferhunde Hanım Apt. and Q-Latis (2026-08-20 client request) — text-only
+   headings (no logo asset for either project) in Montserrat Bold, distinct
+   from the Light-weight Montserrat used by Nlatis/Dlatis above.
+
+   Font-size override (2026-08-21 client request) — these two slugs are the
+   only ones left rendering a real-text Hero heading; every other mapped
+   project since received a client-supplied logo image instead (see
+   HeadingLogoImageUrls in HeroBannerProjectDetailViewComponent) sized to
+   63.2% of the shared .hero-heading--project max-width, not by font-size.
+   .hero-heading--project's own font-size steps (2.25/4.25/5.5rem) were
+   tuned back when every project used text, and now read far larger than
+   those logo images. Scaled down to ~63.6% at each of the same breakpoints
+   here — landing exactly on .hero-heading's own 3.5rem base size at
+   1024px+, this project's existing "standard" heading size used outside
+   the Project Detail context — so both titles match the other project
+   banners' visual scale. Only font-size changes: position, max-width,
+   line-height and every other project's heading (via .hero-heading--project,
+   left untouched) are unaffected. */
+.hero-heading--font-montserrat-bold {
+  font-family: var(--font-hero-montserrat);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.02em;
+  font-size: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .hero-heading--font-montserrat-bold {
+    font-size: 2.75rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-heading--font-montserrat-bold {
+    font-size: 3.5rem;
+  }
+}
+
+/* Ferhunde Hanım Apt. only (2026-08-21 follow-up) — still read slightly too
+   large at .hero-heading--font-montserrat-bold's own scale above, even
+   though that scale is already correct for Q-Latis (the only other project
+   sharing that class). A further, smaller reduction (~15%) scoped to this
+   slug's own modifier class (Default.cshtml) so Q-Latis and every other
+   project are untouched. Same three breakpoints as
+   .hero-heading--font-montserrat-bold; source order here (after that rule)
+   is what lets this win at equal specificity. Position, max-width,
+   line-height and font-family/weight/letter-spacing (inherited from
+   .hero-heading--font-montserrat-bold, still applied alongside this class)
+   are unchanged — font-size only. */
+.hero-heading--ferhunde-hanim-apt {
+  font-size: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .hero-heading--ferhunde-hanim-apt {
+    font-size: 2.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-heading--ferhunde-hanim-apt {
+    font-size: 3rem;
+  }
 }
 
 /* ---- Hero Actions — Attached Segment Bar (Nysa Gold Residence UI
@@ -4907,6 +5217,35 @@ select[aria-invalid='true'] {
   }
 }
 
+/* ---- Gallery Category Picker — Randomized Image Crossfade (2026-08-20
+   client request) ----
+   Each picker card's own random-image swap (site.js, IntersectionObserver-
+   driven as the card re-enters the track's visible/masked area) fades the
+   current thumbnail out before its src changes and back in afterwards,
+   instead of a sudden pop or a possible one-frame broken-image state.
+   Scoped to the picker's own thumbnails only — .gallery-card-image's base
+   rule (Section 26) keeps its existing hover-zoom-only transition
+   untouched for the merged grid below. Disabled under
+   prefers-reduced-motion alongside the marquee itself, since site.js never
+   triggers the swap (and therefore never adds .is-swapping) in that case
+   — this rule is just the matching static fallback. */
+
+.project-gallery-category-track .gallery-card-image {
+  transition:
+    transform var(--transition-base) var(--ease-standard),
+    opacity 220ms var(--ease-standard);
+}
+
+.project-gallery-category-track .gallery-card-image.is-swapping {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-gallery-category-track .gallery-card-image {
+    transition: none;
+  }
+}
+
 /* ---- Gallery Card ----
    Extends Section 25's .gallery-thumb with a hover dark overlay and an
    optional category badge, rather than duplicating the thumbnail shell. */
@@ -5007,6 +5346,19 @@ select[aria-invalid='true'] {
   color: var(--color-white);
 }
 
+/* ---- Project Catalogue CTA — Text Group (2026-08-20 client request) ----
+   Wraps the eyebrow (project name) + heading so the Featured layout below
+   can push this pair to the top of the section as one unit, independent of
+   the button's own position — see _ProjectCatalogue.cshtml. No visual
+   styling of its own; text-align/colour still come from the ancestors
+   above. */
+
+.project-catalogue-cta-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 /* ---- Project Catalogue CTA — Featured (Nysa Gold Residence reference
    redesign, 2026-08-07) ----
    Evolves the existing component in place for a true full-bleed Hero
@@ -5019,12 +5371,73 @@ select[aria-invalid='true'] {
   min-height: 85svh;
 }
 
+/* ---- Project Catalogue CTA — Featured Vertical Rhythm (2026-08-20 client
+   request) ----
+   Previously .project-catalogue-cta's own align-items/justify-content:
+   center centered the eyebrow + heading + button as one clump in the
+   middle of the section. Giving .project-catalogue-cta-inner its own
+   column flex + justify-content: space-between (min-height as the floor
+   that reserves the gap, not a cap — taller content simply pushes it
+   further) instead pins .project-catalogue-cta-text (project name +
+   heading) to the top of the block and the button to the bottom, with the
+   background image left clearly visible in the middle. The outer section's
+   own align-items: center then centers this now-taller block within the
+   85vh section, so the breathing room appears above and below it too. */
+
 .project-catalogue-cta--featured .project-catalogue-cta-inner {
   max-width: 46rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 16rem;
+}
+
+@media (min-width: 640px) {
+  .project-catalogue-cta--featured .project-catalogue-cta-inner {
+    min-height: 20rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .project-catalogue-cta--featured .project-catalogue-cta-inner {
+    min-height: 26rem;
+  }
+}
+
+.project-catalogue-cta--featured .project-catalogue-cta-text {
+  gap: var(--space-sm);
+  /* Moderate upward nudge (2026-08-20 client request) — the text pair sits
+     at the top of this flex: space-between block (see the Vertical Rhythm
+     comment above), so a negative margin here shifts only this pair, not
+     the button, which stays anchored to the block's bottom edge. The gap
+     it opens up is exactly the extra background/breathing room requested. */
+  margin-block-start: calc(-1 * var(--space-lg));
+}
+
+/* Montserrat Bold for the project name + heading pair specifically
+   (2026-08-20 client request) — same 'Montserrat', var(--font-heading)
+   fallback pattern as .project-card-overlay-name, so a project whose name
+   falls outside Montserrat's Latin/Latin-ext coverage still renders
+   correctly via Playfair Display. font-style: normal overrides the
+   eyebrow's own base italic (Cormorant Garamond) treatment used elsewhere
+   on the site. Both sizes reduced ~25% (2026-08-20 client request) — still
+   fluid/responsive, kept clearly bold and legible, just less dominant so
+   the background image reads through the section. */
+
+.project-catalogue-cta--featured .project-catalogue-cta-eyebrow {
+  margin-block-end: 0;
+  font-family: 'Montserrat', var(--font-heading);
+  font-weight: 700;
+  font-style: normal;
+  font-size: clamp(1.375rem, 2.5vw, 1.75rem);
 }
 
 .project-catalogue-cta--featured .project-catalogue-cta-heading {
-  font-size: clamp(2.5rem, 5vw, 4rem);
+  margin-block-end: 0;
+  font-family: 'Montserrat', var(--font-heading);
+  font-weight: 700;
+  font-size: clamp(1.875rem, 3.75vw, 3rem);
 }
 
 .project-catalogue-cta--featured .project-catalogue-cta-button {
@@ -5851,38 +6264,62 @@ a.information-card__value:hover {
   padding-block-start: 0;
 }
 
-
-/* ==========================================================================
-   28a. About Us — Mission & Vision
-   Folkart-reference revision, 2026-08-13. A single darkened image panel —
-   MissionVisionViewComponent no longer reuses Information Card's Grid
-   layout, since the reference has no icon cards, just Misyon/Vizyon set
-   directly over a photo. --mv-bg-image is read the same way Hero Banner's
-   --hero-bg-image is: an inline custom property set in Default.cshtml, so
-   swapping MissionVisionViewComponent.PlaceholderImageUrl for a real photo
-   later needs no change here. The gradient overlay (not the image itself)
-   guarantees the white text stays legible regardless of what photo lands
-   in that slot. */
-
-.mission-vision-panel {
-  border-radius: var(--radius-md);
-  background-color: var(--color-near-black);
-  background-image:
-    linear-gradient(color-mix(in srgb, var(--color-near-black) 55%, transparent), color-mix(in srgb, var(--color-near-black) 55%, transparent)),
-    var(--mv-bg-image);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  padding: var(--space-2xl) var(--space-lg);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2xl);
+/* 2026-08-20 revision: the default .section padding-block (up to 96px at
+   desktop) stacked between the heading, intro text, Mission & Vision and
+   closing text read as too much whitespace for a single continuous
+   editorial read on this page — tighten it while still leaving each
+   block room to breathe. */
+.about-text,
+.mission-vision {
+  padding-block: var(--space-lg);
 }
 
 @media (min-width: 768px) {
-  .mission-vision-panel {
-    padding: var(--space-4xl) var(--space-2xl);
-    gap: var(--space-3xl);
+  .about-text,
+  .mission-vision {
+    padding-block: var(--space-xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .about-text,
+  .mission-vision {
+    padding-block: var(--space-2xl);
+  }
+}
+
+
+/* ==========================================================================
+   28a. About Us — Mission & Vision
+   2026-08-20 revision: the image area now holds only the photo (no text
+   overlay/gradient) — Misyon/Vizyon render as plain text underneath it
+   instead of being set over a darkened panel. */
+
+.mission-vision-image {
+  display: block;
+  width: 100%;
+  max-height: 28rem;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  margin-block-end: var(--space-lg);
+}
+
+@media (min-width: 768px) {
+  .mission-vision-image {
+    margin-block-end: var(--space-xl);
+  }
+}
+
+.mission-vision-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+@media (min-width: 768px) {
+  .mission-vision-content {
+    flex-direction: row;
+    gap: var(--space-2xl);
   }
 }
 
@@ -5892,12 +6329,18 @@ a.information-card__value:hover {
   margin-inline: auto;
 }
 
+@media (min-width: 768px) {
+  .mission-vision-block {
+    flex: 1;
+  }
+}
+
 .mission-vision-label {
   font-family: var(--font-decorative);
   font-weight: var(--font-weight-medium);
   font-style: italic;
   font-size: 2.5rem;
-  color: var(--color-white);
+  color: var(--color-text-primary);
   margin-block-end: var(--space-md);
 }
 
@@ -5908,7 +6351,7 @@ a.information-card__value:hover {
 }
 
 .mission-vision-text {
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--color-text-secondary);
   line-height: var(--line-height-body);
 }
 
@@ -6050,19 +6493,33 @@ a.information-card__value:hover {
    after the first. See CoreValues/Default.cshtml.
    ========================================================================== */
 
-/* Tightened 2026-08-16 (project owner-approved): var(--space-4xl) (96px)
-   read as too loose/disconnected between value sections — var(--space-lg)
-   (24px) keeps items visually distinct while sitting close together, closer
-   to the reference's rhythm. */
+/* Tightened 2026-08-16 (project owner-approved) to var(--space-lg) (24px),
+   then loosened again 2026-08-20 (project owner-requested): the page still
+   read as cramped, so the gap grows to --space-2xl (48px) on mobile and
+   --space-3xl (64px) from 768px up — comfortably under the --space-4xl
+   (96px) the 2026-08-16 revision rejected as too loose/disconnected, but a
+   clearer break between values than the previous 24px. */
 .core-value-item + .core-value-item {
-  margin-block-start: var(--space-lg);
+  margin-block-start: var(--space-2xl);
 }
 
+@media (min-width: 768px) {
+  .core-value-item + .core-value-item {
+    margin-block-start: var(--space-3xl);
+  }
+}
+
+/* margin-block-end raised from the inherited h2 default (--space-md, 16px)
+   to --space-xl (32px) on 2026-08-20, then to --space-2xl (48px) the same
+   day (project owner-requested): the gap to each value's paragraph still
+   read as too tight. Same value at every breakpoint — the increase isn't
+   large enough to need a mobile-specific reduction. */
 .core-value-heading {
   font-family: var(--font-body);
   font-size: var(--font-size-h4);
   text-decoration-line: underline;
   text-underline-offset: 0.15em;
+  margin-block-end: var(--space-2xl);
 }
 
 .core-value-paragraph {
@@ -6559,6 +7016,22 @@ a.information-card__value:hover {
   right: 0;
   width: max-content;
   min-width: 15rem;
+  /* Overrides the base .filter-dropdown-menu's 16rem cap (site.css ~3373):
+     that cap was sized for the base 2.75rem option row height, but this
+     scoped variant's own [role='option'] rule below sets a taller 3.25rem
+     min-height. A project with the maximum realistic category count (the
+     7 named values in ProjectsController.GalleryCategorySortOrder, plus
+     "Tüm Görseller" = 8 rows × 3.25rem + padding-block) needs ~27.5rem to
+     render without clipping — 16rem silently cut off the last 1-2
+     categories with no visible scrollbar affordance, which is exactly
+     what made "Sosyal Alan Görselleri" look absent from the dropdown for
+     Nysa Gold / La Fiore Karabağ 2. Etap / La Via Villalar 1. Etap
+     (root-caused via live browser inspection, 2026-08-20) despite the
+     category being correctly present in the underlying data/DOM all
+     along. overflow-y: auto (inherited from the base rule) remains as a
+     safety net for any future project that somehow exceeds 8 categories.
+  */
+  max-height: 28rem;
   padding-block: var(--space-sm);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -7130,6 +7603,61 @@ a.information-card__value:hover {
 
 .hr-policy-bullet-item + .hr-policy-bullet-item {
   margin-block-start: var(--space-sm);
+}
+
+/* ---- Image strip — decorative separator before "Yetenek Kazanımı" ----
+   2026-08-20, project owner-requested. margin-block-start (--space-3xl)
+   gives clear air after .hr-policy-intro's own margin above; the sibling
+   override below removes .hr-policy-content's default top section-padding
+   so the gap below the strip is this single --space-3xl value instead of
+   stacking on top of it — same "collapse doubled spacing to one instance"
+   approach as .values-introduction + .core-values above. Height is a
+   capped clamp rather than aspect-ratio: the source photo (teamwork.jpg,
+   full-frame, not a pre-cropped banner) needs a fixed short band cropped
+   via object-fit: cover to read as a slim decorative strip rather than a
+   hero image, at any container width. */
+.hr-policy-image-strip {
+  margin-block: var(--space-3xl);
+}
+
+/* Widened to ~2x its original rendered width (2026-08-20, project
+   owner-requested) — the compound selector (.container.hr-policy-image-strip)
+   outranks the plain .container rule above regardless of source order, so
+   this reliably overrides its max-width/padding rather than depending on
+   cascade position. Only applied from the Tablet breakpoint up: on mobile
+   .container is already within a few px of full viewport width, so there is
+   no meaningful room left to double into and the strip stays as before.
+   width uses min() so it never exceeds the viewport itself, only the
+   original 1280px cap; height is untouched (still the same clamp()), so the
+   strip reads wider without ever reading taller. */
+@media (min-width: 768px) {
+  .container.hr-policy-image-strip {
+    width: min(94vw, calc(var(--container-max-width) * 2));
+    max-width: none;
+    padding-inline: 0;
+    margin-inline: auto;
+  }
+}
+
+.hr-policy-image-strip-img {
+  display: block;
+  width: 100%;
+  /* Raised again (2026-08-20, project owner-requested follow-up) — the
+     previous band (clamp(9rem, 16vw, 17.5rem)) was still too short for the
+     photo's content to read clearly. ~25% taller at every clamp bound
+     (11rem/20vw/22rem, up from 9rem/16vw/17.5rem) while staying well under
+     .hero--standard's 45vh minimum, so it still reads as a wide horizontal
+     strip rather than a hero section. width/object-fit: cover are
+     unchanged — the crop is simply less aggressive now, showing more of
+     the photo's vertical extent, without distorting it. */
+  height: clamp(11rem, 20vw, 22rem);
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.hr-policy-image-strip + .hr-policy-content {
+  padding-block-start: 0;
 }
 
 

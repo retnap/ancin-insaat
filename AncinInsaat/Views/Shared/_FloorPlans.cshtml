@@ -127,14 +127,20 @@ else
                        showing a disabled stand-in. *@
                 </div>
 
-                @* A floor plan with no real Net/Gross/Sales-Gross figures yet
+                @* A floor plan with no real Net/Gross figures yet
                    (FloorPlanModel's area fields all null, see
                    ProjectsController.Details) omits this stats row entirely
                    rather than showing invented numbers. Every seeded project,
                    including La Via AVM (68/95/78 placeholder, same as the
                    rest — see BuildKuyuluAvmFloorPlans), already has figures,
-                   so this only matters once a real project has none. *@
-                @if (floorPlan.NetAreaM2.HasValue && floorPlan.GrossAreaM2.HasValue && floorPlan.SalesGrossAreaM2.HasValue)
+                   so this only matters once a real project has none. Satışa
+                   Esas Brüt Alan is rendered independently of Net/Brüt (Le
+                   Jardin Net/Brüt box restore, 2026-08-20) — Le Jardin's
+                   drawings never print that figure, so its two floors show
+                   only the Net Alan/Brüt Alan boxes; every other project
+                   still has all three fields real together, so all three
+                   still render for them exactly as before. *@
+                @if (floorPlan.NetAreaM2.HasValue && floorPlan.GrossAreaM2.HasValue)
                 {
                     <dl class="project-floorplans-stats" data-reveal-group>
                         <div class="project-floorplans-stat" data-reveal>
@@ -145,10 +151,13 @@ else
                             <dt>Brüt Alan</dt>
                             <dd>@m2(floorPlan.GrossAreaM2.Value)</dd>
                         </div>
-                        <div class="project-floorplans-stat" data-reveal>
-                            <dt>Satışa Esas Brüt Alan</dt>
-                            <dd>@m2(floorPlan.SalesGrossAreaM2.Value)</dd>
-                        </div>
+                        @if (floorPlan.SalesGrossAreaM2.HasValue)
+                        {
+                            <div class="project-floorplans-stat" data-reveal>
+                                <dt>Satışa Esas Brüt Alan</dt>
+                                <dd>@m2(floorPlan.SalesGrossAreaM2.Value)</dd>
+                            </div>
+                        }
                     </dl>
                 }
 

@@ -19,6 +19,21 @@ public class HeroBannerProjectDetailViewModel
     // renders with no modifier and falls back to .hero-heading's default.
     public string? HeadingFontModifierClass { get; init; }
 
+    // Set only for the slugs in HeroBannerProjectDetailViewComponent's
+    // HeadingLogoImageUrls map (currently Nysa Gold Residence only). When
+    // present, Default.cshtml renders this image in place of Heading's
+    // text, and omits Subheading entirely — the client-supplied logo file
+    // already carries its own wordmark/subtitle lockup.
+    public string? HeadingLogoImageUrl { get; init; }
+
+    // Set only for La Fiore Karabağ 2. Etap (client request, 2026-08-20) —
+    // a small secondary badge image ("2-etap.png") rendered beside
+    // HeadingLogoImageUrl inside the same <h1> (Default.cshtml's
+    // .hero-heading-lockup) so the heading reads as one combined lockup:
+    // "LA FIORE  2. ETAP". Null for every other slug, including La Fiore
+    // Karabağ 1. Etap, whose logo renders alone exactly as before.
+    public string? HeadingBadgeImageUrl { get; init; }
+
     public string? StatusLabel { get; init; }
     public string? StatusModifierClass { get; init; }
 

@@ -168,9 +168,6 @@ namespace AncinInsaat.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("CareerPositionId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
@@ -190,9 +187,12 @@ namespace AncinInsaat.Data.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.Property<string>("Position")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
 
-                    b.HasIndex("CareerPositionId");
+                    b.HasKey("Id");
 
                     b.ToTable("JobApplications");
                 });
@@ -613,17 +613,6 @@ namespace AncinInsaat.Data.Migrations
                     b.Navigation("FloorPlan");
                 });
 
-            modelBuilder.Entity("AncinInsaat.Data.Entities.JobApplication", b =>
-                {
-                    b.HasOne("AncinInsaat.Data.Entities.CareerPosition", "CareerPosition")
-                        .WithMany("Applications")
-                        .HasForeignKey("CareerPositionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("CareerPosition");
-                });
-
             modelBuilder.Entity("AncinInsaat.Data.Entities.Partner", b =>
                 {
                     b.HasOne("AncinInsaat.Data.Entities.Project", "Project")
@@ -688,11 +677,6 @@ namespace AncinInsaat.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Project");
-                });
-
-            modelBuilder.Entity("AncinInsaat.Data.Entities.CareerPosition", b =>
-                {
-                    b.Navigation("Applications");
                 });
 
             modelBuilder.Entity("AncinInsaat.Data.Entities.FloorPlan", b =>

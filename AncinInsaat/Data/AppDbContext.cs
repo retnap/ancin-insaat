@@ -144,11 +144,6 @@ public class AppDbContext : DbContext
             entity.Property(c => c.Title).IsRequired().HasMaxLength(200);
 
             entity.HasIndex(c => c.IsPublished);
-
-            entity.HasMany(c => c.Applications)
-                .WithOne(a => a.CareerPosition)
-                .HasForeignKey(a => a.CareerPositionId)
-                .OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<ContactMessage>(entity =>
@@ -160,6 +155,7 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<JobApplication>(entity =>
         {
+            entity.Property(a => a.Position).IsRequired().HasMaxLength(200);
             entity.Property(a => a.FullName).IsRequired().HasMaxLength(200);
             entity.Property(a => a.Email).IsRequired().HasMaxLength(320);
             entity.Property(a => a.CVPath).IsRequired();

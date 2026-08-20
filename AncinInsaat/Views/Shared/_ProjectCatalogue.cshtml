@@ -10,8 +10,10 @@
 <section class="project-catalogue-cta project-catalogue-cta--featured" id="project-catalogue" style="--catalogue-bg-image: url('@Model.HeroBackgroundImageUrl')" aria-labelledby="project-catalogue-heading">
     <div class="project-catalogue-cta-bg" aria-hidden="true"></div>
     <div class="container project-catalogue-cta-inner" data-reveal>
-        <p class="project-catalogue-cta-eyebrow">@Model.Name</p>
-        <h2 id="project-catalogue-heading" class="project-catalogue-cta-heading">Projeyi Detaylıca Keşfedin</h2>
+        <div class="project-catalogue-cta-text">
+            <p class="project-catalogue-cta-eyebrow">@Model.Name</p>
+            <h2 id="project-catalogue-heading" class="project-catalogue-cta-heading">Projeyi Detaylıca Keşfedin</h2>
+        </div>
         @if (Model.CatalogueComingSoon)
         {
             @* La Fiore Karabağ 2. Etap Vaziyet Planı/Concept/Gallery phase

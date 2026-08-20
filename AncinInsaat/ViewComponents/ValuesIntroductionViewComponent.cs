@@ -25,7 +25,7 @@ public class ValuesIntroductionViewComponent : ViewComponent
             Paragraphs = new List<string>
             {
                 "Ancın İnşaat için değerler, duvara asılı bir ilke listesi değil; her " +
-                    "projede tekrarlanan bir çalışma biçimidir. 1973'ten bu yana Aydın'da " +
+                    "projede tekrarlanan bir çalışma biçimidir. 1993'ten bu yana Aydın'da " +
                     "inşa ettiğimiz her yapı, aynı titizlik ve sorumluluk anlayışıyla " +
                     "şekillendi.",
                 "Aşağıdaki değerler, ekibimizin günlük kararlarına ve sahaya bakışına " +

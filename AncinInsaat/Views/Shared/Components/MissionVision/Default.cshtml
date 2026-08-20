@@ -1,23 +1,17 @@
 @model MissionVisionViewModel
 
 @*
-    About Us "Mission & Vision" (2026-08-13 Folkart-reference revision).
-    A single darkened image panel — --mv-bg-image is read by .mission-vision-panel
-    in site.css the same way Hero Banner reads --hero-bg-image, so replacing
-    Model.BackgroundImageUrl with a real photo later needs no markup change.
+    About Us "Mission & Vision" image (2026-08-20 revision — project owner
+    asked for the image area to contain only the image, with no text
+    overlay; a follow-up request the same day removed the Misyon/Vizyon
+    copy that had been sitting below it too, so the photo is now the
+    section's entire content). MissionLabel/MissionText/VisionLabel/
+    VisionText stay on the ViewModel/ViewComponent unused rather than
+    removed, in case the client asks for this copy to reappear elsewhere.
 *@
 
 <section class="section mission-vision" id="about-mission-vision" aria-label="Misyon ve Vizyon">
     <div class="container">
-        <div class="mission-vision-panel" style="--mv-bg-image: url('@Model.BackgroundImageUrl')">
-            <div class="mission-vision-block">
-                <h2 class="mission-vision-label">@Model.MissionLabel</h2>
-                <p class="mission-vision-text">@Model.MissionText</p>
-            </div>
-            <div class="mission-vision-block">
-                <h2 class="mission-vision-label">@Model.VisionLabel</h2>
-                <p class="mission-vision-text">@Model.VisionText</p>
-            </div>
-        </div>
+        <img class="mission-vision-image" src="@Model.BackgroundImageUrl" alt="" loading="lazy" decoding="async" />
     </div>
 </section>

@@ -1,5 +1,4 @@
 using AncinInsaat.Data.Entities;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AncinInsaat.Models;
 
@@ -22,11 +21,6 @@ public class CareerPageViewModel
     // are no published positions; the view renders an empty-state message
     // in that case instead of an empty grid.
     public required InformationCardModel OpenPositions { get; init; }
-
-    // The Application Form's position <select> — built from the same
-    // published CareerPosition rows as OpenPositions, so a candidate can
-    // only ever submit against a position that is actually open.
-    public required IReadOnlyList<SelectListItem> PositionOptions { get; init; }
 
     // Set from TempData after a successful POST-redirect-GET — the view
     // renders _SuccessMessage in place of the form when true.

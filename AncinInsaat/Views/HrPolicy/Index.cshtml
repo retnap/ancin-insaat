@@ -44,8 +44,19 @@
     <div class="container">
         <p class="hr-policy-eyebrow">Ancın İnşaat</p>
         <h1 id="hr-policy-heading" class="hr-policy-heading">İK Politikaları</h1>
-        <p class="hr-policy-intro">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat, duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+        <p class="hr-policy-intro">Ançın İnşaat'ta insan kaynakları anlayışımızın temelinde, çalışanlarımızın gelişimini ve mutluluğunu şirket başarısının ayrılmaz bir parçası olarak görmek yatar. Adil, şeffaf ve kapsayıcı bir çalışma ortamı yaratarak her çalışanımızın potansiyelini en iyi şekilde ortaya koyabileceği bir kurum kültürü inşa ediyoruz.</p>
     </div>
 </section>
+
+@* Decorative horizontal image strip, project owner-requested 2026-08-20 —
+   sits between the intro paragraph and the first content section
+   ("Yetenek Kazanımı") as a subtle visual separator. Reuses the existing
+   teamwork.jpg asset (already in wwwroot/images/company/, previously
+   unused), cropped to a short banner shape via object-fit: cover —
+   decorative only, so alt="". See .hr-policy-image-strip in site.css for
+   the spacing rationale. *@
+<div class="container hr-policy-image-strip">
+    <img src="/images/company/teamwork.jpg" alt="" class="hr-policy-image-strip-img" loading="lazy" decoding="async" />
+</div>
 
 @await Component.InvokeAsync("HrPolicySections")

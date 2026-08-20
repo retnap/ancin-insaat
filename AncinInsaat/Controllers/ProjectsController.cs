@@ -61,6 +61,135 @@ public class ProjectsController : Controller
     // rather than a magic string repeated at each call site.
     private const string SocialAreasCategory = "Social Areas";
 
+    // Projects catalogue Nysa Gold card treatment (2026-08-20 client
+    // request) — same slug-keyed override pattern as
+    // ProjectsShowcaseViewComponent's Home-carousel card, reusing the exact
+    // same assets. Every other slug falls through to the normal
+    // CoverImage-derived image below and gets no LogoImageUrl, so
+    // _ProjectCard.cshtml renders nothing extra for them. Project.CoverImage
+    // itself, and every other page that reads it (Home carousel, SEO
+    // OpenGraph image), stay untouched.
+    // La Fiore Karabağ 1. Etap, La Via Villalar 1. Etap and D-Latis
+    // (2026-08-20 client request) — same card treatment extended to these
+    // three projects' newly supplied assets, added as further entries
+    // rather than touching the Nysa Gold/Le Jardin lines above.
+    // Tralles Gold Residence, Alinda Gold Residence, Magnesia Gold
+    // Residence and Nlatis (2026-08-20 client request) — same treatment
+    // again, each project's own proje-karti/card-background.webp derived
+    // the same way (client's "X proje kartı.png" resized 1080x1350 →
+    // 1000x1250 and re-encoded as webp, same scale factor as every prior
+    // project above).
+    // Ferhunde Hanım Apt. (2026-08-20 client request) — card image only, no
+    // logo image asset exists for this project, so it is intentionally
+    // absent from CardLogoImageUrlsBySlug below; it instead gets a
+    // text-based title overlay (CardTitleOverlayTextBySlug below). Its
+    // card-background.webp was derived from the client's "ferhunde proje
+    // kartı.jpeg" (a different source aspect ratio than the 1080x1350 files
+    // above — resized to 1000px wide, height following proportionally,
+    // rather than forced to 1000x1250) since .project-card-standard-media
+    // crops via object-fit: cover regardless of the source's exact ratio.
+    // La Fiore Karabağ 2. Etap (2026-08-20 client request) — full treatment
+    // (card image + logo), same derivation as the 1080x1350 group above.
+    // Hacıfeyzullah - Q-Latis (2026-08-20 client request) — card image
+    // only, no logo image asset, same text-title-overlay treatment as
+    // Ferhunde Hanım Apt. above (its own raw proje-karti file points
+    // directly at the client's PNG rather than a pre-derived webp, since no
+    // image-processing step was requested here).
+    private static readonly IReadOnlyDictionary<string, string> CardImageOverridesBySlug =
+        new Dictionary<string, string>
+        {
+            ["nysa-gold"] = "/images/projects/nysa-gold/proje-karti/card-background.webp",
+            ["le-jardin"] = "/images/projects/le-jardin/proje-karti/card-background.webp",
+            ["la-fiore-karabag"] = "/images/projects/la-fiore-karabag/proje-karti/card-background.webp",
+            ["kuyulu-la-via-villalar-birinci-etap"] = "/images/projects/kuyulu-la-via-villalar-birinci-etap/proje-karti/card-background.webp",
+            ["davutlar-d-latis"] = "/images/projects/davutlar-d-latis/proje-karti/card-background.webp",
+            ["tralles-gold"] = "/images/projects/tralles-gold/proje-karti/card-background.webp",
+            ["alinda-gold"] = "/images/projects/alinda-gold/proje-karti/card-background.webp",
+            ["magnesia-gold"] = "/images/projects/magnesia-gold/proje-karti/card-background.webp",
+            ["nlatis"] = "/images/projects/nlatis/proje-karti/card-background.webp",
+            ["ferhunde-hanim-apt"] = "/images/projects/ferhunde-hanim-apt/proje-karti/card-background.webp",
+            ["la-fiore-karabag-2-etap"] = "/images/projects/la-fiore-karabag-2-etap/proje-karti/card-background.webp",
+            ["q-latis"] = "/images/projects/q-latis/proje-karti/hacıfeyzullah proje kartı.png"
+        };
+
+    private static readonly IReadOnlyDictionary<string, string> CardLogoImageUrlsBySlug =
+        new Dictionary<string, string>
+        {
+            ["nysa-gold"] = "/images/projects/nysa-gold/proje-karti/logo.png",
+            ["le-jardin"] = "/images/projects/le-jardin/proje-karti/logo.png",
+            ["la-fiore-karabag"] = "/images/projects/la-fiore-karabag/proje-karti/logo.png",
+            ["kuyulu-la-via-villalar-birinci-etap"] = "/images/projects/kuyulu-la-via-villalar-birinci-etap/proje-karti/logo.png",
+            ["davutlar-d-latis"] = "/images/projects/davutlar-d-latis/proje-karti/logo.png",
+            ["tralles-gold"] = "/images/projects/tralles-gold/proje-karti/logo.png",
+            ["alinda-gold"] = "/images/projects/alinda-gold/proje-karti/logo.png",
+            ["magnesia-gold"] = "/images/projects/magnesia-gold/proje-karti/logo.png",
+            ["nlatis"] = "/images/projects/nlatis/proje-karti/logo.png",
+            ["la-fiore-karabag-2-etap"] = "/images/projects/la-fiore-karabag-2-etap/proje-karti/la fiore.png"
+        };
+
+    // Ferhunde Hanım Apt. and Q-Latis card treatment (2026-08-20 client
+    // request) — neither has a logo asset, so the card's centered overlay
+    // is real HTML text instead of an image (_ProjectCard.cshtml,
+    // ProjectCardModel.TitleOverlayText). Q-Latis uses the same short
+    // brand-facing title as its Hero heading override above rather than the
+    // project's full record Name ("Hacıfeyzullah - Q-Latis"); Ferhunde
+    // Hanım Apt.'s own Name already is that short form.
+    private static readonly IReadOnlyDictionary<string, string> CardTitleOverlayTextBySlug =
+        new Dictionary<string, string>
+        {
+            ["ferhunde-hanim-apt"] = "Ferhunde Hanım Apt.",
+            ["q-latis"] = "Q-Latis"
+        };
+
+    // Projects catalogue caption removal (2026-08-20 client request) — the
+    // full logo or title overlay above already carries each of these
+    // projects' branding, so the standard name/location caption underneath
+    // is redundant for their cards only. Every other slug keeps its normal
+    // caption, unaffected. La Fiore Karabağ 2. Etap is added alongside its
+    // new logo overlay above; Ferhunde Hanım Apt. and Q-Latis are added
+    // alongside their new title overlays above.
+    private static readonly IReadOnlySet<string> CardsWithCaptionHidden =
+        new HashSet<string>
+        {
+            "nysa-gold", "le-jardin",
+            "la-fiore-karabag", "kuyulu-la-via-villalar-birinci-etap", "davutlar-d-latis",
+            "tralles-gold", "alinda-gold", "magnesia-gold", "nlatis",
+            "la-fiore-karabag-2-etap", "ferhunde-hanim-apt", "q-latis"
+        };
+
+    // Project Detail Hero background overrides for La Fiore Karabağ 1.
+    // Etap, La Via Villalar 1. Etap and D-Latis (2026-08-20 client
+    // request) — same "freshly uploaded, not yet converted to banner.webp"
+    // treatment as Nysa Gold/Le Jardin below, kept as its own dictionary
+    // so those two projects' existing ternary is left untouched.
+    // Tralles Gold Residence, Alinda Gold Residence, Magnesia Gold
+    // Residence and Nlatis (2026-08-20 client request) — same treatment
+    // again; these four projects' own banner.webp/cover.webp were removed
+    // in favor of their new banner/ folder assets, so an override here is
+    // required (not optional) — without it Details() would fall through to
+    // the now-deleted `{slug}/banner.webp` path.
+    // Ferhunde Hanım Apt. and La Fiore Karabağ 2. Etap (2026-08-20 client
+    // request) — same required override, same reason: both projects' own
+    // banner.webp/cover.webp were removed in favor of their new banner/
+    // folder assets.
+    // Hacıfeyzullah - Q-Latis (2026-08-20 client request) — same required
+    // override: this project never had a top-level banner.webp, only the
+    // freshly uploaded banner/ folder asset.
+    private static readonly IReadOnlyDictionary<string, string> HeroBannerImageOverridesBySlug =
+        new Dictionary<string, string>
+        {
+            ["la-fiore-karabag"] = "/images/projects/la-fiore-karabag/banner/la fiore banner.png",
+            ["kuyulu-la-via-villalar-birinci-etap"] = "/images/projects/kuyulu-la-via-villalar-birinci-etap/banner/lavia banner deneme.png",
+            ["davutlar-d-latis"] = "/images/projects/davutlar-d-latis/banner/dlatis banner deneme.png",
+            ["tralles-gold"] = "/images/projects/tralles-gold/banner/tralles banner deneme.png",
+            ["alinda-gold"] = "/images/projects/alinda-gold/banner/alinda banner deneme.png",
+            ["magnesia-gold"] = "/images/projects/magnesia-gold/banner/magnesia banner deneme.png",
+            ["nlatis"] = "/images/projects/nlatis/banner/nlatis banner deneme.png",
+            ["ferhunde-hanim-apt"] = "/images/projects/ferhunde-hanim-apt/banner/ferhunde banner deneme.png",
+            ["la-fiore-karabag-2-etap"] = "/images/projects/la-fiore-karabag-2-etap/banner/lafiore 2.etap banner deneme.png",
+            ["q-latis"] = "/images/projects/q-latis/banner/hacıfeyzullah banner deneme.png"
+        };
+
     // Turkish month names for CompletionDate's display label — the site has
     // no other date formatting yet to be consistent with, and every other
     // user-facing string on the page is already a hardcoded Turkish literal
@@ -94,7 +223,9 @@ public class ProjectsController : Controller
         var cards = projects.Select(project => new ProjectCardModel
         {
             Name = project.Name,
-            CoverImageSrc = ResolveCoverImage(project.CoverImage),
+            CoverImageSrc = CardImageOverridesBySlug.TryGetValue(project.Slug, out var cardImageOverride)
+                ? cardImageOverride
+                : ResolveCoverImage(project.CoverImage),
             StatusLabel = project.Status == ProjectStatus.Completed ? "Tamamlandı" : "Devam Ediyor",
             StatusModifierClass = project.Status == ProjectStatus.Completed
                 ? "project-status-badge--completed"
@@ -102,7 +233,10 @@ public class ProjectsController : Controller
             StatusFilterValue = project.Status == ProjectStatus.Completed ? "completed" : "ongoing",
             DetailUrl = $"/projects/{project.Slug}",
             Location = project.Location,
-            ProjectType = project.ProjectType
+            ProjectType = project.ProjectType,
+            LogoImageUrl = CardLogoImageUrlsBySlug.GetValueOrDefault(project.Slug),
+            TitleOverlayText = CardTitleOverlayTextBySlug.GetValueOrDefault(project.Slug),
+            HideCaption = CardsWithCaptionHidden.Contains(project.Slug)
         }).ToList();
 
         var locationOptions = cards
@@ -214,7 +348,19 @@ public class ProjectsController : Controller
             Slug = project.Slug,
             StatusLabel = statusLabel,
             StatusModifierClass = statusModifierClass,
-            HeroBackgroundImageUrl = $"/images/projects/{project.Slug}/banner.webp",
+            // Nysa Gold temporarily points at the client's freshly uploaded
+            // banner asset (still its original PNG, not yet converted/renamed
+            // into the banner.webp slot every other project uses) per the
+            // 2026-08-20 request to preview it as-is before optimization.
+            // Le Jardin follows the same approach (2026-08-20 request) with
+            // its own freshly uploaded banner asset.
+            HeroBackgroundImageUrl = HeroBannerImageOverridesBySlug.TryGetValue(project.Slug, out var heroBannerOverride)
+                ? heroBannerOverride
+                : project.Slug == "nysa-gold"
+                    ? "/images/projects/nysa-gold/banner/nysa gold 4k.png"
+                    : project.Slug == "le-jardin"
+                        ? "/images/projects/le-jardin/banner/le jardin banner.png"
+                        : $"/images/projects/{project.Slug}/banner.webp",
             ShortDescription = string.IsNullOrWhiteSpace(project.ShortDescription) ? null : project.ShortDescription,
             DescriptionParagraphs = SplitDescription(project.Description),
             Information = new ProjectInformationModel
@@ -302,7 +448,15 @@ public class ProjectsController : Controller
                         ApartmentType = floorPlan.ApartmentType,
                         NetAreaM2 = hasAreaStats ? floorPlan.NetAreaM2 : null,
                         GrossAreaM2 = hasAreaStats ? floorPlan.GrossAreaM2 : null,
-                        SalesGrossAreaM2 = hasAreaStats ? floorPlan.SalesGrossAreaM2 : null,
+                        // Independent of hasAreaStats (Le Jardin Net/Brüt box
+                        // restore, 2026-08-20) — Le Jardin's drawings print a
+                        // real Net/Brüt total per floor but no "Satışa Esas
+                        // Brüt Alan" figure anywhere, so its FloorPlan rows
+                        // keep SalesGrossAreaM2 at its 0 default while
+                        // NetAreaM2/GrossAreaM2 hold real values. Every other
+                        // project already keeps all three fields at 0 or all
+                        // three real together, so this is a no-op for them.
+                        SalesGrossAreaM2 = floorPlan.SalesGrossAreaM2 > 0 ? floorPlan.SalesGrossAreaM2 : null,
                         Rooms = floorPlan.Rooms
                             .OrderBy(room => room.DisplayOrder)
                             .Select(room => new FloorPlanRoomModel { Name = room.Name, AreaM2 = room.AreaM2 })
