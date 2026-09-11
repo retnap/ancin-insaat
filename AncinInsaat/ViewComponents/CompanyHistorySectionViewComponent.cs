@@ -32,8 +32,10 @@ namespace AncinInsaat.ViewComponents;
 // _HistoryCarousel. About Us's "Our Journey" keeps reading the original
 // shared source unchanged.
 //
-// PLACEHOLDER video — the client has not yet supplied the real promotional
-// footage; VideoSrc stays null until it does.
+// Media swap (2026-08-28 request): this section's video teaser and Company
+// Overview's "50 Yıllık Tecrübe" photograph switched places — this slot now
+// renders the 50-yil.jpeg photo (see Image below); the video moved to
+// CompanyOverviewViewComponent.
 //
 // Timeline header redesign (2026-08-03): the section heading is now the
 // shared TimelineHeaderModel/_TimelineHeader partial (also used by
@@ -59,18 +61,17 @@ public class CompanyHistorySectionViewComponent : ViewComponent
                 DecorativeTitle = "zaman tüneli",
                 Subtitle = "İlklerin Mimarı"
             },
-            Video = new VideoShowcaseModel
+            Image = new ImageBlockModel
             {
-                Id = "company-history",
-                Title = "Ancın İnşaat Tanıtım Filmi",
-                PosterSrc = "/images/company/video-poster-placeholder.svg",
+                // Media swap (2026-08-28 request): this slot and Company
+                // Overview's now show each other's original media — see
+                // CompanyOverviewViewComponent's Video for the flip side.
+                Src = "/images/logos/50-yil.jpeg",
 
-                // Empty on purpose — abstract placeholder graphic, decorative
-                // for screen-reader purposes until real video-frame artwork
-                // replaces it (same reasoning as Company Overview's image).
-                PosterAlt = "",
-                VideoSrc = null,
-                CssClass = "video-showcase--compact"
+                // Empty on purpose — decorative stand-in graphic, same
+                // reasoning as its previous placement in Company Overview.
+                Alt = "",
+                CssClass = "company-history-photo"
             },
             InfoPanel = new HistoryInfoPanelModel
             {

@@ -7,11 +7,47 @@
    is present. Taller "featured" treatment (Nysa Gold Residence reference
    redesign, 2026-08-07) rolled out to every project (2026-08-08). *@
 
-<section class="project-catalogue-cta project-catalogue-cta--featured" id="project-catalogue" style="--catalogue-bg-image: url('@Model.HeroBackgroundImageUrl')" aria-labelledby="project-catalogue-heading">
+@{
+    // Nysa Gold, Le Jardin, La Via Villalar 1. Etap logo lockup (2026-08-28
+    // client request) — same banner-logo assets already used as the Hero's
+    // heading image (see HeroBannerProjectDetailViewComponent's
+    // HeadingLogoImageUrls), reused here in place of the plain-text project
+    // name. Every other slug keeps the text eyebrow below unchanged.
+    var catalogueEyebrowLogoUrl = Model.Slug switch
+    {
+        "nysa-gold" => "/images/projects/nysa-gold/banner/nysa gold logo_last.png",
+        "le-jardin" => "/images/projects/le-jardin/banner/le jardin logo.png",
+        "kuyulu-la-via-villalar-birinci-etap" => "/images/projects/kuyulu-la-via-villalar-birinci-etap/banner/lavia  logo.png",
+        _ => null
+    };
+
+    // La Fiore Karabağ (1. Etap) spacing fix (2026-09-11) — Details.cshtml
+    // excludes this slug from the Daire Planları section (it has none), so
+    // this is the only project on the site where this CTA is immediately
+    // followed by the shared layout's CtaBanner ("Tüm Projeler") strip
+    // instead of Daire Planları's own .section padding-block — both this
+    // CTA and CtaBanner use near-black backgrounds, so with nothing else in
+    // between they read as one continuous block. Every other project
+    // rendering this CTA keeps Daire Planları right after it, so this stays
+    // scoped to this one slug rather than changing .project-catalogue-cta's
+    // own padding-block for everyone (see .project-catalogue-cta--standalone-bottom
+    // in site.css).
+    var isStandaloneBeforeCtaBanner = Model.Slug == "la-fiore-karabag";
+    var catalogueCtaClass = "project-catalogue-cta project-catalogue-cta--featured" + (isStandaloneBeforeCtaBanner ? " project-catalogue-cta--standalone-bottom" : "");
+}
+
+<section class="@catalogueCtaClass" id="project-catalogue" style="--catalogue-bg-image: url('@Model.HeroBackgroundImageUrl')" aria-labelledby="project-catalogue-heading">
     <div class="project-catalogue-cta-bg" aria-hidden="true"></div>
     <div class="container project-catalogue-cta-inner" data-reveal>
         <div class="project-catalogue-cta-text">
-            <p class="project-catalogue-cta-eyebrow">@Model.Name</p>
+            @if (catalogueEyebrowLogoUrl is not null)
+            {
+                <img src="@catalogueEyebrowLogoUrl" alt="@Model.Name" class="project-catalogue-cta-eyebrow-logo">
+            }
+            else
+            {
+                <p class="project-catalogue-cta-eyebrow">@Model.Name</p>
+            }
             <h2 id="project-catalogue-heading" class="project-catalogue-cta-heading">Projeyi Detaylıca Keşfedin</h2>
         </div>
         @if (Model.CatalogueComingSoon)

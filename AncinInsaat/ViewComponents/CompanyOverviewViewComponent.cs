@@ -38,26 +38,24 @@ public class CompanyOverviewViewComponent : ViewComponent
                     "uzun soluklu değer yaratmayı ve sakinlerine huzurlu, işlevsel bir " +
                     "yaşam sunmayı hedefleriz."
             },
-            Image = new ImageBlockModel
+            Video = new VideoShowcaseModel
             {
-                // Temporary "50 yıl" visual (Home Page revision #3,
-                // 2026-08-10), replaced with the project owner's final
-                // supplied file (2026-08-20) — the original
-                // overview-placeholder.svg asset is left in place, unused,
-                // rather than deleted.
-                Src = "/images/logos/50-yil.jpeg",
+                // Media swap (2026-08-28 request): this slot and Company
+                // History's "Zaman Tüneli" video teaser switched places —
+                // see CompanyHistorySectionViewComponent's Image for the
+                // flip side. Same placeholder video widget as before, just
+                // relocated; VideoSrc stays null until the client supplies
+                // real footage.
+                Id = "company-overview",
+                Title = "Ancın İnşaat Tanıtım Filmi",
+                PosterSrc = "/images/company/video-poster-placeholder.svg",
 
-                // Empty on purpose: this is a decorative stand-in graphic
-                // that conveys no information beyond what the heading/
-                // description already state. Give it a real descriptive alt
-                // once the final company photography replaces it.
-                Alt = "",
-
-                // 50-yil.jpeg is a tall/portrait source image; the shared
-                // .image-block 4:3 ratio crops too much of it away. This
-                // modifier gives the box a taller ratio and anchors it to
-                // the top of the grid row so it only grows downward.
-                CssClass = "company-overview-image"
+                // Empty on purpose — abstract placeholder graphic, decorative
+                // for screen-reader purposes until real video-frame artwork
+                // replaces it.
+                PosterAlt = "",
+                VideoSrc = null,
+                CssClass = "company-overview-video"
             },
             CtaLabel = "Devamını Oku",
             CtaUrl = "/about-us"

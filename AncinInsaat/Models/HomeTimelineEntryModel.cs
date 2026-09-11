@@ -2,7 +2,7 @@ namespace AncinInsaat.Models;
 
 // Home page "Zaman Tüneli" card content only — deliberately separate from
 // HistoryEntryModel/CompanyHistoryData (shared with About Us's "Our
-// Journey") per the 2026-08-19 request to give Home a fixed four-entry
+// Journey") per the 2026-08-19 request to give Home a fixed
 // timeline with an in-card "devamı..." / "<- gizle" expand toggle, without
 // touching About Us's shared milestones or link-based cards.
 public class HomeTimelineEntryModel

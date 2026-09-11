@@ -143,6 +143,76 @@
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
+/* ---- Caviar Dreams (Company Overview "50 Yıllık Tecrübe" heading only,
+   2026-08-28) — self-hosted from the licensed Font Squirrel distribution
+   (free for commercial/personal use); single file per weight since the
+   source isn't split into latin/latin-ext subsets like the Google Fonts
+   families above. Not part of --font-heading — applied only to
+   #company-overview-heading. ---- */
+
+@font-face {
+  font-family: 'Caviar Dreams';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/caviar-dreams/caviar-dreams-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Caviar Dreams';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/caviar-dreams/caviar-dreams-700.woff2') format('woff2');
+}
+
+/* ---- Oswald (Projects Showcase "Devam Eden Projeler" heading pair only,
+   2026-08-28) — self-hosted from Google Fonts; replaces an earlier Caviar
+   Dreams attempt for this section specifically, which lacked glyphs for
+   ç/ğ/ı/İ/ö/ş/ü. Google serves this family as a variable font (wght
+   400–700) — the 400/700 URLs below are byte-identical (the browser
+   instantiates each at its declared weight), split into latin/latin-ext
+   subsets like every other family above so Turkish characters resolve
+   from latin-ext while everything else loads from the smaller latin
+   file. Not part of --font-heading — applied only to
+   .projects-showcase-header .section-header__eyebrow and h2. ---- */
+
+@font-face {
+  font-family: 'Oswald';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/oswald/oswald-400-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Oswald';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/oswald/oswald-400-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Oswald';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/oswald/oswald-700-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Oswald';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/oswald/oswald-700-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
 /* ---- Inter (body / UI text) ---- */
 
 @font-face {
@@ -2169,12 +2239,23 @@ select[aria-invalid='true'] {
   }
 }
 
-/* 50-yil.jpeg source is a tall/portrait graphic; the shared .image-block
-   4:3 ratio was cropping too much of it away. A taller ratio plus
-   align-self: start anchors the box to the top of the grid row so the
-   extra height is added toward the bottom, not the top. */
-.company-overview-image {
+/* Media swap (2026-08-28 request): this slot held the 50-yil.jpeg photo
+   (a tall/portrait source needing a taller-than-4:3 ratio, hence the 1:1
+   box below) and now holds the VideoShowcase teaser that used to live in
+   Company History's "Zaman Tüneli" section instead. Keeps that same 1:1
+   box — align-self: start anchors it to the top of the grid row — so the
+   swap doesn't change this section's dimensions/positioning; the overrides
+   below undo _VideoShowcase's own default large-centered sizing
+   (max-width: 960px; margin-inline: auto; 16:9 trigger) so it fills this
+   box the same way the photo did. */
+.company-overview-video {
   align-self: start;
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+}
+
+.company-overview-video .video-showcase-trigger {
   aspect-ratio: 1 / 1;
 }
 
@@ -2185,6 +2266,14 @@ select[aria-invalid='true'] {
    lands directly under the sticky Navbar and gets visually clipped. */
 #company-overview {
   scroll-margin-top: 5rem;
+}
+
+/* "50 Yıllık Tecrübe" heading only (2026-08-28 request) — swaps in the
+   self-hosted Caviar Dreams family (Section 1) ahead of the shared
+   --font-heading fallback. Font size/weight/spacing stay on the global h2
+   rule (Section 4); only font-family changes here. */
+#company-overview-heading {
+  font-family: 'Caviar Dreams', var(--font-heading);
 }
 
 /* Same fix as #company-overview above — this section is also a same-page
@@ -2471,41 +2560,28 @@ select[aria-invalid='true'] {
   overflow: hidden;
 }
 
-/* ---- Video Showcase, compact modifier ----
-   The shared _VideoShowcase partial defaults to a large 960px showcase
-   centered via margin-inline: auto; this section wants it as a small
-   teaser that sits INSIDE the left info column (Video -> small title ->
-   arrows, per the project owner's 2026-07-28 layout-hierarchy request),
-   left-aligned with the column's text rather than centered by itself. */
+/* ---- Photo teaser, compact box ----
+   Media swap (2026-08-28 request): this slot used to hold a small
+   VideoShowcase teaser (max-width: 240px, 1:1, left-aligned INSIDE the
+   left info column rather than centered) — see the removed
+   .video-showcase--compact modifier's history. It now holds the
+   "50 Yıllık Tecrübe" photo (formerly in Company Overview) at that exact
+   same box size/position, wrapped in .company-history-image-wrap so the
+   fade-in reveal (data-reveal) that used to live on .video-showcase's own
+   wrapping div still applies here. */
 
-.video-showcase--compact {
+.company-history-image-wrap {
   max-width: 240px;
-  margin-inline: 0;
-}
-
-.video-showcase--compact .video-showcase-trigger {
-  aspect-ratio: 1 / 1;
-}
-
-.video-showcase--compact .video-showcase-play {
-  width: 2.75rem;
-  height: 2.75rem;
-}
-
-@media (min-width: 768px) {
-  .video-showcase--compact .video-showcase-play {
-    width: 3rem;
-    height: 3rem;
-  }
-}
-
-.company-history-info-col > .video-showcase {
   margin-block-end: var(--space-lg);
+}
+
+.company-history-photo {
+  aspect-ratio: 1 / 1;
 }
 
 /* ---- Section Layout ----
    Shared _TimelineHeader leads (own full-width row, styled below in
-   Section 20a) followed by this two-column grid: Info Column (Video ->
+   Section 20a) followed by this two-column grid: Info Column (photo ->
    small title -> arrows, nothing else) beside Carousel. Column ratio
    per the project owner's 2026-07-28 layout-hierarchy request.
 
@@ -2514,10 +2590,10 @@ select[aria-invalid='true'] {
    (1 or 2), so with only two columns defined and two items placed, a
    second row is structurally impossible regardless of content width;
    previously this fell back to display: flex; flex-direction: column
-   below 1024px, which stacked Video above the Carousel instead of
+   below 1024px, which stacked the photo above the Carousel instead of
    keeping them side by side. The left column's minmax lower bound steps
    down at the narrower breakpoints (rather than jumping straight to
-   240px) so the compact Video/nav shrink to fit instead of overflowing
+   240px) so the compact photo/nav shrink to fit instead of overflowing
    at phone widths — the History Info Panel's two 44px nav buttons plus
    their gap need roughly 6.5rem at minimum to avoid overlapping the
    Carousel column. */
@@ -2789,6 +2865,21 @@ select[aria-invalid='true'] {
   margin-block-end: var(--space-xs);
 }
 
+/* Home "Zaman Tüneli" only: Playfair Display's default figures are
+   old-style (text) figures — digits like 3/4/5/7/9 carry a descender
+   below the baseline while 0/1/2/6/8 sit on it, so multi-digit years
+   (e.g. 1978, 1988) look vertically uneven. Switching to the same
+   self-hosted file's built-in lining-figure glyphs (OpenType "lnum",
+   confirmed present in playfair-display-700-latin.woff2) puts every
+   digit on one baseline at a uniform height, with no change to
+   font-family, weight, size, letter-spacing or line-height, and no
+   effect on letters. Scoped to .home-timeline-card so About Us's
+   "Our Journey" (_HistoryCarousel, shares .history-card-year) is
+   untouched. */
+.home-timeline-card .history-card-year {
+  font-variant-numeric: lining-nums;
+}
+
 .history-card-title {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -2974,8 +3065,33 @@ select[aria-invalid='true'] {
   justify-content: center;
   color: var(--color-accent);
   font-weight: var(--font-weight-regular);
-  font-size: 1rem; /* 16px — up from the shared eyebrow's 14px, this section only */
-  line-height: 1.875rem; /* 30px — matches Terzioğlu reference slogan height (450x30) */
+
+  /* Oswald, single-line fit (2026-08-28 revision) — replaces the earlier
+     Caviar Dreams treatment, which had no glyphs for ç/ğ/ı/İ/ö/ş/ü; see
+     Section 1's @font-face for the self-hosted files. white-space: nowrap
+     forces "İlklerin Mimarı - Ancın İnşaat" (30 characters, inheriting
+     this element's own 0.06em letter-spacing from the shared
+     .section-header__eyebrow rule) onto one line, so font-size is capped
+     to whatever fits its unchanged 450px max-width above — measured
+     directly off Oswald's own glyph metrics at weight 400. The clamp()'s
+     two endpoints are a CSS-locks-style affine function of viewport width
+     (not a bare Nvw term, which would overshoot on narrow phones): it
+     reaches its 27px/1.6875rem ceiling once viewport-width minus this
+     section's mobile/tablet container padding equals the 450px cap
+     (viewport ≈ 482px) and holds there at every wider viewport since vw
+     growth alone would otherwise keep exceeding the 450px box on very
+     wide screens; below 482px it scales linearly down to a 17px/1.0625rem
+     floor sized for a 320px viewport, the narrowest width this was
+     safety-margined for (~26% fit margin throughout, vs. the previous
+     31px/20px pair's ~15%, freeing up room for the title below to grow
+     instead — 2026-08-28 hierarchy revision: deliberately smaller/more
+     subordinate now, ~1.55x below the title at every breakpoint instead
+     of ~1.26x). Line-height stays 1.2 (single-line). color/weight/
+     max-width/alignment above are unchanged. */
+  font-family: 'Oswald', var(--font-heading);
+  font-size: clamp(1.0625rem, calc(6.17vw - 0.172rem), 1.6875rem); /* 17px (≤320px viewport) up to 27px (≥482px viewport) */
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 /* Reference title reads as a bold sans-serif, not the site's serif
@@ -2984,12 +3100,32 @@ select[aria-invalid='true'] {
 .projects-showcase-header h2 {
   max-width: 28.125rem; /* ~450px reference title width */
   margin-inline: auto;
-  font-family: var(--font-body);
-  font-size: 1.625rem; /* 26px — down from --font-size-h3's 28px, this section only */
-  line-height: 2.4375rem; /* 39px — matches Terzioğlu reference title height (450x39) */
   letter-spacing: 0.02em;
   text-transform: uppercase;
   text-align: center;
+
+  /* Oswald, single-line fit (2026-08-28 revision) — replaces the earlier
+     Caviar Dreams treatment (no Turkish glyphs; see the eyebrow rule
+     above for the full rationale, which applies identically here).
+     white-space: nowrap forces "DEVAM EDEN PROJELER" (19 characters
+     including the text-transform: uppercase below, plus this rule's own
+     0.02em letter-spacing) onto one line; font-size is capped to fit the
+     unchanged 450px max-width above, measured off Oswald's weight-700
+     glyph metrics, using the same CSS-locks affine clamp() shape as the
+     eyebrow: flat at its 42px/2.625rem ceiling from a 482px viewport
+     upward (where 450px is reached given this section's container
+     padding), scaling linearly down to a 26px/1.625rem floor sized for a
+     320px viewport (~8.6% fit margin throughout — 2026-08-28 hierarchy
+     revision: deliberately larger/more dominant now, trading some of the
+     eyebrow's freed-up margin for this rule's own so the title clearly
+     reads as the section's main heading, ~1.55x the eyebrow at every
+     breakpoint instead of ~1.26x). Line-height stays 1.2 (single-line).
+     letter-spacing/text-transform/text-align/max-width above are
+     untouched. */
+  font-family: 'Oswald', var(--font-heading);
+  font-size: clamp(1.625rem, calc(9.88vw - 0.35rem), 2.625rem); /* 26px (≤320px viewport) up to 42px (≥482px viewport) */
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .projects-slider {
@@ -5160,90 +5296,64 @@ select[aria-invalid='true'] {
 }
 
 /* ---- Gallery Category Picker (Nysa Gold Residence UI revision,
-   2026-08-07) ----
-   Replaces the immediate merged grid under "Tüm Görseller" with a
-   continuously looping (right-to-left) row of category cards — see
-   _ProjectGallery.cshtml/site.js. The track's card set is duplicated 6×
-   server-side (was 2× — with only 2-3 categories that produced a track
-   shorter than many viewports, so the whole loop was visible at once and
-   read as a short repeating strip rather than an endless one); any even
-   rep count keeps translateX(-50%) landing exactly on an identical second
-   half, giving a seamless wrap with no visible reset. animation-duration
-   scaled from 24s to 72s (3× — matching the 2→6 rep increase) to keep the
-   same per-card scroll speed, just over a longer, less perceptible cycle.
-   A mask-image fade softens both edges instead of a hard clip. Paused on
-   hover/focus (so a card can actually be read/clicked) and disabled
-   entirely under prefers-reduced-motion, matching every other looping/
-   animated element on this page.
+   2026-08-07; static layout revision, 2026-08-28; single-row revision,
+   2026-08-28) ----
+   One static card per gallery category under "Tüm Görseller", always a
+   single horizontal row — see _ProjectGallery.cshtml (renders exactly one
+   card per Model.GalleryCategories entry, no duplication) and site.js
+   (click handler, no image-swap/visibility polling). Previously a
+   continuously looping (right-to-left) marquee with a 6×-duplicated card
+   set; removed per client request in favor of a plain static row. Never
+   wraps onto a second row — flex-wrap: nowrap plus overflow-x: auto (same
+   single-row/horizontal-scroll idiom as .project-gallery-cards below,
+   Section 26) lets a project with more categories than fit the viewport
+   scroll horizontally instead, on every breakpoint.
 
-   Card refinement (2026-08-07): each card in the track is now plain
+   Card refinement (2026-08-07): each card in the track is plain
    .gallery-card markup (Section 26 below) — same width/height/border-
-   radius/typography/spacing as every Interior/Exterior card — so no
-   card-specific sizing rules live here anymore; only the track's own
-   layout (flex row, gap, marquee animation) does. */
+   radius/typography/spacing as every Interior/Exterior card, including its
+   own scroll-snap-align: start — so no card-specific sizing rules live
+   here anymore; only the track's own layout (flex row, no-wrap, scroll,
+   gap) does. */
 
 .project-gallery-category-picker {
-  overflow: hidden;
   margin-block-end: var(--space-xl);
-  -webkit-mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
-  mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
 }
 
 .project-gallery-category-track {
   display: flex;
-  width: max-content;
+  flex-wrap: nowrap;
   gap: var(--space-lg);
-  animation: gallery-category-marquee 72s linear infinite;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding-block-end: var(--space-xs);
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--color-dark-gray) 30%, transparent) transparent;
 }
 
-.project-gallery-category-picker:hover .project-gallery-category-track,
-.project-gallery-category-picker:focus-within .project-gallery-category-track {
-  animation-play-state: paused;
+/* Subtle scroll cue (2026-08-29 client request) — the track was previously
+   scrollable but visually indistinguishable from a static row (native
+   scrollbar hidden on all axes), so a 4th category card on desktop had no
+   affordance telling the user more content sat off-screen. Kept light-gray
+   and thin on every breakpoint, not just a hover reveal, since touch
+   devices never get a hover state to rely on. */
+.project-gallery-category-track::-webkit-scrollbar {
+  height: 6px;
 }
 
-@keyframes gallery-category-marquee {
-  from {
-    transform: translateX(0);
-  }
-
-  to {
-    transform: translateX(-50%);
-  }
+.project-gallery-category-track::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .project-gallery-category-track {
-    animation: none;
-  }
+.project-gallery-category-track::-webkit-scrollbar-thumb {
+  background-color: color-mix(in srgb, var(--color-dark-gray) 30%, transparent);
+  border-radius: var(--radius-full, 999px);
 }
 
-/* ---- Gallery Category Picker — Randomized Image Crossfade (2026-08-20
-   client request) ----
-   Each picker card's own random-image swap (site.js, IntersectionObserver-
-   driven as the card re-enters the track's visible/masked area) fades the
-   current thumbnail out before its src changes and back in afterwards,
-   instead of a sudden pop or a possible one-frame broken-image state.
-   Scoped to the picker's own thumbnails only — .gallery-card-image's base
-   rule (Section 26) keeps its existing hover-zoom-only transition
-   untouched for the merged grid below. Disabled under
-   prefers-reduced-motion alongside the marquee itself, since site.js never
-   triggers the swap (and therefore never adds .is-swapping) in that case
-   — this rule is just the matching static fallback. */
-
-.project-gallery-category-track .gallery-card-image {
-  transition:
-    transform var(--transition-base) var(--ease-standard),
-    opacity 220ms var(--ease-standard);
-}
-
-.project-gallery-category-track .gallery-card-image.is-swapping {
-  opacity: 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .project-gallery-category-track .gallery-card-image {
-    transition: none;
-  }
+.project-gallery-category-track::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(in srgb, var(--color-dark-gray) 45%, transparent);
 }
 
 /* ---- Gallery Card ----
@@ -5339,6 +5449,19 @@ select[aria-invalid='true'] {
   font-size: var(--font-size-h3);
   font-style: italic;
   color: var(--color-light-gray);
+}
+
+/* Nysa Gold, Le Jardin, La Via Villalar 1. Etap project-name logo (2026-08-28
+   client request) — replaces .project-catalogue-cta-eyebrow's text for these
+   three slugs only (see _ProjectCatalogue.cshtml). Height pinned to the
+   featured eyebrow's own font-size clamp below so the logo occupies
+   approximately the same visual area as the text it replaces; sizes are a
+   placeholder baseline only, to be revisited later per the client request. */
+.project-catalogue-cta-eyebrow-logo {
+  display: block;
+  height: clamp(1.5rem, 2.75vw, 2rem);
+  width: auto;
+  max-width: 100%;
 }
 
 .project-catalogue-cta-heading {
@@ -5437,7 +5560,15 @@ select[aria-invalid='true'] {
   margin-block-end: 0;
   font-family: 'Montserrat', var(--font-heading);
   font-weight: 700;
-  font-size: clamp(1.875rem, 3.75vw, 3rem);
+  font-size: clamp(2.0625rem, 4.125vw, 3.3rem);
+}
+
+/* "Projeyi Detaylıca Keşfedin" heading only (2026-08-28 request) — swaps in
+   the self-hosted Caviar Dreams family (Section 1), same precedent as
+   #company-overview-heading. ID selector outweighs the compound class rule
+   above without !important; only font-family changes, size/weight untouched. */
+#project-catalogue-heading {
+  font-family: 'Caviar Dreams', var(--font-heading);
 }
 
 .project-catalogue-cta--featured .project-catalogue-cta-button {
@@ -5457,6 +5588,32 @@ select[aria-invalid='true'] {
   border-color: var(--color-accent);
   color: var(--color-white);
   box-shadow: var(--shadow-sm);
+}
+
+/* La Fiore Karabağ (1. Etap) spacing fix (2026-09-11, see
+   _ProjectCatalogue.cshtml's isStandaloneBeforeCtaBanner) — this project has
+   no Daire Planları section after this CTA, so the shared layout's
+   CtaBanner ("Tüm Projeler") strip would otherwise sit directly against
+   this section's own padding-block with no visible separation (both are
+   near-black full-bleed bands). Adds margin-block-end on top of the
+   existing padding so the page's own light background shows through as a
+   clear gap, same responsive scale as the shared .section rhythm elsewhere
+   on the site. Scoped to this one modifier class so no other project's
+   Proje Kataloğunu İndir spacing changes. */
+.project-catalogue-cta--standalone-bottom {
+  margin-block-end: var(--space-2xl);
+}
+
+@media (min-width: 768px) {
+  .project-catalogue-cta--standalone-bottom {
+    margin-block-end: var(--space-3xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .project-catalogue-cta--standalone-bottom {
+    margin-block-end: var(--space-4xl);
+  }
 }
 
 /* ---- Social Facilities ---- */

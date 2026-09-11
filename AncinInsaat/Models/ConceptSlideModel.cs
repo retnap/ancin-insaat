@@ -27,4 +27,13 @@ public class ConceptSlideModel
     public required string Eyebrow { get; init; }
     public required string Title { get; init; }
     public required string Description { get; init; }
+
+    // Media Viewer/lightbox source for an image slide (La Fiore Karabağ
+    // Konsept performance fix, 2026-09-11). Almost always equal to
+    // PosterUrl — every project but La Fiore Karabağ still has PosterUrl
+    // point straight at the original image, same as before this field
+    // existed. Only where ProjectsController swaps PosterUrl for a smaller
+    // card-optimized derivative does LightboxUrl diverge, keeping the full-
+    // resolution original one tap away for anyone who opens the lightbox.
+    public required string LightboxUrl { get; init; }
 }

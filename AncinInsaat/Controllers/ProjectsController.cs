@@ -157,11 +157,22 @@ public class ProjectsController : Controller
             "la-fiore-karabag-2-etap", "ferhunde-hanim-apt", "q-latis"
         };
 
-    // Project Detail Hero background overrides for La Fiore Karabağ 1.
-    // Etap, La Via Villalar 1. Etap and D-Latis (2026-08-20 client
-    // request) — same "freshly uploaded, not yet converted to banner.webp"
-    // treatment as Nysa Gold/Le Jardin below, kept as its own dictionary
-    // so those two projects' existing ternary is left untouched.
+    // Project Detail Hero background overrides for La Via Villalar 1. Etap
+    // and D-Latis (2026-08-20 client request) — same "freshly uploaded, not
+    // yet converted to banner.webp" treatment as Nysa Gold/Le Jardin below,
+    // kept as its own dictionary so those two projects' existing ternary is
+    // left untouched. La Fiore Karabağ 1. Etap had the same entry until the
+    // Konsept performance fix (2026-09-11): its Hero PNG was an 8.3MB RGBA
+    // original (wwwroot/images/projects/la-fiore-karabag/banner/la fiore
+    // banner.png) rendered full-bleed as this page's very first paint, a
+    // real contributor to the reported initial-load stutter. Converted to a
+    // proper banner.webp via the existing pipeline (tools/ThumbnailTool
+    // --single ... --width 1920 --quality 88 — the exact command this
+    // project's own DbSeeder.cs comment already prescribed once a real
+    // source was supplied) and removed from this override, so Details() now
+    // falls through to the default `{slug}/banner.webp` path below like
+    // every non-overridden project. Same source photo, unchanged crop/
+    // framing — only the delivery format changed.
     // Tralles Gold Residence, Alinda Gold Residence, Magnesia Gold
     // Residence and Nlatis (2026-08-20 client request) — same treatment
     // again; these four projects' own banner.webp/cover.webp were removed
@@ -178,13 +189,17 @@ public class ProjectsController : Controller
     private static readonly IReadOnlyDictionary<string, string> HeroBannerImageOverridesBySlug =
         new Dictionary<string, string>
         {
-            ["la-fiore-karabag"] = "/images/projects/la-fiore-karabag/banner/la fiore banner.png",
-            ["kuyulu-la-via-villalar-birinci-etap"] = "/images/projects/kuyulu-la-via-villalar-birinci-etap/banner/lavia banner deneme.png",
+            // Nysa Gold Residence (2026-09-11 client asset addition) — a new
+            // banner photo was dropped into this project's own banner/
+            // folder; overriding here points Details() at it instead of the
+            // default `{slug}/banner.webp` fallback below.
+            ["nysa-gold"] = "/images/projects/nysa-gold/banner/nysa-gold-banner.jpeg",
+            ["kuyulu-la-via-villalar-birinci-etap"] = "/images/projects/kuyulu-la-via-villalar-birinci-etap/banner/la-via-banner.png",
             ["davutlar-d-latis"] = "/images/projects/davutlar-d-latis/banner/dlatis banner deneme.png",
             ["tralles-gold"] = "/images/projects/tralles-gold/banner/tralles banner deneme.png",
             ["alinda-gold"] = "/images/projects/alinda-gold/banner/alinda banner deneme.png",
             ["magnesia-gold"] = "/images/projects/magnesia-gold/banner/magnesia banner deneme.png",
-            ["nlatis"] = "/images/projects/nlatis/banner/nlatis banner deneme.png",
+            ["nlatis"] = "/images/projects/nlatis/banner/n-latis-banner.jpeg",
             ["ferhunde-hanim-apt"] = "/images/projects/ferhunde-hanim-apt/banner/ferhunde banner deneme.png",
             ["la-fiore-karabag-2-etap"] = "/images/projects/la-fiore-karabag-2-etap/banner/lafiore 2.etap banner deneme.png",
             ["q-latis"] = "/images/projects/q-latis/banner/hacıfeyzullah banner deneme.png"
@@ -307,7 +322,16 @@ public class ProjectsController : Controller
             })
             .ToList();
 
-        var galleryCategories = galleryImages
+        // Derived from project.Images (pre file-existence filter), not
+        // galleryImages, so a category can be offered in the dropdown/
+        // category-card picker before any of its photos exist on disk yet —
+        // e.g. Tralles Gold Residence / Magnesia Gold Residence's "Social
+        // Areas" row (DbSeeder.cs), added structurally ahead of the client's
+        // photos with a not-yet-uploaded ImagePath. Its own images stay
+        // correctly absent from galleryImages/the merged "Tüm Görseller"
+        // grid until a real file exists; only the picker/dropdown entry
+        // shows early (2026-08-28 Gallery Category Picker revision).
+        var galleryCategories = project.Images
             .Select(image => image.Category)
             .Where(category => !string.IsNullOrWhiteSpace(category))
             .Select(category => category!)
@@ -389,6 +413,7 @@ public class ProjectsController : Controller
                 {
                     MediaType = ConceptMediaType.Video,
                     PosterUrl = video.PosterPath,
+                    LightboxUrl = video.PosterPath,
                     VideoUrl = video.VideoPath,
                     Eyebrow = video.Eyebrow,
                     Title = video.Title,
@@ -399,7 +424,8 @@ public class ProjectsController : Controller
                     .Select(image => new { image.DisplayOrder, Slide = new ConceptSlideModel
                     {
                         MediaType = ConceptMediaType.Image,
-                        PosterUrl = image.ImagePath,
+                        PosterUrl = ResolveConceptCardImage(project.Slug, image.ImagePath),
+                        LightboxUrl = image.ImagePath,
                         VideoUrl = null,
                         Eyebrow = image.Eyebrow,
                         Title = image.Title,
@@ -548,6 +574,29 @@ public class ProjectsController : Controller
     {
         var thumbnailPath = ImagePathHelper.GetThumbnailPath(originalPath);
         return FileExistsInWebRoot(thumbnailPath) ? thumbnailPath : originalPath;
+    }
+
+    // La Fiore Karabağ (1. Etap) Konsept performance fix, 2026-09-11 — its 3
+    // Konsept slides reuse full Gallery originals (10-35MB camera JPEGs,
+    // gallery/exterior/originals/1.jpg/3.jpg/13.jpg) as their card image, the
+    // exact files ResolveThumbnail already swaps for a ~100KB WebP thumbnail
+    // everywhere else on this page (Gallery grid, Cover). The Concept
+    // carousel never called ResolveThumbnail for any project (PosterUrl above
+    // always used the raw ImagePath) — every other project's Konsept images
+    // happen to already be small pre-optimized files (a dedicated banner/
+    // concept asset, not a raw camera original), so nothing there ever
+    // surfaced this. Scoped to this one slug — rather than resolving a
+    // thumbnail for every project's ConceptImages — so no other project's
+    // rendered Konsept output changes; ConceptSlideModel.LightboxUrl still
+    // carries the untouched original for the Media Viewer/lightbox.
+    private static readonly HashSet<string> ConceptCardThumbnailSlugs = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "la-fiore-karabag"
+    };
+
+    private string ResolveConceptCardImage(string slug, string originalImagePath)
+    {
+        return ConceptCardThumbnailSlugs.Contains(slug) ? ResolveThumbnail(originalImagePath) : originalImagePath;
     }
 
     // Shared by ResolveCoverImage and Details' Gallery/Floor Plans filtering

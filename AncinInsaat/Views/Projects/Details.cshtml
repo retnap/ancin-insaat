@@ -10,12 +10,13 @@
     and SeoStructuredDataViewComponent.
 
     Page flow: Breadcrumb → Hero (full-viewport, HeroBannerProjectDetail) →
-    Concept (media + text panel, folds in Project Information) → Location &
-    Distances (conditional) → Gallery (category-filterable) → Project
+    Concept (media + text panel, folds in Project Information) → Gallery
+    (category-filterable) → Location & Distances (conditional) → Project
     Catalogue (conditional) → Social Facilities (conditional) → Floor Plans
-    (conditional) → shared Media Viewer dialog. See docs/14_Decisions.md for
-    the full rationale and the data model additions (ProjectImage.Category,
-    ProjectNearbyPlace) this redesign introduced.
+    (conditional) → shared Media Viewer dialog. Gallery/Location order
+    swapped from the original redesign (client revision, 2026-08-28) — see
+    docs/14_Decisions.md for the full rationale and the data model additions
+    (ProjectImage.Category, ProjectNearbyPlace) this redesign introduced.
 *@
 
 @* Nysa Gold Residence reference redesign (2026-08-07), rolled out to every
@@ -47,6 +48,12 @@
     </div>
 </section>
 
+<section class="section project-gallery-section" id="project-gallery" aria-labelledby="project-gallery-heading">
+    <div class="container">
+        <partial name="_ProjectGallery" model="Model" />
+    </div>
+</section>
+
 @if (!string.IsNullOrWhiteSpace(Model.Information.Location) || Model.NearbyPlaces.Count > 0)
 {
     <section class="section project-location-section project-location-section--decorative" id="project-location" aria-labelledby="project-location-heading">
@@ -55,12 +62,6 @@
         </div>
     </section>
 }
-
-<section class="section project-gallery-section" id="project-gallery" aria-labelledby="project-gallery-heading">
-    <div class="container">
-        <partial name="_ProjectGallery" model="Model" />
-    </div>
-</section>
 
 @* Alinda Gold Residence, Magnesia Gold Residence, Tralles Gold Residence and
    N Latis (client request, 2026-08-17) — the "Projeyi Detaylıca Keşfedin"
@@ -90,14 +91,17 @@
    existing BuildPlaceholderFloorPlans stand-in), so this is purely additive
    — none of them can reach the new branch.
 
-   Tralles Gold Residence, N Latis, Alinda Gold Residence, Magnesia Gold
-   Residence and La Fiore Karabağ (client request, 2026-08-19) — none of
-   these five projects have floor plans, so the entire Planlar section is
-   hidden for them specifically. Same slug-gated pattern already used above
-   for the Projeyi Detaylıca Keşfedin section (Model.CatalogueUrl check).
-   FloorPlans data/seed rows are untouched — only the section's rendering is
-   suppressed. *@
-@if (Model.Slug is not ("tralles-gold" or "nlatis" or "alinda-gold" or "magnesia-gold" or "la-fiore-karabag"))
+   Tralles Gold Residence, N Latis, Alinda Gold Residence and Magnesia Gold
+   Residence (client request, 2026-08-19) — none of these four projects have
+   floor plans, so the entire Planlar section is hidden for them
+   specifically. Same slug-gated pattern already used above for the Projeyi
+   Detaylıca Keşfedin section (Model.CatalogueUrl check). FloorPlans
+   data/seed rows are untouched — only the section's rendering is
+   suppressed. La Fiore Karabağ (1. Etap) was in this list too until real
+   Daire Planları artwork was supplied (2026-09-11, see
+   BuildLaFioreKarabagFloorPlans/ReconcileLaFioreKarabagDairePlanlariAsync)
+   — removed so its now-real 1+1/2+1/3+1/4+1 plans actually render. *@
+@if (Model.Slug is not ("tralles-gold" or "nlatis" or "alinda-gold" or "magnesia-gold"))
 {
     <section class="section project-floorplans-section project-floorplans-section--decorative" id="project-floor-plans" aria-labelledby="project-floorplans-heading">
         <div class="container">

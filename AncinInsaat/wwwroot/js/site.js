@@ -1069,6 +1069,7 @@
   var nextBtn = viewer.querySelector('[data-media-viewer-next]');
   var closeBtn = viewer.querySelector('.media-viewer-close');
   var closers = Array.prototype.slice.call(viewer.querySelectorAll('[data-media-viewer-close]'));
+  var panelEl = viewer.querySelector('.media-viewer-panel');
 
   // ---- Zoom / Pan / Fullscreen (La Fiore Karabağ 2. Etap Vaziyet Planı/
   // Concept/Gallery phase, 2026-08-09) — upgrades this one shared instance
@@ -1285,6 +1286,25 @@
   closers.forEach(function (closer) {
     closer.addEventListener('click', close);
   });
+
+  // Backdrop click-to-close (2026-09-06) — .media-viewer-panel is a
+  // position:relative box sized to the full viewport (100%/100%) so its
+  // flex centering can lay out the figure/toolbar/nav/counter; that means
+  // clicks on the empty area around the image land on the panel itself,
+  // not on .media-viewer-backdrop underneath it (data-media-viewer-close
+  // alone never fires for them). Closing only when the click target is the
+  // panel element itself — never a descendant — means clicks on the image,
+  // toolbar, nav arrows and close button (all descendants) are unaffected;
+  // this is the shared instance every trigger group (Gallery, Floor Plans,
+  // Concept, Site Plan/Vaziyet Planı) reuses, so the fix applies everywhere
+  // at once with no per-project changes.
+  if (panelEl) {
+    panelEl.addEventListener('click', function (event) {
+      if (event.target === panelEl) {
+        close();
+      }
+    });
+  }
 
   prevBtn.addEventListener('click', showPrev);
   nextBtn.addEventListener('click', showNext);
@@ -2004,10 +2024,11 @@
   });
 
   // ---- Category Picker (Nysa Gold Residence reference redesign,
-  // 2026-08-07) ----
-  // "Tüm Görseller" shows the looping category cards below instead of the
+  // 2026-08-07; static layout revision, 2026-08-28) ----
+  // "Tüm Görseller" shows the static category cards below instead of the
   // merged grid. Gated entirely by the picker's presence in the DOM (only
-  // rendered for Nysa Gold), so this is a safe no-op everywhere else.
+  // rendered when the project has 1+ named categories), so this is a safe
+  // no-op everywhere else.
   //
   // UI revision (2026-08-07): picking a card no longer routes through
   // selectOption/setCategory — that swapped this picker for the filtered
@@ -2047,185 +2068,6 @@
         categoryCards[0].click();
       });
     });
-
-    // ---- Category Picker — Randomized Card Images (2026-08-20 client
-    // request) ----
-    // Each picker card previously always showed the same single image
-    // (server-rendered as the category's first match). categoryImagePools
-    // reuses the merged grid's own cards below — the same images, in the
-    // same order, the dropdown's real category filter already draws from —
-    // rather than duplicating that data server-side. A category with only
-    // one image is simply never swapped (nothing else to pick).
-    var categoryImagePools = {};
-
-    cards.forEach(function (card) {
-      var category = card.getAttribute('data-gallery-category');
-      var cardImage = card.querySelector('.gallery-card-image');
-
-      if (!category || !cardImage) {
-        return;
-      }
-
-      if (!categoryImagePools[category]) {
-        categoryImagePools[category] = [];
-      }
-
-      categoryImagePools[category].push({ src: cardImage.currentSrc || cardImage.src, alt: cardImage.alt });
-    });
-
-    // ---- Category Picker — Cross-Category Duplicate Prevention (2026-08-20
-    // client request) ----
-    // "Dış Mekan Görselleri" and "Sosyal Alan Görselleri" can legitimately
-    // share the same underlying photos (Sosyal Alan is curated as
-    // copies/references of Exterior shots — same ProjectImage.ImagePath,
-    // a second row with a different Category, no file duplication — see
-    // DbSeeder.cs), so their two picker cards can end up showing the exact
-    // same photo at the same time. Every other category pair is unrelated
-    // content and keeps the existing independent-random behaviour above
-    // untouched. lastShownSrcByCategory tracks, per category label, the src
-    // most recently chosen for it — seeded here from the same first-match
-    // image the server already rendered, so the very first cross-check
-    // (before either card has swapped even once) is already correct.
-    var CROSS_CHECK_PARTNER = {
-      'Dış Mekan Görselleri': 'Sosyal Alan Görselleri',
-      'Sosyal Alan Görselleri': 'Dış Mekan Görselleri'
-    };
-    var lastShownSrcByCategory = {};
-
-    Object.keys(categoryImagePools).forEach(function (category) {
-      var pool = categoryImagePools[category];
-      if (pool.length) {
-        lastShownSrcByCategory[category] = pool[0].src;
-      }
-    });
-
-    function pickRandomCategoryImage(category, currentSrc) {
-      var pool = categoryImagePools[category];
-
-      if (!pool || pool.length < 2) {
-        return null;
-      }
-
-      // Hard constraint: never end up matching the paired category's
-      // currently-shown image. If every image in this pool happens to equal
-      // that (only possible with a very small pool), fall back to the full
-      // pool rather than refusing to render anything — graceful degradation
-      // over breaking the randomization.
-      var partnerCategory = CROSS_CHECK_PARTNER[category];
-      var partnerSrc = partnerCategory ? lastShownSrcByCategory[partnerCategory] : null;
-      var choices = partnerSrc
-        ? pool.filter(function (entry) { return entry.src !== partnerSrc; })
-        : pool.slice();
-
-      if (!choices.length) {
-        choices = pool;
-      }
-
-      // Soft preference: avoid immediately repeating this same card's
-      // current image when another valid option exists.
-      var preferred = choices.filter(function (entry) {
-        return entry.src !== currentSrc;
-      });
-
-      if (preferred.length) {
-        choices = preferred;
-      }
-
-      var picked = choices[Math.floor(Math.random() * choices.length)];
-
-      // Recorded synchronously (not after the crossfade delay below) so
-      // that if the paired category's card swaps within the same
-      // animation-frame pass, it already sees this pick and avoids it too.
-      lastShownSrcByCategory[category] = picked.src;
-
-      return picked;
-    }
-
-    // Swaps one picker card's own thumbnail to a freshly-picked random
-    // image from its category's pool. Preloads the replacement first so
-    // the swap only ever happens once it has actually finished loading —
-    // never a broken-image flash — then fades the visible <img> out,
-    // swaps its src while invisible, and fades it back in (site.css
-    // "Gallery Category Picker — Randomized Image Crossfade"), so the
-    // change never pops or flickers mid-scroll.
-    function swapPickerCardImage(card) {
-      var category = card.getAttribute('data-gallery-category-card');
-      var cardImage = card.querySelector('.gallery-card-image');
-
-      if (!category || !cardImage) {
-        return;
-      }
-
-      var next = pickRandomCategoryImage(category, cardImage.currentSrc || cardImage.src);
-
-      if (!next) {
-        return;
-      }
-
-      var preload = new Image();
-      preload.onload = function () {
-        cardImage.classList.add('is-swapping');
-        window.setTimeout(function () {
-          cardImage.src = next.src;
-          if (next.alt) {
-            cardImage.alt = next.alt;
-          }
-          cardImage.classList.remove('is-swapping');
-        }, 220);
-      };
-      preload.src = next.src;
-    }
-
-    // Re-randomizes a card's image every time it (re-)enters the picker's
-    // own visible/masked area — not just once on page load — so the same
-    // category card can show a different image each time the marquee loop
-    // brings it back into view.
-    //
-    // Deliberately NOT IntersectionObserver (2026-08-20 fix — that was the
-    // original approach here and never actually re-fired as the track
-    // scrolled): this track's cards move purely via a CSS `transform`
-    // animation with no scroll/resize event ever firing, and
-    // IntersectionObserver re-evaluation on transform-only animation is
-    // inconsistently implemented across engines — Firefox needs an
-    // explicit rAF nudge to notice at all (Mozilla bug 1419339, "doesn't
-    // fire on transform animations unless rAF") and WebKit has its own
-    // history of stale/incorrect results here (w3c/IntersectionObserver
-    // #484). Polling each card's actual getBoundingClientRect() on every
-    // animation frame instead sidesteps all of that — it always reflects
-    // the live, transform-applied position, on every engine. The picker's
-    // own box (not the mask-image's cosmetic edge fade) is what actually
-    // clips the track via `overflow: hidden`, so comparing against
-    // picker.getBoundingClientRect() reproduces the old `root: picker`
-    // boundary exactly. Skipped entirely under prefers-reduced-motion,
-    // matching the marquee animation itself, which is already disabled in
-    // that case (site.css), so a reduced-motion visitor never sees the
-    // image change unpredictably underneath them.
-    if (!reducedMotion) {
-      var cardWasVisible = pickerCards.map(function () {
-        return false;
-      });
-
-      var checkPickerCardVisibility = function () {
-        var pickerRect = picker.getBoundingClientRect();
-
-        pickerCards.forEach(function (card, index) {
-          var cardRect = card.getBoundingClientRect();
-          var overlap = Math.min(cardRect.right, pickerRect.right) - Math.max(cardRect.left, pickerRect.left);
-          var visibleRatio = cardRect.width > 0 ? Math.max(0, overlap) / cardRect.width : 0;
-          var isVisible = visibleRatio >= 0.15;
-
-          if (isVisible && !cardWasVisible[index]) {
-            swapPickerCardImage(card);
-          }
-
-          cardWasVisible[index] = isVisible;
-        });
-
-        window.requestAnimationFrame(checkPickerCardVisibility);
-      };
-
-      window.requestAnimationFrame(checkPickerCardVisibility);
-    }
 
     var navGroup = gallerySection.querySelector('.project-gallery-nav-group');
 

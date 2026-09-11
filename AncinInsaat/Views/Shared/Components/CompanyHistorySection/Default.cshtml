@@ -8,17 +8,23 @@
     1. Shared _TimelineHeader (oversized decorative watermark + centered
        readable heading) — full width, its own row at the very top,
        above the two-column content below.
-    2. Two-column row: the left column stacks VideoShowcase (small
-       teaser) directly above HistoryInfoPanel (small title + prev/next
+    2. Two-column row: the left column stacks a small photo teaser
+       directly above HistoryInfoPanel (small title + prev/next
        — nothing else); the right column is the independent
        HistoryCarousel, unchanged.
 
     data-reveal-group nests two levels (grid -> info column ->
     HistoryInfoPanel's own title/nav) so the fade-in stagger follows the
-    requested order: video, small title, arrows, cards. _TimelineHeader
+    requested order: photo, small title, arrows, cards. _TimelineHeader
     carries its own standalone data-reveal. _HistoryCarousel's own track
     keeps its separate nested group for the cards, independent of this
     ordering.
+
+    Media swap (2026-08-28 request): this slot originally held the
+    VideoShowcase teaser; it now shows the "50 Yıllık Tecrübe" photograph
+    (wrapped in its own data-reveal div, since _ImageBlock itself carries
+    none) — see Views/Shared/Components/CompanyOverview/Default.cshtml for
+    the flip side of the swap.
 *@
 
 <section class="section company-history" id="company-history" aria-labelledby="@Model.Header.HeadingId">
@@ -26,7 +32,9 @@
         <partial name="_TimelineHeader" model="Model.Header" />
         <div class="company-history-grid" data-reveal-group>
             <div class="company-history-info-col" data-reveal-group>
-                <partial name="_VideoShowcase" model="Model.Video" />
+                <div class="company-history-image-wrap" data-reveal>
+                    <partial name="_ImageBlock" model="Model.Image" />
+                </div>
                 <partial name="_HistoryInfoPanel" model="Model.InfoPanel" />
             </div>
             <div class="company-history-carousel-col" data-reveal>

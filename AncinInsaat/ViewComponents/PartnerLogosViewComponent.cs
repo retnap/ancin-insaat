@@ -32,8 +32,15 @@ public class PartnerLogosViewComponent : ViewComponent
         ("/images/logos/project-logos/logo_07-removebg-preview.png", "La Fiore Karabağ 2. Etap"),
         ("/images/logos/project-logos/logo_08-removebg-preview.png", "Le Jardin"),
         ("/images/logos/project-logos/logo_09-removebg-preview.png", "La Via Villalar 1. Etap"),
-        ("/images/logos/project-logos/logo_10-removebg-preview.png", "Nysa Gold Residence"),
-        ("/images/logos/project-logos/logo_11-removebg-preview.png", "Davutlar D Latis")
+        ("/images/logos/project-logos/logo_10-removebg-preview.png", "Nysa Gold Residence")
+        // "Davutlar D Latis" (logo_11) removed (D-Latis/Q-Latis unpublish,
+        // 2026-08-28) — this list is matched against
+        // GetPublishedProjectsAsync() at line 48 below, which no longer
+        // includes D-Latis, so keeping its entry here throws
+        // KeyNotFoundException on the slugsByName lookup. The logo file
+        // itself is untouched on disk; only this trust-strip entry is
+        // excluded, consistent with D-Latis being unpublished everywhere
+        // else. Q-Latis was never in this list.
     };
 
     private readonly IProjectQueryService _projectQueryService;

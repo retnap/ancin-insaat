@@ -83,64 +83,49 @@ else
         })" />
     </div>
 
-    @* Nysa Gold Residence reference redesign (2026-08-07), rolled out to
-       every project (2026-08-08) — replaces the immediate merged grid under
-       "Tüm Görseller" with a continuously looping (right-to-left) row of
-       category picker cards. Each real card is duplicated once
-       (aria-hidden, tabindex="-1") purely so the CSS marquee loop (site.css)
-       has a second copy to scroll into — see site.js for how the duplicate
-       is excluded from both tab order and the click handler.
+    @* Category Cards under "Tüm Görseller" (Nysa Gold Residence reference
+       redesign, 2026-08-07; rolled out to every project, 2026-08-08) —
+       replaces the immediate merged grid with one static card per gallery
+       category, side by side. Static row/wrap layout (2026-08-28 revision —
+       replaces the previous continuously-looping marquee, which duplicated
+       this same set 6× and animated it via CSS transform; see site.css/
+       site.js history for that removed implementation). Each real card
+       renders exactly once — no duplication, no auto-scroll.
 
-           UI revision (2026-08-07): picker cards now render as plain
-           .gallery-card markup (same <img>/overlay/title structure as every
-           Interior/Exterior card below) instead of a bespoke
-           background-image button, so they share the exact same width,
-           height, border radius, typography and spacing — no separate card
-           design. Clicking one no longer routes through the dropdown's
-           selectOption/setCategory (which used to swap this picker for the
-           filtered grid); site.js instead opens the existing Media Viewer
-           directly, scoped to every image in that category, so "Tüm
-           Görseller" itself never navigates away. The dropdown and
-           applyFilters/setCategory architecture are otherwise completely
-           untouched — selecting a category from the dropdown still swaps to
-           the filtered grid exactly as before. *@
-        @* UI revision (2026-08-07): the set is now duplicated 6× (not 2×) —
-           with only 2-3 categories, 2 copies produced a track shorter than
-           many viewports, so the loop's full content was visible at once and
-           read as a short, obviously-repeating strip rather than an endless
-           one. 6 is still an even number, so the CSS marquee's translateX
-           (-50%) still lands exactly on an identical second half (site.css
-           "Gallery Category Picker" — its animation-duration was scaled up
-           3× alongside this change to keep the same per-card scroll speed,
-           just over a longer, less perceptible cycle. *@
+       Picker cards render as plain .gallery-card markup (same <img>/
+       overlay/title structure as every Interior/Exterior card below), so
+       they share the exact same width, height, border radius, typography
+       and spacing — no separate card design. Clicking one does not route
+       through the dropdown's selectOption/setCategory (which would swap
+       this picker for the filtered grid); site.js instead opens the
+       existing Media Viewer directly, scoped to every image in that
+       category, so "Tüm Görseller" itself never navigates away. The
+       dropdown and applyFilters/setCategory architecture are otherwise
+       completely untouched — selecting a category from the dropdown still
+       swaps to the filtered grid exactly as before. *@
     @* Only meaningful when there's at least one named category to pick from
        — a project with zero named categories (e.g. La Via AVM, every
-       image's Category left null) has nothing for the marquee to loop
-       through, so it keeps the plain merged grid below instead, exactly as
-       it did before this section existed. *@
+       image's Category left null) has nothing to show cards for, so it
+       keeps the plain merged grid below instead, exactly as it did before
+       this section existed. *@
     @if (Model.GalleryCategories.Count > 0)
     {
         <div class="project-gallery-category-picker" data-gallery-category-picker>
             <div class="project-gallery-category-track" data-gallery-category-track>
-                @for (var loopIndex = 0; loopIndex < 6; loopIndex++)
+                @foreach (var category in Model.GalleryCategories)
                 {
-                    @foreach (var category in Model.GalleryCategories)
-                    {
-                        var firstCategoryImage = Model.GalleryImages.FirstOrDefault(image => string.Equals(image.Category, category.Value, StringComparison.OrdinalIgnoreCase));
+                    var firstCategoryImage = Model.GalleryImages.FirstOrDefault(image => string.Equals(image.Category, category.Value, StringComparison.OrdinalIgnoreCase));
 
-                        <button type="button"
-                                class="gallery-card"
-                                data-gallery-category-card="@category.Label"
-                                tabindex="@(loopIndex == 0 ? "0" : "-1")"
-                                aria-hidden="@(loopIndex == 0 ? "false" : "true")">
-                            @if (firstCategoryImage is not null)
-                            {
-                                <img class="gallery-card-image" src="@firstCategoryImage.ThumbnailSrc" alt="" loading="lazy" decoding="async" />
-                            }
-                            <span class="gallery-card-overlay" aria-hidden="true"></span>
-                            <span class="gallery-card-title">@category.Label</span>
-                        </button>
-                    }
+                    <button type="button"
+                            class="gallery-card"
+                            data-gallery-category-card="@category.Label">
+                        @if (firstCategoryImage is not null)
+                        {
+                            <img class="gallery-card-image" src="@firstCategoryImage.ThumbnailSrc" alt="" loading="lazy" decoding="async" />
+                        }
+                        <span class="gallery-card-overlay" aria-hidden="true"></span>
+                        <span class="gallery-card-title">@category.Label</span>
+                    </button>
                 }
             </div>
         </div>
