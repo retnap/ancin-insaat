@@ -78,12 +78,18 @@ public class ProjectsShowcaseViewComponent : ViewComponent
     // (slug "la-fiore-karabag") gets a first entry here for the same
     // reason; it is Completed today so, like the other Completed slugs
     // above, this is a no-op until the project is ever marked Ongoing.
+    // Kuyulu La Via Villalar 1. Etap was missed in that same 2026-09-17
+    // sync (its entry below still pointed at the old
+    // proje-karti/card-background.webp); fixed here to match
+    // ProjectsController.HeroBannerImageOverridesBySlug's
+    // "kuyulu-la-via-villalar-birinci-etap" entry, same reasoning as the
+    // six above.
     private static readonly IReadOnlyDictionary<string, string> CardImageOverridesBySlug =
         new Dictionary<string, string>
         {
             ["nysa-gold"] = "/images/projects/nysa-gold/proje-karti/card-background.webp",
             ["le-jardin"] = "/images/projects/le-jardin/banner/le-jardin-yeni-banner.png",
-            ["kuyulu-la-via-villalar-birinci-etap"] = "/images/projects/kuyulu-la-via-villalar-birinci-etap/proje-karti/card-background.webp",
+            ["kuyulu-la-via-villalar-birinci-etap"] = "/images/projects/kuyulu-la-via-villalar-birinci-etap/banner/la-via-banner.png",
             ["davutlar-d-latis"] = "/images/projects/davutlar-d-latis/proje-karti/card-background.webp",
             ["tralles-gold"] = "/images/projects/tralles-gold/banner/tralles-gold-yeni-banner.jpeg",
             ["alinda-gold"] = "/images/projects/alinda-gold/banner/alinda-gold-yeni-banner.jpeg",

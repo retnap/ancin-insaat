@@ -3444,6 +3444,7 @@ public static class DbSeeder
         await ReconcileMagnesiaGoldRemoveBasketballCourt2Async(context);
         await ReconcileMagnesiaGoldConceptFirstImageAsync(context);
         await ReconcileAlindaGoldConceptFirstImageAsync(context);
+        await ReconcileAlindaGoldConceptSingleCardAsync(context);
         await ReconcileAlindaGoldNewSocialAreasGalleryAsync(context);
         await ReconcileTrallesGoldConceptSingleCardAsync(context);
         await ReconcileTrallesGoldNewSocialAreasGalleryAsync(context);
@@ -5502,16 +5503,21 @@ public static class DbSeeder
         return images;
     }
 
-    // Concept section's 3-slide image carousel (Alinda Gold Residence
-    // revision, 2026-08-10) — this project has no concept video, so it gets
-    // the image-only carousel, same shared markup as La Fiore Karabağ 2.
-    // Etap's (see _ProjectConcept.cshtml). Images are 3 of the 8 exterior
-    // photos above, chosen for visual variety (a wide establishing dusk
-    // shot, an aerial social/garden shot, an illuminated night entrance
-    // shot) rather than arbitrarily. Copy is written specifically for this
-    // project from what these three photos actually show — no invented
-    // facilities, distances or figures, per the client's explicit
-    // instruction not to fabricate project details.
+    // Concept section's image carousel (Alinda Gold Residence revision,
+    // 2026-08-10) — this project has no concept video, so it gets the
+    // image-only carousel, same shared markup as La Fiore Karabağ 2. Etap's
+    // (see _ProjectConcept.cshtml). Copy is written specifically for this
+    // project from what the photo actually shows — no invented facilities,
+    // distances or figures, per the client's explicit instruction not to
+    // fabricate project details.
+    // Collapsed to a single card (2026-09-17 client request, same "keep the
+    // first slide only" shape as ReconcileTrallesGoldConceptSingleCardAsync)
+    // — the other two slides (exterior-06.jpg/exterior-08.jpg) are removed
+    // here so a brand-new database seeds straight to one card; an
+    // already-seeded database is converged by
+    // ReconcileAlindaGoldConceptSingleCardAsync below. Their photo files
+    // stay on disk untouched, same as every other Concept-slide removal in
+    // this file.
     private static List<ProjectConceptImage> BuildAlindaGoldConceptImages()
     {
         return new List<ProjectConceptImage>
@@ -5523,22 +5529,6 @@ public static class DbSeeder
                 Title = "Gün Batımında Yükselen Kıvrımlı Mimari",
                 Description = "Didim'in ufkunda yükselen Alinda Gold Residence, akıcı hatları ve zarif çatı aydınlatmasıyla şehrin siluetine yeni bir karakter katıyor. Alacakaranlıkta ışıldayan cepheleri, gündüzün enerjisini gecenin sakinliğiyle buluşturan bir yaşam deneyimi vaat ediyor.",
                 DisplayOrder = 1
-            },
-            new()
-            {
-                ImagePath = "/images/projects/alinda-gold/gallery/exterior/originals/exterior-06.jpg",
-                Eyebrow = "Bloklar Arasında Yeşil Bir Soluk",
-                Title = "Peyzajla Bütünleşen Ortak Yaşam Alanları",
-                Description = "Bloklar arasına özenle yerleştirilen havuz, yürüyüş yolları ve peyzaj alanları, Alinda Gold Residence sakinlerine güne açık havada başlama ve günü dinginlikle bitirme imkânı sunuyor. Yeşilin ve mimarinin bu uyumu, projeye günlük yaşamın ötesinde bir ayrıcalık katıyor.",
-                DisplayOrder = 2
-            },
-            new()
-            {
-                ImagePath = "/images/projects/alinda-gold/gallery/exterior/originals/exterior-08.jpg",
-                Eyebrow = "Işıkla Karşılanan Bir Giriş",
-                Title = "Akşamın İçinde Zarif Bir Karşılama",
-                Description = "Alinda Gold Residence'ın girişi, özenli aydınlatma tasarımı ve ferah kompozisyonuyla her akşam sakinlerini ve konuklarını şıklıkla karşılıyor. Bu ilk izlenim, projenin genelinde hissedilen premium yaklaşımın habercisi niteliğinde.",
-                DisplayOrder = 3
             }
         };
     }
@@ -7625,6 +7615,38 @@ public static class DbSeeder
 
         firstSlide.ImagePath = correctImagePath;
         await context.SaveChangesAsync();
+    }
+
+    // Client decision (2026-09-17): Alinda Gold Residence's Konsept carousel
+    // collapses to a single card, keeping only the first slide (the
+    // client-supplied alinda-konsept-foto.png set by
+    // ReconcileAlindaGoldConceptFirstImageAsync above) — same shape as
+    // ReconcileTrallesGoldConceptSingleCardAsync. Not a seed —
+    // BuildAlindaGoldConceptImages alone only affects a brand-new insert;
+    // this project's three rows were seeded long before this change (via
+    // ReconcileAlindaGoldResidenceRevisionAsync) and never get replayed.
+    // The removed slides' exterior-06.jpg/exterior-08.jpg files stay on disk
+    // untouched — only their ProjectConceptImages rows are removed. With
+    // only one row left, _ProjectConcept.cshtml's existing `slides.Count > 1`
+    // guard drops the carousel's prev/next arrows on its own — no markup
+    // change needed. Guarded so this is a safe no-op once already applied.
+    private static async Task ReconcileAlindaGoldConceptSingleCardAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.ConceptImages)
+            .FirstOrDefaultAsync(p => p.Slug == "alinda-gold");
+
+        if (project is null)
+        {
+            return;
+        }
+
+        var extraSlides = project.ConceptImages.Where(i => i.DisplayOrder != 1).ToList();
+        if (extraSlides.Count > 0)
+        {
+            context.ProjectConceptImages.RemoveRange(extraSlides);
+            await context.SaveChangesAsync();
+        }
     }
 
     // Client-supplied Social Areas batch (2026-09-04): 10 photos dropped
