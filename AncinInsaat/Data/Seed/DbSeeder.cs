@@ -3447,6 +3447,8 @@ public static class DbSeeder
         await ReconcileAlindaGoldNewSocialAreasGalleryAsync(context);
         await ReconcileTrallesGoldConceptSingleCardAsync(context);
         await ReconcileTrallesGoldNewSocialAreasGalleryAsync(context);
+        await ReconcileTrallesGoldExteriorInteriorGalleryReplacementAsync(context);
+        await ReconcileAlindaGoldExteriorInteriorGalleryReplacementAsync(context);
         await ReconcileLaFioreKarabag2EtapExteriorSocialAreasRevisionAsync(context);
         await ReconcileLaFioreKarabag2EtapInteriorExpansionAsync(context);
         await ReconcileKuyuluLaViaVillalarGaleriRevizesiAsync(context);
@@ -3986,9 +3988,12 @@ public static class DbSeeder
                 // rather than shown as "coming soon" (previous behavior via
                 // CatalogueComingSoon, see ReconcileFerhundeHanimAptRemoveCatalogueAsync
                 // for the same fix applied to an already-seeded row).
-                // Location & Distances section photo (2026-08-10) — see
-                // BuildFerhundeHanimAptSitePlanImages above for why this
-                // shares its source photo with the site plan.
+                // Location & Distances section photo (2026-09-17 update) —
+                // konum/ferhunde-hanim-lokasyon.png converted to WebP via
+                // ThumbnailTool --single (1200w/88q), replacing the previous
+                // location photo for this project only in the Location &
+                // Distances section. Path unchanged; only location.webp's
+                // content was regenerated from the new source.
                 LocationImagePath = "/images/projects/ferhunde-hanim-apt/location.webp",
                 DisplayOrder = 11,
                 IsFeatured = false,
@@ -6897,18 +6902,26 @@ public static class DbSeeder
                 ("Örsdemir Balkan İlkokulu", "400 m"),
                 ("Aydın Polis Meslek Yüksekokulu", "1.9 km"),
                 ("Aydın Bil Koleji", "2.2 km")
+            },
+            ["ferhunde-hanim-apt"] = new[]
+            {
+                ("Aydın Atatürk Devlet Hastanesi", "400 m"),
+                ("Aydın Tren Garı", "1.4 km"),
+                ("Aydın Adnan Menderes Üniversitesi", "4.1 km"),
+                ("Aydın Otogar", "1.1 km"),
+                ("Forum Aydın", "2.6 km"),
+                ("Aydın Atatürk Kent Meydanı", "1.3 km")
             }
         };
 
     // Not a seed — backfills/corrects the "Yakındaki Önemli Noktalar"
-    // (Location & Distances) section for the nine projects above with
+    // (Location & Distances) section for the ten projects above with
     // client-supplied data; see NearbyPlacesResearch. Explicitly does not
-    // touch any other project (including q-latis, kuyulu-avm, ferhunde-
-    // hanim-apt and davutlar-d-latis, none of which appear in the table),
-    // so a project with no verified address keeps whatever NearbyPlaces it
-    // already had — none, in every current case. Safe to run every
-    // startup: a no-op per project once its NearbyPlaces rows already
-    // match the table exactly.
+    // touch any other project (including q-latis, kuyulu-avm and davutlar-
+    // d-latis, none of which appear in the table), so a project with no
+    // verified address keeps whatever NearbyPlaces it already had — none,
+    // in every current case. Safe to run every startup: a no-op per
+    // project once its NearbyPlaces rows already match the table exactly.
     private static async Task ReconcileNearbyPlacesResearchAsync(AppDbContext context)
     {
         foreach (var (slug, desired) in NearbyPlacesResearch)
@@ -7690,6 +7703,85 @@ public static class DbSeeder
         await context.SaveChangesAsync();
     }
 
+    // Client-supplied Exterior/Interior photo replacement (2026-09-17): same
+    // shape as ReconcileTrallesGoldExteriorInteriorGalleryReplacementAsync —
+    // the client dropped a new batch of dış/iç mekan photos into this
+    // project's existing gallery/exterior/originals and gallery/interior/
+    // originals folders (dis-mekan-gorselleri-*.jpg / ic-mekan-gorselleri-*.jpg)
+    // to replace the original launch batch (exterior-NN.jpg/interior-NN.jpg).
+    // Old rows are removed from the Gallery (Category=Exterior/Interior only
+    // — Social Areas is untouched) so the old photos stop appearing in the
+    // UI/filters; their physical files are deliberately left on disk per the
+    // client's instruction. The Concept carousel's own exterior-06.jpg/
+    // exterior-08.jpg slides (BuildAlindaGoldConceptImages, ProjectConceptImages
+    // table) are untouched — a separate table with its own ImagePath, and
+    // those two files stay on disk. Guarded on both ends (RemoveRange only
+    // fires on a real match, AddIfMissing only fires on a real gap), so safe
+    // to run on every startup, including a freshly seeded database whose
+    // BuildAlindaGoldImages output still has the old exterior-NN/interior-NN
+    // rows.
+    private static async Task ReconcileAlindaGoldExteriorInteriorGalleryReplacementAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.Images)
+            .FirstOrDefaultAsync(p => p.Slug == "alinda-gold");
+
+        if (project is null)
+        {
+            return;
+        }
+
+        var staleRows = project.Images
+            .Where(i =>
+                (i.Category == "Exterior" && i.ImagePath.Contains("/gallery/exterior/originals/exterior-")) ||
+                (i.Category == "Interior" && i.ImagePath.Contains("/gallery/interior/originals/interior-")))
+            .ToList();
+
+        if (staleRows.Count > 0)
+        {
+            context.ProjectImages.RemoveRange(staleRows);
+            foreach (var stale in staleRows)
+            {
+                project.Images.Remove(stale);
+            }
+        }
+
+        var nextOrder = (project.Images.Count == 0 ? 0 : project.Images.Max(i => i.DisplayOrder)) + 1;
+
+        void AddIfMissing(string imagePath, string altText, string category)
+        {
+            if (project.Images.Any(i => i.Category == category && i.ImagePath == imagePath))
+            {
+                return;
+            }
+
+            var image = new ProjectImage
+            {
+                ProjectId = project.Id,
+                ImagePath = imagePath,
+                AltText = altText,
+                DisplayOrder = nextOrder++,
+                Category = category
+            };
+            context.ProjectImages.Add(image);
+            project.Images.Add(image);
+        }
+
+        const string exteriorBase = "/images/projects/alinda-gold/gallery/exterior/originals";
+        for (var i = 1; i <= 8; i++)
+        {
+            AddIfMissing($"{exteriorBase}/dis-mekan-gorselleri-{i}.jpg", $"Alinda Gold Residence dış cephe görünümü {i}", "Exterior");
+        }
+
+        const string interiorBase = "/images/projects/alinda-gold/gallery/interior/originals";
+        for (var i = 1; i <= 5; i++)
+        {
+            AddIfMissing($"{interiorBase}/ic-mekan-gorselleri-{i}.jpg", $"Alinda Gold Residence iç mekan görünümü {i}", "Interior");
+        }
+
+        await context.SaveChangesAsync();
+    }
+
     // Client decision (2026-09-04): Tralles Gold Residence's Konsept
     // carousel collapses to a single card — the client supplied a new photo
     // (tralles-konsept-foto.png) for the first slide and asked for the other
@@ -7818,6 +7910,97 @@ public static class DbSeeder
         AddIfMissing(
             "/images/projects/tralles-gold/gallery/social-facilties/swimming-pool-3.jpg.jpeg",
             "Tralles Gold Residence yüzme havuzu görünümü 3");
+
+        await context.SaveChangesAsync();
+    }
+
+    // Client-supplied Exterior/Interior photo replacement (2026-09-17):
+    // the client dropped a new batch of dış/iç mekan photos into this
+    // project's existing gallery/exterior/originals and gallery/interior/
+    // originals folders (dis-mekan-gorselleri-*.jpg / ic-mekan-gorselleri-*.jpg)
+    // to replace the original launch batch (exterior-NN.jpg/interior-NN.jpg).
+    // Old rows are removed from the Gallery (Category=Exterior/Interior only
+    // — Social Areas is untouched) so the old photos stop appearing in the
+    // UI/filters; their physical files are deliberately left on disk
+    // per the client's instruction, so this only ever touches ProjectImages
+    // rows, never the filesystem. New rows are appended after the current
+    // max DisplayOrder via AddIfMissing, same "remove stale, add missing"
+    // shape as ReconcileLaFioreKarabagYeniGaleriVaziyetVeKatalogAsync.
+    // Guarded on both ends (RemoveRange only fires on a real match, AddIfMissing
+    // only fires on a real gap), so safe to run on every startup, including a
+    // freshly seeded database whose BuildTrallesGoldImages output still has
+    // the old exterior-NN/interior-NN rows.
+    private static async Task ReconcileTrallesGoldExteriorInteriorGalleryReplacementAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.Images)
+            .FirstOrDefaultAsync(p => p.Slug == "tralles-gold");
+
+        if (project is null)
+        {
+            return;
+        }
+
+        var staleRows = project.Images
+            .Where(i =>
+                (i.Category == "Exterior" && i.ImagePath.Contains("/gallery/exterior/originals/exterior-")) ||
+                (i.Category == "Interior" && i.ImagePath.Contains("/gallery/interior/originals/interior-")))
+            .ToList();
+
+        if (staleRows.Count > 0)
+        {
+            context.ProjectImages.RemoveRange(staleRows);
+            foreach (var stale in staleRows)
+            {
+                project.Images.Remove(stale);
+            }
+        }
+
+        var nextOrder = (project.Images.Count == 0 ? 0 : project.Images.Max(i => i.DisplayOrder)) + 1;
+
+        void AddIfMissing(string imagePath, string altText, string category)
+        {
+            if (project.Images.Any(i => i.Category == category && i.ImagePath == imagePath))
+            {
+                return;
+            }
+
+            var image = new ProjectImage
+            {
+                ProjectId = project.Id,
+                ImagePath = imagePath,
+                AltText = altText,
+                DisplayOrder = nextOrder++,
+                Category = category
+            };
+            context.ProjectImages.Add(image);
+            project.Images.Add(image);
+        }
+
+        const string exteriorBase = "/images/projects/tralles-gold/gallery/exterior/originals";
+        for (var i = 1; i <= 10; i++)
+        {
+            AddIfMissing($"{exteriorBase}/dis-mekan-gorselleri-{i}.jpg", $"Tralles Gold Residence dış cephe görünümü {i}", "Exterior");
+        }
+
+        // Filenames as supplied by the client — "ic-mekan-gorselleri-3jpg.jpg"
+        // (not renamed/corrected, per the "don't rename client files"
+        // instruction, same precedent as social-facilties' own folder-name
+        // typo above).
+        const string interiorBase = "/images/projects/tralles-gold/gallery/interior/originals";
+        var interiorFiles = new[]
+        {
+            "ic-mekan-gorselleri-1.jpg",
+            "ic-mekan-gorselleri-2.jpg",
+            "ic-mekan-gorselleri-3jpg.jpg",
+            "ic-mekan-gorselleri-4.jpg",
+            "ic-mekan-gorselleri-5.jpg",
+            "ic-mekan-gorselleri-6.jpg"
+        };
+        for (var i = 0; i < interiorFiles.Length; i++)
+        {
+            AddIfMissing($"{interiorBase}/{interiorFiles[i]}", $"Tralles Gold Residence iç mekan görünümü {i + 1}", "Interior");
+        }
 
         await context.SaveChangesAsync();
     }

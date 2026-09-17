@@ -186,6 +186,17 @@ public class ProjectsController : Controller
     // Hacıfeyzullah - Q-Latis (2026-08-20 client request) — same required
     // override: this project never had a top-level banner.webp, only the
     // freshly uploaded banner/ folder asset.
+    // Tralles Gold, Alinda Gold, Le Jardin (see the inline ternary below),
+    // La Fiore Karabağ 1. Etap, La Fiore Karabağ 2. Etap and Ferhunde Hanım
+    // Apt. (2026-09-17 client asset refresh) — each project's client
+    // supplied a new Banner photo in its own banner/ folder; overrides below
+    // were repointed at the new file. The previous "... deneme"/"la fiore
+    // banner"/"lafiore 2.etap banner deneme" files stay on disk untouched
+    // (only this override's target changed, same as every override above).
+    // La Fiore Karabağ 1. Etap previously had no override (it fell through
+    // to the converted `{slug}/banner.webp` default); this client asset
+    // refresh adds one, same "override wins over the default" precedent as
+    // every other entry here.
     private static readonly IReadOnlyDictionary<string, string> HeroBannerImageOverridesBySlug =
         new Dictionary<string, string>
         {
@@ -196,12 +207,13 @@ public class ProjectsController : Controller
             ["nysa-gold"] = "/images/projects/nysa-gold/banner/nysa-gold-banner.jpeg",
             ["kuyulu-la-via-villalar-birinci-etap"] = "/images/projects/kuyulu-la-via-villalar-birinci-etap/banner/la-via-banner.png",
             ["davutlar-d-latis"] = "/images/projects/davutlar-d-latis/banner/dlatis banner deneme.png",
-            ["tralles-gold"] = "/images/projects/tralles-gold/banner/tralles banner deneme.png",
-            ["alinda-gold"] = "/images/projects/alinda-gold/banner/alinda banner deneme.png",
+            ["tralles-gold"] = "/images/projects/tralles-gold/banner/tralles-gold-yeni-banner.jpeg",
+            ["alinda-gold"] = "/images/projects/alinda-gold/banner/alinda-gold-yeni-banner.jpeg",
             ["magnesia-gold"] = "/images/projects/magnesia-gold/banner/magnesia banner deneme.png",
             ["nlatis"] = "/images/projects/nlatis/banner/n-latis-banner.jpeg",
-            ["ferhunde-hanim-apt"] = "/images/projects/ferhunde-hanim-apt/banner/ferhunde banner deneme.png",
-            ["la-fiore-karabag-2-etap"] = "/images/projects/la-fiore-karabag-2-etap/banner/lafiore 2.etap banner deneme.png",
+            ["ferhunde-hanim-apt"] = "/images/projects/ferhunde-hanim-apt/banner/ferhunde-hanim-yeni-banner-2.jpeg",
+            ["la-fiore-karabag"] = "/images/projects/la-fiore-karabag/banner/la-fiore-karabag-birinci-yeni-banner-2.jpeg",
+            ["la-fiore-karabag-2-etap"] = "/images/projects/la-fiore-karabag-2-etap/banner/la-fiore-karabag-ikinci-yeni-banner-2.jpeg",
             ["q-latis"] = "/images/projects/q-latis/banner/hacıfeyzullah banner deneme.png"
         };
 
@@ -377,13 +389,16 @@ public class ProjectsController : Controller
             // into the banner.webp slot every other project uses) per the
             // 2026-08-20 request to preview it as-is before optimization.
             // Le Jardin follows the same approach (2026-08-20 request) with
-            // its own freshly uploaded banner asset.
+            // its own freshly uploaded banner asset — repointed to the
+            // client's newest banner photo (2026-09-17 client asset
+            // refresh); the previous "le jardin banner.png" stays on disk
+            // untouched.
             HeroBackgroundImageUrl = HeroBannerImageOverridesBySlug.TryGetValue(project.Slug, out var heroBannerOverride)
                 ? heroBannerOverride
                 : project.Slug == "nysa-gold"
                     ? "/images/projects/nysa-gold/banner/nysa gold 4k.png"
                     : project.Slug == "le-jardin"
-                        ? "/images/projects/le-jardin/banner/le jardin banner.png"
+                        ? "/images/projects/le-jardin/banner/le-jardin-yeni-banner.png"
                         : $"/images/projects/{project.Slug}/banner.webp",
             ShortDescription = string.IsNullOrWhiteSpace(project.ShortDescription) ? null : project.ShortDescription,
             DescriptionParagraphs = SplitDescription(project.Description),
@@ -455,7 +470,7 @@ public class ProjectsController : Controller
                 .Select(sitePlan => sitePlan.ImagePath)
                 .ToList(),
             LocationImageUrl = !string.IsNullOrWhiteSpace(project.LocationImagePath) && FileExistsInWebRoot(project.LocationImagePath)
-                ? project.LocationImagePath
+                ? WithCacheBust(project.LocationImagePath)
                 : null,
             SocialFacilities = socialFacilities,
             // Not existence-filtered like GalleryImages — every apartment
@@ -616,5 +631,24 @@ public class ProjectsController : Controller
         var absolutePath = Path.Combine(_webHostEnvironment.WebRootPath, normalizedPath);
 
         return System.IO.File.Exists(absolutePath);
+    }
+
+    // Location & Distances image update (2026-09-17) — the Location image
+    // is a fixed path per project (e.g. location.webp) whose content can be
+    // replaced without the path changing, per the image architecture. With
+    // no explicit Cache-Control on the static file middleware, browsers can
+    // keep serving the old bytes from their own cache under that unchanged
+    // URL after a same-path replacement. Appending the file's last-write
+    // time as a query string forces a fresh fetch whenever the file
+    // changes, without renaming/moving the underlying asset. Only applied
+    // to LocationImageUrl for now, where this has actually bitten a
+    // same-path photo replacement.
+    private string WithCacheBust(string relativePath)
+    {
+        var normalizedPath = relativePath.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
+        var absolutePath = Path.Combine(_webHostEnvironment.WebRootPath, normalizedPath);
+        var version = System.IO.File.GetLastWriteTimeUtc(absolutePath).Ticks;
+
+        return $"{relativePath}?v={version}";
     }
 }

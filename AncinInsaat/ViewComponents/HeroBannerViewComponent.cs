@@ -50,17 +50,20 @@ public class HeroBannerViewComponent : ViewComponent
             // banner asset (still its original PNG, not yet converted/renamed
             // into the banner.webp slot every other project uses) per the
             // 2026-08-20 request to preview it as-is before optimization.
-            // Le Jardin and La Fiore Karabağ 2. Etap follow the same
-            // approach (2026-08-20 requests) — same override ProjectsController
-            // already uses for La Fiore Karabağ 2. Etap's own Project Detail
-            // hero (HeroBannerImageOverridesBySlug).
+            // Le Jardin follows the same approach (2026-08-20 request). La
+            // Fiore Karabağ 2. Etap was repointed to its newest client-
+            // supplied banner photo (2026-09-17 Home Page Banner refresh) —
+            // same file ProjectsController's HeroBannerImageOverridesBySlug
+            // already uses for this project's own Project Detail hero; the
+            // previous "lafiore 2.etap banner deneme.png" stays on disk
+            // untouched.
             BackgroundImageUrl = latestProject is not null
                 ? latestProject.Slug == "nysa-gold"
                     ? "/images/projects/nysa-gold/banner/nysa gold 4k.png"
                     : latestProject.Slug == "le-jardin"
                         ? "/images/projects/le-jardin/banner/le jardin banner.png"
                         : latestProject.Slug == "la-fiore-karabag-2-etap"
-                            ? "/images/projects/la-fiore-karabag-2-etap/banner/lafiore 2.etap banner deneme.png"
+                            ? "/images/projects/la-fiore-karabag-2-etap/banner/la-fiore-karabag-ikinci-yeni-banner-2.jpeg"
                             : $"/images/projects/{latestProject.Slug}/banner.webp"
                 : null,
             ProjectCtaLabel = latestProject is not null ? "Projeye Git" : null,

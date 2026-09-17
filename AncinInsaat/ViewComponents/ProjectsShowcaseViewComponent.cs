@@ -67,19 +67,31 @@ public class ProjectsShowcaseViewComponent : ViewComponent
     // La Fiore Karabağ 2. Etap (2026-08-20 client request) — full card
     // treatment (image + logo); this project is Ongoing, so both entries
     // render immediately in this carousel.
+    // Tralles Gold, Alinda Gold, Le Jardin, La Fiore Karabağ 1. Etap, La
+    // Fiore Karabağ 2. Etap and Ferhunde Hanım (2026-09-17 Devam Eden
+    // Projeler banner sync request) — these six entries are repointed at
+    // the exact same file each project's own Project Detail Hero Banner
+    // currently uses (ProjectsController.HeroBannerImageOverridesBySlug,
+    // or its Le Jardin ternary fallback), rather than each project's
+    // separate proje-karti/card-background.webp asset, so this card and
+    // that Banner never drift apart again. La Fiore Karabağ 1. Etap
+    // (slug "la-fiore-karabag") gets a first entry here for the same
+    // reason; it is Completed today so, like the other Completed slugs
+    // above, this is a no-op until the project is ever marked Ongoing.
     private static readonly IReadOnlyDictionary<string, string> CardImageOverridesBySlug =
         new Dictionary<string, string>
         {
             ["nysa-gold"] = "/images/projects/nysa-gold/proje-karti/card-background.webp",
-            ["le-jardin"] = "/images/projects/le-jardin/proje-karti/card-background.webp",
+            ["le-jardin"] = "/images/projects/le-jardin/banner/le-jardin-yeni-banner.png",
             ["kuyulu-la-via-villalar-birinci-etap"] = "/images/projects/kuyulu-la-via-villalar-birinci-etap/proje-karti/card-background.webp",
             ["davutlar-d-latis"] = "/images/projects/davutlar-d-latis/proje-karti/card-background.webp",
-            ["tralles-gold"] = "/images/projects/tralles-gold/proje-karti/card-background.webp",
-            ["alinda-gold"] = "/images/projects/alinda-gold/proje-karti/card-background.webp",
+            ["tralles-gold"] = "/images/projects/tralles-gold/banner/tralles-gold-yeni-banner.jpeg",
+            ["alinda-gold"] = "/images/projects/alinda-gold/banner/alinda-gold-yeni-banner.jpeg",
             ["magnesia-gold"] = "/images/projects/magnesia-gold/proje-karti/card-background.webp",
             ["nlatis"] = "/images/projects/nlatis/proje-karti/card-background.webp",
-            ["ferhunde-hanim-apt"] = "/images/projects/ferhunde-hanim-apt/proje-karti/card-background.webp",
-            ["la-fiore-karabag-2-etap"] = "/images/projects/la-fiore-karabag-2-etap/proje-karti/card-background.webp",
+            ["ferhunde-hanim-apt"] = "/images/projects/ferhunde-hanim-apt/banner/ferhunde-hanim-yeni-banner-2.jpeg",
+            ["la-fiore-karabag"] = "/images/projects/la-fiore-karabag/banner/la-fiore-karabag-birinci-yeni-banner-2.jpeg",
+            ["la-fiore-karabag-2-etap"] = "/images/projects/la-fiore-karabag-2-etap/banner/la-fiore-karabag-ikinci-yeni-banner-2.jpeg",
             // Hacıfeyzullah - Q-Latis (2026-08-20 client request) — same
             // raw-file treatment as ProjectsController's own override (no
             // logo overlay supplied, so it is intentionally absent from
