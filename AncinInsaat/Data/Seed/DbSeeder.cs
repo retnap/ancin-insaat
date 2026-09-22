@@ -1269,12 +1269,18 @@ public static class DbSeeder
                     new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/c-tipi-blok/originals/3a.jpg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 2", DisplayOrder = 193, Category = "Social Areas" },
                     new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/c-tipi-blok/originals/3b.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 3", DisplayOrder = 194, Category = "Social Areas" },
                     new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/d-tipi-blok/originals/2.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 4", DisplayOrder = 195, Category = "Social Areas" },
-                    new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/e-tipi-blok/originals/1.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 5", DisplayOrder = 196, Category = "Social Areas" },
+                    // Archived (client request, 2026-09-22) — positions 5, 7, 9, 10,
+                    // 18, 19, 22, 24, 26 of the current Social Areas order removed
+                    // from active content. Not deleted, files stay on disk; restore
+                    // by uncommenting. See
+                    // ReconcileLaFioreKarabag2EtapRemoveSelectedSocialAreaImagesAsync
+                    // for the already-seeded-DB backfill.
+                    // new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/e-tipi-blok/originals/1.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 5", DisplayOrder = 196, Category = "Social Areas" },
                     new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/e-tipi-blok/originals/1a.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 6", DisplayOrder = 197, Category = "Social Areas" },
-                    new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/e-tipi-blok/originals/3.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 7", DisplayOrder = 198, Category = "Social Areas" },
+                    // new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/e-tipi-blok/originals/3.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 7", DisplayOrder = 198, Category = "Social Areas" },
                     new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/e-tipi-blok/originals/3a.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 8", DisplayOrder = 199, Category = "Social Areas" },
-                    new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/e-tipi-blok/originals/3b.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 9", DisplayOrder = 200, Category = "Social Areas" },
-                    new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/f-tipi-blok/originals/1.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 10", DisplayOrder = 201, Category = "Social Areas" },
+                    // new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/e-tipi-blok/originals/3b.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 9", DisplayOrder = 200, Category = "Social Areas" },
+                    // new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/f-tipi-blok/originals/1.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 10", DisplayOrder = 201, Category = "Social Areas" },
                     new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/f-tipi-blok/originals/1a.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 11", DisplayOrder = 202, Category = "Social Areas" },
                     new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/f-tipi-blok/originals/2.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 12", DisplayOrder = 203, Category = "Social Areas" },
                     new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/g-tipi-blok/originals/1.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 13", DisplayOrder = 204, Category = "Social Areas" },
@@ -1282,8 +1288,10 @@ public static class DbSeeder
                     new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/g-tipi-blok/originals/9.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 15", DisplayOrder = 206, Category = "Social Areas" },
                     new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/g-tipi-blok/originals/9a.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 16", DisplayOrder = 207, Category = "Social Areas" },
                     new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/all-exterior/originals/35.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 17", DisplayOrder = 208, Category = "Social Areas" },
-                    new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/all-exterior/originals/36.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 18", DisplayOrder = 209, Category = "Social Areas" },
-                    new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/all-exterior/originals/37.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 19", DisplayOrder = 210, Category = "Social Areas" },
+                    // Archived (client request, 2026-09-22) — see the archive note
+                    // above position 5's row for details.
+                    // new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/all-exterior/originals/36.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 18", DisplayOrder = 209, Category = "Social Areas" },
+                    // new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/all-exterior/originals/37.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 19", DisplayOrder = 210, Category = "Social Areas" },
 
                     // Gallery revision, client curation (2026-09-06) — C/F/G
                     // Tipi Blok photos removed from their per-block Exterior
@@ -1293,11 +1301,13 @@ public static class DbSeeder
                     // matching backfill for already-seeded databases.
                     new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/c-tipi-blok/originals/4.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 20", DisplayOrder = 211, Category = "Social Areas" },
                     new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/c-tipi-blok/originals/4a.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 21", DisplayOrder = 212, Category = "Social Areas" },
-                    new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/f-tipi-blok/originals/3.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 22", DisplayOrder = 213, Category = "Social Areas" },
+                    // Archived (client request, 2026-09-22) — see the archive note
+                    // above position 5's row for details.
+                    // new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/f-tipi-blok/originals/3.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 22", DisplayOrder = 213, Category = "Social Areas" },
                     new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/f-tipi-blok/originals/3b.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 23", DisplayOrder = 214, Category = "Social Areas" },
-                    new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/f-tipi-blok/originals/3c.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 24", DisplayOrder = 215, Category = "Social Areas" },
+                    // new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/f-tipi-blok/originals/3c.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 24", DisplayOrder = 215, Category = "Social Areas" },
                     new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/f-tipi-blok/originals/3d.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 25", DisplayOrder = 216, Category = "Social Areas" },
-                    new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/f-tipi-blok/originals/3e.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 26", DisplayOrder = 217, Category = "Social Areas" },
+                    // new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/f-tipi-blok/originals/3e.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 26", DisplayOrder = 217, Category = "Social Areas" },
                     new() { ImagePath = "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/g-tipi-blok/originals/8.jpeg", AltText = "La Fiore Karabağ 2. Etap sosyal alan görünümü 27", DisplayOrder = 218, Category = "Social Areas" }
         };
     }
@@ -2257,7 +2267,11 @@ public static class DbSeeder
             // simply reused Exterior photos under this Category (no distinct
             // Social Areas photography existed until now). Same 1-41 client
             // numbering sequence as the Exterior set above, own folder.
-            new() { ImagePath = "/images/projects/le-jardin/sosyal-alan-gorselleri/26 ps.jpg", AltText = "Le Jardin sosyal alan görünümü 1", DisplayOrder = 81, Category = "Social Areas" },
+            // Archived (client request, 2026-09-22) — not deleted, file stays on
+            // disk at sosyal-alan-gorselleri/26 ps.jpg; restore by uncommenting.
+            // See ReconcileLeJardinRemoveFirstSocialAreaImageAsync for the
+            // already-seeded-DB backfill.
+            // new() { ImagePath = "/images/projects/le-jardin/sosyal-alan-gorselleri/26 ps.jpg", AltText = "Le Jardin sosyal alan görünümü 1", DisplayOrder = 81, Category = "Social Areas" },
             new() { ImagePath = "/images/projects/le-jardin/sosyal-alan-gorselleri/28 ps.jpg", AltText = "Le Jardin sosyal alan görünümü 2", DisplayOrder = 82, Category = "Social Areas" },
             new() { ImagePath = "/images/projects/le-jardin/sosyal-alan-gorselleri/32 ps.jpg", AltText = "Le Jardin sosyal alan görünümü 3", DisplayOrder = 83, Category = "Social Areas" },
             new() { ImagePath = "/images/projects/le-jardin/sosyal-alan-gorselleri/38 ps.jpg", AltText = "Le Jardin sosyal alan görünümü 4", DisplayOrder = 84, Category = "Social Areas" },
@@ -3325,6 +3339,34 @@ public static class DbSeeder
         await context.SaveChangesAsync();
     }
 
+    // Not a seed — removes Le Jardin's first Social Areas photo
+    // (sosyal-alan-gorselleri/26 ps.jpg) from an already-seeded database
+    // (client request, 2026-09-22). BuildLeJardinImages no longer seeds this
+    // row for a fresh database, but this project's row was seeded long
+    // before this change (via ReconcileLeJardinDisMekanVeSosyalAlanGorselleriAsync)
+    // and never gets replayed, so the row needs removing directly here.
+    // Guarded on the row still existing, so this is a safe no-op on every
+    // subsequent startup once it has run once. Removes the row from
+    // ProjectImages only — the photo file itself stays on disk, untouched.
+    private static async Task ReconcileLeJardinRemoveFirstSocialAreaImageAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.Images)
+            .FirstOrDefaultAsync(p => p.Slug == "le-jardin");
+
+        var staleImage = project?.Images
+            .FirstOrDefault(i => i.Category == "Social Areas" && i.ImagePath.Contains("sosyal-alan-gorselleri/26 ps.jpg"));
+
+        if (staleImage is null)
+        {
+            return;
+        }
+
+        context.ProjectImages.Remove(staleImage);
+
+        await context.SaveChangesAsync();
+    }
+
     // Not a seed — removes Le Jardin's first Concept video (video1.mp4) from
     // an already-seeded row and replaces the Concept carousel's video/image
     // rows with the 2026-09-06 revision built above: 1 video (the former
@@ -3397,6 +3439,7 @@ public static class DbSeeder
         await ReconcileLeJardinGalleryAndCatalogueAsync(context);
         await ReconcileLeJardinConceptCarouselAsync(context);
         await ReconcileLeJardinDisMekanVeSosyalAlanGorselleriAsync(context);
+        await ReconcileLeJardinRemoveFirstSocialAreaImageAsync(context);
         await ReconcileLeJardinKonseptIlkVideoKaldirmaAsync(context);
         await ReconcileNysaGoldMediaOverhaulAsync(context);
         await ReconcileNysaGoldFloorPlansAsync(context);
@@ -3442,6 +3485,7 @@ public static class DbSeeder
         await ReconcileTrallesAndMagnesiaSocialAreasCategoryAsync(context);
         await ReconcileMagnesiaGoldNewGalleryBatchAsync(context);
         await ReconcileMagnesiaGoldRemoveBasketballCourt2Async(context);
+        await ReconcileMagnesiaGoldRemoveFirstFourSocialAreaImagesAsync(context);
         await ReconcileMagnesiaGoldConceptFirstImageAsync(context);
         await ReconcileAlindaGoldConceptFirstImageAsync(context);
         await ReconcileAlindaGoldConceptSingleCardAsync(context);
@@ -3451,6 +3495,7 @@ public static class DbSeeder
         await ReconcileTrallesGoldExteriorInteriorGalleryReplacementAsync(context);
         await ReconcileAlindaGoldExteriorInteriorGalleryReplacementAsync(context);
         await ReconcileLaFioreKarabag2EtapExteriorSocialAreasRevisionAsync(context);
+        await ReconcileLaFioreKarabag2EtapRemoveSelectedSocialAreaImagesAsync(context);
         await ReconcileLaFioreKarabag2EtapInteriorExpansionAsync(context);
         await ReconcileKuyuluLaViaVillalarGaleriRevizesiAsync(context);
         await ReconcileFerhundeHanimAptGaleriRevizesiAsync(context);
@@ -7268,11 +7313,16 @@ public static class DbSeeder
         await RemoveFromExterior("f-tipi-blok", "5.jpeg");
         await RemoveFromExterior("f-tipi-blok", "6.jpeg");
         await RemoveFromExterior("f-tipi-blok", "b_21 - Foto.jpg");
-        AddSocialAreaIfMissing("f-tipi-blok", "3.jpeg", "La Fiore Karabağ 2. Etap sosyal alan görünümü 22");
+        // 3.jpeg/3c.jpeg (Social Areas positions 22/24) archived per client
+        // request, 2026-09-22 — no longer backfilled here; see
+        // ReconcileLaFioreKarabag2EtapRemoveSelectedSocialAreaImagesAsync.
+        // AddSocialAreaIfMissing("f-tipi-blok", "3.jpeg", "La Fiore Karabağ 2. Etap sosyal alan görünümü 22");
         AddSocialAreaIfMissing("f-tipi-blok", "3b.jpeg", "La Fiore Karabağ 2. Etap sosyal alan görünümü 23");
-        AddSocialAreaIfMissing("f-tipi-blok", "3c.jpeg", "La Fiore Karabağ 2. Etap sosyal alan görünümü 24");
+        // AddSocialAreaIfMissing("f-tipi-blok", "3c.jpeg", "La Fiore Karabağ 2. Etap sosyal alan görünümü 24");
         AddSocialAreaIfMissing("f-tipi-blok", "3d.jpeg", "La Fiore Karabağ 2. Etap sosyal alan görünümü 25");
-        AddSocialAreaIfMissing("f-tipi-blok", "3e.jpeg", "La Fiore Karabağ 2. Etap sosyal alan görünümü 26");
+        // 3e.jpeg (Social Areas position 26) archived per client request,
+        // 2026-09-22 — see the archive note above position 22's line.
+        // AddSocialAreaIfMissing("f-tipi-blok", "3e.jpeg", "La Fiore Karabağ 2. Etap sosyal alan görünümü 26");
 
         // G Tipi Blok — Exterior removals; 8.jpeg moves to Social Areas
         // (9.jpeg/9a.jpeg are also removed from Exterior here since they're
@@ -7290,6 +7340,69 @@ public static class DbSeeder
         await RemoveFromExterior("h-tipi-blok", "1a.jpeg");
         await RemoveFromExterior("h-tipi-blok", "1e.jpeg");
         await RemoveFromExterior("h-tipi-blok", "2a.jpeg");
+
+        await context.SaveChangesAsync();
+    }
+
+    // Not a seed — removes 9 specific La Fiore Karabağ 2. Etap Social Areas
+    // photos from an already-seeded database (client request, 2026-09-22):
+    // positions 5, 7, 9, 10, 18, 19, 22, 24, 26 of the Social Areas order as
+    // it stood at request time (see the matching archived rows in
+    // BuildLaFioreKarabag2EtapImages and the disabled AddSocialAreaIfMissing
+    // calls in ReconcileLaFioreKarabag2EtapExteriorSocialAreasRevisionAsync
+    // above, which would otherwise re-add 3 of these 9 on every startup).
+    // Guarded on any of the 9 rows still existing, so this is a safe no-op
+    // on every subsequent startup once it has run once. Removes rows from
+    // ProjectImages only — the photo files themselves stay on disk,
+    // untouched. Other ProjectImage rows sharing the same ImagePath under a
+    // different Category (e.g. e-tipi-blok's Exterior rows) are untouched —
+    // matched on Category + ImagePath together, same as
+    // ReconcileLaFioreKarabag2EtapExteriorSocialAreasRevisionAsync's own
+    // RemoveFromExterior helper.
+    private static async Task ReconcileLaFioreKarabag2EtapRemoveSelectedSocialAreaImagesAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.Images)
+            .FirstOrDefaultAsync(p => p.Slug == "la-fiore-karabag-2-etap");
+
+        if (project is null)
+        {
+            return;
+        }
+
+        // Position: ImagePath, as archived in BuildLaFioreKarabag2EtapImages.
+        // 5:  gallery/exterior/e-tipi-blok/originals/1.jpeg
+        // 7:  gallery/exterior/e-tipi-blok/originals/3.jpeg
+        // 9:  gallery/exterior/e-tipi-blok/originals/3b.jpeg
+        // 10: gallery/exterior/f-tipi-blok/originals/1.jpeg
+        // 18: gallery/all-exterior/originals/36.jpeg
+        // 19: gallery/all-exterior/originals/37.jpeg
+        // 22: gallery/exterior/f-tipi-blok/originals/3.jpeg
+        // 24: gallery/exterior/f-tipi-blok/originals/3c.jpeg
+        // 26: gallery/exterior/f-tipi-blok/originals/3e.jpeg
+        var pathsToRemove = new[]
+        {
+            "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/e-tipi-blok/originals/1.jpeg",
+            "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/e-tipi-blok/originals/3.jpeg",
+            "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/e-tipi-blok/originals/3b.jpeg",
+            "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/f-tipi-blok/originals/1.jpeg",
+            "/images/projects/la-fiore-karabag-2-etap/gallery/all-exterior/originals/36.jpeg",
+            "/images/projects/la-fiore-karabag-2-etap/gallery/all-exterior/originals/37.jpeg",
+            "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/f-tipi-blok/originals/3.jpeg",
+            "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/f-tipi-blok/originals/3c.jpeg",
+            "/images/projects/la-fiore-karabag-2-etap/gallery/exterior/f-tipi-blok/originals/3e.jpeg"
+        };
+
+        var staleImages = project.Images
+            .Where(i => i.Category == "Social Areas" && pathsToRemove.Contains(i.ImagePath))
+            .ToList();
+
+        if (staleImages.Count == 0)
+        {
+            return;
+        }
+
+        context.ProjectImages.RemoveRange(staleImages);
 
         await context.SaveChangesAsync();
     }
@@ -7489,22 +7602,29 @@ public static class DbSeeder
         // excluded (client request, 2026-09-04, see
         // ReconcileMagnesiaGoldRemoveBasketballCourt2Async below) — the file
         // itself stays on disk, just never seeded here.
-        AddIfMissing(
-            "/images/projects/magnesia-gold/gallery/social-facilities/basketball-court-1.jpg",
-            "Magnesia Gold Residence basketbol sahası görünümü 1",
-            "Social Areas");
-        AddIfMissing(
-            "/images/projects/magnesia-gold/gallery/social-facilities/playground-for-kid-1.jpg",
-            "Magnesia Gold Residence çocuk oyun alanı görünümü 1",
-            "Social Areas");
-        AddIfMissing(
-            "/images/projects/magnesia-gold/gallery/social-facilities/playground-for-kid-2.jpg",
-            "Magnesia Gold Residence çocuk oyun alanı görünümü 2",
-            "Social Areas");
-        AddIfMissing(
-            "/images/projects/magnesia-gold/gallery/social-facilities/playground-for-kid-3.jpg",
-            "Magnesia Gold Residence çocuk oyun alanı görünümü 3",
-            "Social Areas");
+        //
+        // Positions 1-4 (basketball-court-1, playground-for-kid-1/2/3)
+        // archived per client request, 2026-09-22 — the current Social
+        // Areas order's first four images. Not deleted, files stay on disk;
+        // restore by uncommenting. See
+        // ReconcileMagnesiaGoldRemoveFirstFourSocialAreaImagesAsync for the
+        // already-seeded-DB backfill.
+        // AddIfMissing(
+        //     "/images/projects/magnesia-gold/gallery/social-facilities/basketball-court-1.jpg",
+        //     "Magnesia Gold Residence basketbol sahası görünümü 1",
+        //     "Social Areas");
+        // AddIfMissing(
+        //     "/images/projects/magnesia-gold/gallery/social-facilities/playground-for-kid-1.jpg",
+        //     "Magnesia Gold Residence çocuk oyun alanı görünümü 1",
+        //     "Social Areas");
+        // AddIfMissing(
+        //     "/images/projects/magnesia-gold/gallery/social-facilities/playground-for-kid-2.jpg",
+        //     "Magnesia Gold Residence çocuk oyun alanı görünümü 2",
+        //     "Social Areas");
+        // AddIfMissing(
+        //     "/images/projects/magnesia-gold/gallery/social-facilities/playground-for-kid-3.jpg",
+        //     "Magnesia Gold Residence çocuk oyun alanı görünümü 3",
+        //     "Social Areas");
         AddIfMissing(
             "/images/projects/magnesia-gold/gallery/social-facilities/sosyal-alan-1.JPG",
             "Magnesia Gold Residence sosyal alan görünümü 1",
@@ -7555,6 +7675,52 @@ public static class DbSeeder
         }
 
         context.ProjectImages.Remove(image);
+
+        await context.SaveChangesAsync();
+    }
+
+    // Not a seed — removes the first 4 images of Magnesia Gold Residence's
+    // Social Areas order (basketball-court-1.jpg, playground-for-kid-1/2/3.jpg)
+    // from an already-seeded database (client request, 2026-09-22).
+    // ReconcileMagnesiaGoldNewGalleryBatchAsync above no longer seeds these
+    // 4 rows for a fresh database, but this project's rows were seeded long
+    // before this change and never get replayed, so they need removing
+    // directly here — same idiom as ReconcileMagnesiaGoldRemoveBasketballCourt2Async
+    // above. Guarded on any of the 4 rows still existing, so this is a safe
+    // no-op on every subsequent startup once it has run once. Removes rows
+    // from ProjectImages only — the photo files themselves stay on disk,
+    // untouched. The remaining Social Areas rows (sosyal-alan-1..4) are
+    // untouched, so the Gallery's existing DisplayOrder ordering naturally
+    // closes the gap with no renumbering needed.
+    private static async Task ReconcileMagnesiaGoldRemoveFirstFourSocialAreaImagesAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.Images)
+            .FirstOrDefaultAsync(p => p.Slug == "magnesia-gold");
+
+        if (project is null)
+        {
+            return;
+        }
+
+        var pathsToRemove = new[]
+        {
+            "/images/projects/magnesia-gold/gallery/social-facilities/basketball-court-1.jpg",
+            "/images/projects/magnesia-gold/gallery/social-facilities/playground-for-kid-1.jpg",
+            "/images/projects/magnesia-gold/gallery/social-facilities/playground-for-kid-2.jpg",
+            "/images/projects/magnesia-gold/gallery/social-facilities/playground-for-kid-3.jpg"
+        };
+
+        var staleImages = project.Images
+            .Where(i => i.Category == "Social Areas" && pathsToRemove.Contains(i.ImagePath))
+            .ToList();
+
+        if (staleImages.Count == 0)
+        {
+            return;
+        }
+
+        context.ProjectImages.RemoveRange(staleImages);
 
         await context.SaveChangesAsync();
     }
@@ -7657,6 +7823,17 @@ public static class DbSeeder
     // so re-running this (or the client dropping more files later) never
     // duplicates a row; appends after the current max DisplayOrder, so no
     // existing Exterior/Interior row's path or order is touched.
+    //
+    // Client-supplied Social Areas replacement (2026-09-22): the client
+    // removed all 10 of the above photos from gallery/social-facilities and
+    // dropped 3 new ones in their place (different filenames — no path
+    // overlap with the old batch, so this is a full swap, not an addition).
+    // The old 10 rows are removed here (RemoveRange, guarded on a real
+    // match) so an already-seeded database converges to the new set too;
+    // the 3 new rows are then added via the same AddIfMissing idiom as
+    // before. The 10 old photo files themselves are left untouched on disk
+    // per the client's instruction — only their ProjectImages rows are
+    // removed.
     private static async Task ReconcileAlindaGoldNewSocialAreasGalleryAsync(AppDbContext context)
     {
         var project = await context.Projects
@@ -7666,6 +7843,33 @@ public static class DbSeeder
         if (project is null)
         {
             return;
+        }
+
+        var oldPaths = new[]
+        {
+            "/images/projects/alinda-gold/gallery/social-facilities/basketball-court-1.jpg",
+            "/images/projects/alinda-gold/gallery/social-facilities/gym-1.jpg",
+            "/images/projects/alinda-gold/gallery/social-facilities/gym-2.jpg",
+            "/images/projects/alinda-gold/gallery/social-facilities/gym-3.jpg",
+            "/images/projects/alinda-gold/gallery/social-facilities/playground-for-kid-1.jpg",
+            "/images/projects/alinda-gold/gallery/social-facilities/playground-for-kid-2.jpg",
+            "/images/projects/alinda-gold/gallery/social-facilities/playground-for-kid-3.jpg",
+            "/images/projects/alinda-gold/gallery/social-facilities/swimming-pool-1.jpg",
+            "/images/projects/alinda-gold/gallery/social-facilities/swimming-pool-2.jpg",
+            "/images/projects/alinda-gold/gallery/social-facilities/swimming-pool-3.jpg.jpeg"
+        };
+
+        var staleImages = project.Images
+            .Where(i => i.Category == "Social Areas" && oldPaths.Contains(i.ImagePath))
+            .ToList();
+
+        if (staleImages.Count > 0)
+        {
+            context.ProjectImages.RemoveRange(staleImages);
+            foreach (var stale in staleImages)
+            {
+                project.Images.Remove(stale);
+            }
         }
 
         var existingPaths = new HashSet<string>(
@@ -7692,35 +7896,14 @@ public static class DbSeeder
         }
 
         AddIfMissing(
-            "/images/projects/alinda-gold/gallery/social-facilities/basketball-court-1.jpg",
+            "/images/projects/alinda-gold/gallery/social-facilities/basketball-court-1.png",
             "Alinda Gold Residence basketbol sahası görünümü 1");
         AddIfMissing(
-            "/images/projects/alinda-gold/gallery/social-facilities/gym-1.jpg",
-            "Alinda Gold Residence spor salonu görünümü 1");
+            "/images/projects/alinda-gold/gallery/social-facilities/kindergarden-1.jpg",
+            "Alinda Gold Residence kreş görünümü 1");
         AddIfMissing(
-            "/images/projects/alinda-gold/gallery/social-facilities/gym-2.jpg",
-            "Alinda Gold Residence spor salonu görünümü 2");
-        AddIfMissing(
-            "/images/projects/alinda-gold/gallery/social-facilities/gym-3.jpg",
-            "Alinda Gold Residence spor salonu görünümü 3");
-        AddIfMissing(
-            "/images/projects/alinda-gold/gallery/social-facilities/playground-for-kid-1.jpg",
-            "Alinda Gold Residence çocuk oyun alanı görünümü 1");
-        AddIfMissing(
-            "/images/projects/alinda-gold/gallery/social-facilities/playground-for-kid-2.jpg",
-            "Alinda Gold Residence çocuk oyun alanı görünümü 2");
-        AddIfMissing(
-            "/images/projects/alinda-gold/gallery/social-facilities/playground-for-kid-3.jpg",
-            "Alinda Gold Residence çocuk oyun alanı görünümü 3");
-        AddIfMissing(
-            "/images/projects/alinda-gold/gallery/social-facilities/swimming-pool-1.jpg",
-            "Alinda Gold Residence yüzme havuzu görünümü 1");
-        AddIfMissing(
-            "/images/projects/alinda-gold/gallery/social-facilities/swimming-pool-2.jpg",
-            "Alinda Gold Residence yüzme havuzu görünümü 2");
-        AddIfMissing(
-            "/images/projects/alinda-gold/gallery/social-facilities/swimming-pool-3.jpg.jpeg",
-            "Alinda Gold Residence yüzme havuzu görünümü 3");
+            "/images/projects/alinda-gold/gallery/social-facilities/outdoor-swimming-pool-1.jpg",
+            "Alinda Gold Residence açık yüzme havuzu görünümü 1");
 
         await context.SaveChangesAsync();
     }
@@ -7862,6 +8045,19 @@ public static class DbSeeder
     // re-running this (or the client dropping more files later) never
     // duplicates a row; appends after the current max DisplayOrder, so no
     // existing Exterior/Interior row's path or order is touched.
+    //
+    // Client-supplied Social Areas replacement (2026-09-22): the client
+    // removed all 12 of the above photos from gallery/social-facilties and
+    // dropped 4 new ones in their place (different filenames — no path
+    // overlap with the old batch, so this is a full swap, not an addition).
+    // The old 12 rows are removed here (RemoveRange, guarded on a real
+    // match) so an already-seeded database converges to the new set too;
+    // the 4 new rows are then added via the same AddIfMissing idiom as
+    // before. The still-pending "Coming Soon" placeholder above is
+    // untouched by this swap — it has its own ImagePath outside this
+    // folder. The 12 old photo files themselves are left untouched on disk
+    // per the client's instruction — only their ProjectImages rows are
+    // removed.
     private static async Task ReconcileTrallesGoldNewSocialAreasGalleryAsync(AppDbContext context)
     {
         var project = await context.Projects
@@ -7871,6 +8067,35 @@ public static class DbSeeder
         if (project is null)
         {
             return;
+        }
+
+        var oldPaths = new[]
+        {
+            "/images/projects/tralles-gold/gallery/social-facilties/basketball-court-1.jpg",
+            "/images/projects/tralles-gold/gallery/social-facilties/gym-1.jpg",
+            "/images/projects/tralles-gold/gallery/social-facilties/gym-2.jpg",
+            "/images/projects/tralles-gold/gallery/social-facilties/gym-3.jpg",
+            "/images/projects/tralles-gold/gallery/social-facilties/indoor-swimming-pool.jpg",
+            "/images/projects/tralles-gold/gallery/social-facilties/indoor-swimming-pool-2.jpg.jpeg",
+            "/images/projects/tralles-gold/gallery/social-facilties/playground-for-kid-1.jpg",
+            "/images/projects/tralles-gold/gallery/social-facilties/playground-for-kid-2.jpg",
+            "/images/projects/tralles-gold/gallery/social-facilties/playground-for-kid-3.jpg",
+            "/images/projects/tralles-gold/gallery/social-facilties/swimming-pool-1.jpg",
+            "/images/projects/tralles-gold/gallery/social-facilties/swimming-pool-2.jpg",
+            "/images/projects/tralles-gold/gallery/social-facilties/swimming-pool-3.jpg.jpeg"
+        };
+
+        var staleImages = project.Images
+            .Where(i => i.Category == "Social Areas" && oldPaths.Contains(i.ImagePath))
+            .ToList();
+
+        if (staleImages.Count > 0)
+        {
+            context.ProjectImages.RemoveRange(staleImages);
+            foreach (var stale in staleImages)
+            {
+                project.Images.Remove(stale);
+            }
         }
 
         var existingPaths = new HashSet<string>(
@@ -7897,41 +8122,17 @@ public static class DbSeeder
         }
 
         AddIfMissing(
-            "/images/projects/tralles-gold/gallery/social-facilties/basketball-court-1.jpg",
+            "/images/projects/tralles-gold/gallery/social-facilties/basketball-court-2.jpg",
             "Tralles Gold Residence basketbol sahası görünümü 1");
         AddIfMissing(
-            "/images/projects/tralles-gold/gallery/social-facilties/gym-1.jpg",
-            "Tralles Gold Residence spor salonu görünümü 1");
-        AddIfMissing(
-            "/images/projects/tralles-gold/gallery/social-facilties/gym-2.jpg",
-            "Tralles Gold Residence spor salonu görünümü 2");
-        AddIfMissing(
-            "/images/projects/tralles-gold/gallery/social-facilties/gym-3.jpg",
-            "Tralles Gold Residence spor salonu görünümü 3");
-        AddIfMissing(
-            "/images/projects/tralles-gold/gallery/social-facilties/indoor-swimming-pool.jpg",
+            "/images/projects/tralles-gold/gallery/social-facilties/indoor-swimming-pool-2.jpg",
             "Tralles Gold Residence kapalı yüzme havuzu görünümü 1");
         AddIfMissing(
-            "/images/projects/tralles-gold/gallery/social-facilties/indoor-swimming-pool-2.jpg.jpeg",
-            "Tralles Gold Residence kapalı yüzme havuzu görünümü 2");
+            "/images/projects/tralles-gold/gallery/social-facilties/kindergarden-2.jpg",
+            "Tralles Gold Residence kreş görünümü 1");
         AddIfMissing(
-            "/images/projects/tralles-gold/gallery/social-facilties/playground-for-kid-1.jpg",
-            "Tralles Gold Residence çocuk oyun alanı görünümü 1");
-        AddIfMissing(
-            "/images/projects/tralles-gold/gallery/social-facilties/playground-for-kid-2.jpg",
-            "Tralles Gold Residence çocuk oyun alanı görünümü 2");
-        AddIfMissing(
-            "/images/projects/tralles-gold/gallery/social-facilties/playground-for-kid-3.jpg",
-            "Tralles Gold Residence çocuk oyun alanı görünümü 3");
-        AddIfMissing(
-            "/images/projects/tralles-gold/gallery/social-facilties/swimming-pool-1.jpg",
-            "Tralles Gold Residence yüzme havuzu görünümü 1");
-        AddIfMissing(
-            "/images/projects/tralles-gold/gallery/social-facilties/swimming-pool-2.jpg",
-            "Tralles Gold Residence yüzme havuzu görünümü 2");
-        AddIfMissing(
-            "/images/projects/tralles-gold/gallery/social-facilties/swimming-pool-3.jpg.jpeg",
-            "Tralles Gold Residence yüzme havuzu görünümü 3");
+            "/images/projects/tralles-gold/gallery/social-facilties/outdoor-swimming-pool-2.jpg",
+            "Tralles Gold Residence açık yüzme havuzu görünümü 1");
 
         await context.SaveChangesAsync();
     }

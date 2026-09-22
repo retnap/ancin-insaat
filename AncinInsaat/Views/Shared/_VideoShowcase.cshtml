@@ -44,7 +44,7 @@
         <div class="video-modal-frame">
             @if (!string.IsNullOrWhiteSpace(Model.VideoSrc))
             {
-                <video class="video-modal-video" controls playsinline poster="@Model.PosterSrc" data-video-element>
+                <video class="video-modal-video" controls playsinline preload="none" poster="@Model.PosterSrc" data-video-element>
                     <source src="@Model.VideoSrc" type="video/mp4" />
                 </video>
             }

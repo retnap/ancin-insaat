@@ -7,3 +7,4 @@ AncinInsaat/wwwroot/images/projects/**/*.jpeg filter=lfs diff=lfs merge=lfs -tex
 AncinInsaat/wwwroot/images/projects/**/*.mov filter=lfs diff=lfs merge=lfs -text
 AncinInsaat/wwwroot/images/projects/**/*.MOV filter=lfs diff=lfs merge=lfs -text
 AncinInsaat/wwwroot/images/projects/**/*.JPG filter=lfs diff=lfs merge=lfs -text
+AncinInsaat/wwwroot/images/logos/*.mp4 filter=lfs diff=lfs merge=lfs -text

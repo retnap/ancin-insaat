@@ -482,6 +482,41 @@
       document.body.classList.add('no-scroll');
       document.addEventListener('keydown', onKeydown);
 
+      if (videoElement) {
+        // preload="none" means no resource has been selected yet. play()
+        // alone is spec'd to kick off resource selection when networkState
+        // is still NETWORK_EMPTY, but Safari does not reliably honor that on
+        // a preload="none" element that has never had load() called — so
+        // load() is invoked explicitly here to force resource selection
+        // deterministically, immediately followed by play() in the same
+        // synchronous click handler (same pattern _ProjectConcept's video
+        // modal uses). Both calls stay inside the user's original click so
+        // the browser still credits it as a user gesture, which is what
+        // allows unmuted autoplay (muted set here rather than via the
+        // markup attribute) to be permitted at all.
+        videoElement.muted = false;
+        videoElement.load();
+
+        console.log('[video-showcase] attempting play()', {
+          muted: videoElement.muted,
+          paused: videoElement.paused,
+          readyState: videoElement.readyState,
+          src: videoElement.currentSrc,
+          visibilityState: document.visibilityState
+        });
+
+        var playPromise = videoElement.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(function (error) {
+            // Surfaced instead of swallowed so a genuine autoplay rejection
+            // (e.g. battery saver mode) is visible during development;
+            // native controls remain available so the visitor can press
+            // Play themselves.
+            console.error('Home video playback failed:', error.name, error.message, error);
+          });
+        }
+      }
+
       var closeButton = modal.querySelector('.video-modal-close');
       if (closeButton) {
         closeButton.focus();

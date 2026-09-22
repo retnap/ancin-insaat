@@ -43,18 +43,22 @@ public class CompanyOverviewViewComponent : ViewComponent
                 // Media swap (2026-08-28 request): this slot and Company
                 // History's "Zaman Tüneli" video teaser switched places —
                 // see CompanyHistorySectionViewComponent's Image for the
-                // flip side. Same placeholder video widget as before, just
-                // relocated; VideoSrc stays null until the client supplies
-                // real footage.
+                // flip side. Same video widget as before, just relocated.
                 Id = "company-overview",
                 Title = "Ancın İnşaat Tanıtım Filmi",
-                PosterSrc = "/images/company/video-poster-placeholder.svg",
+                // Frame extracted directly from video-optimized.mp4 at exactly
+                // 1.33s (project owner's explicit timestamp) via ffmpeg,
+                // cropped to the section's 1:1 trigger and re-encoded as
+                // WebP. Note: this timestamp falls within the video's
+                // opening fade-in, so the frame is a near-solid white square
+                // rather than a recognizable photo — intentional per the
+                // 2026-09-22 instruction to use this exact timestamp.
+                PosterSrc = "/images/company/video-poster.webp",
 
-                // Empty on purpose — abstract placeholder graphic, decorative
-                // for screen-reader purposes until real video-frame artwork
-                // replaces it.
+                // Empty on purpose — the poster is a frame from the video
+                // itself, decorative for screen-reader purposes.
                 PosterAlt = "",
-                VideoSrc = null,
+                VideoSrc = "/images/logos/video-optimized.mp4",
                 CssClass = "company-overview-video"
             },
             CtaLabel = "Devamını Oku",
