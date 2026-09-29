@@ -3505,6 +3505,7 @@ public static class DbSeeder
         await ReconcileLaFioreKarabagKonseptMetniAsync(context);
         await ReconcileLaFioreKarabagDairePlanlariAsync(context);
         await ReconcileLaFioreKarabagDairePlanlariOdaBilgileriAsync(context);
+        await ReconcileTrallesGoldConceptVideoAsync(context);
 
         var existingSlugs = new HashSet<string>(await context.Projects.Select(p => p.Slug).ToListAsync());
 
@@ -8590,6 +8591,78 @@ public static class DbSeeder
         project.CataloguePath = "/images/projects/la-fiore-karabag/katalog/Lafiore_katalog.pdf";
         project.CatalogueComingSoon = false;
         project.CatalogueComingSoonHeroToast = false;
+
+        await context.SaveChangesAsync();
+    }
+
+    // Tralles Gold Residence Konsept video addition (2026-09-29) — the
+    // client's own concept walkthrough video, dropped into this project's
+    // existing concept/ folder. Added as a second Konsept carousel slide
+    // (DisplayOrder = 2) alongside the single image card left by
+    // ReconcileTrallesGoldConceptSingleCardAsync above (DisplayOrder = 1),
+    // which this method never touches — same "append after existing
+    // DisplayOrder, don't disturb anything else" idiom as
+    // ReconcileMagnesiaGoldNewGalleryBatchAsync's AddIfMissing. The video
+    // file itself is left exactly where it was added and under its
+    // original client filename (spaces and all — same precedent as this
+    // project's own "tralles banner deneme.png"/"tralles gold logo.png",
+    // both already served successfully at literal space-containing paths).
+    // Poster is a frame extracted from the video itself (~4.3s — the wide
+    // dusk establishing shot of all three blocks, illuminated, matching
+    // this project's own already-approved copy describing "Akşam
+    // saatlerinde ışıklandırılan cepheleriyle... gece silüetinde"), run
+    // through the same ffmpeg-frame-extract + ThumbnailTool --single WebP
+    // pipeline as every other concept video poster (e.g.
+    // BuildDavutlarDLatisConceptVideos' poster-video1..4.webp), at the
+    // video's native 1280x720 (never upscaled). Guarded on this VideoPath
+    // not already being present, so re-seeding an already-migrated database
+    // never duplicates the row, and a fresh database gets it too via the
+    // same call in SeedAsync.
+    private static List<ProjectConceptVideo> BuildTrallesGoldConceptVideos()
+    {
+        return new List<ProjectConceptVideo>
+        {
+            new()
+            {
+                VideoPath = "/images/projects/tralles-gold/concept/Tralles Gold Rezidans 4+1-compressed.mp4",
+                PosterPath = "/images/projects/tralles-gold/concept/poster.webp",
+                Eyebrow = "Kısa Bir Gezinti",
+                Title = "Tralles Gold Residence'ı Video ile Keşfedin",
+                Description = "Beyaz cepheleri ve dikey kırmızı vurgularıyla şehrin gece silüetinde öne çıkan Tralles Gold Residence bloklarını, bu kısa video ile hem dış cepheden hem de daire içlerinden keşfedin.",
+                DisplayOrder = 2
+            }
+        };
+    }
+
+    private static async Task ReconcileTrallesGoldConceptVideoAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.ConceptVideos)
+            .FirstOrDefaultAsync(p => p.Slug == "tralles-gold");
+
+        if (project is null)
+        {
+            return;
+        }
+
+        foreach (var conceptVideo in BuildTrallesGoldConceptVideos())
+        {
+            if (project.ConceptVideos.Any(v => v.VideoPath == conceptVideo.VideoPath))
+            {
+                continue;
+            }
+
+            context.ProjectConceptVideos.Add(new ProjectConceptVideo
+            {
+                ProjectId = project.Id,
+                VideoPath = conceptVideo.VideoPath,
+                PosterPath = conceptVideo.PosterPath,
+                Eyebrow = conceptVideo.Eyebrow,
+                Title = conceptVideo.Title,
+                Description = conceptVideo.Description,
+                DisplayOrder = conceptVideo.DisplayOrder
+            });
+        }
 
         await context.SaveChangesAsync();
     }
