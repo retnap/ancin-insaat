@@ -5,6 +5,14 @@
    still on the original .project-card / .project-card-overlay classes) stay
    completely untouched. See docs/04_ComponentLibrary.md. *@
 
+@{
+    // Q-Latis card title size (2026-09-28 revision) — Q-Latis is the only
+    // slug getting a slightly larger title overlay; Ferhunde Hanım Apt.
+    // (the class's only other consumer) renders no modifier and keeps the
+    // shared .project-card-standard-title-overlay size unchanged.
+    var titleOverlayModifierClass = Model.Slug == "q-latis" ? " project-card-standard-title-overlay--q-latis" : "";
+}
+
 <a class="project-card-standard" href="@Model.DetailUrl" aria-label="@Model.Name">
     <span class="project-card-standard-media">
         <img class="project-card-standard-image" src="@Model.CoverImageSrc" alt="" loading="lazy" decoding="async" />
@@ -14,7 +22,7 @@
         }
         else if (!string.IsNullOrWhiteSpace(Model.TitleOverlayText))
         {
-            <span class="project-card-standard-title-overlay" lang="en" aria-hidden="true">@Model.TitleOverlayText</span>
+            <span class="project-card-standard-title-overlay@(titleOverlayModifierClass)" lang="en" aria-hidden="true">@Model.TitleOverlayText</span>
         }
         <span class="project-card-standard-scrim" aria-hidden="true"></span>
         <span class="project-status-badge @Model.StatusModifierClass">@Model.StatusLabel</span>

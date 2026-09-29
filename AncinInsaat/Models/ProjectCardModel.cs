@@ -7,6 +7,14 @@ namespace AncinInsaat.Models;
 // future grid/listing reuses the same markup instead of duplicating it.
 public class ProjectCardModel
 {
+    // Gelecek Projeler (Q-Latis/D-Latis revision, 2026-09-28) — added so
+    // _ProjectCard.cshtml can apply a slug-scoped modifier class to
+    // TitleOverlayText (Q-Latis's own title needs to render slightly
+    // larger than the shared .project-card-standard-title-overlay size,
+    // without touching Ferhunde Hanım Apt.'s, the class's only other
+    // consumer). Not read for anything else on the card.
+    public required string Slug { get; init; }
+
     public required string Name { get; init; }
     public required string CoverImageSrc { get; init; }
     public required string StatusLabel { get; init; }

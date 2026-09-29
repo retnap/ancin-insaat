@@ -37,6 +37,15 @@ public class HeroBannerProjectDetailViewModel
     public string? StatusLabel { get; init; }
     public string? StatusModifierClass { get; init; }
 
+    // Gelecek Projeler (Q-Latis/D-Latis revision, 2026-09-28) — when true,
+    // Default.cshtml renders only the background (still with its normal
+    // zoom animation) and the heading, adds a faded/dimmed scrim plus a
+    // large animated "?" overlay, and omits the status badge, subheading,
+    // Hero action bar and scroll indicator entirely (a future/undisclosed
+    // project has no catalogue/site plan/contact CTA to offer yet). False
+    // for every other project, which renders exactly as before.
+    public bool IsFutureProject { get; init; }
+
     // Null omits the Katalog button entirely (no CataloguePath, or the file
     // does not exist on disk).
     public string? CatalogueUrl { get; init; }

@@ -9,6 +9,15 @@ public class ProjectDetailViewModel
 {
     public required string Name { get; init; }
     public required string Slug { get; init; }
+
+    // Gelecek Projeler (Q-Latis/D-Latis revision, 2026-09-28) — when true,
+    // Details.cshtml renders only the Hero (banner + title, in its
+    // faded/question-mark future-project state) and skips every section
+    // below it (Concept, Gallery, Location, Catalogue, Floor Plans). False
+    // for every other project, which renders exactly as before. See
+    // Data.Entities.Project.IsFutureProject.
+    public required bool IsFutureProject { get; init; }
+
     public required string StatusLabel { get; init; }
     public required string StatusModifierClass { get; init; }
 

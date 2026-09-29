@@ -271,6 +271,21 @@ public static class DbSeeder
                 MetaDescription = "Ancın İnşaat'ın 6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) kapsamında kişisel verilerin işlenmesine ilişkin aydınlatma metni.",
                 CanonicalUrl = "/kvkk",
                 OpenGraphImage = "/images/seo/og-home.webp"
+            },
+
+            // Sosyal Sorumluluk Projelerimiz (new Kurumsal navigation item,
+            // 2026-09-28). OpenGraphImage placeholder-reuses the Home OG
+            // image, same as every other corporate page above — no
+            // page-specific one has been supplied yet. The page itself is
+            // intentionally empty for now (see
+            // Views/SocialResponsibility/Index.cshtml).
+            new()
+            {
+                Page = "sosyal-sorumluluk-projelerimiz",
+                MetaTitle = "Sosyal Sorumluluk Projelerimiz | Ancın İnşaat",
+                MetaDescription = "Ancın İnşaat'ın topluma değer katan sosyal sorumluluk projelerini keşfedin.",
+                CanonicalUrl = "/sosyal-sorumluluk-projelerimiz",
+                OpenGraphImage = "/images/seo/og-home.webp"
             }
         };
 
@@ -3469,8 +3484,11 @@ public static class DbSeeder
         await ReconcileFerhundeHanimAptRemoveCatalogueAsync(context);
         await ReconcileLaFioreKarabag2EtapRemoveCatalogueAsync(context);
         await ReconcileKuyuluAvmUnpublishAsync(context);
-        await ReconcileUnpublishAsync(context, "davutlar-d-latis");
-        await ReconcileUnpublishAsync(context, "q-latis");
+        // Davutlar D Latis / Hacıfeyzullah - Q-Latis are no longer
+        // unpublished here (2026-09-28 client request supersedes the
+        // 2026-08-2x unpublish below) — both are reintroduced as Gelecek
+        // Projeler by ReconcileFutureProjectAsync near the end of this
+        // method instead, which also re-publishes them.
         await ReconcileRemoveCatalogueAndSitePlanAsync(context, "alinda-gold");
         await ReconcileRemoveCatalogueAndSitePlanAsync(context, "magnesia-gold");
         await ReconcileRemoveCatalogueAndSitePlanAsync(context, "tralles-gold");
@@ -3494,6 +3512,9 @@ public static class DbSeeder
         await ReconcileTrallesGoldNewSocialAreasGalleryAsync(context);
         await ReconcileTrallesGoldExteriorInteriorGalleryReplacementAsync(context);
         await ReconcileAlindaGoldExteriorInteriorGalleryReplacementAsync(context);
+        await ReconcileAlindaGoldSocialAreasSecondReplacementAsync(context);
+        await ReconcileTrallesGoldSocialAreasSecondReplacementAsync(context);
+        await ReconcileMagnesiaGoldSocialAreasSecondReplacementAsync(context);
         await ReconcileLaFioreKarabag2EtapExteriorSocialAreasRevisionAsync(context);
         await ReconcileLaFioreKarabag2EtapRemoveSelectedSocialAreaImagesAsync(context);
         await ReconcileLaFioreKarabag2EtapInteriorExpansionAsync(context);
@@ -3505,6 +3526,11 @@ public static class DbSeeder
         await ReconcileLaFioreKarabagKonseptMetniAsync(context);
         await ReconcileLaFioreKarabagDairePlanlariAsync(context);
         await ReconcileLaFioreKarabagDairePlanlariOdaBilgileriAsync(context);
+        // Gelecek Projeler revision (2026-09-28 client request) — re-publishes
+        // and reclassifies these two projects; see ReconcileFutureProjectAsync
+        // and Project.IsFutureProject.
+        await ReconcileFutureProjectAsync(context, "davutlar-d-latis");
+        await ReconcileFutureProjectAsync(context, "q-latis");
         await ReconcileTrallesGoldConceptVideoAsync(context);
 
         var existingSlugs = new HashSet<string>(await context.Projects.Select(p => p.Slug).ToListAsync());
@@ -3988,6 +4014,12 @@ public static class DbSeeder
                 DisplayOrder = 10,
                 IsFeatured = false,
                 IsPublished = true,
+                // Gelecek Projeler revision (2026-09-28 client request) — see
+                // Project.IsFutureProject. This project's real gallery/floor
+                // plans/concept video/catalogue rows below are left exactly
+                // as seeded; only the Detail page's rendering is now gated
+                // by this flag (ProjectsController/Details.cshtml).
+                IsFutureProject = true,
                 CreatedAt = now,
                 UpdatedAt = now,
                 // Real photos (2026-08-05, Davutlar D Latis Media phase) — every
@@ -4166,6 +4198,12 @@ public static class DbSeeder
                 DisplayOrder = 13,
                 IsFeatured = false,
                 IsPublished = true,
+                // Gelecek Projeler revision (2026-09-28 client request) — see
+                // Project.IsFutureProject / Davutlar D Latis's own entry
+                // above for the full rationale. This project's real gallery/
+                // catalogue rows below are left exactly as seeded; only the
+                // Detail page's rendering is now gated by this flag.
+                IsFutureProject = true,
                 CreatedAt = now,
                 UpdatedAt = now,
                 // Real Exterior/Interior/Social Areas gallery (2026-08-10) —
@@ -6756,25 +6794,33 @@ public static class DbSeeder
         await context.SaveChangesAsync();
     }
 
-    // Not a seed — unpublishes Davutlar D Latis and Hacıfeyzullah - Q-Latis
-    // (client revision, 2026-08-28), per explicit client instruction to
-    // remove both projects from the live site without deleting their rows,
-    // images or Git history. Same IsPublished gate and same reversible,
-    // idempotent shape as ReconcileKuyuluAvmUnpublishAsync above, but
-    // parameterized by slug (like ReconcileRemoveCatalogueAndSitePlanAsync
-    // below) since it now covers two projects rather than duplicating the
-    // same body twice.
-    private static async Task ReconcileUnpublishAsync(AppDbContext context, string slug)
+    // Not a seed — reintroduces Davutlar D Latis and Hacıfeyzullah - Q-Latis
+    // as "Gelecek Projeler" (client revision, 2026-09-28), superseding the
+    // 2026-08-28 unpublish that previously hid both from the live site
+    // entirely (that call — formerly ReconcileUnpublishAsync — has been
+    // removed from SeedProjectsAsync's call chain). Re-publishing
+    // (IsPublished = true) undoes that unpublish; IsFutureProject = true is
+    // what actually keeps each project out of Devam Eden/Tamamlanan
+    // everywhere (ProjectsController, ProjectsShowcaseViewComponent) and
+    // switches its Project Detail page to the minimal banner+title
+    // presentation (Details.cshtml, HeroBannerProjectDetail). Neither
+    // project's Images/FloorPlans/ConceptVideos/CataloguePath rows are
+    // touched — nothing seeded for them is deleted, only what the Detail
+    // page renders. Idempotent/safe to run every startup, same shape as
+    // every other Reconcile*Async method — a no-op once both flags already
+    // match.
+    private static async Task ReconcileFutureProjectAsync(AppDbContext context, string slug)
     {
         var project = await context.Projects
             .FirstOrDefaultAsync(p => p.Slug == slug);
 
-        if (project is null || !project.IsPublished)
+        if (project is null || (project.IsPublished && project.IsFutureProject))
         {
             return;
         }
 
-        project.IsPublished = false;
+        project.IsPublished = true;
+        project.IsFutureProject = true;
         await context.SaveChangesAsync();
     }
 
@@ -7979,6 +8025,18 @@ public static class DbSeeder
             AddIfMissing($"{exteriorBase}/dis-mekan-gorselleri-{i}.jpg", $"Alinda Gold Residence dış cephe görünümü {i}", "Exterior");
         }
 
+        // Client-supplied follow-up batch (2026-09-28): 4 more dış mekan
+        // photos dropped into the same originals folder. Filenames as
+        // supplied by the client — dis-mekan-gorselleri-9/-10/-11.JPG plus
+        // dis-mekan-gorsellleri-12.JPG (extra "l", not corrected, same
+        // "don't rename client files" precedent as Tralles Gold Residence's
+        // own ic-mekan-gorselleri-3jpg.jpg below). Mixed-case .JPG extension
+        // preserved as-is too, for the same reason.
+        AddIfMissing($"{exteriorBase}/dis-mekan-gorselleri-9.JPG", "Alinda Gold Residence dış cephe görünümü 9", "Exterior");
+        AddIfMissing($"{exteriorBase}/dis-mekan-gorselleri-10.JPG", "Alinda Gold Residence dış cephe görünümü 10", "Exterior");
+        AddIfMissing($"{exteriorBase}/dis-mekan-gorselleri-11.JPG", "Alinda Gold Residence dış cephe görünümü 11", "Exterior");
+        AddIfMissing($"{exteriorBase}/dis-mekan-gorsellleri-12.JPG", "Alinda Gold Residence dış cephe görünümü 12", "Exterior");
+
         const string interiorBase = "/images/projects/alinda-gold/gallery/interior/originals";
         for (var i = 1; i <= 5; i++)
         {
@@ -8207,6 +8265,20 @@ public static class DbSeeder
             AddIfMissing($"{exteriorBase}/dis-mekan-gorselleri-{i}.jpg", $"Tralles Gold Residence dış cephe görünümü {i}", "Exterior");
         }
 
+        // Client-supplied follow-up batch (2026-09-28): 6 more dış mekan
+        // photos dropped into the same originals folder. Filenames as
+        // supplied by the client — dis-mekan-gorselleri-11..15/-17.JPG plus
+        // dis-mekan-gorselleri-16JPG.JPG (double-extension typo, not
+        // corrected, same "don't rename client files" precedent as this
+        // project's own ic-mekan-gorselleri-3jpg.jpg / social-facilties
+        // folder-name typo below).
+        for (var i = 11; i <= 15; i++)
+        {
+            AddIfMissing($"{exteriorBase}/dis-mekan-gorselleri-{i}.JPG", $"Tralles Gold Residence dış cephe görünümü {i}", "Exterior");
+        }
+        AddIfMissing($"{exteriorBase}/dis-mekan-gorselleri-16JPG.JPG", "Tralles Gold Residence dış cephe görünümü 16", "Exterior");
+        AddIfMissing($"{exteriorBase}/dis-mekan-gorselleri-17.JPG", "Tralles Gold Residence dış cephe görünümü 17", "Exterior");
+
         // Filenames as supplied by the client — "ic-mekan-gorselleri-3jpg.jpg"
         // (not renamed/corrected, per the "don't rename client files"
         // instruction, same precedent as social-facilties' own folder-name
@@ -8225,6 +8297,262 @@ public static class DbSeeder
         {
             AddIfMissing($"{interiorBase}/{interiorFiles[i]}", $"Tralles Gold Residence iç mekan görünümü {i + 1}", "Interior");
         }
+
+        await context.SaveChangesAsync();
+    }
+
+    // Client-supplied Social Areas replacement (2026-09-28): the client
+    // dropped a fresh batch of 9 named amenity photos into the existing
+    // gallery/social-facilities folder (barbecue.jpg, cafeteria.jpg,
+    // concierge.jpg, exterior-swimming-pool.png, gym.jpg, hamam.jpg,
+    // parking-lot.jpg, playground-for-kid-1.jpg, spa.jpg — no numbering
+    // supplied, ordered alphabetically by filename) to replace the 3 rows
+    // ReconcileAlindaGoldNewSocialAreasGalleryAsync above currently keeps
+    // active (basketball-court-1.png, kindergarden-1.jpg,
+    // outdoor-swimming-pool-1.jpg). Same "remove stale, add new" shape as
+    // that method and ReconcileTrallesGoldNewSocialAreasGalleryAsync below —
+    // guarded on both ends (RemoveRange only fires on a real match,
+    // AddIfMissing only fires on a real gap), so safe on every startup,
+    // including a freshly seeded database. The 3 superseded rows' photo
+    // files stay on disk untouched per the client's instruction — only
+    // their ProjectImages rows are removed; ReconcileAlindaGoldNewSocialAreasGalleryAsync
+    // itself is left unmodified so its own history/no-op safety net for the
+    // 2026-09-22 batch still applies.
+    private static async Task ReconcileAlindaGoldSocialAreasSecondReplacementAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.Images)
+            .FirstOrDefaultAsync(p => p.Slug == "alinda-gold");
+
+        if (project is null)
+        {
+            return;
+        }
+
+        var oldPaths = new[]
+        {
+            "/images/projects/alinda-gold/gallery/social-facilities/basketball-court-1.png",
+            "/images/projects/alinda-gold/gallery/social-facilities/kindergarden-1.jpg",
+            "/images/projects/alinda-gold/gallery/social-facilities/outdoor-swimming-pool-1.jpg"
+        };
+
+        var staleImages = project.Images
+            .Where(i => i.Category == "Social Areas" && oldPaths.Contains(i.ImagePath))
+            .ToList();
+
+        if (staleImages.Count > 0)
+        {
+            context.ProjectImages.RemoveRange(staleImages);
+            foreach (var stale in staleImages)
+            {
+                project.Images.Remove(stale);
+            }
+        }
+
+        var existingPaths = new HashSet<string>(
+            project.Images.Select(i => i.ImagePath),
+            StringComparer.OrdinalIgnoreCase);
+
+        var nextOrder = project.Images.Count > 0 ? project.Images.Max(i => i.DisplayOrder) + 1 : 1;
+
+        void AddIfMissing(string imagePath, string altText)
+        {
+            if (!existingPaths.Add(imagePath))
+            {
+                return;
+            }
+
+            context.ProjectImages.Add(new ProjectImage
+            {
+                ProjectId = project.Id,
+                ImagePath = imagePath,
+                AltText = altText,
+                DisplayOrder = nextOrder++,
+                Category = "Social Areas"
+            });
+        }
+
+        const string socialAreasBase = "/images/projects/alinda-gold/gallery/social-facilities";
+        AddIfMissing($"{socialAreasBase}/barbecue.jpg", "Alinda Gold Residence barbekü alanı görünümü");
+        AddIfMissing($"{socialAreasBase}/cafeteria.jpg", "Alinda Gold Residence kafeterya görünümü");
+        AddIfMissing($"{socialAreasBase}/concierge.jpg", "Alinda Gold Residence concierge alanı görünümü");
+        AddIfMissing($"{socialAreasBase}/exterior-swimming-pool.png", "Alinda Gold Residence açık yüzme havuzu görünümü");
+        AddIfMissing($"{socialAreasBase}/gym.jpg", "Alinda Gold Residence fitness salonu görünümü");
+        AddIfMissing($"{socialAreasBase}/hamam.jpg", "Alinda Gold Residence hamam görünümü");
+        AddIfMissing($"{socialAreasBase}/parking-lot.jpg", "Alinda Gold Residence otopark görünümü");
+        AddIfMissing($"{socialAreasBase}/playground-for-kid-1.jpg", "Alinda Gold Residence çocuk oyun alanı görünümü");
+        AddIfMissing($"{socialAreasBase}/spa.jpg", "Alinda Gold Residence spa alanı görünümü");
+
+        await context.SaveChangesAsync();
+    }
+
+    // Client-supplied Social Areas replacement (2026-09-28): the client
+    // dropped a fresh batch of 12 named amenity photos into the existing
+    // gallery/social-facilties folder (client's own folder name, kept as-is
+    // per the "don't rename client files" precedent — see
+    // ReconcileTrallesGoldNewSocialAreasGalleryAsync above) to replace the 4
+    // rows that method currently keeps active (basketball-court-2.jpg,
+    // indoor-swimming-pool-2.jpg, kindergarden-2.jpg,
+    // outdoor-swimming-pool-2.jpg). No numbering supplied for the new
+    // batch — ordered alphabetically by filename, with gym-1/gym-2 and
+    // hamam-1/hamam-2 numbered as the client's own filenames already
+    // distinguish. Same "remove stale, add new" shape as
+    // ReconcileAlindaGoldSocialAreasSecondReplacementAsync above — guarded
+    // on both ends, so safe on every startup, including a freshly seeded
+    // database. The 4 superseded rows' photo files stay on disk untouched
+    // per the client's instruction — only their ProjectImages rows are
+    // removed; ReconcileTrallesGoldNewSocialAreasGalleryAsync itself is left
+    // unmodified so its own history/no-op safety net for the 2026-09-22
+    // batch still applies.
+    private static async Task ReconcileTrallesGoldSocialAreasSecondReplacementAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.Images)
+            .FirstOrDefaultAsync(p => p.Slug == "tralles-gold");
+
+        if (project is null)
+        {
+            return;
+        }
+
+        var oldPaths = new[]
+        {
+            "/images/projects/tralles-gold/gallery/social-facilties/basketball-court-2.jpg",
+            "/images/projects/tralles-gold/gallery/social-facilties/indoor-swimming-pool-2.jpg",
+            "/images/projects/tralles-gold/gallery/social-facilties/kindergarden-2.jpg",
+            "/images/projects/tralles-gold/gallery/social-facilties/outdoor-swimming-pool-2.jpg"
+        };
+
+        var staleImages = project.Images
+            .Where(i => i.Category == "Social Areas" && oldPaths.Contains(i.ImagePath))
+            .ToList();
+
+        if (staleImages.Count > 0)
+        {
+            context.ProjectImages.RemoveRange(staleImages);
+            foreach (var stale in staleImages)
+            {
+                project.Images.Remove(stale);
+            }
+        }
+
+        var existingPaths = new HashSet<string>(
+            project.Images.Select(i => i.ImagePath),
+            StringComparer.OrdinalIgnoreCase);
+
+        var nextOrder = project.Images.Count > 0 ? project.Images.Max(i => i.DisplayOrder) + 1 : 1;
+
+        void AddIfMissing(string imagePath, string altText)
+        {
+            if (!existingPaths.Add(imagePath))
+            {
+                return;
+            }
+
+            context.ProjectImages.Add(new ProjectImage
+            {
+                ProjectId = project.Id,
+                ImagePath = imagePath,
+                AltText = altText,
+                DisplayOrder = nextOrder++,
+                Category = "Social Areas"
+            });
+        }
+
+        const string socialAreasBase = "/images/projects/tralles-gold/gallery/social-facilties";
+        AddIfMissing($"{socialAreasBase}/barbecue.png", "Tralles Gold Residence barbekü alanı görünümü");
+        AddIfMissing($"{socialAreasBase}/cafeteria.jpg", "Tralles Gold Residence kafeterya görünümü");
+        AddIfMissing($"{socialAreasBase}/concierge.jpg", "Tralles Gold Residence concierge alanı görünümü");
+        AddIfMissing($"{socialAreasBase}/gym-1.JPG", "Tralles Gold Residence fitness salonu görünümü 1");
+        AddIfMissing($"{socialAreasBase}/gym-2.JPG", "Tralles Gold Residence fitness salonu görünümü 2");
+        AddIfMissing($"{socialAreasBase}/hairdresser.JPG", "Tralles Gold Residence kuaför görünümü");
+        AddIfMissing($"{socialAreasBase}/hamam-1.JPG", "Tralles Gold Residence hamam görünümü 1");
+        AddIfMissing($"{socialAreasBase}/hamam-2.JPG", "Tralles Gold Residence hamam görünümü 2");
+        AddIfMissing($"{socialAreasBase}/indoor-playground.jpg", "Tralles Gold Residence kapalı çocuk oyun alanı görünümü");
+        AddIfMissing($"{socialAreasBase}/indoor-swimming-pool.png", "Tralles Gold Residence kapalı yüzme havuzu görünümü");
+        AddIfMissing($"{socialAreasBase}/parking-lot.jpg", "Tralles Gold Residence otopark görünümü");
+        AddIfMissing($"{socialAreasBase}/spa.jpg", "Tralles Gold Residence spa alanı görünümü");
+
+        await context.SaveChangesAsync();
+    }
+
+    // Client-supplied Social Areas replacement (2026-09-28): the client
+    // dropped a fresh batch of 5 named amenity photos into the existing
+    // gallery/social-facilities folder (barbecue.jpg, cafetaria.jpg,
+    // concierge.jpg, hamam.jpg, indoor-parking-lot.jpg — no numbering
+    // supplied, ordered alphabetically by filename) to replace the 4
+    // "sosyal-alan-N" rows ReconcileMagnesiaGoldNewGalleryBatchAsync above
+    // currently keeps active. Same "remove stale, add new" shape as
+    // ReconcileAlindaGoldSocialAreasSecondReplacementAsync/
+    // ReconcileTrallesGoldSocialAreasSecondReplacementAsync above — guarded
+    // on both ends, so safe on every startup, including a freshly seeded
+    // database. The 4 superseded rows' photo files stay on disk untouched
+    // per the client's instruction — only their ProjectImages rows are
+    // removed; ReconcileMagnesiaGoldNewGalleryBatchAsync/
+    // ReconcileMagnesiaGoldRemoveBasketballCourt2Async/
+    // ReconcileMagnesiaGoldRemoveFirstFourSocialAreaImagesAsync are left
+    // unmodified so their own history/no-op safety nets still apply.
+    private static async Task ReconcileMagnesiaGoldSocialAreasSecondReplacementAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.Images)
+            .FirstOrDefaultAsync(p => p.Slug == "magnesia-gold");
+
+        if (project is null)
+        {
+            return;
+        }
+
+        var oldPaths = new[]
+        {
+            "/images/projects/magnesia-gold/gallery/social-facilities/sosyal-alan-1.JPG",
+            "/images/projects/magnesia-gold/gallery/social-facilities/sosyal-alan-2.JPG",
+            "/images/projects/magnesia-gold/gallery/social-facilities/sosyal-alan-3.JPG",
+            "/images/projects/magnesia-gold/gallery/social-facilities/sosyal-alan-4.jpeg"
+        };
+
+        var staleImages = project.Images
+            .Where(i => i.Category == "Social Areas" && oldPaths.Contains(i.ImagePath))
+            .ToList();
+
+        if (staleImages.Count > 0)
+        {
+            context.ProjectImages.RemoveRange(staleImages);
+            foreach (var stale in staleImages)
+            {
+                project.Images.Remove(stale);
+            }
+        }
+
+        var existingPaths = new HashSet<string>(
+            project.Images.Select(i => i.ImagePath),
+            StringComparer.OrdinalIgnoreCase);
+
+        var nextOrder = project.Images.Count > 0 ? project.Images.Max(i => i.DisplayOrder) + 1 : 1;
+
+        void AddIfMissing(string imagePath, string altText)
+        {
+            if (!existingPaths.Add(imagePath))
+            {
+                return;
+            }
+
+            context.ProjectImages.Add(new ProjectImage
+            {
+                ProjectId = project.Id,
+                ImagePath = imagePath,
+                AltText = altText,
+                DisplayOrder = nextOrder++,
+                Category = "Social Areas"
+            });
+        }
+
+        const string socialAreasBase = "/images/projects/magnesia-gold/gallery/social-facilities";
+        AddIfMissing($"{socialAreasBase}/barbecue.jpg", "Magnesia Gold Residence barbekü alanı görünümü");
+        AddIfMissing($"{socialAreasBase}/cafetaria.jpg", "Magnesia Gold Residence kafeterya görünümü");
+        AddIfMissing($"{socialAreasBase}/concierge.jpg", "Magnesia Gold Residence concierge alanı görünümü");
+        AddIfMissing($"{socialAreasBase}/hamam.jpg", "Magnesia Gold Residence hamam görünümü");
+        AddIfMissing($"{socialAreasBase}/indoor-parking-lot.jpg", "Magnesia Gold Residence kapalı otopark görünümü");
 
         await context.SaveChangesAsync();
     }

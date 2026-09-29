@@ -103,7 +103,8 @@ public class HeroBannerProjectDetailViewComponent : ViewComponent
         bool catalogueComingSoonHeroToast,
         IReadOnlyList<string> sitePlanImageUrls,
         bool sitePlanComingSoon,
-        string scrollTargetId)
+        string scrollTargetId,
+        bool isFutureProject = false)
     {
         var model = new HeroBannerProjectDetailViewModel
         {
@@ -120,7 +121,8 @@ public class HeroBannerProjectDetailViewComponent : ViewComponent
             CatalogueComingSoonHeroToast = catalogueComingSoonHeroToast,
             SitePlanImageUrls = sitePlanImageUrls,
             SitePlanComingSoon = sitePlanComingSoon,
-            ScrollTargetId = scrollTargetId
+            ScrollTargetId = scrollTargetId,
+            IsFutureProject = isFutureProject
         };
 
         return View(model);

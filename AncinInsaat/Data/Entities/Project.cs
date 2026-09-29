@@ -90,6 +90,23 @@ public class Project
     public int DisplayOrder { get; set; }
     public bool IsFeatured { get; set; }
     public bool IsPublished { get; set; }
+
+    // When true, this project is a "Gelecek Projeler" (future/undisclosed)
+    // listing rather than a normal Ongoing/Completed one (Q-Latis/D-Latis
+    // Gelecek Projeler revision, 2026-09-28) — ProjectsController.Index
+    // gives it StatusFilterValue "future" instead of the usual Status-based
+    // ongoing/completed value (so it surfaces only under "Tümü"/"Gelecek
+    // Projeler", never "Devam Eden"/"Tamamlanan"), ProjectsShowcaseViewComponent
+    // excludes it from the Home "Devam Eden Projeler" carousel regardless of
+    // Status, and ProjectsController.Details/HeroBannerProjectDetail render
+    // its Project Detail page as banner + title only (faded banner, no
+    // gallery/concept/floor plans/catalogue). Status itself is left
+    // unchanged by this flag — deliberately not a third ProjectStatus enum
+    // value, so every existing Status-based ternary/switch across the
+    // codebase keeps working unmodified for every other project. False
+    // (default) for every project except Davutlar D Latis and Hacıfeyzullah
+    // - Q-Latis.
+    public bool IsFutureProject { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 

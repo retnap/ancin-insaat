@@ -2134,6 +2134,117 @@ select[aria-invalid='true'] {
   margin-block-end: var(--space-md);
 }
 
+/* ---- Hero — Future Project (Gelecek Projeler) ----
+   Q-Latis/D-Latis revision, 2026-09-28 — a scoped variant of the Project
+   Detail Hero for a project not yet fully disclosed. Adds a dimming scrim
+   and a large "?" mark on top of the existing .hero-bg (its zoom-in/
+   zoom-out breathe keeps running underneath, completely untouched), and
+   lifts .hero-inner above both so the title stays fully legible. Nothing
+   here changes .hero/.hero-bg's base rules, so every other project's Hero
+   renders exactly as before — only .hero--future-project opts in. */
+
+.hero--future-project .hero-inner {
+  position: relative;
+  z-index: 2;
+}
+
+/* Title made more subdued than a normal project's Hero heading (2026-09-28
+   revision) so it visually recedes behind .hero-future-question below —
+   opacity only, nothing else about .hero-heading/.hero-heading--project
+   (font, size, position) changes, and no other Hero variant is affected. */
+.hero--future-project .hero-heading {
+  opacity: 0.62;
+}
+
+.hero-future-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  /* .hero-bg already paints its own permanent 55%-black readability
+     overlay baked into its background-image; this adds further, deliberate
+     dimming on top so a future project's banner reads as noticeably
+     faded/muted next to a normal project's Hero. */
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-near-black) 78%, transparent) 0%,
+    color-mix(in srgb, var(--color-near-black) 60%, transparent) 45%,
+    color-mix(in srgb, var(--color-near-black) 82%, transparent) 100%
+  );
+}
+
+.hero-future-mark {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.hero-future-question {
+  font-family: var(--font-heading, inherit);
+  /* Enlarged (2026-09-28 revision) so the mark reads as clearly dominant
+     without covering the full banner — animation/timing below is
+     untouched, only this size step changed. */
+  font-size: clamp(9rem, 27vw, 19rem);
+  font-weight: var(--font-weight-bold, 700);
+  line-height: 1;
+  color: color-mix(in srgb, var(--color-white) 92%, transparent);
+  text-shadow: 0 0.5rem 2.5rem color-mix(in srgb, var(--color-near-black) 45%, transparent);
+  /* Runs once on load, then holds its final state ("both") — not a
+     looping/bouncing spinner. 2026-09-28 revision: replaced the earlier
+     multi-stage clip-path/blur "construction" reveal with a single,
+     minimal fade + gentle scale/settle — a flatter, more corporate
+     entrance in line with the rest of the site's Hero motion. Collapsed
+     to a near-instant single frame by the global prefers-reduced-motion
+     rule (Section 6) — no separate override needed here. */
+  animation: hero-future-question-reveal 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes hero-future-question-reveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(0.5rem);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-future-question {
+    font-size: clamp(7rem, 38vw, 12rem);
+  }
+}
+
+/* Future Project footer spacing (Q-Latis/D-Latis revision, 2026-09-28) —
+   a plain spacer block Details.cshtml renders only when IsFutureProject,
+   right after the Hero, so the CtaBanner ("Tüm Projeler" strip)/Footer
+   below it don't sit flush against the banner. Mirrors .section's own
+   responsive padding-block scale above (2xl → 3xl → 4xl) rather than a
+   fixed value, so the gap feels like an intentional section gap and not
+   an arbitrary margin. Nothing about .hero--future-project, CtaBanner or
+   .footer is touched — only this new, additive element. */
+.future-project-footer-spacer {
+  block-size: var(--space-2xl);
+}
+
+@media (min-width: 768px) {
+  .future-project-footer-spacer {
+    block-size: var(--space-3xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .future-project-footer-spacer {
+    block-size: var(--space-4xl);
+  }
+}
+
 .hero-heading {
   color: var(--color-white);
 }
@@ -3346,6 +3457,13 @@ select[aria-invalid='true'] {
   background-color: color-mix(in srgb, var(--color-near-black) 65%, transparent);
 }
 
+/* Gelecek Projeler (Q-Latis/D-Latis revision, 2026-09-28) — same shape as
+   --completed/--ongoing above, its own neutral/muted fill so a "Yakında"
+   badge never reads as either an active-construction or finished project. */
+.project-status-badge--future {
+  background-color: color-mix(in srgb, var(--color-dark-gray) 75%, transparent);
+}
+
 .projects-slider-nav {
   display: flex;
   justify-content: flex-end;
@@ -3707,6 +3825,17 @@ select[aria-invalid='true'] {
   letter-spacing: 0.02em;
   text-shadow: 0 2px 16px rgba(0, 0, 0, 0.45);
   pointer-events: none;
+}
+
+/* Q-Latis card title (2026-09-28 revision, bumped again same day per
+   client feedback that the first increase wasn't enough) — now two steps
+   larger than the shared .project-card-standard-title-overlay size above,
+   scoped to this slug only (_ProjectCard.cshtml); Ferhunde Hanım Apt.'s own
+   title overlay and D-Latis (no override class, uses the shared size) are
+   unaffected. Expressed as a multiplier of the shared token rather than a
+   fixed rem value so it stays proportional if that token ever changes. */
+.project-card-standard-title-overlay--q-latis {
+  font-size: calc(var(--font-size-h3) * 1.24);
 }
 
 .project-card-standard-scrim {

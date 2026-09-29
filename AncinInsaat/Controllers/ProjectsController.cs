@@ -213,7 +213,16 @@ public class ProjectsController : Controller
             ["nlatis"] = "/images/projects/nlatis/banner/n-latis-banner.jpeg",
             ["ferhunde-hanim-apt"] = "/images/projects/ferhunde-hanim-apt/banner/ferhunde-hanim-yeni-banner-2.jpeg",
             ["la-fiore-karabag"] = "/images/projects/la-fiore-karabag/banner/la-fiore-karabag-birinci-yeni-banner-2.jpeg",
-            ["la-fiore-karabag-2-etap"] = "/images/projects/la-fiore-karabag-2-etap/banner/la-fiore-karabag-ikinci-yeni-banner-2.jpeg",
+            // La Fiore Karabağ 2. Etap (2026-09-28 client request) — the
+            // banner now reuses "Tüm Dış Mekan Görselleri" gallery photo #36
+            // (gallery/all-exterior/originals/36.jpeg, this project's own
+            // Gallery-display order), copied — not moved — into this
+            // project's banner/ folder as its own dedicated file so the
+            // original gallery photo stays in the Gallery unaffected. See
+            // ProjectsShowcaseViewComponent.CardImageOverridesBySlug's
+            // matching entry, repointed at the exact same file so the Home
+            // "Devam Eden Projeler" card and this Hero never drift apart.
+            ["la-fiore-karabag-2-etap"] = "/images/projects/la-fiore-karabag-2-etap/banner/la-fiore-2-etap-banner-36.jpeg",
             ["q-latis"] = "/images/projects/q-latis/banner/hacıfeyzullah banner deneme.png"
         };
 
@@ -249,15 +258,29 @@ public class ProjectsController : Controller
 
         var cards = projects.Select(project => new ProjectCardModel
         {
+            Slug = project.Slug,
             Name = project.Name,
             CoverImageSrc = CardImageOverridesBySlug.TryGetValue(project.Slug, out var cardImageOverride)
                 ? cardImageOverride
                 : ResolveCoverImage(project.CoverImage),
-            StatusLabel = project.Status == ProjectStatus.Completed ? "Tamamlandı" : "Devam Ediyor",
-            StatusModifierClass = project.Status == ProjectStatus.Completed
-                ? "project-status-badge--completed"
-                : "project-status-badge--ongoing",
-            StatusFilterValue = project.Status == ProjectStatus.Completed ? "completed" : "ongoing",
+            // Gelecek Projeler (2026-09-28 client request) — IsFutureProject
+            // overrides the normal Status-based label/class/filter value
+            // entirely, independent of the project's actual Status (left
+            // untouched at Ongoing for Davutlar D Latis/Hacıfeyzullah -
+            // Q-Latis — see Project.IsFutureProject) so it never matches the
+            // "Devam Eden"/"Tamamlanan" tabs, only "Tümü" and the new
+            // "Gelecek Projeler" tab (Views/Projects/Index.cshtml).
+            StatusLabel = project.IsFutureProject
+                ? "Yakında"
+                : project.Status == ProjectStatus.Completed ? "Tamamlandı" : "Devam Ediyor",
+            StatusModifierClass = project.IsFutureProject
+                ? "project-status-badge--future"
+                : project.Status == ProjectStatus.Completed
+                    ? "project-status-badge--completed"
+                    : "project-status-badge--ongoing",
+            StatusFilterValue = project.IsFutureProject
+                ? "future"
+                : project.Status == ProjectStatus.Completed ? "completed" : "ongoing",
             DetailUrl = $"/projects/{project.Slug}",
             Location = project.Location,
             ProjectType = project.ProjectType,
@@ -382,6 +405,14 @@ public class ProjectsController : Controller
         {
             Name = project.Name,
             Slug = project.Slug,
+            // Gelecek Projeler (2026-09-28 client request) — every field
+            // below is still computed exactly as before from this project's
+            // real seeded data (Gallery/Concept/Floor Plans/Catalogue/etc.),
+            // nothing is skipped or deleted; IsFutureProject only tells
+            // Details.cshtml/HeroBannerProjectDetail to render banner+title
+            // only and hide the rest, so flipping this flag back off later
+            // needs no other code or data change.
+            IsFutureProject = project.IsFutureProject,
             StatusLabel = statusLabel,
             StatusModifierClass = statusModifierClass,
             // Nysa Gold temporarily points at the client's freshly uploaded

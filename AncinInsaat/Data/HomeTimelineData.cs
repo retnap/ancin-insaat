@@ -198,12 +198,41 @@ public static class HomeTimelineData
         },
         new()
         {
-            Year = "2020",
+            Year = "2021",
             Title = "Magnesia Gold",
             ImageSrc = "/images/projects/magnesia-gold/gallery/exterior/originals/dis-mekan-1.jpeg",
             ImageAlt = "Magnesia Gold dış cephe görünümü",
-            Summary = "2020 yılında tamamlanan Magnesia Gold, Ancın İnşaat'ın Aydın'daki en kapsamlı site projelerinden biri olarak hayata geçirildi.",
+            Summary = "2021 yılında tamamlanan Magnesia Gold, Ancın İnşaat'ın Aydın'daki en kapsamlı site projelerinden biri olarak hayata geçirildi.",
             Detail = "Çok bloklu yerleşim planı, geniş peyzaj alanları ve sosyal donatılarıyla tasarlanan proje, şirketin büyük ölçekli site organizasyonundaki deneyimini bir üst seviyeye taşıdı. Magnesia Gold, Ancın İnşaat'ın konut projelerinde sürdürdüğü kalite ve yaşam standardı anlayışının güçlü bir yansımasıdır."
+        },
+        // Ferhunde Hanım Apartmanı ve La Fiore Karabağ 1. Etap
+        // (Q-Latis/D-Latis revision, 2026-09-28 — client-requested Zaman
+        // Tüneli additions). Images reuse each project's own existing
+        // gallery/exterior thumbnails (already-optimized .webp files, no
+        // new assets created) rather than their raw banner originals, which
+        // are multi-megabyte source photos unsuited to a timeline card
+        // thumbnail — see ProjectsController's own precedent (La Fiore
+        // Karabağ 1. Etap's 8.3MB Hero PNG replaced with a proper .webp
+        // for the same reason). Summary/Detail copy is drawn from each
+        // project's own seeded Description (DbSeeder.cs) — no new claims,
+        // specs or dates introduced beyond what that record already states.
+        new()
+        {
+            Year = "2026",
+            Title = "Ferhunde Hanım Apartmanı",
+            ImageSrc = "/images/projects/ferhunde-hanim-apt/gallery/exterior/thumbnails/exterior-02.webp",
+            ImageAlt = "Ferhunde Hanım Apartmanı dış cephe görünümü",
+            Summary = "2026 yılında tamamlanan Ferhunde Hanım Apartmanı, Aydın Efeler'de yumuşak hatlı balkonları ve özenle seçilmiş cephe dokusuyla dikkat çeken bir konut projesidir.",
+            Detail = "Geniş camları ve ferah balkonlarıyla her kata bol doğal ışık taşıyan proje, yüksek çitlerle çevrili özel bahçe alanıyla sakinlerine güvenli ve huzurlu bir dış mekân yaşamı sunuyor. Ferhunde Hanım Apartmanı, Ancın İnşaat'ın Aydın Efeler'deki şehir içi konut projelerindeki deneyimini yansıtan yapılardan biri oldu."
+        },
+        new()
+        {
+            Year = "2026",
+            Title = "La Fiore Karabağ 1. Etap",
+            ImageSrc = "/images/projects/la-fiore-karabag/gallery/exterior/thumbnails/3.webp",
+            ImageAlt = "La Fiore Karabağ 1. Etap dış cephe görünümü",
+            Summary = "2026 yılında tamamlanan La Fiore Karabağ 1. Etap, Aydın İncirliova'da gür bir çam ormanının içine yerleştirilmiş tek katlı villalarıyla sakin ve mahrem bir yaşam alanı sunuyor.",
+            Detail = "Taş kaplı cepheleri ve ahşap detaylarıyla dikkat çeken villalar, peyzajlı bahçeleri ve güvenlikli giriş noktasıyla doğayla iç içe bir günlük yaşam vaat ediyor. La Fiore Karabağ 1. Etap, Ancın İnşaat'ın villa ölçeğindeki proje deneyimini yansıtan yapılardan biri oldu."
         }
     };
 }

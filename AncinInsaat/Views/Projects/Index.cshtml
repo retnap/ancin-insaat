@@ -21,6 +21,13 @@
                 <button type="button" class="project-tab is-active" data-project-filter="all" aria-pressed="true">Tümü</button>
                 <button type="button" class="project-tab" data-project-filter="ongoing" aria-pressed="false">Devam Eden</button>
                 <button type="button" class="project-tab" data-project-filter="completed" aria-pressed="false">Tamamlanan</button>
+                @* Gelecek Projeler (Q-Latis/D-Latis revision, 2026-09-28) —
+                   same tab markup/interaction as the three above; the
+                   filter script (site.js) already matches any
+                   data-project-filter value against each card's
+                   data-project-status generically, so no script change was
+                   needed for this 4th tab. *@
+                <button type="button" class="project-tab" data-project-filter="future" aria-pressed="false">Gelecek Projeler</button>
             </div>
 
             <div class="filter-row">

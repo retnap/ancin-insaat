@@ -44,6 +44,13 @@
     // Daire Planları (_FloorPlans.cshtml) keeps working. Same slug-gated
     // pattern already used by _FloorPlans.cshtml's PLANLAR heading.
     var hideCatalogueHeroButton = Model.Slug is "alinda-gold" or "magnesia-gold" or "tralles-gold" or "nlatis";
+
+    // Gelecek Projeler (Q-Latis/D-Latis revision, 2026-09-28) — appends the
+    // future-project modifier class, which site.css uses to layer the
+    // faded scrim + "?" mark over .hero-bg (still animating its normal
+    // zoom) and to lift .hero-inner above them; it never touches .hero/
+    // .hero-bg's base rules, so every other project's Hero is unaffected.
+    var heroSectionClass = "hero hero--project-detail hero--overlap-navbar hero--full-viewport" + (Model.IsFutureProject ? " hero--future-project" : "");
 }
 
 @* Nysa Gold Residence reference redesign (2026-08-07), rolled out as the
@@ -56,16 +63,29 @@
    "i" instead becomes "İ" (dotted capital I), the cause of the
    "RESİDENCE" defect. Project names are brand names, not Turkish prose, so
    overriding the language here is correct rather than a workaround. *@
-<section class="hero hero--project-detail hero--overlap-navbar hero--full-viewport" style="@heroStyle" aria-labelledby="hero-heading">
+<section class="@heroSectionClass" style="@heroStyle" aria-labelledby="hero-heading">
     <div class="hero-bg" aria-hidden="true"></div>
 
-    <nav class="hero-social-nav" aria-label="Sosyal medya">
-        @await Component.InvokeAsync("SocialMedia")
-    </nav>
+    @if (Model.IsFutureProject)
+    {
+        @* Gelecek Projeler (2026-09-28) — the faded scrim sits above
+           .hero-bg (still zooming underneath, untouched) and below
+           .hero-inner's heading; the "?" gets its own layer so the scrim's
+           opacity never has to double as the mark's, and its entrance
+           animation runs once on load — see site.css. *@
+        <div class="hero-future-overlay" aria-hidden="true"></div>
+        <div class="hero-future-mark" aria-hidden="true"><span class="hero-future-question">?</span></div>
+    }
+    else
+    {
+        <nav class="hero-social-nav" aria-label="Sosyal medya">
+            @await Component.InvokeAsync("SocialMedia")
+        </nav>
+    }
 
     <div class="container hero-inner">
         <div class="hero-content hero-content--start">
-            @if (!string.IsNullOrWhiteSpace(Model.StatusLabel))
+            @if (!string.IsNullOrWhiteSpace(Model.StatusLabel) && !Model.IsFutureProject)
             {
                 <span class="project-status-badge @Model.StatusModifierClass hero-status-badge">@Model.StatusLabel</span>
             }
@@ -84,7 +104,7 @@
             else
             {
                 <h1 id="hero-heading" class="@headingClass" lang="en">@Model.Heading</h1>
-                @if (!string.IsNullOrWhiteSpace(Model.Subheading))
+                @if (!string.IsNullOrWhiteSpace(Model.Subheading) && !Model.IsFutureProject)
                 {
                     <p class="hero-subheading">@Model.Subheading</p>
                 }
@@ -92,6 +112,8 @@
         </div>
     </div>
 
+    @if (!Model.IsFutureProject)
+    {
     <div class="hero-bottom">
         <div class="hero-actions hero-actions--attached">
             @if (Model.SitePlanImageUrls.Count > 0)
@@ -174,4 +196,5 @@
         }
         <partial name="_ScrollIndicator" model="scrollIndicatorModel" />
     </div>
+    }
 </section>

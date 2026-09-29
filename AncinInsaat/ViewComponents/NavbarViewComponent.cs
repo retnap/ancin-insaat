@@ -8,7 +8,9 @@ public class NavbarViewComponent : ViewComponent
     // so the active-state check and the dropdown's own links can never
     // drift apart (docs/14_Decisions.md, Global Navigation & Search
     // milestone: HR Policy moved here from the now-flattened Kariyer item).
-    private static readonly string[] CorporateControllers = { "About", "Values", "HrPolicy", "Kvkk" };
+    // "SocialResponsibility" (Sosyal Sorumluluk Projelerimiz, 2026-09-28
+    // client request) added alongside the existing four.
+    private static readonly string[] CorporateControllers = { "About", "Values", "HrPolicy", "Kvkk", "SocialResponsibility" };
 
     public IViewComponentResult Invoke()
     {

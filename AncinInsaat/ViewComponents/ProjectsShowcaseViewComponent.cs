@@ -97,7 +97,12 @@ public class ProjectsShowcaseViewComponent : ViewComponent
             ["nlatis"] = "/images/projects/nlatis/proje-karti/card-background.webp",
             ["ferhunde-hanim-apt"] = "/images/projects/ferhunde-hanim-apt/banner/ferhunde-hanim-yeni-banner-2.jpeg",
             ["la-fiore-karabag"] = "/images/projects/la-fiore-karabag/banner/la-fiore-karabag-birinci-yeni-banner-2.jpeg",
-            ["la-fiore-karabag-2-etap"] = "/images/projects/la-fiore-karabag-2-etap/banner/la-fiore-karabag-ikinci-yeni-banner-2.jpeg",
+            // La Fiore Karabağ 2. Etap (2026-09-28 client request) — repointed
+            // at the same copied Gallery photo #36 now used as this
+            // project's Project Detail Hero Banner (see
+            // ProjectsController.HeroBannerImageOverridesBySlug's matching
+            // entry) so the two never drift apart.
+            ["la-fiore-karabag-2-etap"] = "/images/projects/la-fiore-karabag-2-etap/banner/la-fiore-2-etap-banner-36.jpeg",
             // Hacıfeyzullah - Q-Latis (2026-08-20 client request) — same
             // raw-file treatment as ProjectsController's own override (no
             // logo overlay supplied, so it is intentionally absent from
@@ -135,8 +140,14 @@ public class ProjectsShowcaseViewComponent : ViewComponent
         // Home page shows ongoing projects only (2026-08-03 request) — this
         // filters the shared published list locally rather than adding a
         // new IProjectQueryService method, so /projects and its own
-        // filtering stay untouched.
-        var ongoingProjects = projects.Where(project => project.Status == ProjectStatus.Ongoing);
+        // filtering stay untouched. Gelecek Projeler (Q-Latis/D-Latis
+        // revision, 2026-09-28) — IsFutureProject additionally excludes
+        // Davutlar D Latis/Hacıfeyzullah - Q-Latis from this "Devam Eden
+        // Projeler" carousel, even though Status stays Ongoing for both
+        // (see Data.Entities.Project.IsFutureProject); they now surface
+        // only via the Projects listing's own "Gelecek Projeler"/"Tümü"
+        // tabs, never here.
+        var ongoingProjects = projects.Where(project => project.Status == ProjectStatus.Ongoing && !project.IsFutureProject);
 
         var cards = ongoingProjects.Select(project => new ProjectShowcaseCardModel
         {

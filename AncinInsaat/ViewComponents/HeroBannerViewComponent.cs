@@ -51,19 +51,21 @@ public class HeroBannerViewComponent : ViewComponent
             // into the banner.webp slot every other project uses) per the
             // 2026-08-20 request to preview it as-is before optimization.
             // Le Jardin follows the same approach (2026-08-20 request). La
-            // Fiore Karabağ 2. Etap was repointed to its newest client-
-            // supplied banner photo (2026-09-17 Home Page Banner refresh) —
-            // same file ProjectsController's HeroBannerImageOverridesBySlug
-            // already uses for this project's own Project Detail hero; the
-            // previous "lafiore 2.etap banner deneme.png" stays on disk
-            // untouched.
+            // Fiore Karabağ 2. Etap (2026-09-28 client request) is repointed
+            // at the same copied Gallery photo #36 (banner/la-fiore-2-etap-
+            // banner-36.jpeg) now used by this project's own Project Detail
+            // Hero (ProjectsController.HeroBannerImageOverridesBySlug) and
+            // Home "Devam Eden Projeler" card (ProjectsShowcaseViewComponent.
+            // CardImageOverridesBySlug), so all three surfaces stay in sync
+            // on the exact same physical asset; the previous "la-fiore-
+            // karabag-ikinci-yeni-banner-2.jpeg" stays on disk untouched.
             BackgroundImageUrl = latestProject is not null
                 ? latestProject.Slug == "nysa-gold"
                     ? "/images/projects/nysa-gold/banner/nysa gold 4k.png"
                     : latestProject.Slug == "le-jardin"
                         ? "/images/projects/le-jardin/banner/le jardin banner.png"
                         : latestProject.Slug == "la-fiore-karabag-2-etap"
-                            ? "/images/projects/la-fiore-karabag-2-etap/banner/la-fiore-karabag-ikinci-yeni-banner-2.jpeg"
+                            ? "/images/projects/la-fiore-karabag-2-etap/banner/la-fiore-2-etap-banner-36.jpeg"
                             : $"/images/projects/{latestProject.Slug}/banner.webp"
                 : null,
             ProjectCtaLabel = latestProject is not null ? "Projeye Git" : null,

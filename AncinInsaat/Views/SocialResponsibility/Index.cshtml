@@ -1,0 +1,28 @@
+@*
+    Sosyal Sorumluluk Projelerimiz (new Kurumsal navigation item, 2026-09-28
+    client request). Title/description/canonical/OG/WebPage schema come from
+    ViewData["Seo"] + ViewData["SeoPageType"], set in
+    SocialResponsibilityController.Index via ISeoService — see
+    _Layout.cshtml's <head> and SeoStructuredDataViewComponent.
+
+    Intentionally empty content page — no real copy/projects/imagery has
+    been supplied yet, so this renders only the shared Breadcrumb + the
+    shared Section Header (existing _SectionHeader.cshtml/SectionHeaderModel,
+    reused as-is, no new component) with just a title. No placeholder text,
+    Lorem Ipsum, invented projects or imagery — ready for real content to be
+    added later with no structural change needed.
+*@
+
+@{
+    var breadcrumbTrail = new List<AncinInsaat.ViewComponents.BreadcrumbItem>
+    {
+        new() { Label = "Sosyal Sorumluluk Projelerimiz" }
+    };
+}
+@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail, homeLabel = "Anasayfa" })
+
+<section class="section">
+    <div class="container">
+        <partial name="_SectionHeader" model="@(new AncinInsaat.Models.SectionHeaderModel { Title = "Sosyal Sorumluluk Projelerimiz" })" />
+    </div>
+</section>

@@ -278,6 +278,9 @@ namespace AncinInsaat.Data.Migrations
                     b.Property<bool>("IsFeatured")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsFutureProject")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("IsPublished")
                         .HasColumnType("INTEGER");
 
