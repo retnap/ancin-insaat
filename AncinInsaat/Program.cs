@@ -6,6 +6,22 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Render assigns the container's listen port via the PORT environment
+// variable at container start (not known at build/publish time) and scans
+// for an open TCP port on that value — it does not read the Dockerfile's
+// EXPOSE, and nothing guarantees ASPNETCORE_HTTP_PORTS ends up honored by
+// every possible way this service could be run/redeployed. Binding
+// explicitly here keeps the app discoverable by Render's port scan
+// regardless. 10000 is Render's own documented default, used only when
+// PORT isn't set. Scoped to non-Development so plain `dotnet run`/IIS
+// Express keep using Properties/launchSettings.json's existing local ports
+// (PORT is never set in those profiles) exactly as before.
+if (!builder.Environment.IsDevelopment())
+{
+    var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
+    builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+}
+
 builder.Services.AddControllersWithViews();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
