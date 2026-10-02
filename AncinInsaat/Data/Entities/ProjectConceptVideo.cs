@@ -22,6 +22,12 @@ public class ProjectConceptVideo
     public required string Title { get; set; }
     public required string Description { get; set; }
 
+    // English localization (2026-10-02) — nullable companions; null falls
+    // back to the Turkish fields above.
+    public string? EyebrowEn { get; set; }
+    public string? TitleEn { get; set; }
+    public string? DescriptionEn { get; set; }
+
     public int DisplayOrder { get; set; }
 
     public Project Project { get; set; } = null!;

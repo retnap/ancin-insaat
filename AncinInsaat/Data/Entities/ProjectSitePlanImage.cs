@@ -14,6 +14,10 @@ public class ProjectSitePlanImage
     public required string ImagePath { get; set; }
     public string AltText { get; set; } = string.Empty;
 
+    // English localization (2026-10-02) — nullable companion; null falls
+    // back to AltText above.
+    public string? AltTextEn { get; set; }
+
     public int DisplayOrder { get; set; }
 
     public Project Project { get; set; } = null!;

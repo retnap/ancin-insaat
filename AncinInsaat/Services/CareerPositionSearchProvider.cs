@@ -1,3 +1,4 @@
+using System.Globalization;
 using AncinInsaat.Models;
 
 namespace AncinInsaat.Services;
@@ -23,20 +24,29 @@ public class CareerPositionSearchProvider : ISearchIndexProvider
 
     public async Task<IReadOnlyList<SearchResultItem>> GetItemsAsync(CancellationToken cancellationToken = default)
     {
+        var isEnglish = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+
         var positions = await _careerPositionQueryService.GetPublishedAsync(cancellationToken);
 
         return positions
-            .Select((position, index) => new SearchResultItem
+            .Select((position, index) =>
             {
-                Title = position.Title,
-                Description = string.IsNullOrWhiteSpace(position.Description)
-                    ? "Açık pozisyon detaylarını görüntüleyin."
-                    : position.Description,
-                Url = "/career",
-                Category = "Kariyer",
-                Keywords = string.Join(' ', new[] { position.Department, position.Location }
-                    .Where(part => !string.IsNullOrWhiteSpace(part))),
-                SortOrder = BaseSortOrder + index
+                var title = isEnglish && !string.IsNullOrWhiteSpace(position.TitleEn) ? position.TitleEn : position.Title;
+                var description = isEnglish && !string.IsNullOrWhiteSpace(position.DescriptionEn) ? position.DescriptionEn : position.Description;
+                var department = isEnglish && !string.IsNullOrWhiteSpace(position.DepartmentEn) ? position.DepartmentEn : position.Department;
+
+                return new SearchResultItem
+                {
+                    Title = title,
+                    Description = string.IsNullOrWhiteSpace(description)
+                        ? (isEnglish ? "View this open position's details." : "Açık pozisyon detaylarını görüntüleyin.")
+                        : description,
+                    Url = isEnglish ? "/en/career" : "/career",
+                    Category = isEnglish ? "Career" : "Kariyer",
+                    Keywords = string.Join(' ', new[] { department, position.Location }
+                        .Where(part => !string.IsNullOrWhiteSpace(part))),
+                    SortOrder = BaseSortOrder + index
+                };
             })
             .ToList();
     }

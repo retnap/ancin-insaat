@@ -1,4 +1,14 @@
 @model AncinInsaat.Models.ProjectDetailViewModel
+@using System.Globalization
+
+@{
+    // English localization (2026-10-02) — same CultureInfo-driven pattern
+    // every other shared partial on the site uses. category.Label is
+    // already localized by ProjectsController.Details
+    // (GalleryCategoryLabels/GalleryCategoryLabelsEn), so this partial only
+    // translates its own static chrome.
+    var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+}
 
 @* Image Gallery, redesigned as premium Category Cards (Gallery Category
    Cards redesign, 2026-08-04 — inspired by, not copying,
@@ -67,18 +77,18 @@
 
 @if (Model.GalleryImages.Count == 0)
 {
-    <p class="projects-grid-empty">Bu proje için galeri görselleri yakında eklenecek.</p>
+    <p class="projects-grid-empty">@(isEn ? "Gallery images for this project will be added soon." : "Bu proje için galeri görselleri yakında eklenecek.")</p>
 }
 else
 {
     <div class="project-gallery-header">
-        <h2 id="project-gallery-heading" class="sr-only">Galeri</h2>
-        <p class="project-gallery-title" aria-hidden="true">GALERİ</p>
+        <h2 id="project-gallery-heading" class="sr-only">@(isEn ? "Gallery" : "Galeri")</h2>
+        <p class="project-gallery-title" aria-hidden="true">@(isEn ? "GALLERY" : "GALERİ")</p>
 
         <partial name="_FilterDropdown" model="@(new AncinInsaat.Models.FilterDropdownModel
         {
             FilterKey = "gallery-category",
-            Placeholder = "Tüm Görseller",
+            Placeholder = isEn ? "All Images" : "Tüm Görseller",
             Options = Model.GalleryCategories.Select(category => category.Label).ToList()
         })" />
     </div>
@@ -194,7 +204,7 @@ else
                                 data-video-src="@image.VideoUrl"
                                 data-poster-src="@image.Src"
                                 data-video-title="@image.Alt"
-                                aria-label="@($"{image.Alt} videosunu oynat")">
+                                aria-label="@(isEn ? $"Play {image.Alt} video" : $"{image.Alt} videosunu oynat")">
                             <img class="gallery-card-image" src="@image.ThumbnailSrc" alt="@image.Alt" loading="lazy" decoding="async" />
                             <span class="gallery-card-overlay" aria-hidden="true"></span>
                             <span class="gallery-card-play" aria-hidden="true">
@@ -219,7 +229,7 @@ else
                                 data-media-viewer-group-category="@groupKey"
                                 data-media-viewer-src="@image.Src"
                                 data-media-viewer-alt="@image.Alt"
-                                aria-label="@($"{category.Label} — büyüt")">
+                                aria-label="@(isEn ? $"{category.Label} — enlarge" : $"{category.Label} — büyüt")">
                             <img class="gallery-card-image" src="@image.ThumbnailSrc" alt="@image.Alt" loading="lazy" decoding="async" />
                             <span class="gallery-card-overlay" aria-hidden="true"></span>
                             <span class="gallery-card-title">@category.Label</span>
@@ -240,7 +250,9 @@ else
             for (var i = 0; i < Model.GalleryImages.Count; i++)
             {
                 var image = Model.GalleryImages[i];
-                var accessibleLabel = string.IsNullOrWhiteSpace(image.Alt) ? $"Galeri görseli {i + 1}" : image.Alt;
+                var accessibleLabel = string.IsNullOrWhiteSpace(image.Alt)
+                    ? (isEn ? $"Gallery image {i + 1}" : $"Galeri görseli {i + 1}")
+                    : image.Alt;
 
                 <button type="button"
                         class="gallery-card"
@@ -250,7 +262,7 @@ else
                         data-media-viewer-group-category="gallery-all"
                         data-media-viewer-src="@image.Src"
                         data-media-viewer-alt="@image.Alt"
-                        aria-label="@($"{accessibleLabel} — büyüt")">
+                        aria-label="@(isEn ? $"{accessibleLabel} — enlarge" : $"{accessibleLabel} — büyüt")">
                     <img class="gallery-card-image" src="@image.ThumbnailSrc" alt="@image.Alt" loading="lazy" decoding="async" />
                     <span class="gallery-card-overlay" aria-hidden="true"></span>
                 </button>
@@ -259,12 +271,12 @@ else
     </div>
 
     <div class="project-gallery-nav-group" @(Model.GalleryCategories.Count > 0 ? "hidden" : null)>
-        <button type="button" class="history-nav-btn project-gallery-nav project-gallery-prev" data-gallery-prev aria-label="Önceki görsel">
+        <button type="button" class="history-nav-btn project-gallery-nav project-gallery-prev" data-gallery-prev aria-label="@(isEn ? "Previous image" : "Önceki görsel")">
             <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
                 <path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
         </button>
-        <button type="button" class="history-nav-btn project-gallery-nav project-gallery-next" data-gallery-next aria-label="Sonraki görsel">
+        <button type="button" class="history-nav-btn project-gallery-nav project-gallery-next" data-gallery-next aria-label="@(isEn ? "Next image" : "Sonraki görsel")">
             <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
                 <path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>

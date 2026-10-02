@@ -704,9 +704,16 @@
 // Home-only _HomeTimelineCarousel cards. Each card's [data-timeline-toggle]
 // button independently shows/hides that card's .home-timeline-more block
 // (site.css animates the reveal via grid-template-rows) and swaps its own
-// label between "devamı..." and "<- gizle" — unrelated to the History Info
-// Panel sync above, and never touches About Us's shared _HistoryCarousel
-// cards, which have no [data-timeline-toggle] markup.
+// label between its collapsed/expanded text — unrelated to the History
+// Info Panel sync above, and never touches About Us's shared
+// _HistoryCarousel cards, which have no [data-timeline-toggle] markup.
+//
+// English localization (2026-10-02) — the two label strings ("devamı..."/
+// "<- gizle" in Turkish) were previously hardcoded here; they now come
+// from data-label-more/data-label-less attributes the server renders in
+// the current page language (_HomeTimelineCarousel.cshtml), so this
+// module stays language-agnostic rather than hardcoding a culture check
+// in JavaScript.
 // ==========================================================================
 
 (function () {
@@ -720,10 +727,13 @@
       return;
     }
 
+    var moreLabel = toggle.getAttribute('data-label-more') || 'devamı...';
+    var lessLabel = toggle.getAttribute('data-label-less') || '<- gizle';
+
     toggle.addEventListener('click', function () {
       var expanded = card.classList.toggle('is-expanded');
       toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-      toggle.textContent = expanded ? '<- gizle' : 'devamı...';
+      toggle.textContent = expanded ? lessLabel : moreLabel;
     });
   });
 })();
@@ -1106,6 +1116,16 @@
   var closers = Array.prototype.slice.call(viewer.querySelectorAll('[data-media-viewer-close]'));
   var panelEl = viewer.querySelector('.media-viewer-panel');
 
+  // ---- Video items (Social Responsibility unified galleries, 2026-10-02)
+  // ----
+  // A trigger with data-media-viewer-type="video" shows this wrap instead
+  // of imageEl — see render() below. The <video> never carries a src in
+  // markup; one is assigned only when videoPlayBtn is pressed, so no MP4 is
+  // ever fetched just by browsing past a video with Prev/Next.
+  var videoWrapEl = viewer.querySelector('[data-media-viewer-video-wrap]');
+  var videoEl = viewer.querySelector('[data-media-viewer-video-el]');
+  var videoPlayBtn = viewer.querySelector('[data-media-viewer-video-play]');
+
   // ---- Zoom / Pan / Fullscreen (La Fiore Karabağ 2. Etap Vaziyet Planı/
   // Concept/Gallery phase, 2026-08-09) — upgrades this one shared instance
   // in place, so every existing and future trigger group (Gallery, Floor
@@ -1208,15 +1228,71 @@
     }
   }
 
+  // Resets the video element back to its pre-play state: paused, no src
+  // (so nothing keeps loading/playing in the background), native controls
+  // hidden again and the Play overlay restored. Called on every render()
+  // (covers "navigated away from a video" and "re-entering it fresh, never
+  // mid-playback") and on close().
+  function stopVideo() {
+    if (!videoEl) {
+      return;
+    }
+
+    videoEl.pause();
+    videoEl.removeAttribute('src');
+    videoEl.load();
+    videoEl.controls = false;
+
+    if (videoPlayBtn) {
+      videoPlayBtn.hidden = false;
+    }
+  }
+
   function render() {
     var item = state.items[state.index];
+    var isVideo = item.getAttribute('data-media-viewer-type') === 'video';
+    var alt = item.getAttribute('data-media-viewer-alt') || '';
 
-    imageEl.classList.remove('is-loaded');
-    imageEl.onload = function () {
-      imageEl.classList.add('is-loaded');
-    };
-    imageEl.src = item.getAttribute('data-media-viewer-src');
-    imageEl.alt = item.getAttribute('data-media-viewer-alt') || '';
+    stopVideo();
+
+    if (isVideo) {
+      imageEl.hidden = true;
+      if (videoWrapEl) {
+        videoWrapEl.hidden = false;
+      }
+      if (videoEl) {
+        // data-media-viewer-src doubles as the poster for a video item —
+        // the same attribute every photo trigger already carries, so no
+        // second "poster" attribute is needed and a non-JS/failed-type
+        // fallback would still show something meaningful via imageEl.
+        videoEl.poster = item.getAttribute('data-media-viewer-src') || '';
+        videoEl.setAttribute('aria-label', alt);
+      }
+      if (videoPlayBtn) {
+        videoPlayBtn.setAttribute('aria-label', alt ? alt + ' — oynat' : 'Videoyu oynat');
+      }
+    } else {
+      imageEl.hidden = false;
+      if (videoWrapEl) {
+        videoWrapEl.hidden = true;
+      }
+
+      imageEl.classList.remove('is-loaded');
+      imageEl.onload = function () {
+        imageEl.classList.add('is-loaded');
+      };
+      imageEl.src = item.getAttribute('data-media-viewer-src');
+      imageEl.alt = alt;
+    }
+
+    // Zoom only ever applies to photos — hide rather than leave visibly
+    // no-op over a video.
+    if (zoomInBtn) {
+      zoomInBtn.hidden = isVideo;
+    }
+    if (zoomOutBtn) {
+      zoomOutBtn.hidden = isVideo;
+    }
 
     counterEl.textContent = (state.index + 1) + ' / ' + state.items.length;
 
@@ -1227,9 +1303,21 @@
     resetZoom();
   }
 
+  // 'video[controls]' added (Social Responsibility unified galleries,
+  // 2026-10-02) — matches the identical selector the separate Concept/
+  // Gallery video modal's own focusableElements() already uses, so the
+  // Tab-trap includes the <video> once its native controls appear after
+  // Play is pressed.
   function focusableElements() {
-    return Array.prototype.slice.call(viewer.querySelectorAll('button')).filter(function (el) {
-      return !el.hidden && !el.disabled;
+    return Array.prototype.slice.call(viewer.querySelectorAll('button, video[controls]')).filter(function (el) {
+      // offsetParent (not el.hidden) so a button that is only hidden via an
+      // ancestor's [hidden] — videoPlayBtn sits inside
+      // [data-media-viewer-video-wrap], which is what actually toggles —
+      // is correctly excluded too. None of these elements are
+      // position:fixed themselves (only the outer dialog is), so
+      // offsetParent reliably reflects "display:none somewhere in the
+      // chain" here.
+      return el.offsetParent !== null && !el.disabled;
     });
   }
 
@@ -1294,6 +1382,7 @@
     document.body.classList.remove('no-scroll');
     document.removeEventListener('keydown', onKeydown);
     resetZoom();
+    stopVideo();
 
     if (lastFocused && typeof lastFocused.focus === 'function') {
       lastFocused.focus();
@@ -1352,6 +1441,31 @@
   }
   if (fullscreenBtn) {
     fullscreenBtn.addEventListener('click', toggleFullscreen);
+  }
+
+  // Lazy video source assignment (Social Responsibility unified galleries,
+  // 2026-10-02) — the <video> gets its src only here, on an explicit user
+  // click, never on render()/open(). This is the one and only place any of
+  // the three optimized MP4 files are ever requested.
+  if (videoPlayBtn) {
+    videoPlayBtn.addEventListener('click', function () {
+      var item = state.items[state.index];
+      var videoSrc = item && item.getAttribute('data-media-viewer-video-src');
+
+      if (!videoSrc || !videoEl) {
+        return;
+      }
+
+      videoEl.src = videoSrc;
+      videoEl.controls = true;
+      videoPlayBtn.hidden = true;
+      videoEl.load();
+      videoEl.play().catch(function () {
+        // Playback can be blocked (e.g. low-power mode) — native controls
+        // are already visible at this point so the visitor can press Play
+        // themselves; nothing more to do here.
+      });
+    });
   }
 
   document.addEventListener('fullscreenchange', function () {
@@ -2391,7 +2505,15 @@
       return indexPromise;
     }
 
-    indexPromise = fetch('/api/search/index')
+    // English localization (2026-10-02) — the request culture is derived
+    // from the URL's leading "/en" segment server-side
+    // (RouteSegmentRequestCultureProvider), so this fetch must carry the
+    // same prefix whenever the current page itself is under "/en" or the
+    // index would come back in Turkish on an English page.
+    var isEnglishPage = location.pathname === '/en' || location.pathname.indexOf('/en/') === 0;
+    var searchIndexUrl = isEnglishPage ? '/en/api/search/index' : '/api/search/index';
+
+    indexPromise = fetch(searchIndexUrl)
       .then(function (response) {
         return response.ok ? response.json() : [];
       })

@@ -1,4 +1,5 @@
 @model HomeTimelineCarouselModel
+@using System.Globalization
 
 @*
     Home-only fork of _HistoryCarousel (2026-08-19) — same card layout,
@@ -12,24 +13,33 @@
     site.js keeps working unchanged.
 *@
 
+@{
+    var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+    var labelMore = isEn ? "more..." : "devamı...";
+    var labelLess = isEn ? "<- less" : "<- gizle";
+}
+
 <div class="history-carousel" data-history-carousel="@Model.Id">
-    <div class="history-carousel-track" data-history-track tabindex="0" role="group" aria-label="Zaman tüneli" data-reveal-group>
+    <div class="history-carousel-track" data-history-track tabindex="0" role="group" aria-label="@(isEn ? "Timeline" : "Zaman tüneli")" data-reveal-group>
         @for (var i = 0; i < Model.Entries.Count; i++)
         {
             var entry = Model.Entries[i];
             var moreId = $"{Model.Id}-timeline-more-{i}";
+            var alt = isEn && !string.IsNullOrWhiteSpace(entry.ImageAltEn) ? entry.ImageAltEn : entry.ImageAlt;
+            var summary = isEn && !string.IsNullOrWhiteSpace(entry.SummaryEn) ? entry.SummaryEn : entry.Summary;
+            var detail = isEn && !string.IsNullOrWhiteSpace(entry.DetailEn) ? entry.DetailEn : entry.Detail;
             <article class="history-card home-timeline-card@(i == 0 ? " is-active" : "")" data-history-index="@i" data-reveal>
-                <img class="history-card-image" src="@entry.ImageSrc" alt="@entry.ImageAlt" loading="lazy" decoding="async" />
+                <img class="history-card-image" src="@entry.ImageSrc" alt="@alt" loading="lazy" decoding="async" />
                 <div class="history-card-body">
                     <span class="history-card-year">@entry.Year</span>
                     <h3 class="history-card-title">@entry.Title</h3>
-                    <p class="history-card-description">@entry.Summary</p>
+                    <p class="history-card-description">@summary</p>
                     <div class="home-timeline-more" id="@moreId">
                         <div class="home-timeline-more-inner">
-                            <p class="home-timeline-detail">@entry.Detail</p>
+                            <p class="home-timeline-detail">@detail</p>
                         </div>
                     </div>
-                    <button type="button" class="home-timeline-toggle" data-timeline-toggle aria-expanded="false" aria-controls="@moreId">devamı...</button>
+                    <button type="button" class="home-timeline-toggle" data-timeline-toggle data-label-more="@labelMore" data-label-less="@labelLess" aria-expanded="false" aria-controls="@moreId">@labelMore</button>
                 </div>
             </article>
         }

@@ -19,6 +19,13 @@ public class HeroBannerProjectDetailViewModel
     // renders with no modifier and falls back to .hero-heading's default.
     public string? HeadingFontModifierClass { get; init; }
 
+    // Mobile Performance & Responsive Pass (2026-10-02) — this project's own
+    // "X% Y%" background-position (ProjectHeroMobileFocusMap), rendered as
+    // the --hero-bg-position-mobile custom property below 768px only (site.
+    // css's .hero-bg); null for any slug outside that map, which renders
+    // the exact plain "center" crop every Hero banner already used.
+    public string? MobileBackgroundPosition { get; init; }
+
     // Set only for the slugs in HeroBannerProjectDetailViewComponent's
     // HeadingLogoImageUrls map (currently Nysa Gold Residence only). When
     // present, Default.cshtml renders this image in place of Heading's

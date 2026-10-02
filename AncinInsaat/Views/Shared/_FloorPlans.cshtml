@@ -40,6 +40,10 @@
     Func<decimal, string> m2 = value => value.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture) + " m²";
     var floorPlans = Model.FloorPlans;
     var hasMultipleTypes = floorPlans.Count > 1;
+
+    // English localization (2026-10-02) — floorPlan.ApartmentType/room.Name
+    // already arrive pre-localized from ProjectsController.Details.
+    var isEn = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
 }
 
 @if (floorPlans.Count == 0)
@@ -52,11 +56,11 @@
     <div class="project-floorplans">
         <partial name="_TimelineHeader" model="@(new TimelineHeaderModel
         {
-            DecorativeTitle = "PLANLAR",
+            DecorativeTitle = isEn ? "FLOOR PLANS" : "PLANLAR",
             Subtitle = string.Empty,
             HeadingId = "project-floorplans-heading"
         })" />
-        <p class="projects-grid-empty">Planlar yakında eklenecektir.</p>
+        <p class="projects-grid-empty">@(isEn ? "Floor plans will be added soon." : "Planlar yakında eklenecektir.")</p>
     </div>
 }
 else
@@ -89,8 +93,8 @@ else
            Tralles Gold Residence/Nlatis. *@
         <partial name="_TimelineHeader" model="@(new TimelineHeaderModel
         {
-            DecorativeTitle = "PLANLAR",
-            Subtitle = Model.Slug is "davutlar-d-latis" or "kuyulu-avm" or "kuyulu-la-via-villalar-birinci-etap" or "le-jardin" or "nysa-gold" or "la-fiore-karabag-2-etap" or "ferhunde-hanim-apt" or "alinda-gold" or "magnesia-gold" or "tralles-gold" or "nlatis" or "la-fiore-karabag" ? string.Empty : "Daire Planları",
+            DecorativeTitle = isEn ? "FLOOR PLANS" : "PLANLAR",
+            Subtitle = Model.Slug is "davutlar-d-latis" or "kuyulu-avm" or "kuyulu-la-via-villalar-birinci-etap" or "le-jardin" or "nysa-gold" or "la-fiore-karabag-2-etap" or "ferhunde-hanim-apt" or "alinda-gold" or "magnesia-gold" or "tralles-gold" or "nlatis" or "la-fiore-karabag" ? string.Empty : (isEn ? "Floor Plans" : "Daire Planları"),
             HeadingId = "project-floorplans-heading"
         })" />
 
@@ -112,11 +116,11 @@ else
                        they keep the real download link exactly as before. *@
                     @if (Model.CatalogueComingSoon)
                     {
-                        <button type="button" class="btn btn-primary project-floorplans-catalogue" data-toast-trigger data-toast-message="Proje kataloğu yakında eklenecektir.">Proje Kataloğunu İndir</button>
+                        <button type="button" class="btn btn-primary project-floorplans-catalogue" data-toast-trigger data-toast-message="@(isEn ? "The project catalogue will be added soon." : "Proje kataloğu yakında eklenecektir.")">@(isEn ? "Download Project Catalogue" : "Proje Kataloğunu İndir")</button>
                     }
                     else if (!string.IsNullOrWhiteSpace(Model.CatalogueUrl))
                     {
-                        <a class="btn btn-primary project-floorplans-catalogue" href="@Model.CatalogueUrl" download>Proje Kataloğunu İndir</a>
+                        <a class="btn btn-primary project-floorplans-catalogue" href="@Model.CatalogueUrl" download>@(isEn ? "Download Project Catalogue" : "Proje Kataloğunu İndir")</a>
                     }
                     @* No CatalogueUrl and not Coming Soon (Project Asset
                        Audit, 2026-08-17) — a project with no catalogue at
@@ -144,17 +148,17 @@ else
                 {
                     <dl class="project-floorplans-stats" data-reveal-group>
                         <div class="project-floorplans-stat" data-reveal>
-                            <dt>Net Alan</dt>
+                            <dt>@(isEn ? "Net Area" : "Net Alan")</dt>
                             <dd>@m2(floorPlan.NetAreaM2.Value)</dd>
                         </div>
                         <div class="project-floorplans-stat" data-reveal>
-                            <dt>Brüt Alan</dt>
+                            <dt>@(isEn ? "Gross Area" : "Brüt Alan")</dt>
                             <dd>@m2(floorPlan.GrossAreaM2.Value)</dd>
                         </div>
                         @if (floorPlan.SalesGrossAreaM2.HasValue)
                         {
                             <div class="project-floorplans-stat" data-reveal>
-                                <dt>Satışa Esas Brüt Alan</dt>
+                                <dt>@(isEn ? "Sales Gross Area" : "Satışa Esas Brüt Alan")</dt>
                                 <dd>@m2(floorPlan.SalesGrossAreaM2.Value)</dd>
                             </div>
                         }
@@ -191,7 +195,7 @@ else
                             data-media-viewer-group="floorplans"
                             data-media-viewer-src="@floorPlan.Src"
                             data-media-viewer-alt="@floorPlan.ApartmentType"
-                            aria-label="@($"{floorPlan.ApartmentType} — büyüt")">
+                            aria-label="@(isEn ? $"{floorPlan.ApartmentType} — enlarge" : $"{floorPlan.ApartmentType} — büyüt")">
                         <img class="project-floorplans-image" src="@floorPlan.ThumbnailSrc" alt="@floorPlan.ApartmentType" loading="lazy" decoding="async" />
                     </button>
                 }
@@ -207,7 +211,7 @@ else
                                 <circle cx="16" cy="16" r="2.5" fill="currentColor" />
                             </svg>
                         </span>
-                        <p class="project-floorplans-placeholder-text">Kat planı görseli<br />daha sonra eklenecek.</p>
+                        <p class="project-floorplans-placeholder-text">@(isEn ? "Floor plan image" : "Kat planı görseli")<br />@(isEn ? "will be added later." : "daha sonra eklenecek.")</p>
                     </div>
                 }
             </div>
@@ -216,12 +220,12 @@ else
         @if (hasMultipleTypes)
         {
             <div class="project-floorplans-nav-group">
-                <button type="button" class="history-nav-btn project-floorplans-nav project-floorplans-prev" data-floorplan-prev data-reveal="scale" aria-label="Önceki daire tipi">
+                <button type="button" class="history-nav-btn project-floorplans-nav project-floorplans-prev" data-floorplan-prev data-reveal="scale" aria-label="@(isEn ? "Previous apartment type" : "Önceki daire tipi")">
                     <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
                         <path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                 </button>
-                <button type="button" class="history-nav-btn project-floorplans-nav project-floorplans-next" data-floorplan-next data-reveal="scale" aria-label="Sonraki daire tipi">
+                <button type="button" class="history-nav-btn project-floorplans-nav project-floorplans-next" data-floorplan-next data-reveal="scale" aria-label="@(isEn ? "Next apartment type" : "Sonraki daire tipi")">
                     <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
                         <path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>

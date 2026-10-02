@@ -17,7 +17,13 @@ public class SearchController : Controller
         _searchService = searchService;
     }
 
+    // English localization (2026-10-02) — "en/api/search/index" lets the
+    // Search overlay's fetch (site.js) hit a path RouteSegmentRequestCultureProvider
+    // recognizes as English when called from an English page, so results
+    // come back in the matching language; see every ISearchIndexProvider
+    // implementation's own isEnglish branch.
     [HttpGet("index")]
+    [HttpGet("/en/api/search/index")]
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
         var items = await _searchService.GetIndexAsync(cancellationToken);

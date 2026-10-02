@@ -1,7 +1,18 @@
 @model AncinInsaat.ViewComponents.HeroBannerProjectDetailViewModel
+@using System.Globalization
 
 @{
-    var heroStyle = $"--hero-bg-image: url('{Model.BackgroundImageUrl}')";
+    // English localization (2026-10-02) — same CultureInfo-driven pattern
+    // every other shared partial on the site uses.
+    var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+
+    // Mobile Performance & Responsive Pass (2026-10-02) — appends this
+    // project's own mobile focal position (ProjectHeroMobileFocusMap) as a
+    // second custom property when it has one; site.css's .hero-bg only
+    // resolves --hero-bg-position-mobile below 768px, so this never affects
+    // desktop regardless of the value.
+    var heroStyle = $"--hero-bg-image: url('{Model.BackgroundImageUrl}')"
+        + (string.IsNullOrWhiteSpace(Model.MobileBackgroundPosition) ? "" : $"; --hero-bg-position-mobile: {Model.MobileBackgroundPosition}");
     var hasHeadingLogo = !string.IsNullOrWhiteSpace(Model.HeadingLogoImageUrl);
 
     // Ferhunde Hanım Apt. (2026-08-21 follow-up client request) — even after
@@ -78,7 +89,7 @@
     }
     else
     {
-        <nav class="hero-social-nav" aria-label="Sosyal medya">
+        <nav class="hero-social-nav" aria-label="@(isEn ? "Social media" : "Sosyal medya")">
             @await Component.InvokeAsync("SocialMedia")
         </nav>
     }
@@ -131,8 +142,8 @@
                         data-media-viewer-trigger
                         data-media-viewer-group="site-plan"
                         data-media-viewer-src="@Model.SitePlanImageUrls[0]"
-                        data-media-viewer-alt="@(Model.Heading) vaziyet planı">
-                    Vaziyet Planı
+                        data-media-viewer-alt="@(isEn ? $"{Model.Heading} site plan" : $"{Model.Heading} vaziyet planı")">
+                    @(isEn ? "Site Plan" : "Vaziyet Planı")
                 </button>
                 @for (var sitePlanIndex = 1; sitePlanIndex < Model.SitePlanImageUrls.Count; sitePlanIndex++)
                 {
@@ -143,7 +154,7 @@
                             data-media-viewer-trigger
                             data-media-viewer-group="site-plan"
                             data-media-viewer-src="@Model.SitePlanImageUrls[sitePlanIndex]"
-                            data-media-viewer-alt="@(Model.Heading) vaziyet planı @(sitePlanIndex + 1)"></button>
+                            data-media-viewer-alt="@(isEn ? $"{Model.Heading} site plan {sitePlanIndex + 1}" : $"{Model.Heading} vaziyet planı {sitePlanIndex + 1}")"></button>
                 }
             }
             else if (Model.SitePlanComingSoon)
@@ -158,8 +169,8 @@
                 <button type="button"
                         class="btn btn-hero-segment btn-hero-segment--siteplan"
                         data-toast-trigger
-                        data-toast-message="Vaziyet planı yakında eklenecektir.">
-                    Vaziyet Planı
+                        data-toast-message="@(isEn ? "The site plan will be added soon." : "Vaziyet planı yakında eklenecektir.")">
+                    @(isEn ? "Site Plan" : "Vaziyet Planı")
                 </button>
             }
             @if (!string.IsNullOrWhiteSpace(Model.CatalogueUrl) && !hideCatalogueHeroButton)
@@ -177,20 +188,20 @@
                    behavior, byte-identical to before. *@
                 if (Model.CatalogueComingSoonHeroToast)
                 {
-                    <a class="btn btn-hero-segment btn-hero-segment--accent" href="#project-catalogue" data-toast-trigger data-toast-message="Proje kataloğu yakında eklenecektir.">Kataloğu İncele</a>
+                    <a class="btn btn-hero-segment btn-hero-segment--accent" href="#project-catalogue" data-toast-trigger data-toast-message="@(isEn ? "The project catalogue will be added soon." : "Proje kataloğu yakında eklenecektir.")">@(isEn ? "Explore Project" : "Kataloğu İncele")</a>
                 }
                 else
                 {
-                    <a class="btn btn-hero-segment btn-hero-segment--accent" href="#project-catalogue">Kataloğu İncele</a>
+                    <a class="btn btn-hero-segment btn-hero-segment--accent" href="#project-catalogue">@(isEn ? "Explore Project" : "Kataloğu İncele")</a>
                 }
             }
-            <a class="btn btn-hero-segment btn-hero-segment--contact" href="/contact">Size Ulaşalım</a>
+            <a class="btn btn-hero-segment btn-hero-segment--contact" href="@(isEn ? "/en/contact" : "/contact")">@(isEn ? "Get in Touch" : "Size Ulaşalım")</a>
         </div>
         @{
             var scrollIndicatorModel = new AncinInsaat.Models.ScrollIndicatorModel
             {
                 TargetId = Model.ScrollTargetId,
-                Label = "Aşağı kaydır",
+                Label = isEn ? "Scroll down" : "Aşağı kaydır",
                 CssClass = "scroll-indicator--on-dark"
             };
         }

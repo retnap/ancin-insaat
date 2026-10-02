@@ -1,11 +1,16 @@
 @model FooterViewModel
+@using System.Globalization
+
+@{
+    var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+}
 
 <div class="container footer-inner">
 
     <div class="footer-row">
 
         <div class="footer-brand">
-            <a href="/" class="footer-logo" aria-label="Ancın İnşaat — Home">
+            <a href="@(isEn ? "/en" : "/")" class="footer-logo" aria-label="Ancın İnşaat — Home">
                 <img src="~/images/logos/ancin-logo-2-removebg.png" alt="Ancın İnşaat" width="98" height="40" />
             </a>
             <p class="footer-copyright">&copy; @Model.CopyrightYear Ancın İnşaat. All rights reserved.</p>

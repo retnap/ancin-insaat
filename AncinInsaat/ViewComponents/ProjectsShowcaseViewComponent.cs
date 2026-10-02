@@ -1,3 +1,4 @@
+using System.Globalization;
 using AncinInsaat.Data.Entities;
 using AncinInsaat.Models;
 using AncinInsaat.Services;
@@ -88,26 +89,35 @@ public class ProjectsShowcaseViewComponent : ViewComponent
         new Dictionary<string, string>
         {
             ["nysa-gold"] = "/images/projects/nysa-gold/proje-karti/card-background.webp",
-            ["le-jardin"] = "/images/projects/le-jardin/banner/le-jardin-yeni-banner.png",
-            ["kuyulu-la-via-villalar-birinci-etap"] = "/images/projects/kuyulu-la-via-villalar-birinci-etap/banner/la-via-banner.png",
+            // Mobile Performance & Responsive Pass (2026-10-02) — the six
+            // entries below that reuse a Project Detail Hero Banner file are
+            // repointed at that Banner's own new WebP derivative (see
+            // ProjectsController.HeroBannerImageOverridesBySlug's comment),
+            // keeping this card and that Banner on the exact same physical
+            // asset per this dictionary's own "never drift apart" contract.
+            ["le-jardin"] = "/images/projects/le-jardin/banner/le-jardin-banner.webp",
+            ["kuyulu-la-via-villalar-birinci-etap"] = "/images/projects/kuyulu-la-via-villalar-birinci-etap/banner/la-via-banner.webp",
             ["davutlar-d-latis"] = "/images/projects/davutlar-d-latis/proje-karti/card-background.webp",
-            ["tralles-gold"] = "/images/projects/tralles-gold/banner/tralles-gold-yeni-banner.jpeg",
-            ["alinda-gold"] = "/images/projects/alinda-gold/banner/alinda-gold-yeni-banner.jpeg",
+            ["tralles-gold"] = "/images/projects/tralles-gold/banner/tralles-gold-banner.webp",
+            ["alinda-gold"] = "/images/projects/alinda-gold/banner/alinda-gold-banner.webp",
             ["magnesia-gold"] = "/images/projects/magnesia-gold/proje-karti/card-background.webp",
             ["nlatis"] = "/images/projects/nlatis/proje-karti/card-background.webp",
-            ["ferhunde-hanim-apt"] = "/images/projects/ferhunde-hanim-apt/banner/ferhunde-hanim-yeni-banner-2.jpeg",
-            ["la-fiore-karabag"] = "/images/projects/la-fiore-karabag/banner/la-fiore-karabag-birinci-yeni-banner-2.jpeg",
+            ["ferhunde-hanim-apt"] = "/images/projects/ferhunde-hanim-apt/banner/ferhunde-hanim-banner.webp",
+            ["la-fiore-karabag"] = "/images/projects/la-fiore-karabag/banner/la-fiore-karabag-banner.webp",
             // La Fiore Karabağ 2. Etap (2026-09-28 client request) — repointed
             // at the same copied Gallery photo #36 now used as this
             // project's Project Detail Hero Banner (see
             // ProjectsController.HeroBannerImageOverridesBySlug's matching
-            // entry) so the two never drift apart.
+            // entry) so the two never drift apart. Already a lightweight
+            // 340KB JPEG — no WebP derivative needed (2026-10-02 pass).
             ["la-fiore-karabag-2-etap"] = "/images/projects/la-fiore-karabag-2-etap/banner/la-fiore-2-etap-banner-36.jpeg",
             // Hacıfeyzullah - Q-Latis (2026-08-20 client request) — same
             // raw-file treatment as ProjectsController's own override (no
             // logo overlay supplied, so it is intentionally absent from
             // CardLogoImageUrlsBySlug below and keeps its normal caption).
-            ["q-latis"] = "/images/projects/q-latis/proje-karti/hacıfeyzullah proje kartı.png"
+            // Repointed at its own WebP derivative (2.5MB PNG → 172KB,
+            // 2026-10-02 pass); the original PNG stays on disk untouched.
+            ["q-latis"] = "/images/projects/q-latis/proje-karti/hacifeyzullah-proje-karti.webp"
         };
 
     private static readonly IReadOnlyDictionary<string, string> CardLogoImageUrlsBySlug =
@@ -135,6 +145,9 @@ public class ProjectsShowcaseViewComponent : ViewComponent
 
     public async Task<IViewComponentResult> InvokeAsync()
     {
+        var isEnglish = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+        var pathPrefix = isEnglish ? "/en" : "";
+
         var projects = await _projectQueryService.GetPublishedProjectsAsync();
 
         // Home page shows ongoing projects only (2026-08-03 request) — this
@@ -157,11 +170,13 @@ public class ProjectsShowcaseViewComponent : ViewComponent
             CoverImageSrc = CardImageOverridesBySlug.TryGetValue(project.Slug, out var cardImageOverride)
                 ? cardImageOverride
                 : ResolveCoverImage(project.CoverImage),
-            StatusLabel = project.Status == ProjectStatus.Completed ? "Tamamlandı" : "Devam Ediyor",
+            StatusLabel = project.Status == ProjectStatus.Completed
+                ? (isEnglish ? "Completed" : "Tamamlandı")
+                : (isEnglish ? "Ongoing" : "Devam Ediyor"),
             StatusModifierClass = project.Status == ProjectStatus.Completed
                 ? "project-status-badge--completed"
                 : "project-status-badge--ongoing",
-            DetailUrl = $"/projects/{project.Slug}",
+            DetailUrl = $"{pathPrefix}/projects/{project.Slug}",
             LogoImageUrl = CardLogoImageUrlsBySlug.GetValueOrDefault(project.Slug)
         }).ToList();
 
@@ -175,8 +190,8 @@ public class ProjectsShowcaseViewComponent : ViewComponent
                 // in site.css Section 21 — see comment there for why the eyebrow's
                 // shared decorative line is hidden and why the title's font
                 // diverges from the default h2 treatment).
-                Eyebrow = "İlklerin Mimarı - Ancın İnşaat",
-                Title = "Devam Eden Projeler",
+                Eyebrow = isEnglish ? "The Architect of Firsts - Ancın İnşaat" : "İlklerin Mimarı - Ancın İnşaat",
+                Title = isEnglish ? "Ongoing Projects" : "Devam Eden Projeler",
                 HeadingId = "projects-showcase-heading"
             },
             Cards = cards

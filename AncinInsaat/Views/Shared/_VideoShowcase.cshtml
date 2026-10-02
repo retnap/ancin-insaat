@@ -1,7 +1,9 @@
 @model VideoShowcaseModel
+@using System.Globalization
 
 @{
     var modalId = $"video-modal-{Model.Id}";
+    var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
 }
 
 @* The trigger and its modal are siblings, not nested — .video-showcase
@@ -36,7 +38,7 @@
      hidden>
     <div class="video-modal-backdrop" data-video-close></div>
     <div class="video-modal-panel">
-        <button type="button" class="video-modal-close" data-video-close aria-label="Kapat">
+        <button type="button" class="video-modal-close" data-video-close aria-label="@(isEn ? "Close" : "Kapat")">
             <svg viewBox="0 0 24 24" width="20" height="20">
                 <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none" />
             </svg>
@@ -52,7 +54,7 @@
             {
                 <div class="video-modal-placeholder">
                     <img class="video-modal-placeholder-image" src="@Model.PosterSrc" alt="" aria-hidden="true" />
-                    <p class="video-modal-placeholder-text">Tanıtım videosu yakında eklenecektir.</p>
+                    <p class="video-modal-placeholder-text">@(isEn ? "The promotional video will be added soon." : "Tanıtım videosu yakında eklenecektir.")</p>
                 </div>
             }
         </div>

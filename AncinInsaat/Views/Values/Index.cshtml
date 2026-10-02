@@ -24,17 +24,20 @@
     follows the reference. See CoreValuesViewComponent.
 *@
 
+@using System.Globalization
 @{
+    var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+
     var breadcrumbTrail = new List<AncinInsaat.ViewComponents.BreadcrumbItem>
     {
-        new() { Label = "Değerlerimiz" }
+        new() { Label = isEn ? "Our Values" : "Değerlerimiz" }
     };
 }
-@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail, homeLabel = "Anasayfa" })
+@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail })
 
 <section class="section values-heading-section">
     <div class="container">
-        <h1 id="values-heading" class="values-heading">Değerlerimiz</h1>
+        <h1 id="values-heading" class="values-heading">@(isEn ? "Our Values" : "Değerlerimiz")</h1>
     </div>
 </section>
 

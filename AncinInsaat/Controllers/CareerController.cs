@@ -1,3 +1,4 @@
+using System.Globalization;
 using AncinInsaat.Data.Entities;
 using AncinInsaat.Models;
 using AncinInsaat.Services;
@@ -29,7 +30,13 @@ public class CareerController : Controller
         _logger = logger;
     }
 
+    // English localization (2026-10-02) — see ContactController's own
+    // identical property for the rationale.
+    private bool IsEnglish =>
+        CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+
     [HttpGet("career")]
+    [HttpGet("en/career")]
     public async Task<IActionResult> Index()
     {
         var showSuccess = TempData[SuccessTempDataKey] is not null;
@@ -44,6 +51,7 @@ public class CareerController : Controller
     }
 
     [HttpPost("career")]
+    [HttpPost("en/career")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Submit(CareerFormViewModel form)
     {
@@ -59,6 +67,8 @@ public class CareerController : Controller
 
         if (!ModelState.IsValid)
         {
+            ModelStateLocalizer.Localize(ModelState, IsEnglish);
+
             var invalidModel = BuildPageModel(form, positions, showSuccess: false);
 
             ViewData["Seo"] = await _seoService.GetPageSeoAsync("career", Request);
@@ -80,6 +90,7 @@ public class CareerController : Controller
         if (result.Status != JobApplicationSubmitStatus.Success)
         {
             AddSubmitFailureModelError(result.Status);
+            ModelStateLocalizer.Localize(ModelState, IsEnglish);
 
             var invalidModel = BuildPageModel(form, positions, showSuccess: false);
 

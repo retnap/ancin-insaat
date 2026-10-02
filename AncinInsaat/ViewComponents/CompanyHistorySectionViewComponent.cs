@@ -1,3 +1,4 @@
+using System.Globalization;
 using AncinInsaat.Data;
 using AncinInsaat.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -46,7 +47,8 @@ public class CompanyHistorySectionViewComponent : ViewComponent
 {
     public IViewComponentResult Invoke()
     {
-        const string sectionTitle = "Zaman Tüneli";
+        var isEnglish = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+        var sectionTitle = isEnglish ? "Timeline" : "Zaman Tüneli";
 
         var model = new CompanyHistorySectionViewModel
         {
@@ -58,8 +60,8 @@ public class CompanyHistorySectionViewComponent : ViewComponent
                 // giant background watermark keeps its natural casing
                 // rather than sectionTitle's Title Case, which stays on
                 // InfoPanel.Title below for that smaller, ordinary heading.
-                DecorativeTitle = "zaman tüneli",
-                Subtitle = "İlklerin Mimarı"
+                DecorativeTitle = isEnglish ? "timeline" : "zaman tüneli",
+                Subtitle = isEnglish ? "The Architect of Firsts" : "İlklerin Mimarı"
             },
             Image = new ImageBlockModel
             {

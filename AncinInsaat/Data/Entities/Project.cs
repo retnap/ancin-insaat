@@ -7,6 +7,20 @@ public class Project
     public required string Slug { get; set; }
     public string ShortDescription { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
+
+    // English localization (2026-10-02) — nullable companions to the
+    // Turkish columns above/below, never a replacement for them (the
+    // Turkish columns are untouched and keep driving the Turkish site
+    // exactly as before). Name/Location/Slug are deliberately NOT
+    // duplicated here: project names are brand names (never translated —
+    // see docs/14_Decisions.md), and Location holds real place names
+    // (Aydın, Kuşadası, İzmir, …), which also stay as-is in English copy.
+    // ProjectQueryService.Localize* picks the English value when one
+    // exists and falls back to the Turkish value otherwise, so a project
+    // not yet given English copy still renders (in Turkish) rather than
+    // showing blank text on the English site.
+    public string? ShortDescriptionEn { get; set; }
+    public string? DescriptionEn { get; set; }
     public ProjectStatus Status { get; set; }
     public string Location { get; set; } = string.Empty;
 
@@ -16,6 +30,13 @@ public class Project
     // ProjectType simply does not surface in the Projects listing's
     // Project Type filter until one is assigned.
     public string? ProjectType { get; set; }
+
+    // English display label for ProjectType (English localization,
+    // 2026-10-02) — most seeded values (Residence/Villa/Commercial) are
+    // already English words, so this is only actually populated for the
+    // one Turkish value ("Apartman"); every other project leaves it null
+    // and falls back to ProjectType unchanged.
+    public string? ProjectTypeEn { get; set; }
 
     public DateTime? CompletionDate { get; set; }
     public string CoverImage { get; set; } = string.Empty;
@@ -71,6 +92,7 @@ public class Project
     // _ProjectConcept.cshtml falls back to ShortDescription/Description
     // exactly as before.
     public string? ConceptDescription { get; set; }
+    public string? ConceptDescriptionEn { get; set; }
 
     // Optional per-project photo for the right side of the Location &
     // Distances section (Davutlar D Latis Media phase, 2026-08-09). Null
@@ -86,6 +108,7 @@ public class Project
     public string? CatalogueTitle { get; set; }
 
     public string? Amenities { get; set; }
+    public string? AmenitiesEn { get; set; }
 
     public int DisplayOrder { get; set; }
     public bool IsFeatured { get; set; }

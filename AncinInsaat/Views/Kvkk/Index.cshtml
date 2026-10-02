@@ -21,18 +21,26 @@
     Hero Banner rendered.
 *@
 
+@using System.Globalization
 @{
+    // KVKK itself is the Turkish data-protection law's own name — not
+    // translated, same as a reference to "GDPR" wouldn't be (rule: legal/
+    // regulatory identifiers stay as-is). Only the surrounding copy and
+    // the page's own privacy content (KvkkPolicyViewComponent) are
+    // localized.
+    var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+
     var breadcrumbTrail = new List<AncinInsaat.ViewComponents.BreadcrumbItem>
     {
-        new() { Label = "KVKK Aydınlatma Metni" }
+        new() { Label = isEn ? "KVKK Privacy Notice" : "KVKK Aydınlatma Metni" }
     };
 }
 @await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail })
 
 <section class="section kvkk-heading-section">
     <div class="container">
-        <h1 id="kvkk-heading" class="kvkk-heading">KVKK Aydınlatma Metni</h1>
-        <p class="kvkk-subheading">Kişisel verilerinizin işlenmesine ilişkin aydınlatma metnimiz.</p>
+        <h1 id="kvkk-heading" class="kvkk-heading">@(isEn ? "KVKK Privacy Notice" : "KVKK Aydınlatma Metni")</h1>
+        <p class="kvkk-subheading">@(isEn ? "Our notice on the processing of your personal data." : "Kişisel verilerinizin işlenmesine ilişkin aydınlatma metnimiz.")</p>
     </div>
 </section>
 

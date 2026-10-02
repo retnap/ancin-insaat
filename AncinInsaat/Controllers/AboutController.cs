@@ -19,6 +19,7 @@ public class AboutController : Controller
     }
 
     [HttpGet("about-us")]
+    [HttpGet("en/about-us")]
     public async Task<IActionResult> Index()
     {
         ViewData["Seo"] = await _seoService.GetPageSeoAsync("about-us", Request);

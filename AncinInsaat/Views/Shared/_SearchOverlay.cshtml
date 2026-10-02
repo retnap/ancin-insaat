@@ -1,14 +1,26 @@
+@using System.Globalization
 @* Global Search overlay (docs/04_ComponentLibrary.md) — one instance per
    page, opened by the Navbar's search trigger (site.js). Populated
    entirely client-side from GET /api/search/index, so it carries no
    @model — matching _MediaViewer.cshtml's precedent for a shared,
    markup-only global dialog. WAI-ARIA combobox/listbox pattern: focus
    stays on the input, ArrowUp/ArrowDown move an active option via
-   aria-activedescendant, Enter navigates to it. *@
+   aria-activedescendant, Enter navigates to it.
+
+   English localization (2026-10-02) — static chrome (labels/placeholder/
+   empty-state) is localized here; the result data itself comes from
+   GET /api/search/index, which SearchController/the ISearchIndexProvider
+   implementations already serve in the request's own culture (see
+   StaticPageSearchProvider etc.) so results match whichever language
+   this overlay's static chrome is in. *@
+
+@{
+    var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+}
 
 <div class="search-overlay" id="search-overlay" data-search-overlay>
     <div class="search-overlay-backdrop" data-search-close></div>
-    <div class="search-overlay-panel" role="dialog" aria-modal="true" aria-label="Site içinde ara">
+    <div class="search-overlay-panel" role="dialog" aria-modal="true" aria-label="@(isEn ? "Search the site" : "Site içinde ara")">
         <div class="container search-overlay-inner">
 
             <div class="search-field">
@@ -24,19 +36,19 @@
                        aria-expanded="false"
                        aria-controls="search-results"
                        aria-autocomplete="list"
-                       aria-label="Sayfa veya proje ara"
-                       placeholder="Sayfa veya proje ara..."
+                       aria-label="@(isEn ? "Search for a page or project" : "Sayfa veya proje ara")"
+                       placeholder="@(isEn ? "Search for a page or project..." : "Sayfa veya proje ara...")"
                        autocomplete="off" />
-                <button type="button" class="search-overlay-close" data-search-close aria-label="Aramayı kapat">
+                <button type="button" class="search-overlay-close" data-search-close aria-label="@(isEn ? "Close search" : "Aramayı kapat")">
                     <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
                         <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                 </button>
             </div>
 
-            <ul class="search-results" id="search-results" role="listbox" aria-label="Arama sonuçları" data-search-results></ul>
+            <ul class="search-results" id="search-results" role="listbox" aria-label="@(isEn ? "Search results" : "Arama sonuçları")" data-search-results></ul>
 
-            <p class="search-empty" data-search-empty hidden>“<span data-search-empty-query></span>” için sonuç bulunamadı.</p>
+            <p class="search-empty" data-search-empty hidden>@(isEn ? "No results found for “" : "“")<span data-search-empty-query></span>@(isEn ? "”." : "” için sonuç bulunamadı.")</p>
 
         </div>
     </div>

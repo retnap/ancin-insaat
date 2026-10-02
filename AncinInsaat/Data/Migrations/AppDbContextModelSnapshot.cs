@@ -30,8 +30,14 @@ namespace AncinInsaat.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("DepartmentEn")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Description")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DescriptionEn")
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsPublished")
@@ -44,6 +50,9 @@ namespace AncinInsaat.Data.Migrations
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TitleEn")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -101,6 +110,9 @@ namespace AncinInsaat.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("ApartmentTypeEn")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("INTEGER");
 
@@ -149,6 +161,9 @@ namespace AncinInsaat.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NameEn")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -237,6 +252,9 @@ namespace AncinInsaat.Data.Migrations
                     b.Property<string>("Amenities")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("AmenitiesEn")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("CatalogueComingSoon")
                         .HasColumnType("INTEGER");
 
@@ -255,6 +273,9 @@ namespace AncinInsaat.Data.Migrations
                     b.Property<string>("ConceptDescription")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("ConceptDescriptionEn")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("ConceptVideoPath")
                         .HasColumnType("TEXT");
 
@@ -270,6 +291,9 @@ namespace AncinInsaat.Data.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DescriptionEn")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("DisplayOrder")
@@ -299,8 +323,14 @@ namespace AncinInsaat.Data.Migrations
                     b.Property<string>("ProjectType")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("ProjectTypeEn")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("ShortDescription")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ShortDescriptionEn")
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("SitePlanComingSoon")
@@ -341,12 +371,18 @@ namespace AncinInsaat.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("DescriptionEn")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Eyebrow")
                         .IsRequired()
                         .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("EyebrowEn")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ImagePath")
@@ -359,6 +395,9 @@ namespace AncinInsaat.Data.Migrations
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TitleEn")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -378,12 +417,18 @@ namespace AncinInsaat.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("DescriptionEn")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Eyebrow")
                         .IsRequired()
                         .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("EyebrowEn")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PosterPath")
@@ -396,6 +441,9 @@ namespace AncinInsaat.Data.Migrations
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TitleEn")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("VideoPath")
@@ -417,6 +465,9 @@ namespace AncinInsaat.Data.Migrations
 
                     b.Property<string>("AltText")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AltTextEn")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ApartmentType")
@@ -462,9 +513,15 @@ namespace AncinInsaat.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("DistanceEn")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NameEn")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("ProjectId")
@@ -485,6 +542,9 @@ namespace AncinInsaat.Data.Migrations
 
                     b.Property<string>("AltText")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AltTextEn")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("DisplayOrder")
@@ -518,8 +578,14 @@ namespace AncinInsaat.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("MetaDescriptionEn")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("MetaTitle")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MetaTitleEn")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("OpenGraphImage")
@@ -565,6 +631,9 @@ namespace AncinInsaat.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("FooterTextEn")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("GoogleMaps")
                         .HasColumnType("TEXT");
 
@@ -584,6 +653,9 @@ namespace AncinInsaat.Data.Migrations
 
                     b.Property<string>("WorkingHours")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("WorkingHoursEn")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("YouTube")

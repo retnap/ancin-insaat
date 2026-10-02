@@ -188,6 +188,12 @@ public static class DbSeeder
                 Page = "home",
                 MetaTitle = "Ancın İnşaat | Aydın'da Güvenilir Konut Projeleri",
                 MetaDescription = "Ancın İnşaat, Aydın'da güven ve zanaatkârlıkla şekillenen konut projeleriyle yaşam alanlarını geleceğe taşıyor. Devam eden ve tamamlanan projelerimizi keşfedin.",
+                // English localization (2026-10-02) — nullable companions;
+                // SeoService falls back to the Turkish fields above when
+                // null. See LanguageUrlService for how the canonical URL
+                // itself is localized without a second CanonicalUrl column.
+                MetaTitleEn = "Ançın İnşaat | Trusted Residential Projects in Aydın",
+                MetaDescriptionEn = "Ançın İnşaat carries living spaces into the future through residential projects shaped by trust and craftsmanship in Aydın. Explore our ongoing and completed projects.",
                 CanonicalUrl = "/",
                 OpenGraphImage = "/images/seo/og-home.webp"
             },
@@ -200,6 +206,8 @@ public static class DbSeeder
                 Page = "projects",
                 MetaTitle = "Projelerimiz | Ancın İnşaat",
                 MetaDescription = "Ancın İnşaat'ın Aydın'da tamamladığı ve devam eden tüm konut projelerini keşfedin.",
+                MetaTitleEn = "Our Projects | Ançın İnşaat",
+                MetaDescriptionEn = "Explore all of Ançın İnşaat's completed and ongoing residential projects in Aydın.",
                 CanonicalUrl = "/projects",
                 OpenGraphImage = "/images/seo/og-home.webp"
             },
@@ -209,6 +217,8 @@ public static class DbSeeder
                 Page = "contact",
                 MetaTitle = "İletişim | Ancın İnşaat",
                 MetaDescription = "Ancın İnşaat ile iletişime geçin. Adres, telefon, e-posta bilgilerimiz ve iletişim formumuz.",
+                MetaTitleEn = "Contact | Ançın İnşaat",
+                MetaDescriptionEn = "Get in touch with Ançın İnşaat — our address, phone, email details and contact form.",
                 CanonicalUrl = "/contact",
                 OpenGraphImage = "/images/seo/og-home.webp"
             },
@@ -221,6 +231,8 @@ public static class DbSeeder
                 Page = "about-us",
                 MetaTitle = "Hakkımızda | Ancın İnşaat",
                 MetaDescription = "Ancın İnşaat'ın 1973'ten bugüne uzanan hikayesini, değerlerini ve Aydın'daki yolculuğunu keşfedin.",
+                MetaTitleEn = "About Us | Ançın İnşaat",
+                MetaDescriptionEn = "Discover Ançın İnşaat's story since 1973, our values and our journey in Aydın.",
                 CanonicalUrl = "/about-us",
                 OpenGraphImage = "/images/seo/og-home.webp"
             },
@@ -233,6 +245,8 @@ public static class DbSeeder
                 Page = "values",
                 MetaTitle = "Değerlerimiz | Ancın İnşaat",
                 MetaDescription = "Ancın İnşaat'ın kurumsal kültürünü ve inşaat anlayışını şekillendiren temel değerleri keşfedin.",
+                MetaTitleEn = "Our Values | Ançın İnşaat",
+                MetaDescriptionEn = "Discover the core values that shape Ançın İnşaat's corporate culture and approach to construction.",
                 CanonicalUrl = "/values",
                 OpenGraphImage = "/images/seo/og-home.webp"
             },
@@ -245,6 +259,8 @@ public static class DbSeeder
                 Page = "career",
                 MetaTitle = "Kariyer | Ancın İnşaat",
                 MetaDescription = "Ancın İnşaat'ta kariyer fırsatlarını keşfedin, açık pozisyonlarımıza CV'nizle başvurun.",
+                MetaTitleEn = "Career | Ançın İnşaat",
+                MetaDescriptionEn = "Explore career opportunities at Ançın İnşaat and apply to our open positions with your CV.",
                 CanonicalUrl = "/career",
                 OpenGraphImage = "/images/seo/og-home.webp"
             },
@@ -257,6 +273,8 @@ public static class DbSeeder
                 Page = "hr-policy",
                 MetaTitle = "İnsan Kaynakları Politikası | Ancın İnşaat",
                 MetaDescription = "Ancın İnşaat'ın çalışan gelişimi, kurum kültürü ve insan kaynakları ilkelerini keşfedin.",
+                MetaTitleEn = "Human Resources Policy | Ançın İnşaat",
+                MetaDescriptionEn = "Discover Ançın İnşaat's approach to employee development, corporate culture and human resources principles.",
                 CanonicalUrl = "/hr-policy",
                 OpenGraphImage = "/images/seo/og-home.webp"
             },
@@ -269,21 +287,37 @@ public static class DbSeeder
                 Page = "kvkk",
                 MetaTitle = "KVKK Aydınlatma Metni | Ancın İnşaat",
                 MetaDescription = "Ancın İnşaat'ın 6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) kapsamında kişisel verilerin işlenmesine ilişkin aydınlatma metni.",
+                MetaTitleEn = "KVKK Privacy Notice | Ançın İnşaat",
+                MetaDescriptionEn = "Ançın İnşaat's notice on the processing of personal data under Turkish Law No. 6698 on the Protection of Personal Data (KVKK).",
                 CanonicalUrl = "/kvkk",
                 OpenGraphImage = "/images/seo/og-home.webp"
             },
 
             // Sosyal Sorumluluk Projelerimiz (new Kurumsal navigation item,
-            // 2026-09-28). OpenGraphImage placeholder-reuses the Home OG
-            // image, same as every other corporate page above — no
-            // page-specific one has been supplied yet. The page itself is
-            // intentionally empty for now (see
-            // Views/SocialResponsibility/Index.cshtml).
+            // 2026-09-28; page built out 2026-10-02, Folkart
+            // "/sosyal-sorumluluk" reference revision — see
+            // SocialResponsibilityPillarsViewComponent). MetaTitle/
+            // MetaDescription updated 2026-10-02 from the earlier generic
+            // placeholder values to the project owner's explicit copy.
+            // OpenGraphImage placeholder-reuses the Home OG image, same as
+            // every other corporate page above — no page-specific one has
+            // been supplied yet.
+            //
+            // NOTE: SeedSeoMetadataAsync only inserts rows for pages not
+            // already present (see the missingPages filter below) — this
+            // row already existed in App_Data/ancinInsaat.db from the
+            // 2026-09-28 seed run, so the corrected values here were also
+            // applied directly to that file via a one-off SQL UPDATE
+            // (2026-10-02) so local/dev testing reflects them immediately.
+            // A fresh database (new environment, reseed) picks up the
+            // corrected values from this seed list with no extra step.
             new()
             {
                 Page = "sosyal-sorumluluk-projelerimiz",
-                MetaTitle = "Sosyal Sorumluluk Projelerimiz | Ancın İnşaat",
-                MetaDescription = "Ancın İnşaat'ın topluma değer katan sosyal sorumluluk projelerini keşfedin.",
+                MetaTitle = "Sosyal Sorumluluk | Ancın İnşaat",
+                MetaDescription = "Ancın İnşaat'ın çalışanlara, çevreye ve yerel topluma karşı sorumluluk anlayışını şekillendiren yaklaşımları keşfedin.",
+                MetaTitleEn = "Social Responsibility | Ançın İnşaat",
+                MetaDescriptionEn = "Discover the approach that shapes Ançın İnşaat's sense of responsibility toward its employees, the environment and the local community.",
                 CanonicalUrl = "/sosyal-sorumluluk-projelerimiz",
                 OpenGraphImage = "/images/seo/og-home.webp"
             }
@@ -299,6 +333,52 @@ public static class DbSeeder
 
         context.SeoMetadata.AddRange(missingPages);
         await context.SaveChangesAsync();
+
+        // English localization (2026-10-02) — SeedSeoMetadataAsync only
+        // inserts rows for pages not already present (missingPages above),
+        // so an already-seeded database (every page in a database created
+        // before this column existed) would otherwise never receive
+        // MetaTitleEn/MetaDescriptionEn even though `pages` above now
+        // defines them. This backfills every existing row from the exact
+        // same `pages` list, guarded per-field on that field still being
+        // null, so it is a no-op once applied and never overwrites a later
+        // manual edit.
+        await ReconcileSeoMetadataEnglishLocalizationAsync(context, pages);
+    }
+
+    private static async Task ReconcileSeoMetadataEnglishLocalizationAsync(AppDbContext context, List<SeoMetadata> pages)
+    {
+        var sourceByPage = pages.ToDictionary(p => p.Page);
+
+        var existingRows = await context.SeoMetadata
+            .Where(s => sourceByPage.Keys.Contains(s.Page))
+            .ToListAsync();
+
+        var changed = false;
+        foreach (var row in existingRows)
+        {
+            if (!sourceByPage.TryGetValue(row.Page, out var source))
+            {
+                continue;
+            }
+
+            if (string.IsNullOrWhiteSpace(row.MetaTitleEn) && !string.IsNullOrWhiteSpace(source.MetaTitleEn))
+            {
+                row.MetaTitleEn = source.MetaTitleEn;
+                changed = true;
+            }
+
+            if (string.IsNullOrWhiteSpace(row.MetaDescriptionEn) && !string.IsNullOrWhiteSpace(source.MetaDescriptionEn))
+            {
+                row.MetaDescriptionEn = source.MetaDescriptionEn;
+                changed = true;
+            }
+        }
+
+        if (changed)
+        {
+            await context.SaveChangesAsync();
+        }
     }
 
     // Names/slugs mirror SeedProjectsAsync's project list exactly — kept as
@@ -328,6 +408,11 @@ public static class DbSeeder
             Page = p.Slug,
             MetaTitle = $"{p.Name} | Ancın İnşaat",
             MetaDescription = $"Ancın İnşaat'ın Aydın'daki {p.Name} projesini keşfedin. Konum, durum ve proje detayları.",
+            // English localization (2026-10-02) — p.Name is never
+            // translated (project names are brand names), only the
+            // surrounding template text.
+            MetaTitleEn = $"{p.Name} | Ançın İnşaat",
+            MetaDescriptionEn = $"Explore Ançın İnşaat's {p.Name} project. Location, status and project details.",
             CanonicalUrl = $"/projects/{p.Slug}",
             OpenGraphImage = $"/images/projects/{p.Slug}/cover.webp"
         });
@@ -2716,26 +2801,27 @@ public static class DbSeeder
         // (garden-inclusive gross), not Satışa Esas Brüt Alan, so it is not
         // reused as that field — meaning SalesGrossAreaM2 stays 0 (hidden,
         // _FloorPlans.cshtml) for every floor.
-        var floors = new (string Label, string File, decimal? NetAreaM2, decimal? GrossAreaM2)[]
+        var floors = new (string Label, string LabelEn, string File, decimal? NetAreaM2, decimal? GrossAreaM2)[]
         {
-            ("Bodrum Kat", "bodrum-kat.jpg", null, null),
-            ("Zemin Kat", "zemin-kat.jpg", 120.10m, 152.10m),
-            ("1. Kat", "1-kat.jpg", 130.60m, 152.80m),
-            ("2. Kat", "2-kat.jpg", 125.80m, 142.20m),
-            ("3. Kat", "3-kat.jpg", 126.50m, 142.70m),
-            ("4. Kat", "4-kat.jpg", 152.10m, 170.70m),
-            ("5. Kat", "5-kat.jpg", 137.80m, 156.70m),
-            ("6. Kat", "6-kat.jpg", 126.60m, 147.70m),
-            ("7. Kat", "7-kat.jpg", 125.60m, 146.50m)
+            ("Bodrum Kat", "Basement Floor", "bodrum-kat.jpg", null, null),
+            ("Zemin Kat", "Ground Floor", "zemin-kat.jpg", 120.10m, 152.10m),
+            ("1. Kat", "1st Floor", "1-kat.jpg", 130.60m, 152.80m),
+            ("2. Kat", "2nd Floor", "2-kat.jpg", 125.80m, 142.20m),
+            ("3. Kat", "3rd Floor", "3-kat.jpg", 126.50m, 142.70m),
+            ("4. Kat", "4th Floor", "4-kat.jpg", 152.10m, 170.70m),
+            ("5. Kat", "5th Floor", "5-kat.jpg", 137.80m, 156.70m),
+            ("6. Kat", "6th Floor", "6-kat.jpg", 126.60m, 147.70m),
+            ("7. Kat", "7th Floor", "7-kat.jpg", 125.60m, 146.50m)
         };
 
         var floorPlans = new List<FloorPlan>();
         var order = 1;
-        foreach (var (label, file, netAreaM2, grossAreaM2) in floors)
+        foreach (var (label, labelEn, file, netAreaM2, grossAreaM2) in floors)
         {
             floorPlans.Add(new FloorPlan
             {
                 ApartmentType = label,
+                ApartmentTypeEn = labelEn,
                 ImagePath = $"/images/projects/nysa-gold/floorplans/originals/{file}",
                 NetAreaM2 = netAreaM2 ?? 0,
                 GrossAreaM2 = grossAreaM2 ?? 0,
@@ -2746,12 +2832,12 @@ public static class DbSeeder
                 // the stats row itself changed.
                 Rooms = new List<FloorPlanRoom>
                 {
-                    new() { Name = "Salon", AreaM2 = 24.00m, DisplayOrder = 1 },
-                    new() { Name = "Mutfak", AreaM2 = 9.50m, DisplayOrder = 2 },
-                    new() { Name = "Yatak Odası 1", AreaM2 = 14.00m, DisplayOrder = 3 },
-                    new() { Name = "Yatak Odası 2", AreaM2 = 11.00m, DisplayOrder = 4 },
-                    new() { Name = "Banyo", AreaM2 = 6.00m, DisplayOrder = 5 },
-                    new() { Name = "Balkon", AreaM2 = 7.50m, DisplayOrder = 6 }
+                    new() { Name = "Salon", NameEn = "Living Room", AreaM2 = 24.00m, DisplayOrder = 1 },
+                    new() { Name = "Mutfak", NameEn = "Kitchen", AreaM2 = 9.50m, DisplayOrder = 2 },
+                    new() { Name = "Yatak Odası 1", NameEn = "Bedroom 1", AreaM2 = 14.00m, DisplayOrder = 3 },
+                    new() { Name = "Yatak Odası 2", NameEn = "Bedroom 2", AreaM2 = 11.00m, DisplayOrder = 4 },
+                    new() { Name = "Banyo", NameEn = "Bathroom", AreaM2 = 6.00m, DisplayOrder = 5 },
+                    new() { Name = "Balkon", NameEn = "Balcony", AreaM2 = 7.50m, DisplayOrder = 6 }
                 }
             });
         }
@@ -2781,6 +2867,9 @@ public static class DbSeeder
                 Eyebrow = "Yeni Nesil Yaşam",
                 Title = "Nysa Gold Residence'ın Mimari Vizyonu",
                 Description = "Zarif cepheleri, geniş balkonları ve özenle tasarlanmış sosyal alanlarıyla Nysa Gold Residence, modern mimariyi konforlu bir yaşam deneyimiyle buluşturuyor.",
+                EyebrowEn = "A New Generation of Living",
+                TitleEn = "The Architectural Vision of Nysa Gold Residence",
+                DescriptionEn = "With its elegant façades, wide balconies and thoughtfully designed social areas, Nysa Gold Residence brings modern architecture together with a comfortable living experience.",
                 DisplayOrder = 1
             }
         };
@@ -2796,6 +2885,9 @@ public static class DbSeeder
                 Eyebrow = "Yukarıdan Bir Bakış",
                 Title = "Peyzajla Bütünleşen Yerleşim",
                 Description = "Havuzu, yeşil alanları ve düzenli site içi dolaşım aksıyla Nysa Gold Residence, kuşbakışı görünümünde bile dengeli ve ferah bir yerleşim planı sunuyor.",
+                EyebrowEn = "A View From Above",
+                TitleEn = "A Layout Integrated with the Landscape",
+                DescriptionEn = "With its pool, green spaces and orderly internal circulation routes, Nysa Gold Residence offers a balanced, open site plan even from a bird's-eye view.",
                 DisplayOrder = 2
             },
             new()
@@ -2804,6 +2896,9 @@ public static class DbSeeder
                 Eyebrow = "Aile Odaklı Yaşam",
                 Title = "Yeşilin İçinde Sosyal Alanlar",
                 Description = "Çocuk oyun alanı ve geniş çim yüzeyleriyle donatılan iç bahçe, Nysa Gold Residence sakinlerine güvenli ve keyifli bir sosyal yaşam alanı sunuyor.",
+                EyebrowEn = "Family-Focused Living",
+                TitleEn = "Social Spaces Within the Greenery",
+                DescriptionEn = "Fitted with a children's playground and expansive lawns, the inner garden offers Nysa Gold Residence's residents a safe and enjoyable social living space.",
                 DisplayOrder = 3
             },
             new()
@@ -2812,6 +2907,9 @@ public static class DbSeeder
                 Eyebrow = "Günbatımı Keyfi",
                 Title = "Havuz Başında Huzurlu Anlar",
                 Description = "Palmiye ağaçları ve şezlonglarıyla çevrelenen havuz alanı, gün batımının sıcak tonlarında Nysa Gold Residence'a otel konforunda bir dinlenme deneyimi katıyor.",
+                EyebrowEn = "Sunset Pleasure",
+                TitleEn = "Peaceful Moments by the Pool",
+                DescriptionEn = "Surrounded by palm trees and sun loungers, the pool area adds a hotel-level relaxation experience to Nysa Gold Residence in the warm tones of sunset.",
                 DisplayOrder = 4
             },
             new()
@@ -2820,6 +2918,9 @@ public static class DbSeeder
                 Eyebrow = "Geceye Özel Atmosfer",
                 Title = "Işıklarla Aydınlanan Bir Yaşam Alanı",
                 Description = "Peyzaj aydınlatması ve havuz çevresindeki ışık tasarımıyla Nysa Gold Residence, gece saatlerinde de davetkâr ve güvenli bir yaşam atmosferi sunuyor.",
+                EyebrowEn = "An Atmosphere for the Night",
+                TitleEn = "A Living Space Lit Up After Dark",
+                DescriptionEn = "With landscape lighting and a carefully designed pool-area lighting scheme, Nysa Gold Residence offers an inviting, secure atmosphere after dark as well.",
                 DisplayOrder = 5
             }
         };
@@ -2838,9 +2939,9 @@ public static class DbSeeder
     {
         return new List<ProjectSitePlanImage>
         {
-            new() { ImagePath = "/images/projects/nysa-gold/site-plan-1.webp", AltText = "Nysa Gold Residence vaziyet planı", DisplayOrder = 1 },
-            new() { ImagePath = "/images/projects/nysa-gold/site-plan-2.webp", AltText = "Nysa Gold Residence arsa ve yerleşim görünümü", DisplayOrder = 2 },
-            new() { ImagePath = "/images/projects/nysa-gold/site-plan-3.webp", AltText = "Nysa Gold Residence çevresel konum görünümü", DisplayOrder = 3 }
+            new() { ImagePath = "/images/projects/nysa-gold/site-plan-1.webp", AltText = "Nysa Gold Residence vaziyet planı", AltTextEn = "Nysa Gold Residence site plan", DisplayOrder = 1 },
+            new() { ImagePath = "/images/projects/nysa-gold/site-plan-2.webp", AltText = "Nysa Gold Residence arsa ve yerleşim görünümü", AltTextEn = "Nysa Gold Residence plot and layout view", DisplayOrder = 2 },
+            new() { ImagePath = "/images/projects/nysa-gold/site-plan-3.webp", AltText = "Nysa Gold Residence çevresel konum görünümü", AltTextEn = "Nysa Gold Residence surrounding location view", DisplayOrder = 3 }
         };
     }
 
@@ -2997,6 +3098,112 @@ public static class DbSeeder
         }
 
         await context.SaveChangesAsync();
+    }
+
+    // Not a seed — backfills Nysa Gold's English companions (English
+    // localization, 2026-10-02) onto an already-seeded row: FloorPlan.
+    // ApartmentTypeEn/FloorPlanRoom.NameEn (BuildNysaGoldFloorPlans now
+    // seeds both directly for a fresh database, but this project's
+    // existing 9 floors/rooms in an already-seeded database were created
+    // before those fields existed) and ProjectConceptVideo/
+    // ProjectConceptImage's Eyebrow/Title/DescriptionEn (same reasoning —
+    // BuildNysaGoldConceptVideos/Images now seed them directly, but
+    // existing rows predate the columns). Matched by DisplayOrder, which
+    // both the seed and this reconcile derive from BuildNysaGoldFloorPlans/
+    // BuildNysaGoldConceptVideos/BuildNysaGoldConceptImages' own fixed
+    // ordering, so each existing row maps to the exact same slide it was
+    // originally seeded from. Guarded per-field on that field still being
+    // null, so this is a no-op once applied and never overwrites a later
+    // manual edit.
+    private static async Task ReconcileNysaGoldEnglishLocalizationAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.FloorPlans).ThenInclude(f => f.Rooms)
+            .Include(p => p.ConceptVideos)
+            .Include(p => p.ConceptImages)
+            .Include(p => p.SitePlanImages)
+            .FirstOrDefaultAsync(p => p.Slug == "nysa-gold");
+
+        if (project is null)
+        {
+            return;
+        }
+
+        var changed = false;
+
+        var floorPlansByOrder = BuildNysaGoldFloorPlans().ToDictionary(fp => fp.DisplayOrder);
+        foreach (var floorPlan in project.FloorPlans)
+        {
+            if (!floorPlansByOrder.TryGetValue(floorPlan.DisplayOrder, out var sourceFloorPlan))
+            {
+                continue;
+            }
+
+            if (string.IsNullOrWhiteSpace(floorPlan.ApartmentTypeEn))
+            {
+                floorPlan.ApartmentTypeEn = sourceFloorPlan.ApartmentTypeEn;
+                changed = true;
+            }
+
+            var sourceRoomsByOrder = sourceFloorPlan.Rooms.ToDictionary(r => r.DisplayOrder);
+            foreach (var room in floorPlan.Rooms)
+            {
+                if (string.IsNullOrWhiteSpace(room.NameEn) &&
+                    sourceRoomsByOrder.TryGetValue(room.DisplayOrder, out var sourceRoom))
+                {
+                    room.NameEn = sourceRoom.NameEn;
+                    changed = true;
+                }
+            }
+        }
+
+        var conceptVideosByOrder = BuildNysaGoldConceptVideos().ToDictionary(v => v.DisplayOrder);
+        foreach (var video in project.ConceptVideos)
+        {
+            if (string.IsNullOrWhiteSpace(video.EyebrowEn) &&
+                conceptVideosByOrder.TryGetValue(video.DisplayOrder, out var sourceVideo))
+            {
+                video.EyebrowEn = sourceVideo.EyebrowEn;
+                video.TitleEn = sourceVideo.TitleEn;
+                video.DescriptionEn = sourceVideo.DescriptionEn;
+                changed = true;
+            }
+        }
+
+        var conceptImagesByOrder = BuildNysaGoldConceptImages().ToDictionary(i => i.DisplayOrder);
+        foreach (var image in project.ConceptImages)
+        {
+            if (string.IsNullOrWhiteSpace(image.EyebrowEn) &&
+                conceptImagesByOrder.TryGetValue(image.DisplayOrder, out var sourceImage))
+            {
+                image.EyebrowEn = sourceImage.EyebrowEn;
+                image.TitleEn = sourceImage.TitleEn;
+                image.DescriptionEn = sourceImage.DescriptionEn;
+                changed = true;
+            }
+        }
+
+        if (string.IsNullOrWhiteSpace(project.AmenitiesEn))
+        {
+            project.AmenitiesEn = "Swimming Pool\nBasketball Court\nChildren's Playground\nLandscaped Gardens\nParking\nAydın's First Pet Park";
+            changed = true;
+        }
+
+        var sitePlanImagesByOrder = BuildNysaGoldSitePlanImages().ToDictionary(s => s.DisplayOrder);
+        foreach (var sitePlanImage in project.SitePlanImages)
+        {
+            if (string.IsNullOrWhiteSpace(sitePlanImage.AltTextEn) &&
+                sitePlanImagesByOrder.TryGetValue(sitePlanImage.DisplayOrder, out var sourceSitePlanImage))
+            {
+                sitePlanImage.AltTextEn = sourceSitePlanImage.AltTextEn;
+                changed = true;
+            }
+        }
+
+        if (changed)
+        {
+            await context.SaveChangesAsync();
+        }
     }
 
     // Not a seed — Nysa Gold Residence "Aydın'ın İlk Pet Parkı" Konsept
@@ -3459,6 +3666,7 @@ public static class DbSeeder
         await ReconcileNysaGoldMediaOverhaulAsync(context);
         await ReconcileNysaGoldFloorPlansAsync(context);
         await ReconcileNysaGoldFloorPlanAreasAsync(context);
+        await ReconcileNysaGoldEnglishLocalizationAsync(context);
         await ReconcileNysaGoldPetParkConceptAsync(context);
         await ReconcileNysaGoldRemoveSalesOfficeAsync(context);
         await ReconcileNysaGoldLocationImageAsync(context);
@@ -3586,6 +3794,7 @@ public static class DbSeeder
                 // not invented. "Aydın'ın İlk Pet Parkı" appended verbatim per
                 // client request (2026-08-20).
                 Amenities = "Yüzme Havuzu\nBasketbol Sahası\nÇocuk Oyun Alanı\nPeyzaj Bahçeleri\nOtopark\nAydın'ın İlk Pet Parkı",
+                AmenitiesEn = "Swimming Pool\nBasketball Court\nChildren's Playground\nLandscaped Gardens\nParking\nAydın's First Pet Park",
                 DisplayOrder = 1,
                 IsFeatured = true,
                 IsPublished = true,
@@ -4195,6 +4404,7 @@ public static class DbSeeder
                 // copy before launch; the facilities themselves are not
                 // invented.
                 Amenities = "Açık Teras ve Dinlenme Alanı\nFitness Salonu\nAeroyoga / Pilates Stüdyosu",
+                AmenitiesEn = "Open Terrace and Lounge Area\nFitness Room\nAero-Yoga / Pilates Studio",
                 DisplayOrder = 13,
                 IsFeatured = false,
                 IsPublished = true,
@@ -4493,6 +4703,26 @@ public static class DbSeeder
             ["kuyulu-avm"] = ("Placeholder short description for the La Via AVM development.", "Gölgelikli teraslar ve özenle tasarlanmış peyzajıyla alışverişi bir yaşam deneyimine dönüştüren, Aydın Efeler'de yükselen ticari proje.")
         };
 
+        // English localization (2026-10-02) — natural corporate-English
+        // renderings of shortDescriptionUpdates' NewValue above, not
+        // literal translations. Applied to ShortDescriptionEn below
+        // whenever that column is still null, independent of the
+        // TR-placeholder guard the Turkish column itself uses (this column
+        // never held a placeholder — it is simply unset until now).
+        var shortDescriptionUpdatesEn = new Dictionary<string, string>
+        {
+            ["nysa-gold"] = "A modern residence offering a privileged life in Aydın Efeler, with elegant façades, a swimming pool and thoughtfully designed social areas.",
+            ["tralles-gold"] = "A completed residence with a strong architectural identity, standing out in Aydın Efeler's skyline with its white façades and vertical red accents.",
+            ["nlatis"] = "A completed residential project in İzmir with a distinctive architectural identity, featuring a curved, timber-toned roofline and a glass-clad façade.",
+            ["alinda-gold"] = "A completed modern residence that brings a new character to Aydın Efeler's skyline with its flowing lines and elegant roofline lighting.",
+            ["magnesia-gold"] = "A completed residence in Aydın Efeler that puts togetherness first, with extensive landscaped grounds and thoughtfully designed shared living spaces.",
+            ["la-fiore-karabag"] = "A completed project offering a calm, private life in Aydın İncirliova, with single-story villas carefully set within a lush pine forest.",
+            ["la-fiore-karabag-2-etap"] = "A distinguished development rising in Aydın İncirliova, set among centuries-old olive trees with a villa layout fully integrated into nature.",
+            ["kuyulu-la-via-villalar-birinci-etap"] = "An exclusive living environment that brings independent villa architecture — each with its own garden and garage — together with Kuyulu's tranquil character.",
+            ["ferhunde-hanim-apt"] = "A completed apartment project that stands out in Aydın Efeler for its softly curved balconies and carefully chosen façade texture.",
+            ["kuyulu-avm"] = "A commercial development rising in Aydın Efeler that turns shopping into a lifestyle experience, with shaded terraces and thoughtfully designed landscaping."
+        };
+
         const string oldDescription = "Placeholder full description. Replace with approved project copy before launch.";
         var descriptionUpdates = new Dictionary<string, string>
         {
@@ -4511,7 +4741,32 @@ public static class DbSeeder
             ["q-latis"] = "Kuşadası'nın eşsiz doğasıyla iç içe konumlanan Hacıfeyzullah - Q-Latis, ahşap dokulu cepheleri ve geniş camekânlarıyla bölgenin karakterine saygılı, çağdaş bir mimari dil sunuyor. Üst kat dairelerin geniş balkonlarından izlenen Ege Denizi manzarası her günü ayrıcalıklı kılarken, açık teras, fitness salonu ve aeroyoga/pilates stüdyosu gibi sosyal donatılar aktif bir yaşam tarzını destekliyor. Zeytinliklerle çevrili tepelik konumuyla proje, Kuşadası'nın doğal dokusunu koruyan bir yerleşim anlayışıyla tasarlandı."
         };
 
-        var slugsToCheck = shortDescriptionUpdates.Keys.Union(descriptionUpdates.Keys).ToHashSet();
+        // English localization (2026-10-02) — natural corporate-English
+        // renderings of descriptionUpdates' value above, not literal
+        // translations. Applied to DescriptionEn below whenever that
+        // column is still null.
+        var descriptionUpdatesEn = new Dictionary<string, string>
+        {
+            ["nysa-gold"] = "Rising in the developing district of Aydın Efeler, Nysa Gold Residence brings modern architecture together with a comfortable, secure way of life. With its swimming pool, basketball court, children's playground and landscaped gardens, the project offers social spaces residents of every age can enjoy at any hour of the day. Every apartment is designed with wide balconies and bright interiors that carry natural light deep inside.",
+            ["le-jardin"] = "Bringing the warm character of the Mediterranean together with modern architecture, Le Jardin welcomes its residents with an inviting atmosphere through its bougainvillea-wrapped entrance and light-toned stone-clad façade. With its private pool, shaded terrace and spacious garden, the project unites the comfort of indoor living with the calm of the outdoors. Located in Aydın Efeler, Le Jardin offers an exclusive villa experience for enjoying both everyday life and hosting your guests.",
+            ["tralles-gold"] = "Rising within the fabric of Aydın Efeler, Tralles Gold Residence carries a strong architectural identity that sets it apart from its surroundings at a glance, with white façades and vertical red accents. Lit up in the evening hours, the project takes on a distinctive character in the city's night silhouette, bringing together the simplicity of day with the vibrancy of night. Now complete, the project is offered to its residents as a lasting living space that reflects Ançın İnşaat's commitment to craftsmanship.",
+            ["nlatis"] = "Completed in İzmir, N-Latis carries a distinctive architectural identity with its curved, timber-toned roofline and glass-clad façade. The layered rhythm created by dark façade panels and vertical timber accents, supported by glass balconies, offers a modern, understated look. The ground-floor social amenity areas form a lively welcome point that connects the building with its surroundings.",
+            ["alinda-gold"] = "Rising on the Aydın Efeler skyline, Alinda Gold Residence brings a new character to the city's silhouette with its flowing lines and elegant roofline lighting. The pool, walking paths and landscaped areas thoughtfully placed between the blocks give residents the chance to start the day outdoors and end it in calm. With its careful lighting design and open composition, the project's entrance makes Ançın İnşaat's premium approach felt from the very first moment.",
+            ["magnesia-gold"] = "Rising side by side on Aydın's skyline, the Magnesia Gold Residence blocks put togetherness first, with extensive landscaped grounds and thoughtfully designed shared living spaces. Palm-lined walking paths, pools and wide lawns offer a peaceful break at any hour of the day, while the pool surrounds — highlighted by careful lighting in the evening — become an inviting gathering point for residents who want to socialize. Now complete, the project places the harmony of greenery and architecture at the center of everyday life.",
+            ["la-fiore-karabag"] = "Carefully set within a lush pine forest in Aydın İncirliova, La Fiore Karabağ offers a living environment that prioritizes calm and privacy through its single-story villas. Uninterrupted walking paths and landscaping throughout the development promise a daily life immersed in nature, while the pergola-covered seating areas and fireplaces in each villa's garden bring the indoors and the garden together as one. Notable for its stone-clad façade and timber detailing, the project's entrance secures residents' peace of mind with a guarded entry point.",
+            ["la-fiore-karabag-2-etap"] = "Set among centuries-old olive trees in Aydın Karabağ, La Fiore Karabağ 2. Etap comes to life with a site plan that preserves the land's natural slope and character. Woven together with wide walking paths, landscaped squares and shared social areas, the project invites its residents into a life together rather than simply a collection of buildings. With its stone walls, elegant lighting and villas surrounded by olive trees, La Fiore Karabağ 2. Etap brings together a peaceful way of life and a strong investment opportunity backed by Karabağ's rising value.",
+            ["kuyulu-la-via-villalar-birinci-etap"] = "La Via Villalar 1. Etap brings independent villa architecture — each with its own garden and garage — together with Kuyulu's tranquil character. Timber-textured façades, elegant lighting and modern lines redefine Ançın İnşaat's commitment to quality in every villa. Designed with its own roof terrace, private pool and landscaped garden for every villa, the project brings social life into your family's own privacy, combining a peaceful way of life with a strong investment opportunity backed by Kuyulu's rising value.",
+            ["davutlar-d-latis"] = "Set amid Kuşadası's thousands of years of history and natural beauty, Davutlar D Latis brings the region's thermal water sources together with a modern architectural living experience. Complete with its spa, fitness and social amenities, the project offers both everyday comfort and a long-term investment opportunity in one of the Aegean's most sought-after tourism destinations. Brought to life under the Ançın İnşaat guarantee, the project aims to be an exclusive address that brings a peaceful life together with thermal healing.",
+            ["ferhunde-hanim-apt"] = "Ferhunde Hanım Apt. presents an architectural identity that stands out in Aydın Efeler with its softly curved balconies and carefully chosen façade texture. With large windows and spacious balconies, every floor carries natural light inside, while the private garden area enclosed by tall hedges gives residents a safe, peaceful outdoor life away from the noise of the city. Complete with its perimeter walls and landscaped front garden, the project offers an investment opportunity that makes everyday life easier while holding its value.",
+            ["kuyulu-avm"] = "Rising at the edge of a wide olive grove in Aydın Efeler, La Via Shopping Center turns shopping into a lifestyle experience rather than simply a daily errand. With its shaded terraces, wide walkways and thoughtfully designed landscaping, the project reinterprets Ançın İnşaat's signature quality approach at a commercial scale. Natural stone cladding, timber-lamella textures and lighting that traces a soft line through the night give the façade a lasting, elegant character.",
+            ["q-latis"] = "Set amid Kuşadası's unique natural surroundings, Hacıfeyzullah - Q-Latis offers a contemporary architectural language that respects the character of the region, with timber-textured façades and wide glazing. The Aegean Sea view from the upper-floor apartments' wide balconies makes every day feel special, while social amenities such as an open terrace, fitness room and an aero-yoga/pilates studio support an active lifestyle. With its hillside position surrounded by olive groves, the project was designed with a site plan that preserves Kuşadası's natural character."
+        };
+
+        var slugsToCheck = shortDescriptionUpdates.Keys
+            .Union(descriptionUpdates.Keys)
+            .Union(shortDescriptionUpdatesEn.Keys)
+            .Union(descriptionUpdatesEn.Keys)
+            .ToHashSet();
         var projectsToCheck = await context.Projects
             .Where(p => slugsToCheck.Contains(p.Slug))
             .ToListAsync();
@@ -4530,6 +4785,20 @@ public static class DbSeeder
                 project.Description == oldDescription)
             {
                 project.Description = newDescription;
+                changed = true;
+            }
+
+            if (string.IsNullOrWhiteSpace(project.ShortDescriptionEn) &&
+                shortDescriptionUpdatesEn.TryGetValue(project.Slug, out var shortDescriptionEn))
+            {
+                project.ShortDescriptionEn = shortDescriptionEn;
+                changed = true;
+            }
+
+            if (string.IsNullOrWhiteSpace(project.DescriptionEn) &&
+                descriptionUpdatesEn.TryGetValue(project.Slug, out var descriptionEn))
+            {
+                project.DescriptionEn = descriptionEn;
                 changed = true;
             }
         }

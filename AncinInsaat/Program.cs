@@ -1,6 +1,8 @@
+using System.Globalization;
 using AncinInsaat.Data;
 using AncinInsaat.Data.Seed;
 using AncinInsaat.Services;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
@@ -45,6 +47,23 @@ builder.Services.AddScoped<ISearchIndexProvider, ProjectSearchProvider>();
 builder.Services.AddScoped<ISearchIndexProvider, CareerPositionSearchProvider>();
 builder.Services.AddScoped<ISearchService, SearchService>();
 
+// English localization (2026-10-02) — the request culture is derived
+// purely from the URL's leading "/en" segment (see
+// RouteSegmentRequestCultureProvider/docs/14_Decisions.md), never from a
+// cookie or Accept-Language. tr-TR stays the default/fallback for any path
+// that provider doesn't recognize. Every page that reads
+// CultureInfo.CurrentUICulture (views, ViewComponents, SeoService) picks
+// its Turkish or English content from this single per-request culture.
+var supportedCultures = new[] { new CultureInfo("tr-TR"), new CultureInfo("en-US") };
+var requestLocalizationOptions = new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture("tr-TR"),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures,
+};
+requestLocalizationOptions.RequestCultureProviders.Clear();
+requestLocalizationOptions.RequestCultureProviders.Add(new RouteSegmentRequestCultureProvider());
+
 var app = builder.Build();
 
 // SQLite does not create missing parent directories for its data file;
@@ -71,6 +90,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseRequestLocalization(requestLocalizationOptions);
 
 app.UseRouting();
 

@@ -15,8 +15,10 @@
    on an invalid POST, so ModelState errors below reflect the submitted
    values. *@
 
+@using System.Globalization
 @{
     bool IsInvalid(string key) => ViewData.ModelState.TryGetValue(key, out var entry) && entry.Errors.Count > 0;
+    var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
 }
 
 <div class="contact-info-form">
@@ -25,21 +27,23 @@
         {
             <partial name="_SuccessMessage" model="@(new SuccessMessageModel
             {
-                Title = "Mesajınız Alındı",
-                Description = "İlginiz için teşekkür ederiz. Ekibimiz en kısa sürede sizinle iletişime geçecektir."
+                Title = isEn ? "Your Message Has Been Received" : "Mesajınız Alındı",
+                Description = isEn
+                    ? "Thank you for your interest. Our team will get back to you as soon as possible."
+                    : "İlginiz için teşekkür ederiz. Ekibimiz en kısa sürede sizinle iletişime geçecektir."
             })" />
         }
         else
         {
             <form class="contact-form" asp-controller="Contact" asp-action="Submit" method="post" aria-labelledby="contact-form-heading">
-                <h2 id="contact-form-heading" class="sr-only">İletişim Formu</h2>
+                <h2 id="contact-form-heading" class="sr-only">@(isEn ? "Contact Form" : "İletişim Formu")</h2>
 
                 @if (!ViewData.ModelState.IsValid)
                 {
-                    <p class="form-error form-summary-error" role="alert">Lütfen formdaki hataları düzeltip tekrar deneyin.</p>
+                    <p class="form-error form-summary-error" role="alert">@(isEn ? "Please correct the errors in the form and try again." : "Lütfen formdaki hataları düzeltip tekrar deneyin.")</p>
                 }
 
-                <p class="contact-form__required-note"><span aria-hidden="true">*</span> işaretli alanlar zorunludur.</p>
+                <p class="contact-form__required-note"><span aria-hidden="true">*</span> @(isEn ? "marked fields are required." : "işaretli alanlar zorunludur.")</p>
 
                 @* Row pairing follows the reference's "Adınız Soyadınız / İlgili
                    Proje" two-column row — there is no project-selector field in
@@ -49,14 +53,14 @@
                    row below, matching the reference. *@
                 <div class="form-row">
                     <div class="form-field">
-                        <label asp-for="Form.FullName">Ad Soyad <span class="required-mark" aria-hidden="true">*</span></label>
+                        <label asp-for="Form.FullName">@(isEn ? "Full Name" : "Ad Soyad") <span class="required-mark" aria-hidden="true">*</span></label>
                         <input asp-for="Form.FullName" type="text" autocomplete="name" required maxlength="200" minlength="2"
                                aria-invalid="@(IsInvalid("Form.FullName") ? "true" : "false")" aria-describedby="FullName-error" />
                         <span asp-validation-for="Form.FullName" id="FullName-error" class="form-error"></span>
                     </div>
 
                     <div class="form-field">
-                        <label asp-for="Form.Subject">Konu</label>
+                        <label asp-for="Form.Subject">@(isEn ? "Subject" : "Konu")</label>
                         <input asp-for="Form.Subject" type="text" maxlength="200"
                                aria-invalid="@(IsInvalid("Form.Subject") ? "true" : "false")" aria-describedby="Subject-error" />
                         <span asp-validation-for="Form.Subject" id="Subject-error" class="form-error"></span>
@@ -64,21 +68,21 @@
                 </div>
 
                 <div class="form-field">
-                    <label asp-for="Form.Email">E-posta <span class="required-mark" aria-hidden="true">*</span></label>
+                    <label asp-for="Form.Email">@(isEn ? "Email Address" : "E-posta") <span class="required-mark" aria-hidden="true">*</span></label>
                     <input asp-for="Form.Email" type="email" autocomplete="email" required maxlength="320"
                            aria-invalid="@(IsInvalid("Form.Email") ? "true" : "false")" aria-describedby="Email-error" />
                     <span asp-validation-for="Form.Email" id="Email-error" class="form-error"></span>
                 </div>
 
                 <div class="form-field">
-                    <label asp-for="Form.Phone">Telefon</label>
+                    <label asp-for="Form.Phone">@(isEn ? "Phone Number" : "Telefon")</label>
                     <input asp-for="Form.Phone" type="tel" autocomplete="tel" maxlength="50"
                            aria-invalid="@(IsInvalid("Form.Phone") ? "true" : "false")" aria-describedby="Phone-error" />
                     <span asp-validation-for="Form.Phone" id="Phone-error" class="form-error"></span>
                 </div>
 
                 <div class="form-field">
-                    <label asp-for="Form.Message">Mesajınız <span class="required-mark" aria-hidden="true">*</span></label>
+                    <label asp-for="Form.Message">@(isEn ? "Your Message" : "Mesajınız") <span class="required-mark" aria-hidden="true">*</span></label>
                     <textarea asp-for="Form.Message" required maxlength="2000" minlength="10" rows="6"
                               aria-invalid="@(IsInvalid("Form.Message") ? "true" : "false")" aria-describedby="Message-error"></textarea>
                     <span asp-validation-for="Form.Message" id="Message-error" class="form-error"></span>
@@ -99,13 +103,13 @@
                    colours come from the page-scoped .contact-form__submit
                    rule below rather than .btn-primary, since the hover here
                    is a subtle lighten, not the sitewide invert-to-white. *@
-                <button type="submit" class="btn contact-form__submit" data-contact-form-submit>Gönder</button>
+                <button type="submit" class="btn contact-form__submit" data-contact-form-submit>@(isEn ? "Send" : "Gönder")</button>
             </form>
         }
     </div>
 
     <div class="contact-info-panel" data-reveal="right">
-        <h2 id="contact-info-heading" class="sr-only">İletişim Bilgileri</h2>
+        <h2 id="contact-info-heading" class="sr-only">@(isEn ? "Contact Information" : "İletişim Bilgileri")</h2>
         <partial name="_InformationCard" model="Model.InformationCard" />
     </div>
 </div>

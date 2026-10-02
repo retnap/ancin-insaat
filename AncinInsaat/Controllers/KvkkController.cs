@@ -19,6 +19,7 @@ public class KvkkController : Controller
     }
 
     [HttpGet("kvkk")]
+    [HttpGet("en/kvkk")]
     public async Task<IActionResult> Index()
     {
         ViewData["Seo"] = await _seoService.GetPageSeoAsync("kvkk", Request);

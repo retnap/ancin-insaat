@@ -1,4 +1,5 @@
 @model AncinInsaat.Models.ProjectsIndexViewModel
+@using System.Globalization
 
 @* Title/description/canonical/OG/CollectionPage schema come from
    ViewData["Seo"] + ViewData["SeoPageType"], set in
@@ -6,43 +7,48 @@
    and SeoStructuredDataViewComponent. *@
 
 @{
+    // English localization (2026-10-02) — see Views/Shared/_Layout.cshtml's
+    // own isEnglish for the same CultureInfo-driven pattern used throughout
+    // every Razor view/partial rather than a second mechanism.
+    var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+
     var breadcrumbTrail = new List<AncinInsaat.ViewComponents.BreadcrumbItem>
     {
-        new() { Label = "Projeler" }
+        new() { Label = isEn ? "Projects" : "Projeler" }
     };
 }
-@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail, homeLabel = "Anasayfa" })
+@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail })
 
-<section class="section projects-categories" aria-label="Proje filtreleri">
+<section class="section projects-categories" aria-label="@(isEn ? "Project filters" : "Proje filtreleri")">
     <div class="container">
         @if (Model.Cards.Count > 0)
         {
-            <div class="project-tabs" role="group" aria-label="Projeleri durumlarına göre filtrele" data-project-filter-group>
-                <button type="button" class="project-tab is-active" data-project-filter="all" aria-pressed="true">Tümü</button>
-                <button type="button" class="project-tab" data-project-filter="ongoing" aria-pressed="false">Devam Eden</button>
-                <button type="button" class="project-tab" data-project-filter="completed" aria-pressed="false">Tamamlanan</button>
+            <div class="project-tabs" role="group" aria-label="@(isEn ? "Filter projects by status" : "Projeleri durumlarına göre filtrele")" data-project-filter-group>
+                <button type="button" class="project-tab is-active" data-project-filter="all" aria-pressed="true">@(isEn ? "All" : "Tümü")</button>
+                <button type="button" class="project-tab" data-project-filter="ongoing" aria-pressed="false">@(isEn ? "Ongoing" : "Devam Eden")</button>
+                <button type="button" class="project-tab" data-project-filter="completed" aria-pressed="false">@(isEn ? "Completed" : "Tamamlanan")</button>
                 @* Gelecek Projeler (Q-Latis/D-Latis revision, 2026-09-28) —
                    same tab markup/interaction as the three above; the
                    filter script (site.js) already matches any
                    data-project-filter value against each card's
                    data-project-status generically, so no script change was
                    needed for this 4th tab. *@
-                <button type="button" class="project-tab" data-project-filter="future" aria-pressed="false">Gelecek Projeler</button>
+                <button type="button" class="project-tab" data-project-filter="future" aria-pressed="false">@(isEn ? "Future Projects" : "Gelecek Projeler")</button>
             </div>
 
             <div class="filter-row">
-                <partial name="_FilterDropdown" model="@(new AncinInsaat.Models.FilterDropdownModel { FilterKey = "type", Placeholder = "Proje Tipi", Options = Model.ProjectTypeOptions })" />
-                <partial name="_FilterDropdown" model="@(new AncinInsaat.Models.FilterDropdownModel { FilterKey = "location", Placeholder = "Lokasyon", Options = Model.LocationOptions })" />
+                <partial name="_FilterDropdown" model="@(new AncinInsaat.Models.FilterDropdownModel { FilterKey = "type", Placeholder = isEn ? "Project Type" : "Proje Tipi", Options = Model.ProjectTypeOptions })" />
+                <partial name="_FilterDropdown" model="@(new AncinInsaat.Models.FilterDropdownModel { FilterKey = "location", Placeholder = isEn ? "Location" : "Lokasyon", Options = Model.LocationOptions })" />
             </div>
         }
     </div>
 </section>
 
-<section class="section projects-grid-section" aria-label="Proje listesi">
+<section class="section projects-grid-section" aria-label="@(isEn ? "Project list" : "Proje listesi")">
     <div class="container">
         @if (Model.Cards.Count == 0)
         {
-            <p class="projects-grid-empty">Şu anda listelenecek bir proje bulunmuyor. Yakında burada olacağız.</p>
+            <p class="projects-grid-empty">@(isEn ? "There are no projects to list right now. We will be here soon." : "Şu anda listelenecek bir proje bulunmuyor. Yakında burada olacağız.")</p>
         }
         else
         {
@@ -60,7 +66,7 @@
             </div>
 
             <p class="projects-grid-empty projects-grid-empty--filtered" hidden data-project-filter-empty>
-                Bu kategoride henüz bir proje bulunmuyor.
+                @(isEn ? "There are no projects in this category yet." : "Bu kategoride henüz bir proje bulunmuyor.")
             </p>
         }
     </div>

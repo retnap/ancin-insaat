@@ -1,32 +1,37 @@
 @model AncinInsaat.Models.ProjectInformationModel
+@using System.Globalization
 
 @* Project Information "Standard" variant (docs/04_ComponentLibrary.md) — a
    plain partial rather than a ViewComponent, matching _ProjectCard's
    precedent: purely presentational, driven entirely by data the calling
    page already has, no DI or cross-page invocation needed. *@
 
+@{
+    var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+}
+
 <div class="card project-info-panel" aria-labelledby="project-info-heading">
-    <h3 id="project-info-heading" class="project-info-panel__title">Proje Bilgileri</h3>
+    <h3 id="project-info-heading" class="project-info-panel__title">@(isEn ? "Project Information" : "Proje Bilgileri")</h3>
     <dl class="project-info-list">
         <div class="project-info-row">
-            <dt>Proje Adı</dt>
+            <dt>@(isEn ? "Project Name" : "Proje Adı")</dt>
             <dd>@Model.Name</dd>
         </div>
         @if (!string.IsNullOrWhiteSpace(Model.Location))
         {
             <div class="project-info-row">
-                <dt>Konum</dt>
+                <dt>@(isEn ? "Location" : "Konum")</dt>
                 <dd>@Model.Location</dd>
             </div>
         }
         <div class="project-info-row">
-            <dt>Durum</dt>
+            <dt>@(isEn ? "Status" : "Durum")</dt>
             <dd>@Model.StatusLabel</dd>
         </div>
         @if (!string.IsNullOrWhiteSpace(Model.CompletionDateLabel))
         {
             <div class="project-info-row">
-                <dt>Tamamlanma Tarihi</dt>
+                <dt>@(isEn ? "Completion Date" : "Tamamlanma Tarihi")</dt>
                 <dd>@Model.CompletionDateLabel</dd>
             </div>
         }

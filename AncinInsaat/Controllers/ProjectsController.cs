@@ -1,3 +1,4 @@
+using System.Globalization;
 using AncinInsaat.Data.Entities;
 using AncinInsaat.Models;
 using AncinInsaat.Services;
@@ -54,6 +55,37 @@ public class ProjectsController : Controller
         // other value here; no special-casing anywhere else in the Gallery.
         ["Sales Office"] = "Satış Ofisi Görselleri",
         ["Social Areas"] = "Sosyal Alan Görselleri"
+    };
+
+    // English counterpart to GalleryCategoryLabels (English localization,
+    // 2026-10-02) — Category values themselves are a small fixed set of
+    // filter keys shared across every project, so a per-project *En
+    // database column would be redundant; this one dictionary covers all
+    // of them, same precedent as GalleryCategoryLabels.
+    private static readonly Dictionary<string, string> GalleryCategoryLabelsEn = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Exterior"] = "Exterior Views",
+        ["All Exterior"] = "All Exterior Views",
+        ["Interior"] = "Interior Views",
+        ["Standard Interior"] = "Standard Interior Views",
+        ["Optional Interior"] = "Optional Interior Views",
+        ["Sales Office"] = "Sales Office Views",
+        ["Social Areas"] = "Social Area Views"
+    };
+
+    // English display label for a Project.ProjectType value (English
+    // localization, 2026-10-02) — most seeded values are already English
+    // words (Residence/Villa/Commercial); only "Apartman" actually needs
+    // translating. A value outside this map renders unchanged.
+    private static readonly Dictionary<string, string> ProjectTypeLabelsEn = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Apartman"] = "Apartment"
+    };
+
+    private static readonly string[] EnglishMonths =
+    {
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
     };
 
     // "Social Areas" is the one ProjectImage.Category value Social
@@ -204,15 +236,28 @@ public class ProjectsController : Controller
             // banner photo was dropped into this project's own banner/
             // folder; overriding here points Details() at it instead of the
             // default `{slug}/banner.webp` fallback below.
-            ["nysa-gold"] = "/images/projects/nysa-gold/banner/nysa-gold-banner.jpeg",
-            ["kuyulu-la-via-villalar-birinci-etap"] = "/images/projects/kuyulu-la-via-villalar-birinci-etap/banner/la-via-banner.png",
-            ["davutlar-d-latis"] = "/images/projects/davutlar-d-latis/banner/dlatis banner deneme.png",
-            ["tralles-gold"] = "/images/projects/tralles-gold/banner/tralles-gold-yeni-banner.jpeg",
-            ["alinda-gold"] = "/images/projects/alinda-gold/banner/alinda-gold-yeni-banner.jpeg",
-            ["magnesia-gold"] = "/images/projects/magnesia-gold/banner/magnesia banner deneme.png",
-            ["nlatis"] = "/images/projects/nlatis/banner/n-latis-banner.jpeg",
-            ["ferhunde-hanim-apt"] = "/images/projects/ferhunde-hanim-apt/banner/ferhunde-hanim-yeni-banner-2.jpeg",
-            ["la-fiore-karabag"] = "/images/projects/la-fiore-karabag/banner/la-fiore-karabag-birinci-yeni-banner-2.jpeg",
+            //
+            // Mobile Performance & Responsive Pass (2026-10-02) — every
+            // entry below was repointed from its original client-supplied
+            // JPEG/PNG (8-32MB at up to 5504x3072, several times wider than
+            // any Hero ever renders at) to a WebP derivative generated via
+            // cwebp (resized to 3200px wide max, preserving aspect ratio;
+            // quality 82, matching ThumbnailGenerator.DefaultQuality's own
+            // "visually identical, lightweight" target), cutting every
+            // banner to under 1MB with no visible quality loss. The original
+            // file stays on disk alongside it, untouched, same archival-copy
+            // precedent as every raw gallery/concept-video drop elsewhere in
+            // this file (see BuildQLatisImages, ReconcileDavutlarDLatis
+            // MediaAsync's concept video comment).
+            ["nysa-gold"] = "/images/projects/nysa-gold/banner/nysa-gold-banner.webp",
+            ["kuyulu-la-via-villalar-birinci-etap"] = "/images/projects/kuyulu-la-via-villalar-birinci-etap/banner/la-via-banner.webp",
+            ["davutlar-d-latis"] = "/images/projects/davutlar-d-latis/banner/dlatis-banner.webp",
+            ["tralles-gold"] = "/images/projects/tralles-gold/banner/tralles-gold-banner.webp",
+            ["alinda-gold"] = "/images/projects/alinda-gold/banner/alinda-gold-banner.webp",
+            ["magnesia-gold"] = "/images/projects/magnesia-gold/banner/magnesia-gold-banner.webp",
+            ["nlatis"] = "/images/projects/nlatis/banner/nlatis-banner.webp",
+            ["ferhunde-hanim-apt"] = "/images/projects/ferhunde-hanim-apt/banner/ferhunde-hanim-banner.webp",
+            ["la-fiore-karabag"] = "/images/projects/la-fiore-karabag/banner/la-fiore-karabag-banner.webp",
             // La Fiore Karabağ 2. Etap (2026-09-28 client request) — the
             // banner now reuses "Tüm Dış Mekan Görselleri" gallery photo #36
             // (gallery/all-exterior/originals/36.jpeg, this project's own
@@ -222,8 +267,10 @@ public class ProjectsController : Controller
             // ProjectsShowcaseViewComponent.CardImageOverridesBySlug's
             // matching entry, repointed at the exact same file so the Home
             // "Devam Eden Projeler" card and this Hero never drift apart.
+            // Already a lightweight 340KB/1664x928 JPEG — left out of the
+            // 2026-10-02 WebP pass above, nothing to gain here.
             ["la-fiore-karabag-2-etap"] = "/images/projects/la-fiore-karabag-2-etap/banner/la-fiore-2-etap-banner-36.jpeg",
-            ["q-latis"] = "/images/projects/q-latis/banner/hacıfeyzullah banner deneme.png"
+            ["q-latis"] = "/images/projects/q-latis/banner/q-latis-banner.webp"
         };
 
     // Turkish month names for CompletionDate's display label — the site has
@@ -251,7 +298,27 @@ public class ProjectsController : Controller
         _webHostEnvironment = webHostEnvironment;
     }
 
+    // English localization (2026-10-02) — the request culture is derived
+    // from the URL ("/en/..." vs everything else) by
+    // RouteSegmentRequestCultureProvider; every label built in this
+    // controller reads it through this one property rather than each
+    // scattering its own CultureInfo check. Localize/LocalizeNullable pick
+    // the English value only when one has actually been supplied, so a
+    // project/row without English copy yet still renders in Turkish on
+    // the English site instead of showing blank text.
+    private bool IsEnglish =>
+        CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+
+    private string Localize(string? english, string turkish) =>
+        IsEnglish && !string.IsNullOrWhiteSpace(english) ? english! : turkish;
+
+    private string? LocalizeNullable(string? english, string? turkish) =>
+        IsEnglish && !string.IsNullOrWhiteSpace(english) ? english : turkish;
+
+    private string DetailUrl(string slug) => IsEnglish ? $"/en/projects/{slug}" : $"/projects/{slug}";
+
     [HttpGet("projects")]
+    [HttpGet("en/projects")]
     public async Task<IActionResult> Index()
     {
         var projects = await _projectQueryService.GetPublishedProjectsAsync();
@@ -271,8 +338,10 @@ public class ProjectsController : Controller
             // "Devam Eden"/"Tamamlanan" tabs, only "Tümü" and the new
             // "Gelecek Projeler" tab (Views/Projects/Index.cshtml).
             StatusLabel = project.IsFutureProject
-                ? "Yakında"
-                : project.Status == ProjectStatus.Completed ? "Tamamlandı" : "Devam Ediyor",
+                ? Localize("Coming Soon", "Yakında")
+                : project.Status == ProjectStatus.Completed
+                    ? Localize("Completed", "Tamamlandı")
+                    : Localize("Ongoing", "Devam Ediyor"),
             StatusModifierClass = project.IsFutureProject
                 ? "project-status-badge--future"
                 : project.Status == ProjectStatus.Completed
@@ -281,9 +350,11 @@ public class ProjectsController : Controller
             StatusFilterValue = project.IsFutureProject
                 ? "future"
                 : project.Status == ProjectStatus.Completed ? "completed" : "ongoing",
-            DetailUrl = $"/projects/{project.Slug}",
+            DetailUrl = DetailUrl(project.Slug),
             Location = project.Location,
-            ProjectType = project.ProjectType,
+            ProjectType = LocalizeNullable(
+                project.ProjectType is not null && ProjectTypeLabelsEn.TryGetValue(project.ProjectType, out var typeEn) ? typeEn : project.ProjectType,
+                project.ProjectType),
             LogoImageUrl = CardLogoImageUrlsBySlug.GetValueOrDefault(project.Slug),
             TitleOverlayText = CardTitleOverlayTextBySlug.GetValueOrDefault(project.Slug),
             HideCaption = CardsWithCaptionHidden.Contains(project.Slug)
@@ -322,6 +393,7 @@ public class ProjectsController : Controller
     }
 
     [HttpGet("projects/{slug}")]
+    [HttpGet("en/projects/{slug}")]
     public async Task<IActionResult> Details(string slug)
     {
         var project = await _projectQueryService.GetPublishedProjectBySlugAsync(slug);
@@ -331,7 +403,9 @@ public class ProjectsController : Controller
             return NotFound();
         }
 
-        var statusLabel = project.Status == ProjectStatus.Completed ? "Tamamlandı" : "Devam Ediyor";
+        var statusLabel = project.Status == ProjectStatus.Completed
+            ? Localize("Completed", "Tamamlandı")
+            : Localize("Ongoing", "Devam Ediyor");
         var statusModifierClass = project.Status == ProjectStatus.Completed
             ? "project-status-badge--completed"
             : "project-status-badge--ongoing";
@@ -347,7 +421,7 @@ public class ProjectsController : Controller
             {
                 Src = image.ImagePath,
                 ThumbnailSrc = ResolveThumbnail(image.ImagePath),
-                Alt = image.AltText,
+                Alt = Localize(image.AltTextEn, image.AltText),
                 Category = string.IsNullOrWhiteSpace(image.Category) ? null : image.Category,
                 Block = string.IsNullOrWhiteSpace(image.Block) ? null : image.Block,
                 ApartmentType = string.IsNullOrWhiteSpace(image.ApartmentType) ? null : image.ApartmentType,
@@ -380,7 +454,9 @@ public class ProjectsController : Controller
             .Select(category => new GalleryCategoryModel
             {
                 Value = category,
-                Label = GalleryCategoryLabels.TryGetValue(category, out var label) ? label : category
+                Label = IsEnglish
+                    ? (GalleryCategoryLabelsEn.TryGetValue(category, out var labelEn) ? labelEn : category)
+                    : (GalleryCategoryLabels.TryGetValue(category, out var label) ? label : category)
             })
             .ToList();
 
@@ -392,7 +468,7 @@ public class ProjectsController : Controller
             .Where(image => string.Equals(image.Category, SocialAreasCategory, StringComparison.OrdinalIgnoreCase))
             .ToList();
 
-        var amenities = SplitLines(project.Amenities);
+        var amenities = SplitLines(Localize(project.AmenitiesEn, project.Amenities ?? string.Empty));
         var socialFacilities = amenities
             .Select((name, index) => new SocialFacilityModel
             {
@@ -429,10 +505,15 @@ public class ProjectsController : Controller
                 : project.Slug == "nysa-gold"
                     ? "/images/projects/nysa-gold/banner/nysa gold 4k.png"
                     : project.Slug == "le-jardin"
-                        ? "/images/projects/le-jardin/banner/le-jardin-yeni-banner.png"
+                        // Mobile Performance & Responsive Pass (2026-10-02) —
+                        // repointed at the WebP derivative (see
+                        // HeroBannerImageOverridesBySlug's comment above);
+                        // the original 32MB "le-jardin-yeni-banner.png"
+                        // stays on disk untouched.
+                        ? "/images/projects/le-jardin/banner/le-jardin-banner.webp"
                         : $"/images/projects/{project.Slug}/banner.webp",
-            ShortDescription = string.IsNullOrWhiteSpace(project.ShortDescription) ? null : project.ShortDescription,
-            DescriptionParagraphs = SplitDescription(project.Description),
+            ShortDescription = LocalizeNullable(project.ShortDescriptionEn, string.IsNullOrWhiteSpace(project.ShortDescription) ? null : project.ShortDescription),
+            DescriptionParagraphs = SplitDescription(Localize(project.DescriptionEn, project.Description)),
             Information = new ProjectInformationModel
             {
                 Name = project.Name,
@@ -461,9 +542,9 @@ public class ProjectsController : Controller
                     PosterUrl = video.PosterPath,
                     LightboxUrl = video.PosterPath,
                     VideoUrl = video.VideoPath,
-                    Eyebrow = video.Eyebrow,
-                    Title = video.Title,
-                    Description = video.Description
+                    Eyebrow = Localize(video.EyebrowEn, video.Eyebrow),
+                    Title = Localize(video.TitleEn, video.Title),
+                    Description = Localize(video.DescriptionEn, video.Description)
                 } })
                 .Concat(project.ConceptImages
                     .Where(image => FileExistsInWebRoot(image.ImagePath))
@@ -473,16 +554,16 @@ public class ProjectsController : Controller
                         PosterUrl = ResolveConceptCardImage(project.Slug, image.ImagePath),
                         LightboxUrl = image.ImagePath,
                         VideoUrl = null,
-                        Eyebrow = image.Eyebrow,
-                        Title = image.Title,
-                        Description = image.Description
+                        Eyebrow = Localize(image.EyebrowEn, image.Eyebrow),
+                        Title = Localize(image.TitleEn, image.Title),
+                        Description = Localize(image.DescriptionEn, image.Description)
                     } }))
                 .OrderBy(entry => entry.DisplayOrder)
                 .Select(entry => entry.Slide)
                 .ToList(),
-            ConceptDescription = string.IsNullOrWhiteSpace(project.ConceptDescription) ? null : project.ConceptDescription,
+            ConceptDescription = LocalizeNullable(project.ConceptDescriptionEn, string.IsNullOrWhiteSpace(project.ConceptDescription) ? null : project.ConceptDescription),
             NearbyPlaces = project.NearbyPlaces
-                .Select(place => new NearbyPlaceModel { Name = place.Name, Distance = place.Distance })
+                .Select(place => new NearbyPlaceModel { Name = Localize(place.NameEn, place.Name), Distance = Localize(place.DistanceEn, place.Distance) })
                 .ToList(),
             GalleryImages = galleryImages,
             GalleryCategories = galleryCategories,
@@ -517,7 +598,7 @@ public class ProjectsController : Controller
                     var hasAreaStats = floorPlan.NetAreaM2 > 0 || floorPlan.GrossAreaM2 > 0 || floorPlan.SalesGrossAreaM2 > 0;
                     return new FloorPlanModel
                     {
-                        ApartmentType = floorPlan.ApartmentType,
+                        ApartmentType = Localize(floorPlan.ApartmentTypeEn, floorPlan.ApartmentType),
                         NetAreaM2 = hasAreaStats ? floorPlan.NetAreaM2 : null,
                         GrossAreaM2 = hasAreaStats ? floorPlan.GrossAreaM2 : null,
                         // Independent of hasAreaStats (Le Jardin Net/Brüt box
@@ -531,7 +612,7 @@ public class ProjectsController : Controller
                         SalesGrossAreaM2 = floorPlan.SalesGrossAreaM2 > 0 ? floorPlan.SalesGrossAreaM2 : null,
                         Rooms = floorPlan.Rooms
                             .OrderBy(room => room.DisplayOrder)
-                            .Select(room => new FloorPlanRoomModel { Name = room.Name, AreaM2 = room.AreaM2 })
+                            .Select(room => new FloorPlanRoomModel { Name = Localize(room.NameEn, room.Name), AreaM2 = room.AreaM2 })
                             .ToList(),
                         Src = FileExistsInWebRoot(floorPlan.ImagePath) ? floorPlan.ImagePath : null,
                         ThumbnailSrc = FileExistsInWebRoot(floorPlan.ImagePath) ? ResolveThumbnail(floorPlan.ImagePath) : null
@@ -590,9 +671,10 @@ public class ProjectsController : Controller
             .ToList();
     }
 
-    private static string FormatCompletionDate(DateTime completionDate)
+    private string FormatCompletionDate(DateTime completionDate)
     {
-        return $"{TurkishMonths[completionDate.Month - 1]} {completionDate.Year}";
+        var months = IsEnglish ? EnglishMonths : TurkishMonths;
+        return $"{months[completionDate.Month - 1]} {completionDate.Year}";
     }
 
     // Falls back to the shared placeholder cover whenever a project's real

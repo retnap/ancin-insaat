@@ -18,22 +18,25 @@
    reference is only a source for this page's own content layout, not for
    the shared chrome around it. *@
 
+@using System.Globalization
 @{
+    var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+
     var breadcrumbTrail = new List<AncinInsaat.ViewComponents.BreadcrumbItem>
     {
-        new() { Label = "İletişim" }
+        new() { Label = isEn ? "Contact" : "İletişim" }
     };
 }
-@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail, homeLabel = "Anasayfa" })
+@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail })
 
 <section class="section contact-heading-section">
     <div class="container">
-        <h1 id="contact-heading" class="contact-heading">İletişim</h1>
-        <p class="contact-intro">Projeleriniz ve sorularınız için ekibimiz sizi dinlemeye hazır.</p>
+        <h1 id="contact-heading" class="contact-heading">@(isEn ? "Contact" : "İletişim")</h1>
+        <p class="contact-intro">@(isEn ? "Our team is ready to hear about your projects and questions." : "Projeleriniz ve sorularınız için ekibimiz sizi dinlemeye hazır.")</p>
     </div>
 </section>
 
-<section class="section contact-section" id="contact-form" aria-label="İletişim bilgileri ve formu">
+<section class="section contact-section" id="contact-form" aria-label="@(isEn ? "Contact information and form" : "İletişim bilgileri ve formu")">
     <div class="container">
         <partial name="_ContactInfo" model="Model" />
     </div>
@@ -41,7 +44,7 @@
 
 @if (!string.IsNullOrWhiteSpace(Model.MapEmbedUrl) || !string.IsNullOrWhiteSpace(Model.MapLinkUrl))
 {
-    <section class="section contact-map-section" aria-label="Konum">
+    <section class="section contact-map-section" aria-label="@(isEn ? "Location" : "Konum")">
         <div class="container">
             <div data-reveal>
                 @await Component.InvokeAsync("Map", new { embedUrl = Model.MapEmbedUrl, linkUrl = Model.MapLinkUrl })

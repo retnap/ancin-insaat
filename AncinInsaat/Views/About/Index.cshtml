@@ -19,17 +19,21 @@
     sections themselves.
 *@
 
+@using System.Globalization
 @{
+    // English localization (2026-10-02) — see _Layout.cshtml's own isEnglish.
+    var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+
     var breadcrumbTrail = new List<AncinInsaat.ViewComponents.BreadcrumbItem>
     {
-        new() { Label = "Hakkımızda" }
+        new() { Label = isEn ? "About Us" : "Hakkımızda" }
     };
 }
-@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail, homeLabel = "Anasayfa" })
+@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail })
 
 <section class="section about-heading-section">
     <div class="container">
-        <h1 id="about-heading" class="about-heading">Hakkımızda</h1>
+        <h1 id="about-heading" class="about-heading">@(isEn ? "About Us" : "Hakkımızda")</h1>
     </div>
 </section>
 

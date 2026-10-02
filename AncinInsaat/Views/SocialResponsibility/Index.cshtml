@@ -1,28 +1,57 @@
 @*
-    Sosyal Sorumluluk Projelerimiz (new Kurumsal navigation item, 2026-09-28
-    client request). Title/description/canonical/OG/WebPage schema come from
-    ViewData["Seo"] + ViewData["SeoPageType"], set in
-    SocialResponsibilityController.Index via ISeoService — see
+    Sosyal Sorumluluk Projelerimiz (2026-10-02) — rebuilt from the earlier
+    intentionally-empty placeholder per the project owner's instruction to
+    use https://folkart.com.tr/sosyal-sorumluluk as a structural/visual
+    reference only (design, UX and editorial rhythm — never its code,
+    copy, images or named programs). Title/description/canonical/OG/
+    WebPage schema still come from ViewData["Seo"] + ViewData["SeoPageType"],
+    set in SocialResponsibilityController.Index via ISeoService — see
     _Layout.cshtml's <head> and SeoStructuredDataViewComponent.
 
-    Intentionally empty content page — no real copy/projects/imagery has
-    been supplied yet, so this renders only the shared Breadcrumb + the
-    shared Section Header (existing _SectionHeader.cshtml/SectionHeaderModel,
-    reused as-is, no new component) with just a title. No placeholder text,
-    Lorem Ipsum, invented projects or imagery — ready for real content to be
-    added later with no structural change needed.
+    Page flow mirrors the same "no Hero Banner, plain eyebrow + H1 + intro
+    paragraph" pattern already established for About Us/Our
+    Values/Career/Contact/HR Policy/KVKK's own Folkart-reference revisions
+    (docs/14_Decisions.md) — Breadcrumb → plain heading section → exactly
+    two real projects (SocialResponsibilityProjectsViewComponent, 2026-10-02
+    — replaces the earlier four generic placeholder pillars, now removed),
+    each an alternating image/text pair whose featured photo opens the
+    existing shared Media Viewer (_MediaViewer.cshtml) on that project's
+    full gallery. CTA Banner / Project Logo Carousel / Footer are already
+    global (_Layout.cshtml) — no page-specific section needed for them, same
+    precedent as every other static page.
 *@
 
+@using System.Globalization
 @{
+    var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+
     var breadcrumbTrail = new List<AncinInsaat.ViewComponents.BreadcrumbItem>
     {
-        new() { Label = "Sosyal Sorumluluk Projelerimiz" }
+        new() { Label = isEn ? "Social Responsibility" : "Sosyal Sorumluluk Projelerimiz" }
     };
 }
-@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail, homeLabel = "Anasayfa" })
+@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail })
 
-<section class="section">
+@* One shared instance for both projects' galleries, same "one dialog per
+   page" rule every other Media Viewer-using page follows (Home, Projects
+   Details). *@
+<partial name="_MediaViewer" />
+
+<section class="section social-responsibility-heading-section">
     <div class="container">
-        <partial name="_SectionHeader" model="@(new AncinInsaat.Models.SectionHeaderModel { Title = "Sosyal Sorumluluk Projelerimiz" })" />
+        <p class="social-responsibility-eyebrow">Ancın İnşaat</p>
+        <h1 id="social-responsibility-heading" class="social-responsibility-heading">@(isEn ? "Social Responsibility" : "Sosyal Sorumluluk")</h1>
+        <p class="social-responsibility-intro">
+            @if (isEn)
+            {
+                @:For Ançın İnşaat, responsibility does not end with the buildings we construct. We see our responsibility toward the region we work in, the people we work alongside, and future generations as part of every decision we make. We share the two projects we have brought to life below.
+            }
+            else
+            {
+                @:Ançın İnşaat için sorumluluk, inşa ettiğimiz yapılarla sınırlı değildir. Çalıştığımız bölgeye, birlikte çalıştığımız insanlara ve gelecek nesillere karşı duyduğumuz sorumluluğu, her kararımızın bir parçası olarak görürüz. Hayata geçirdiğimiz iki projeyi aşağıda paylaşıyoruz.
+            }
+        </p>
     </div>
 </section>
+
+@await Component.InvokeAsync("SocialResponsibilityProjects")

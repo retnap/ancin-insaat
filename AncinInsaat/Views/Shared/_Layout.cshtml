@@ -1,3 +1,5 @@
+@using System.Globalization
+@using AncinInsaat.Services
 @{
     // Falls back to the plain ViewData["Title"] convention (Projects/Details,
     // Error) for any page that hasn't been wired to ISeoService yet — only
@@ -11,13 +13,24 @@
     // out to every Project Detail page 2026-08-08) without threading
     // Project Detail's ViewModel through NavbarViewComponent.
     var pageSlug = ViewData["ProjectSlug"] as string;
+
+    // English localization (2026-10-02) — culture comes solely from the
+    // URL (RouteSegmentRequestCultureProvider); hreflang/og:locale/html lang
+    // all follow it so a crawler or screen reader is told the truth about
+    // whichever language this exact response actually rendered.
+    var isEnglish = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+    var turkishPageUrl = LanguageUrlService.GetTurkishEquivalent(Context.Request.Path, Context.Request.QueryString);
+    var englishPageUrl = LanguageUrlService.GetEnglishEquivalent(Context.Request.Path, Context.Request.QueryString);
 }
 <!DOCTYPE html>
-<html lang="tr" class="no-js">
+<html lang="@(isEnglish ? "en" : "tr")" class="no-js">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@pageTitle</title>
+    <link rel="alternate" hreflang="tr" href="@turkishPageUrl" />
+    <link rel="alternate" hreflang="en" href="@englishPageUrl" />
+    <link rel="alternate" hreflang="x-default" href="@turkishPageUrl" />
     @if (seo is not null)
     {
         <meta name="description" content="@seo.Description" />
@@ -28,7 +41,7 @@
         <meta property="og:description" content="@seo.Description" />
         <meta property="og:url" content="@seo.CanonicalUrl" />
         <meta property="og:image" content="@seo.OgImageUrl" />
-        <meta property="og:locale" content="tr_TR" />
+        <meta property="og:locale" content="@(isEnglish ? "en_US" : "tr_TR")" />
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="@pageTitle" />
@@ -46,7 +59,7 @@
     <script>document.documentElement.classList.replace('no-js', 'js');</script>
 </head>
 <body data-page-slug="@pageSlug">
-    <a href="#main-content" class="skip-link">İçeriğe geç</a>
+    <a href="#main-content" class="skip-link">@(isEnglish ? "Skip to content" : "İçeriğe geç")</a>
 
     <header class="navbar">
         @await Component.InvokeAsync("Navbar")

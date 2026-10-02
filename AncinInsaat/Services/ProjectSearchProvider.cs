@@ -1,3 +1,4 @@
+using System.Globalization;
 using AncinInsaat.Data.Entities;
 using AncinInsaat.Models;
 
@@ -22,28 +23,40 @@ public class ProjectSearchProvider : ISearchIndexProvider
 
     public async Task<IReadOnlyList<SearchResultItem>> GetItemsAsync(CancellationToken cancellationToken = default)
     {
+        var isEnglish = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+        var pathPrefix = isEnglish ? "/en" : "";
+
         var projects = await _projectQueryService.GetPublishedProjectsAsync(cancellationToken);
 
         return projects
-            .Select((project, index) => new SearchResultItem
+            .Select((project, index) =>
             {
-                Title = project.Name,
-                Description = string.IsNullOrWhiteSpace(project.ShortDescription)
-                    ? "Proje detaylarını görüntüleyin."
-                    : project.ShortDescription,
-                Url = $"/projects/{project.Slug}",
-                Category = "Projeler",
-                // Location/status/type aren't shown on the result card but
-                // let a query for e.g. a district or "tamamlandı" surface
-                // the right project — same status-label convention as
-                // ProjectsController/ProjectsShowcaseViewComponent.
-                Keywords = string.Join(' ', new[]
+                var shortDescription = isEnglish && !string.IsNullOrWhiteSpace(project.ShortDescriptionEn)
+                    ? project.ShortDescriptionEn
+                    : project.ShortDescription;
+
+                return new SearchResultItem
                 {
-                    project.Location,
-                    project.Status == ProjectStatus.Completed ? "Tamamlandı" : "Devam Ediyor",
-                    project.ProjectType
-                }.Where(part => !string.IsNullOrWhiteSpace(part))),
-                SortOrder = BaseSortOrder + index
+                    Title = project.Name,
+                    Description = string.IsNullOrWhiteSpace(shortDescription)
+                        ? (isEnglish ? "View project details." : "Proje detaylarını görüntüleyin.")
+                        : shortDescription,
+                    Url = $"{pathPrefix}/projects/{project.Slug}",
+                    Category = isEnglish ? "Projects" : "Projeler",
+                    // Location/status/type aren't shown on the result card but
+                    // let a query for e.g. a district or "tamamlandı"/"completed"
+                    // surface the right project — same status-label convention
+                    // as ProjectsController/ProjectsShowcaseViewComponent.
+                    Keywords = string.Join(' ', new[]
+                    {
+                        project.Location,
+                        project.Status == ProjectStatus.Completed
+                            ? (isEnglish ? "Completed" : "Tamamlandı")
+                            : (isEnglish ? "Ongoing" : "Devam Ediyor"),
+                        project.ProjectType
+                    }.Where(part => !string.IsNullOrWhiteSpace(part))),
+                    SortOrder = BaseSortOrder + index
+                };
             })
             .ToList();
     }

@@ -18,6 +18,7 @@ public class HrPolicyController : Controller
     }
 
     [HttpGet("hr-policy")]
+    [HttpGet("en/hr-policy")]
     public async Task<IActionResult> Index()
     {
         ViewData["Seo"] = await _seoService.GetPageSeoAsync("hr-policy", Request);

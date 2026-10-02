@@ -1,8 +1,16 @@
 @model HeroBannerViewModel
+@using System.Globalization
 
 @{
+    var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+
+    // Mobile Performance & Responsive Pass (2026-10-02) — appends the
+    // featured project's own mobile focal position (ProjectHeroMobileFocusMap)
+    // when it has one; site.css's .hero-bg only resolves
+    // --hero-bg-position-mobile below 768px, so this never affects desktop.
     var heroStyle = Model.BackgroundImageUrl is not null
         ? $"--hero-bg-image: url('{Model.BackgroundImageUrl}')"
+            + (string.IsNullOrWhiteSpace(Model.MobileBackgroundPosition) ? "" : $"; --hero-bg-position-mobile: {Model.MobileBackgroundPosition}")
         : null;
 
     // Home Hero title typography match (Home Page revision #2, 2026-08-10):
@@ -51,7 +59,7 @@
 <section class="@heroSectionClass" style="@heroStyle" aria-labelledby="hero-heading">
     <div class="hero-bg" aria-hidden="true"></div>
 
-    <nav class="hero-social-nav" aria-label="Sosyal medya">
+    <nav class="hero-social-nav" aria-label="@(isEn ? "Social media" : "Sosyal medya")">
         @await Component.InvokeAsync("SocialMedia")
     </nav>
 
@@ -101,11 +109,11 @@
                             data-media-viewer-trigger
                             data-media-viewer-group="site-plan"
                             data-media-viewer-src="@Model.SitePlanImageUrl"
-                            data-media-viewer-alt="@(Model.Heading) vaziyet planı">
-                        Vaziyet Planı
+                            data-media-viewer-alt="@(isEn ? $"{Model.Heading} site plan" : $"{Model.Heading} vaziyet planı")">
+                        @(isEn ? "Site Plan" : "Vaziyet Planı")
                     </button>
                 }
-                <a class="btn btn-hero-segment btn-hero-segment--contact" href="/contact">Size Ulaşalım</a>
+                <a class="btn btn-hero-segment btn-hero-segment--contact" href="@(isEn ? "/en/contact" : "/contact")">@(isEn ? "Get in Touch" : "Size Ulaşalım")</a>
             </div>
         }
         else if (Model.ProjectCtaUrl is not null)

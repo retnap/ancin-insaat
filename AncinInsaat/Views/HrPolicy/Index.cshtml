@@ -32,19 +32,31 @@
     while keeping the reference's small-text-above-heading structure.
 *@
 
+@using System.Globalization
 @{
+    var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+
     var breadcrumbTrail = new List<AncinInsaat.ViewComponents.BreadcrumbItem>
     {
-        new() { Label = "İnsan Kaynakları Politikamız" }
+        new() { Label = isEn ? "Our HR Policy" : "İnsan Kaynakları Politikamız" }
     };
 }
-@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail, homeLabel = "Anasayfa" })
+@await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail })
 
 <section class="section hr-policy-heading-section">
     <div class="container">
         <p class="hr-policy-eyebrow">Ancın İnşaat</p>
-        <h1 id="hr-policy-heading" class="hr-policy-heading">İK Politikaları</h1>
-        <p class="hr-policy-intro">Ançın İnşaat'ta insan kaynakları anlayışımızın temelinde, çalışanlarımızın gelişimini ve mutluluğunu şirket başarısının ayrılmaz bir parçası olarak görmek yatar. Adil, şeffaf ve kapsayıcı bir çalışma ortamı yaratarak her çalışanımızın potansiyelini en iyi şekilde ortaya koyabileceği bir kurum kültürü inşa ediyoruz.</p>
+        <h1 id="hr-policy-heading" class="hr-policy-heading">@(isEn ? "HR Policies" : "İK Politikaları")</h1>
+        <p class="hr-policy-intro">
+            @if (isEn)
+            {
+                @:At Ançın İnşaat, our approach to human resources is built on the belief that our employees' growth and wellbeing are inseparable from the company's success. By creating a fair, transparent and inclusive working environment, we build a corporate culture in which every employee can realize their full potential.
+            }
+            else
+            {
+                @:Ançın İnşaat'ta insan kaynakları anlayışımızın temelinde, çalışanlarımızın gelişimini ve mutluluğunu şirket başarısının ayrılmaz bir parçası olarak görmek yatar. Adil, şeffaf ve kapsayıcı bir çalışma ortamı yaratarak her çalışanımızın potansiyelini en iyi şekilde ortaya koyabileceği bir kurum kültürü inşa ediyoruz.
+            }
+        </p>
     </div>
 </section>
 

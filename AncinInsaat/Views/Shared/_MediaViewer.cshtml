@@ -2,12 +2,29 @@
    (docs/04_ComponentLibrary.md) — one instance per page, reused by any
    number of data-media-viewer-trigger groups (see _ProjectGallery.cshtml,
    _FloorPlans.cshtml and site.js). Markup-only; entirely data-driven from
-   whichever trigger was clicked, so it carries no @model. *@
+   whichever trigger was clicked, so it carries no @model.
+
+   Video support (Social Responsibility unified galleries, 2026-10-02) — a
+   trigger carrying data-media-viewer-type="video" (plus
+   data-media-viewer-video-src, poster already supplied via its own
+   data-media-viewer-src/alt like any other item) shows the
+   .media-viewer-video-wrap below instead of .media-viewer-image; still the
+   exact same Prev/Next/counter/close mechanics, see the "Media Viewer"
+   module in site.js. The <video> has no src in markup and
+   preload="none" — nothing is ever fetched until the visitor presses the
+   Play overlay, which is site.js's job, not this partial's. *@
+
+@using System.Globalization
+@{
+    // English localization (2026-10-02) — same CultureInfo-driven pattern
+    // every other shared partial on the site uses.
+    var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+}
 
 <div class="media-viewer" id="media-viewer" hidden data-media-viewer>
     <div class="media-viewer-backdrop" data-media-viewer-close></div>
-    <div class="media-viewer-panel" role="dialog" aria-modal="true" aria-label="Görsel görüntüleyici">
-        <button type="button" class="media-viewer-close" data-media-viewer-close aria-label="Kapat">
+    <div class="media-viewer-panel" role="dialog" aria-modal="true" aria-label="@(isEn ? "Media viewer" : "Görsel görüntüleyici")">
+        <button type="button" class="media-viewer-close" data-media-viewer-close aria-label="@(isEn ? "Close" : "Kapat")">
             <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
                 <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
@@ -18,33 +35,41 @@
            Floor Plans, Concept, Site Plan) gains these capabilities
            automatically; see the "Media Viewer" module in site.js. *@
         <div class="media-viewer-toolbar">
-            <button type="button" class="media-viewer-tool" data-media-viewer-zoom-out aria-label="Uzaklaştır">
+            <button type="button" class="media-viewer-tool" data-media-viewer-zoom-out aria-label="@(isEn ? "Zoom out" : "Uzaklaştır")">
                 <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
                     <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2" />
                     <path d="M21 21l-4.35-4.35M8 11h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                 </svg>
             </button>
-            <button type="button" class="media-viewer-tool" data-media-viewer-zoom-in aria-label="Yakınlaştır">
+            <button type="button" class="media-viewer-tool" data-media-viewer-zoom-in aria-label="@(isEn ? "Zoom in" : "Yakınlaştır")">
                 <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
                     <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2" />
                     <path d="M21 21l-4.35-4.35M11 8v6M8 11h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                 </svg>
             </button>
-            <button type="button" class="media-viewer-tool" data-media-viewer-fullscreen aria-label="Tam ekran">
+            <button type="button" class="media-viewer-tool" data-media-viewer-fullscreen aria-label="@(isEn ? "Fullscreen" : "Tam ekran")">
                 <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
                     <path d="M9 4H5a1 1 0 00-1 1v4M15 4h4a1 1 0 011 1v4M9 20H5a1 1 0 01-1-1v-4M15 20h4a1 1 0 001-1v-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
             </button>
         </div>
-        <button type="button" class="media-viewer-nav media-viewer-prev" data-media-viewer-prev aria-label="Önceki görsel">
+        <button type="button" class="media-viewer-nav media-viewer-prev" data-media-viewer-prev aria-label="@(isEn ? "Previous image" : "Önceki görsel")">
             <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
                 <path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
         </button>
         <figure class="media-viewer-figure">
             <img class="media-viewer-image" data-media-viewer-image alt="" />
+            <div class="media-viewer-video-wrap" data-media-viewer-video-wrap hidden>
+                <video class="media-viewer-video-el" data-media-viewer-video-el playsinline preload="none"></video>
+                <button type="button" class="media-viewer-video-play" data-media-viewer-video-play aria-label="@(isEn ? "Play video" : "Videoyu oynat")">
+                    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+                        <path d="M9 7l9 5-9 5V7z" fill="currentColor" />
+                    </svg>
+                </button>
+            </div>
         </figure>
-        <button type="button" class="media-viewer-nav media-viewer-next" data-media-viewer-next aria-label="Sonraki görsel">
+        <button type="button" class="media-viewer-nav media-viewer-next" data-media-viewer-next aria-label="@(isEn ? "Next image" : "Sonraki görsel")">
             <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
                 <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>

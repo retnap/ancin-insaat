@@ -1,3 +1,4 @@
+using System.Globalization;
 using AncinInsaat.Data.Entities;
 using AncinInsaat.Models;
 using AncinInsaat.Services;
@@ -52,7 +53,14 @@ public class ContactController : Controller
         _logger = logger;
     }
 
+    // English localization (2026-10-02) — culture comes from the URL's
+    // "/en" prefix (see RouteSegmentRequestCultureProvider), read here
+    // through CultureInfo rather than a second per-controller mechanism.
+    private bool IsEnglish =>
+        CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+
     [HttpGet("contact")]
+    [HttpGet("en/contact")]
     public async Task<IActionResult> Index()
     {
         var showSuccess = TempData[SuccessTempDataKey] is not null;
@@ -66,6 +74,7 @@ public class ContactController : Controller
     }
 
     [HttpPost("contact")]
+    [HttpPost("en/contact")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Submit(ContactFormViewModel form)
     {
@@ -84,6 +93,8 @@ public class ContactController : Controller
 
         if (!ModelState.IsValid)
         {
+            ModelStateLocalizer.Localize(ModelState, IsEnglish);
+
             var invalidModel = await BuildPageModelAsync(form, showSuccess: false);
 
             ViewData["Seo"] = await _seoService.GetPageSeoAsync("contact", Request);
@@ -115,7 +126,7 @@ public class ContactController : Controller
         {
             if (!string.IsNullOrWhiteSpace(settings.Address))
             {
-                items.Add(new InformationCardItem { IconMarkup = AddressIconMarkup, Label = "Adres", Value = settings.Address });
+                items.Add(new InformationCardItem { IconMarkup = AddressIconMarkup, Label = IsEnglish ? "Address" : "Adres", Value = settings.Address });
             }
 
             if (!string.IsNullOrWhiteSpace(settings.Phone))
@@ -123,7 +134,7 @@ public class ContactController : Controller
                 items.Add(new InformationCardItem
                 {
                     IconMarkup = PhoneIconMarkup,
-                    Label = "Telefon",
+                    Label = IsEnglish ? "Phone" : "Telefon",
                     Value = settings.Phone,
                     Href = $"tel:{NormalizePhoneHref(settings.Phone)}"
                 });
@@ -134,7 +145,7 @@ public class ContactController : Controller
                 items.Add(new InformationCardItem
                 {
                     IconMarkup = EmailIconMarkup,
-                    Label = "E-posta",
+                    Label = IsEnglish ? "Email" : "E-posta",
                     Value = settings.Email,
                     Href = $"mailto:{settings.Email}"
                 });
@@ -145,7 +156,7 @@ public class ContactController : Controller
                 items.Add(new InformationCardItem
                 {
                     IconMarkup = EmailIconMarkup,
-                    Label = "İş Başvuruları İçin",
+                    Label = IsEnglish ? "For Job Applications" : "İş Başvuruları İçin",
                     Value = settings.Email,
                     Href = $"mailto:{settings.Email}"
                 });
@@ -153,7 +164,12 @@ public class ContactController : Controller
 
             if (!string.IsNullOrWhiteSpace(settings.WorkingHours))
             {
-                items.Add(new InformationCardItem { IconMarkup = ClockIconMarkup, Label = "Çalışma Saatleri", Value = settings.WorkingHours });
+                items.Add(new InformationCardItem
+                {
+                    IconMarkup = ClockIconMarkup,
+                    Label = IsEnglish ? "Working Hours" : "Çalışma Saatleri",
+                    Value = IsEnglish && !string.IsNullOrWhiteSpace(settings.WorkingHoursEn) ? settings.WorkingHoursEn : settings.WorkingHours
+                });
             }
         }
 

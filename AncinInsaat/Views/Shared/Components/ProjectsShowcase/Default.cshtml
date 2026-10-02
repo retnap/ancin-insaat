@@ -1,4 +1,5 @@
 @model ProjectsShowcaseViewModel
+@using System.Globalization
 
 @*
     Premium horizontal slider (not a grid) — Embla Carousel (+ Autoplay
@@ -21,6 +22,10 @@
     has one `transform`.
 *@
 
+@{
+    var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+}
+
 <section class="section projects-showcase" id="projects-showcase" aria-labelledby="@Model.Header.HeadingId">
     <div class="container" data-reveal-group>
         <div class="projects-showcase-header" data-reveal>
@@ -29,7 +34,7 @@
 
         <div class="projects-slider" data-projects-slider data-reveal>
             <div class="projects-slider-viewport" data-projects-viewport>
-                <div class="projects-slider-container" data-projects-container role="group" aria-label="Projeler, kaydırılabilir" data-reveal-group>
+                <div class="projects-slider-container" data-projects-container role="group" aria-label="@(isEn ? "Projects, scrollable" : "Projeler, kaydırılabilir")" data-reveal-group>
                     @{ var cardNumber = 0; }
                     @foreach (var card in Model.Cards)
                     {
@@ -57,12 +62,12 @@
             </div>
 
             <div class="projects-slider-nav">
-                <button type="button" class="history-nav-btn" data-projects-prev aria-label="Önceki proje">
+                <button type="button" class="history-nav-btn" data-projects-prev aria-label="@(isEn ? "Previous project" : "Önceki proje")">
                     <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
                         <path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                 </button>
-                <button type="button" class="history-nav-btn" data-projects-next aria-label="Sonraki proje">
+                <button type="button" class="history-nav-btn" data-projects-next aria-label="@(isEn ? "Next project" : "Sonraki proje")">
                     <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
                         <path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>

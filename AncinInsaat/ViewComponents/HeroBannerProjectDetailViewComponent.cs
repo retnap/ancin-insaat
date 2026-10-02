@@ -113,6 +113,7 @@ public class HeroBannerProjectDetailViewComponent : ViewComponent
             Subheading = subheading,
             BackgroundImageUrl = backgroundImageUrl,
             HeadingFontModifierClass = ProjectHeroFontMap.HeadingFontModifierClasses.GetValueOrDefault(slug),
+            MobileBackgroundPosition = ProjectHeroMobileFocusMap.MobileBackgroundPositions.GetValueOrDefault(slug),
             HeadingLogoImageUrl = HeadingLogoImageUrls.GetValueOrDefault(slug),
             HeadingBadgeImageUrl = HeadingBadgeImageUrls.GetValueOrDefault(slug),
             StatusLabel = statusLabel,

@@ -1,0 +1,91 @@
+@model SocialResponsibilityProjectsViewModel
+
+@*
+    Sosyal Sorumluluk Projelerimiz — the two real projects (2026-10-02).
+    Reuses the exact same .grid.grid-cols-2 + data-reveal "left"/"right"
+    shape the earlier pillars (and HrPhilosophyViewComponent before them)
+    already established — only the media side changed, from a static
+    _ImageBlock partial to an interactive Media Viewer trigger.
+
+    Gallery/lightbox mechanism: entirely the existing, unmodified-in-markup
+    shared Media Viewer (_MediaViewer.cshtml + its one site.js module,
+    already rendered once from _Layout.cshtml). The featured photo is the
+    only visible trigger; every other photo OR video in that project's
+    gallery is a `hidden` sibling trigger carrying the same
+    data-media-viewer-group key — site.js already discovers every
+    [data-media-viewer-trigger] on the page once and groups them by that
+    key at click time (see its "Media Viewer" module), so these hidden
+    triggers need no further JS changes to participate in Prev/Next.
+    `hidden` alone is enough to keep them out of layout, the accessibility
+    tree and tab order (no competing class sets `display` on them, so the
+    plain UA `[hidden]{display:none}` rule applies — see site.css's own
+    note on that cascade gotcha, Section 23). None of them carry a real
+    <img>/<video>, so they cost zero extra network requests on page load —
+    the browser only fetches a lightbox-resolution photo, or a video's
+    poster/MP4, once the viewer actually reaches/plays it.
+
+    Unified gallery (2026-10-02) — a SocialResponsibilityGalleryImage with
+    VideoSrc set renders its hidden trigger with
+    data-media-viewer-type="video" + data-media-viewer-video-src, so
+    site.js's render() shows that item's poster + a Play overlay inside the
+    Media Viewer instead of treating it as a photo — see
+    _MediaViewer.cshtml / site.js. Nothing else about the trigger differs
+    from a photo's.
+*@
+
+@using System.Globalization
+@{
+    var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+}
+
+@foreach (var project in Model.Projects)
+{
+    var totalMediaCount = project.OtherMedia.Count + 1;
+
+    <section
+        class="section social-responsibility-project @(project.ImageOnRight ? "social-responsibility-project--image-right" : "")"
+        id="@project.SectionId"
+        aria-labelledby="@(project.SectionId)-heading">
+        <div class="container grid grid-cols-2 social-responsibility-project-grid" data-reveal-group>
+            <div class="social-responsibility-project-content" data-reveal="@(project.ImageOnRight ? "right" : "left")">
+                <h2 id="@(project.SectionId)-heading" class="social-responsibility-project-heading">@project.Heading</h2>
+                @foreach (var paragraph in project.Paragraphs)
+                {
+                    <p class="social-responsibility-project-paragraph">@paragraph</p>
+                }
+            </div>
+            <div class="social-responsibility-project-media" data-reveal="@(project.ImageOnRight ? "left" : "right")">
+                <button type="button"
+                        class="social-responsibility-project-featured"
+                        data-media-viewer-trigger
+                        data-media-viewer-group="@project.GalleryGroupKey"
+                        data-media-viewer-src="@project.FeaturedSrc"
+                        data-media-viewer-alt="@project.FeaturedAlt"
+                        aria-label="@(isEn ? $"{project.Heading} — open gallery ({totalMediaCount} photos)" : $"{project.Heading} — galeriyi aç ({totalMediaCount} görsel)")">
+                    <img class="image-block" src="@project.FeaturedThumbnailSrc" alt="@project.FeaturedAlt" loading="lazy" decoding="async" />
+                    <span class="social-responsibility-project-overlay" aria-hidden="true"></span>
+                    <span class="social-responsibility-project-expand-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                            <path d="M9 4H5a1 1 0 00-1 1v4M15 4h4a1 1 0 011 1v4M9 20H5a1 1 0 01-1-1v-4M15 20h4a1 1 0 001-1v-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </span>
+                    <span class="social-responsibility-project-count" aria-hidden="true">@totalMediaCount @(isEn ? "Photos" : "Görsel")</span>
+                </button>
+
+                @foreach (var media in project.OtherMedia)
+                {
+                    <button type="button"
+                            hidden
+                            tabindex="-1"
+                            aria-hidden="true"
+                            data-media-viewer-trigger
+                            data-media-viewer-group="@project.GalleryGroupKey"
+                            data-media-viewer-src="@media.Src"
+                            data-media-viewer-alt="@media.Alt"
+                            data-media-viewer-type="@(media.VideoSrc is not null ? "video" : null)"
+                            data-media-viewer-video-src="@media.VideoSrc"></button>
+                }
+            </div>
+        </div>
+    </section>
+}

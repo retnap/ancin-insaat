@@ -1,8 +1,21 @@
 @model NavbarViewModel
+@{
+    // English localization (2026-10-02) — every link below has a Turkish
+    // and an English form (home "/" ⇄ "/en", "sosyal-sorumluluk-
+    // projelerimiz" ⇄ "en/social-responsibility", everything else just
+    // gains/loses the "en/" prefix — see LanguageUrlService, the single
+    // source of truth for this mapping; the two language-switch links
+    // themselves are already computed from the *current* page by
+    // NavbarViewComponent, not hardcoded here). Project slugs are
+    // untranslated, so Project Detail's own Hero/Breadcrumb links (not
+    // this component) carry the "en/" prefix the same way.
+    var isEn = Model.IsEnglish;
+    string Href(string trPath, string enPath) => isEn ? enPath : trPath;
+}
 
 <div class="container navbar-inner">
 
-    <a href="/" class="navbar-logo" aria-label="Ancın İnşaat — Anasayfa">
+    <a href="@Href("/", "/en")" class="navbar-logo" aria-label="@(isEn ? "Ancın İnşaat — Home" : "Ancın İnşaat — Anasayfa")">
         @* Nysa Gold Residence UI revision (2026-08-07), rolled out to every
            Project Detail page (2026-08-08) — data-navbar-logo/
            data-logo-src-solid/data-logo-src-transparent let site.js's
@@ -18,10 +31,10 @@
              alt="Ancın İnşaat" width="132" height="46" />
     </a>
 
-    <nav class="navbar-nav" id="navbar-nav" aria-label="Ana menü">
+    <nav class="navbar-nav" id="navbar-nav" aria-label="@(isEn ? "Main menu" : "Ana menü")">
         <ul class="navbar-nav-list">
             <li>
-                <a href="/" class="nav-link @(Model.IsHomeActive ? "nav-link--active" : "")">Anasayfa</a>
+                <a href="@Href("/", "/en")" class="nav-link @(Model.IsHomeActive ? "nav-link--active" : "")">@(isEn ? "Home" : "Anasayfa")</a>
             </li>
             <li class="nav-item-dropdown">
                 <button type="button"
@@ -30,7 +43,7 @@
                         aria-haspopup="true"
                         aria-expanded="false"
                         aria-controls="nav-dropdown-menu-corporate">
-                    Kurumsal
+                    @(isEn ? "Corporate" : "Kurumsal")
                     <span class="nav-chevron" aria-hidden="true"></span>
                 </button>
                 <ul class="nav-dropdown"
@@ -38,39 +51,39 @@
                     role="menu"
                     aria-labelledby="nav-dropdown-trigger-corporate">
                     <li role="none">
-                        <a role="menuitem" tabindex="-1" class="nav-dropdown-link" href="/about-us">Hakkımızda</a>
+                        <a role="menuitem" tabindex="-1" class="nav-dropdown-link" href="@Href("/about-us", "/en/about-us")">@(isEn ? "About Us" : "Hakkımızda")</a>
                     </li>
                     <li role="none">
-                        <a role="menuitem" tabindex="-1" class="nav-dropdown-link" href="/values">Değerlerimiz</a>
+                        <a role="menuitem" tabindex="-1" class="nav-dropdown-link" href="@Href("/values", "/en/values")">@(isEn ? "Our Values" : "Değerlerimiz")</a>
                     </li>
                     <li role="none">
-                        <a role="menuitem" tabindex="-1" class="nav-dropdown-link" href="/hr-policy">İnsan Kaynakları Politikası</a>
+                        <a role="menuitem" tabindex="-1" class="nav-dropdown-link" href="@Href("/hr-policy", "/en/hr-policy")">@(isEn ? "Human Resources Policy" : "İnsan Kaynakları Politikası")</a>
                     </li>
                     <li role="none">
-                        <a role="menuitem" tabindex="-1" class="nav-dropdown-link" href="/kvkk">KVKK</a>
+                        <a role="menuitem" tabindex="-1" class="nav-dropdown-link" href="@Href("/kvkk", "/en/kvkk")">KVKK</a>
                     </li>
                     <li role="none">
-                        <a role="menuitem" tabindex="-1" class="nav-dropdown-link" href="/sosyal-sorumluluk-projelerimiz">Sosyal Sorumluluk Projelerimiz</a>
+                        <a role="menuitem" tabindex="-1" class="nav-dropdown-link" href="@Href("/sosyal-sorumluluk-projelerimiz", "/en/social-responsibility")">@(isEn ? "Social Responsibility" : "Sosyal Sorumluluk Projelerimiz")</a>
                     </li>
                 </ul>
             </li>
             <li>
-                <a href="/projects" class="nav-link @(Model.IsProjectsActive ? "nav-link--active" : "")">Projeler</a>
+                <a href="@Href("/projects", "/en/projects")" class="nav-link @(Model.IsProjectsActive ? "nav-link--active" : "")">@(isEn ? "Projects" : "Projeler")</a>
             </li>
             <li>
-                <a href="/career" class="nav-link @(Model.IsCareerActive ? "nav-link--active" : "")">Kariyer</a>
+                <a href="@Href("/career", "/en/career")" class="nav-link @(Model.IsCareerActive ? "nav-link--active" : "")">@(isEn ? "Career" : "Kariyer")</a>
             </li>
             <li>
-                <a href="/contact" class="nav-link @(Model.IsContactActive ? "nav-link--active" : "")">İletişim</a>
+                <a href="@Href("/contact", "/en/contact")" class="nav-link @(Model.IsContactActive ? "nav-link--active" : "")">@(isEn ? "Contact" : "İletişim")</a>
             </li>
         </ul>
     </nav>
 
     <div class="navbar-actions">
 
-        <div class="navbar-lang" role="group" aria-label="Dil seçimi">
-            <span class="lang-option lang-option--active" aria-current="true">TR</span>
-            <span class="lang-option lang-option--disabled" aria-disabled="true" title="Çok yakında">ENG</span>
+        <div class="navbar-lang" role="group" aria-label="@(isEn ? "Language selection" : "Dil seçimi")">
+            <a href="@Model.TurkishUrl" class="lang-option @(isEn ? "" : "lang-option--active")" aria-current="@(isEn ? null : "true")" hreflang="tr" lang="tr">TR</a>
+            <a href="@Model.EnglishUrl" class="lang-option @(isEn ? "lang-option--active" : "")" aria-current="@(isEn ? "true" : null)" hreflang="en" lang="en">ENG</a>
         </div>
 
         <button type="button"
@@ -79,7 +92,7 @@
                 aria-haspopup="dialog"
                 aria-expanded="false"
                 aria-controls="search-overlay"
-                aria-label="Ara">
+                aria-label="@(isEn ? "Search" : "Ara")">
             <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
                 <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8" />
                 <path d="M19.5 19.5l-4.3-4.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
@@ -91,7 +104,7 @@
                 class="navbar-toggle"
                 aria-expanded="false"
                 aria-controls="navbar-nav"
-                aria-label="Menüyü aç">
+                aria-label="@(isEn ? "Open menu" : "Menüyü aç")">
             <span class="navbar-toggle-bar"></span>
             <span class="navbar-toggle-bar"></span>
             <span class="navbar-toggle-bar"></span>

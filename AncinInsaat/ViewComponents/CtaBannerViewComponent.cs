@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AncinInsaat.ViewComponents;
@@ -10,10 +11,12 @@ public class CtaBannerViewComponent : ViewComponent
 {
     public IViewComponentResult Invoke()
     {
+        var isEnglish = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+
         var model = new CtaBannerViewModel
         {
-            Heading = "Tüm Projeler",
-            LinkUrl = "/projects"
+            Heading = isEnglish ? "All Projects" : "Tüm Projeler",
+            LinkUrl = isEnglish ? "/en/projects" : "/projects"
         };
 
         return View(model);

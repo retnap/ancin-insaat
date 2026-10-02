@@ -6,6 +6,10 @@ public class ProjectImage
     public int ProjectId { get; set; }
     public required string ImagePath { get; set; }
     public string AltText { get; set; } = string.Empty;
+
+    // English localization (2026-10-02) — nullable companion; null falls
+    // back to AltText above.
+    public string? AltTextEn { get; set; }
     public int DisplayOrder { get; set; }
 
     // Nullable, freeform string rather than an enum so the taxonomy can grow
@@ -15,6 +19,11 @@ public class ProjectImage
     // from the distinct, non-null values actually present on a project's
     // images, never a static list, so an image with no Category simply
     // never appears in a filtered view (only "Tüm Görseller").
+    // Category is a small fixed set of filter keys shared across every
+    // project (Exterior, Interior, Social Areas, …) — its English display
+    // label lives in ProjectsController.GalleryCategoryLabelsEn, the same
+    // place GalleryCategoryLabels already keeps the Turkish one, rather
+    // than a per-row *En column here (English localization, 2026-10-02).
     public string? Category { get; set; }
 
     // Nullable, freeform strings — Gallery block/apartment-type filter tiers

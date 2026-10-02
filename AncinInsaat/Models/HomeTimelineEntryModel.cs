@@ -8,6 +8,9 @@ namespace AncinInsaat.Models;
 public class HomeTimelineEntryModel
 {
     public required string Year { get; init; }
+
+    // A historic building's own name (e.g. "Seda Apartmanı") — a proper
+    // noun, never translated, same convention as Project.Name.
     public required string Title { get; init; }
     public required string ImageSrc { get; init; }
     public required string ImageAlt { get; init; }
@@ -18,6 +21,13 @@ public class HomeTimelineEntryModel
     // Additional text revealed only when the card is expanded; Summary +
     // Detail together form the entry's complete text.
     public required string Detail { get; init; }
+
+    // English localization (2026-10-02) — nullable companions; a null
+    // value falls back to ImageAlt/Summary/Detail above (see
+    // _HomeTimelineCarousel.cshtml).
+    public string? ImageAltEn { get; init; }
+    public string? SummaryEn { get; init; }
+    public string? DetailEn { get; init; }
 }
 
 public class HomeTimelineCarouselModel

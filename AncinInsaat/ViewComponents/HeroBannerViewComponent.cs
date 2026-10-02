@@ -1,3 +1,4 @@
+using System.Globalization;
 using AncinInsaat.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,14 +34,26 @@ public class HeroBannerViewComponent : ViewComponent
     {
         var latestProject = await _projectQueryService.GetLatestFeaturedProjectAsync();
 
+        // English localization (2026-10-02) — Heading is deliberately NOT
+        // translated even in English: it is this project's display name
+        // ("La Fiore Karabağ 2. Etap"), and project names/phase suffixes
+        // stay untranslated everywhere else on the site (cards, SEO
+        // titles, breadcrumbs), so translating it only here would create
+        // the exact inconsistency docs/13_DevelopmentRules.md's
+        // terminology-consistency rule warns against.
+        var isEnglish = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+        var pathPrefix = isEnglish ? "/en" : "";
+
         var model = new HeroBannerViewModel
         {
             Heading = "LA FIORE KARABAĞ 2. ETAP",
-            Subheading = "Ancın İnşaat, güven ve zanaatkârlıkla şekillenen projeleriyle yaşam alanlarını geleceğe taşıyor.",
-            PrimaryCtaLabel = "Projelerimizi İnceleyin",
-            PrimaryCtaUrl = "/projects",
-            SecondaryCtaLabel = "Bize Ulaşın",
-            SecondaryCtaUrl = "/contact",
+            Subheading = isEnglish
+                ? "Ançın İnşaat carries living spaces into the future through projects shaped by trust and craftsmanship."
+                : "Ancın İnşaat, güven ve zanaatkârlıkla şekillenen projeleriyle yaşam alanlarını geleceğe taşıyor.",
+            PrimaryCtaLabel = isEnglish ? "Explore Our Projects" : "Projelerimizi İnceleyin",
+            PrimaryCtaUrl = $"{pathPrefix}/projects",
+            SecondaryCtaLabel = isEnglish ? "Contact Us" : "Bize Ulaşın",
+            SecondaryCtaUrl = $"{pathPrefix}/contact",
 
             // Commit 4 (Company Overview) must give its section wrapper
             // id="company-overview" for this anchor to resolve.
@@ -68,8 +81,18 @@ public class HeroBannerViewComponent : ViewComponent
                             ? "/images/projects/la-fiore-karabag-2-etap/banner/la-fiore-2-etap-banner-36.jpeg"
                             : $"/images/projects/{latestProject.Slug}/banner.webp"
                 : null,
-            ProjectCtaLabel = latestProject is not null ? "Projeye Git" : null,
-            ProjectCtaUrl = latestProject is not null ? $"/projects/{latestProject.Slug}" : null,
+            ProjectCtaLabel = latestProject is not null ? (isEnglish ? "View Project" : "Projeye Git") : null,
+            ProjectCtaUrl = latestProject is not null ? $"{pathPrefix}/projects/{latestProject.Slug}" : null,
+            // Mobile Performance & Responsive Pass (2026-10-02) — same
+            // ProjectHeroMobileFocusMap the Project Detail Hero resolves
+            // from, so the Home Hero crops the latest featured project's own
+            // banner identically on narrow viewports. Null today (La Fiore
+            // Karabağ 2. Etap's banner is already evenly centered, no entry
+            // in the map) — only takes effect if a mapped slug is ever
+            // promoted to featured.
+            MobileBackgroundPosition = latestProject is not null
+                ? ProjectHeroMobileFocusMap.MobileBackgroundPositions.GetValueOrDefault(latestProject.Slug)
+                : null,
             HeadingFontModifierClass = latestProject is not null
                 ? ProjectHeroFontMap.HeadingFontModifierClasses.GetValueOrDefault(latestProject.Slug)
                 : null,

@@ -1,10 +1,17 @@
 @model AncinInsaat.Models.ProjectDetailViewModel
+@using System.Globalization
 
 @* Location & Distances (Project Detail redesign, 2026-07-31) — split layout:
    location copy + nearby-places list left, a static on-brand illustration
    right (no interactive map/coordinates — see docs/14_Decisions.md). Only
    composed by Details.cshtml when the project has a Location and/or
    NearbyPlaces to show. *@
+
+@{
+    // English localization (2026-10-02) — place.Name/place.Distance already
+    // arrive pre-localized from ProjectsController.Details.
+    var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+}
 
 <div class="project-location">
     <div class="project-location-info" data-reveal="left">
@@ -14,8 +21,8 @@
            component (see _FloorPlans.cshtml for the identical treatment). *@
         <partial name="_TimelineHeader" model="@(new TimelineHeaderModel
         {
-            DecorativeTitle = "LOKASYON",
-            Subtitle = "Hayatın Yeni Merkezinde",
+            DecorativeTitle = isEn ? "LOCATION" : "LOKASYON",
+            Subtitle = isEn ? "At the New Center of Life" : "Hayatın Yeni Merkezinde",
             HeadingId = "project-location-heading"
         })" />
 
@@ -40,11 +47,11 @@
     <div class="project-location-media" data-reveal="right">
         @if (!string.IsNullOrWhiteSpace(Model.LocationImageUrl))
         {
-            <img src="@Model.LocationImageUrl" alt="@(Model.Name) konum görseli" loading="lazy" decoding="async" />
+            <img src="@Model.LocationImageUrl" alt="@(isEn ? $"{Model.Name} location image" : $"{Model.Name} konum görseli")" loading="lazy" decoding="async" />
         }
         else
         {
-            <img src="/images/company/location-illustration.svg" alt="Konum illüstrasyonu" loading="lazy" decoding="async" />
+            <img src="/images/company/location-illustration.svg" alt="@(isEn ? "Location illustration" : "Konum illüstrasyonu")" loading="lazy" decoding="async" />
         }
     </div>
 </div>

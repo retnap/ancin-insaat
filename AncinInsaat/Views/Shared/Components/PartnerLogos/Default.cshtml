@@ -1,11 +1,13 @@
 @model PartnerLogosViewModel
+@using System.Globalization
 
 @{
     // Rendered twice back-to-back so the marquee (site.css Section 15) can
     // loop seamlessly; the second copy is aria-hidden so screen readers
     // only hear the logo list once.
+    var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
 }
-<section class="partner-logos section" aria-label="Projelerimiz">
+<section class="partner-logos section" aria-label="@(isEn ? "Our Projects" : "Projelerimiz")">
     <div class="container">
         <div class="partner-logos-carousel">
             <div class="partner-logos-track">

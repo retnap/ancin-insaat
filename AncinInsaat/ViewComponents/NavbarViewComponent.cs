@@ -1,3 +1,5 @@
+using System.Globalization;
+using AncinInsaat.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AncinInsaat.ViewComponents;
@@ -16,13 +18,24 @@ public class NavbarViewComponent : ViewComponent
     {
         var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? string.Empty;
 
+        // English localization (2026-10-02) — the language switch must
+        // land on the EN/TR equivalent of the page being viewed right now,
+        // not always Home, so it is computed from the actual request path
+        // (including its query string, e.g. a Projects filter) rather than
+        // from any static per-controller URL.
+        var currentPath = Request.Path;
+        var currentQuery = Request.QueryString;
+
         var model = new NavbarViewModel
         {
             IsHomeActive = currentController.Equals("Home", StringComparison.OrdinalIgnoreCase),
             IsCorporateActive = CorporateControllers.Any(c => currentController.Equals(c, StringComparison.OrdinalIgnoreCase)),
             IsProjectsActive = currentController.Equals("Projects", StringComparison.OrdinalIgnoreCase),
             IsCareerActive = currentController.Equals("Career", StringComparison.OrdinalIgnoreCase),
-            IsContactActive = currentController.Equals("Contact", StringComparison.OrdinalIgnoreCase)
+            IsContactActive = currentController.Equals("Contact", StringComparison.OrdinalIgnoreCase),
+            IsEnglish = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase),
+            TurkishUrl = LanguageUrlService.GetTurkishEquivalent(currentPath, currentQuery),
+            EnglishUrl = LanguageUrlService.GetEnglishEquivalent(currentPath, currentQuery)
         };
 
         return View(model);

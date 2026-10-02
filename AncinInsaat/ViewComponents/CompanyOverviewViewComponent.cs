@@ -1,3 +1,4 @@
+using System.Globalization;
 using AncinInsaat.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,17 +27,26 @@ public class CompanyOverviewViewComponent : ViewComponent
 {
     public IViewComponentResult Invoke()
     {
+        // English localization (2026-10-02) — same CultureInfo-driven
+        // pattern as every other ViewComponent on the site.
+        var isEnglish = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+
         var model = new CompanyOverviewViewModel
         {
             SectionHeader = new SectionHeaderModel
             {
                 HeadingId = "company-overview-heading",
-                Eyebrow = "HAKKIMIZDA",
-                Title = "50 Yıllık Tecrübe",
-                Description = "Ancın İnşaat; güvenilirlik, zanaatkârlık ve modern mimari " +
-                    "anlayışını bir araya getirerek yaşam alanları üretir. Her projede " +
-                    "uzun soluklu değer yaratmayı ve sakinlerine huzurlu, işlevsel bir " +
-                    "yaşam sunmayı hedefleriz."
+                Eyebrow = isEnglish ? "ABOUT US" : "HAKKIMIZDA",
+                Title = isEnglish ? "50 Years of Experience" : "50 Yıllık Tecrübe",
+                Description = isEnglish
+                    ? "Ançın İnşaat creates living spaces by bringing together reliability, " +
+                        "craftsmanship and a modern architectural philosophy. In every project, " +
+                        "we aim to create lasting value and offer our residents a peaceful, " +
+                        "functional way of life."
+                    : "Ancın İnşaat; güvenilirlik, zanaatkârlık ve modern mimari " +
+                        "anlayışını bir araya getirerek yaşam alanları üretir. Her projede " +
+                        "uzun soluklu değer yaratmayı ve sakinlerine huzurlu, işlevsel bir " +
+                        "yaşam sunmayı hedefleriz."
             },
             Video = new VideoShowcaseModel
             {
@@ -45,7 +55,7 @@ public class CompanyOverviewViewComponent : ViewComponent
                 // see CompanyHistorySectionViewComponent's Image for the
                 // flip side. Same video widget as before, just relocated.
                 Id = "company-overview",
-                Title = "Ancın İnşaat Tanıtım Filmi",
+                Title = isEnglish ? "Ançın İnşaat Promotional Film" : "Ancın İnşaat Tanıtım Filmi",
                 // Frame extracted directly from video-optimized.mp4 at exactly
                 // 1.33s (project owner's explicit timestamp) via ffmpeg,
                 // cropped to the section's 1:1 trigger and re-encoded as
@@ -61,8 +71,8 @@ public class CompanyOverviewViewComponent : ViewComponent
                 VideoSrc = "/images/logos/video-optimized.mp4",
                 CssClass = "company-overview-video"
             },
-            CtaLabel = "Devamını Oku",
-            CtaUrl = "/about-us"
+            CtaLabel = isEnglish ? "Read More" : "Devamını Oku",
+            CtaUrl = isEnglish ? "/en/about-us" : "/about-us"
         };
 
         return View(model);

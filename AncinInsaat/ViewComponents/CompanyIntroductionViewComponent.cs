@@ -1,3 +1,4 @@
+using System.Globalization;
 using AncinInsaat.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,12 +52,48 @@ public class CompanyIntroductionViewComponent : ViewComponent
             "projelere taşırken, her zaman insana değer veren anlayışımızdan ödün vermiyoruz."
     };
 
+    // English localization (2026-10-02) — natural corporate-English
+    // renderings of IntroParagraphs/ClosingParagraphs above, not literal
+    // translations; same three-facts grounding (1973 founding year, the
+    // "yarım asır"/half-century framing, Aydın as home region), no new
+    // business fact introduced.
+    private static readonly IReadOnlyList<string> IntroParagraphsEn = new List<string>
+    {
+        "Since its very first steps in Aydın, Ançın İnşaat has built living spaces by combining " +
+            "sound engineering with a people-first approach. Throughout a journey now " +
+            "approaching half a century, we have never lost sight of our goal of creating " +
+            "lasting value in every project.",
+        "Transparency, craftsmanship and customer satisfaction sit at the heart of our " +
+            "corporate culture. We design every project as a home its residents can live in " +
+            "safely for many years to come, and we act with that responsibility in mind.",
+        "Through the residential and villa projects we bring to life in Aydın's developing " +
+            "districts, we bring modern architecture together with the character of the " +
+            "region. As we carry our experience forward, we always prioritize a construction " +
+            "philosophy that respects both people and nature."
+    };
+
+    private static readonly IReadOnlyList<string> ClosingParagraphsEn = new List<string>
+    {
+        "With our expert engineers, architects and site teams, we follow a working discipline " +
+            "in which every project is meticulously tracked from the planning stage through to " +
+            "handover. For us, quality control is not a single stage — it is a principle present " +
+            "at every step of the process.",
+        "We take care to maintain the trust we build with our residents even after handover. " +
+            "Transparent communication and a fast, solution-focused approach are an " +
+            "inseparable part of every project that carries the Ançın İnşaat signature.",
+        "Looking to the future, our goal is to continue offering more families in and around " +
+            "Aydın quality, safe living spaces. As we carry our half-century of experience into " +
+            "a new generation of projects, we never compromise on our people-first philosophy."
+    };
+
     public IViewComponentResult Invoke(string part)
     {
+        var isEnglish = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+
         var model = part switch
         {
-            "intro" => new CompanyIntroductionViewModel { SectionId = "about-intro", Paragraphs = IntroParagraphs },
-            "closing" => new CompanyIntroductionViewModel { SectionId = "about-closing", Paragraphs = ClosingParagraphs },
+            "intro" => new CompanyIntroductionViewModel { SectionId = "about-intro", Paragraphs = isEnglish ? IntroParagraphsEn : IntroParagraphs },
+            "closing" => new CompanyIntroductionViewModel { SectionId = "about-closing", Paragraphs = isEnglish ? ClosingParagraphsEn : ClosingParagraphs },
             _ => throw new ArgumentOutOfRangeException(nameof(part), part, "Expected \"intro\" or \"closing\".")
         };
 

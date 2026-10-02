@@ -1077,8 +1077,7 @@ select[aria-invalid='true'] {
 
 .navbar--transparent .nav-link,
 .navbar--transparent .nav-link--active,
-.navbar--transparent .lang-option--active,
-.navbar--transparent .lang-option--disabled,
+.navbar--transparent .lang-option,
 .navbar--transparent .navbar-search-trigger {
   color: var(--color-white);
 }
@@ -1225,11 +1224,11 @@ select[aria-invalid='true'] {
 }
 
 /* ---- Language Selector ----
-   Architecture prepared for future localisation (docs/14_Decisions.md,
-   Global Navigation & Search milestone): TR is the only active locale,
-   ENG is visible but inert — no route, no resource files, no
-   localization middleware. Plain text, not buttons, since neither
-   option is currently interactive. */
+   English localization (2026-10-02) — both TR/ENG are real links to the
+   current page's TR/EN route equivalent (see LanguageUrlService,
+   NavbarViewComponent). The inactive option keeps looking like a plain
+   secondary label at rest (same color/opacity as the old disabled state)
+   but is a real link now, so it gets its own hover/focus affordance. */
 
 .navbar-lang {
   display: flex;
@@ -1240,14 +1239,22 @@ select[aria-invalid='true'] {
   font-size: var(--font-size-small);
 }
 
-.lang-option--active {
+.lang-option {
+  color: var(--color-text-secondary);
+  opacity: 0.6;
+  text-decoration: none;
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+
+.lang-option:hover,
+.lang-option:focus-visible {
+  opacity: 1;
   color: var(--color-text-primary);
 }
 
-.lang-option--disabled {
-  color: var(--color-text-secondary);
-  opacity: 0.6;
-  cursor: default;
+.lang-option--active {
+  color: var(--color-text-primary);
+  opacity: 1;
 }
 
 .lang-option--active::after {
@@ -2079,8 +2086,21 @@ select[aria-invalid='true'] {
     linear-gradient(color-mix(in srgb, var(--color-near-black) 55%, transparent), color-mix(in srgb, var(--color-near-black) 55%, transparent)),
     var(--hero-bg-image, linear-gradient(160deg, var(--color-near-black) 0%, var(--color-dark-gray) 100%));
   background-size: cover;
-  background-position: center;
+  /* Mobile Performance & Responsive Pass (2026-10-02) — below 768px this
+     resolves --hero-bg-position-mobile when a project sets it (inline,
+     alongside --hero-bg-image; see ProjectHeroMobileFocusMap), falling back
+     to the same "center" every banner already used. At 768px+ the rule
+     further down always wins and pins every Hero back to plain center,
+     so no desktop composition changes — this only touches banners narrow
+     enough to crop away a wide aerial/exterior render's actual subject. */
+  background-position: var(--hero-bg-position-mobile, center);
   animation: hero-bg-zoom 22s ease-in-out infinite;
+}
+
+@media (min-width: 768px) {
+  .hero-bg {
+    background-position: center;
+  }
 }
 
 @keyframes hero-bg-zoom {
@@ -3048,6 +3068,35 @@ select[aria-invalid='true'] {
 
 .home-timeline-card {
   align-self: flex-start;
+}
+
+/* ---- Mobile Prev/Next vertical scroll fix (2026-10-02) ----
+   Root cause: site.js's scrollToCard() calls card.scrollIntoView({
+   block: 'nearest', ... }) for the History Info Panel's Prev/Next
+   buttons (Section 21's comment above .history-carousel). Cards no
+   longer share one stretched height since .home-timeline-card's
+   align-self: flex-start above — each one sizes to its own title/
+   description line count — so paging to a slightly taller neighbour can
+   leave its bottom edge just past the bottom of a short mobile viewport.
+   "nearest" then scrolls the whole page up just enough to fit that
+   neighbour, which (with no offset) lands the row's top flush with the
+   true viewport top — directly behind the sticky Navbar (.navbar,
+   position: sticky, --navbar-height) — clipping the top of the card
+   image. Desktop viewports are tall enough that every card already
+   fits without any vertical scroll, so block: 'nearest' never fires
+   there and nothing changes above this breakpoint.
+
+   Same fix already used for anchor-link targets elsewhere in this file
+   (#company-overview, #projects-showcase): scroll-margin-top reserves
+   the Navbar's height so the browser's own scroll-into-view math stops
+   short of it instead of sliding the card underneath. Scoped to
+   .home-timeline-card (not the shared .history-card) and to mobile
+   only, so About Us's Our Journey carousel and every desktop width are
+   untouched. */
+@media (max-width: 767px) {
+  .home-timeline-card {
+    scroll-margin-top: var(--navbar-height);
+  }
 }
 
 .home-timeline-more {
@@ -7967,4 +8016,308 @@ a.information-card__value:hover {
   font-family: var(--font-body);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
+}
+
+
+/* ==========================================================================
+   41. Social Responsibility Page — Folkart reference revision, 2026-10-02
+   Reference: https://folkart.com.tr/sosyal-sorumluluk, used for structure/
+   rhythm only. The reference has no Hero Banner — same "plain eyebrow + H1
+   + intro paragraph" heading pattern as Sections 28/30/32/38/39/40 (About
+   Us/Our Values/Career/Contact/HR Policy/KVKK), reusing
+   .hr-policy-heading-section's exact shape rather than inventing a new one.
+   Below the heading, the reference's own body is a sequence of alternating
+   image/text pairs — reused as-is from Section 34's .hr-philosophy-grid
+   (.grid.grid-cols-2 + Image Block).
+
+   2026-10-02 revision: the four generic placeholder "pillars" this section
+   originally held were replaced with exactly two real projects
+   (SocialResponsibilityProjectsViewComponent) — classes renamed
+   .social-responsibility-pillar* -> .social-responsibility-project*
+   (values unchanged) to match. The only new rules are the interactive
+   featured-image affordance (.social-responsibility-project-featured and
+   its overlay/icon/count children) — everything else below is the exact
+   same alternating-sides grid this section already had. */
+
+.social-responsibility-heading-section {
+  padding-block-end: 0;
+}
+
+.social-responsibility-eyebrow {
+  margin-block-end: var(--space-sm);
+  font-size: 1.5rem;
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-body);
+  color: var(--color-text-primary);
+}
+
+.social-responsibility-heading {
+  max-width: 40ch;
+  margin-block-end: var(--space-xl);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+/* 2026-10-02 spacing correction (project owner-requested): collapsing the
+   section padding below left the intro paragraph sitting almost flush
+   against the first project, with no deliberate break between "reading the
+   intro" and "looking at a project". margin-block-end gives the intro its
+   own explicit, intentional gap instead of relying on that collapsed
+   section padding — same responsive 2xl/3xl/4xl rhythm the sitewide
+   .section padding itself uses (Section 7), so the break reads as a normal
+   editorial beat rather than a one-off page quirk. Heading->intro spacing
+   (.social-responsibility-heading's own margin-block-end) is untouched. */
+.social-responsibility-intro {
+  max-width: none;
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-body);
+  margin-block-end: var(--space-2xl);
+}
+
+@media (min-width: 768px) {
+  .social-responsibility-intro {
+    margin-block-end: var(--space-3xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .social-responsibility-intro {
+    margin-block-end: var(--space-4xl);
+  }
+}
+
+/* .social-responsibility-heading-section's own top/bottom section padding
+   already provides the gap down to the first project — collapse the first
+   project's own top padding away so the two don't stack into a too-wide
+   gap, same "collapse doubled spacing to one instance" approach as
+   .values-introduction + .core-values (Section 30a). The intro's own
+   margin-block-end above (not this collapsed section padding) is what now
+   supplies the actual visible gap. */
+.social-responsibility-heading-section + .social-responsibility-project {
+  padding-block-start: 0;
+}
+
+.social-responsibility-project-grid {
+  align-items: center;
+}
+
+.social-responsibility-project-heading {
+  margin-block-end: var(--space-md);
+  font-family: var(--font-body);
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.social-responsibility-project-paragraph {
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-body);
+}
+
+.social-responsibility-project-paragraph + .social-responsibility-project-paragraph {
+  margin-block-start: var(--space-md);
+}
+
+/* Alternates which side the image sits on per project, matching the
+   reference's alternating editorial rhythm. Source order always keeps the
+   text content first in the DOM (same reading-order precedent as Section
+   34's .hr-philosophy-grid) — only the visual position swaps, and only
+   from the Tablet breakpoint up, matching exactly where .grid-cols-2
+   itself first splits into two columns (Section 7). Below that, both
+   stack in natural (content-then-image) source order regardless of this
+   modifier. */
+@media (min-width: 768px) {
+  .social-responsibility-project--image-right .social-responsibility-project-content {
+    order: 2;
+  }
+
+  .social-responsibility-project--image-right .social-responsibility-project-media {
+    order: 1;
+  }
+}
+
+/* ---- Featured image — interactive gallery affordance, 2026-10-02 ----
+   The featured photo is a real <button> wrapping the existing .image-block
+   (Section 8 — same 4:3/radius/shadow treatment every other page image
+   uses), not a plain <img>. Overlay + expand icon + photo-count badge
+   mirror the exact hover/focus-visible idiom .gallery-card already
+   established (Section 26) — a gradient overlay that deepens on
+   hover/focus, a centered icon that only appears on hover/focus — just
+   with an "expand" icon instead of a Play icon (this opens a photo
+   lightbox, not a video) and a count badge instead of a category title. */
+
+.social-responsibility-project-featured {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.social-responsibility-project-featured .image-block {
+  transition: transform var(--transition-base) var(--ease-standard);
+}
+
+.social-responsibility-project-featured:hover .image-block,
+.social-responsibility-project-featured:focus-visible .image-block {
+  transform: scale(1.02);
+}
+
+.social-responsibility-project-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-md);
+  background: linear-gradient(to top, rgba(28, 28, 28, 0.55) 0%, rgba(28, 28, 28, 0.08) 45%, rgba(28, 28, 28, 0) 68%);
+  opacity: 0;
+  transition: opacity var(--transition-base) var(--ease-standard);
+}
+
+.social-responsibility-project-featured:hover .social-responsibility-project-overlay,
+.social-responsibility-project-featured:focus-visible .social-responsibility-project-overlay {
+  opacity: 1;
+}
+
+.social-responsibility-project-expand-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  transform: translate(-50%, -50%) scale(0.85);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-white);
+  background-color: color-mix(in srgb, var(--color-near-black) 35%, transparent);
+  color: var(--color-white);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity var(--transition-fast) var(--ease-standard),
+    transform var(--transition-fast) var(--ease-standard);
+}
+
+.social-responsibility-project-featured:hover .social-responsibility-project-expand-icon,
+.social-responsibility-project-featured:focus-visible .social-responsibility-project-expand-icon {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.social-responsibility-project-count {
+  position: absolute;
+  right: var(--space-md);
+  bottom: var(--space-md);
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background-color: color-mix(in srgb, var(--color-near-black) 55%, transparent);
+  color: var(--color-white);
+  font-size: 0.8125rem;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.01em;
+  pointer-events: none;
+}
+
+/* 2026-10-02 fix (project owner-requested): Project 2's featured photo is a
+   tall (9:16) event flyer whose printed title sits in its top third.
+   .image-block's shared 4:3 aspect-ratio + object-fit: cover (Section 8)
+   only shows a horizontal slice of a source that tall, and the default
+   center object-position cropped that slice from the vertical middle —
+   cutting the title off entirely. Overriding object-position here (scoped
+   to this one project's own featured image only, by id) keeps the crop
+   anchored to the top of the source photo instead, without touching the
+   shared .image-block rule every other page's images still rely on. */
+#social-responsibility-project-2 .social-responsibility-project-featured .image-block {
+  object-position: top;
+}
+
+
+/* ==========================================================================
+   42. Media Viewer — Video Items (Social Responsibility unified galleries,
+   2026-10-02)
+   Extends the shared Media Viewer (Section "Media Viewer" above, ~line
+   4065) in place — every other trigger group (Project Detail Gallery,
+   Floor Plans, Concept, Site Plan) carries no data-media-viewer-type and
+   is completely unaffected. .media-viewer-video-el reuses the exact same
+   per-breakpoint max-width/max-height .media-viewer-image already has, so
+   a video sizes identically to a photo rather than introducing a second
+   sizing scale. The Play overlay reuses .gallery-card-play's established
+   circular icon treatment (Section 26) rather than a new button design.
+   ========================================================================== */
+
+.media-viewer-image[hidden] {
+  display: none;
+}
+
+.media-viewer-video-wrap {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.media-viewer-video-wrap[hidden] {
+  display: none;
+}
+
+.media-viewer-video-el {
+  display: block;
+  max-width: min(90vw, 28rem);
+  max-height: min(58vh, 32rem);
+  border-radius: var(--radius-md);
+  background-color: var(--color-near-black);
+}
+
+@media (min-width: 768px) {
+  .media-viewer-video-el {
+    max-width: min(70vw, 38rem);
+    max-height: min(65vh, 42rem);
+  }
+}
+
+@media (min-width: 1024px) {
+  .media-viewer-video-el {
+    max-width: min(50vw, 46rem);
+    max-height: min(70vh, 48rem);
+  }
+}
+
+.media-viewer-video-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1.5px solid var(--color-white);
+  background-color: color-mix(in srgb, var(--color-near-black) 45%, transparent);
+  color: var(--color-white);
+  transition:
+    transform var(--transition-fast) var(--ease-standard),
+    background-color var(--transition-fast) var(--ease-standard);
+}
+
+.media-viewer-video-play:hover {
+  transform: translate(-50%, -50%) scale(1.06);
+  background-color: color-mix(in srgb, var(--color-near-black) 65%, transparent);
+}
+
+.media-viewer-video-play[hidden] {
+  display: none;
+}
+
+/* .media-viewer-tool already sets display: inline-flex as a class rule
+   (above) — needs the same explicit [hidden] override every such element
+   in this codebase does (Section 23's documented cascade note) now that
+   render() hides Zoom In/Out for video items. */
+.media-viewer-tool[hidden] {
+  display: none;
 }

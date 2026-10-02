@@ -1,3 +1,4 @@
+using System.Globalization;
 using AncinInsaat.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -52,6 +53,9 @@ public class PartnerLogosViewComponent : ViewComponent
 
     public async Task<IViewComponentResult> InvokeAsync()
     {
+        var isEnglish = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+        var pathPrefix = isEnglish ? "/en" : "";
+
         var projects = await _projectQueryService.GetPublishedProjectsAsync();
         var slugsByName = projects.ToDictionary(project => project.Name, project => project.Slug);
 
@@ -60,7 +64,7 @@ public class PartnerLogosViewComponent : ViewComponent
             {
                 ImageSrc = partner.ImageSrc,
                 ImageAlt = partner.ImageAlt,
-                DetailUrl = $"/projects/{slugsByName[partner.ImageAlt]}"
+                DetailUrl = $"{pathPrefix}/projects/{slugsByName[partner.ImageAlt]}"
             })
             .ToList();
 

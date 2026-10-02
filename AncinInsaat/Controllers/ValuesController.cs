@@ -16,6 +16,7 @@ public class ValuesController : Controller
     }
 
     [HttpGet("values")]
+    [HttpGet("en/values")]
     public async Task<IActionResult> Index()
     {
         ViewData["Seo"] = await _seoService.GetPageSeoAsync("values", Request);

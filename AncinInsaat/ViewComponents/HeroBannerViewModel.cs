@@ -19,6 +19,13 @@ public class HeroBannerViewModel
     public string? ProjectCtaLabel { get; init; }
     public string? ProjectCtaUrl { get; init; }
 
+    // Mobile Performance & Responsive Pass (2026-10-02) — resolved from the
+    // featured project's slug via ProjectHeroMobileFocusMap, the same map
+    // the Project Detail Hero uses. Null for any project outside that map
+    // (or when there is no featured project), in which case the mobile crop
+    // renders the exact plain "center" it always has.
+    public string? MobileBackgroundPosition { get; init; }
+
     // Resolved from the featured project's slug via ProjectHeroFontMap —
     // the same map every Project Detail Hero uses (Home Hero title
     // typography match, 2026-08-10). Null for any project outside that map

@@ -1,4 +1,5 @@
 @model AncinInsaat.Models.ProjectDetailViewModel
+@using System.Globalization
 
 @* Project Catalogue (docs/03_PageBlueprints.md) — full-bleed cinematic CTA,
    Project Detail redesign 2026-07-31. Reuses the Hero's own banner image for
@@ -34,6 +35,10 @@
     // in site.css).
     var isStandaloneBeforeCtaBanner = Model.Slug == "la-fiore-karabag";
     var catalogueCtaClass = "project-catalogue-cta project-catalogue-cta--featured" + (isStandaloneBeforeCtaBanner ? " project-catalogue-cta--standalone-bottom" : "");
+
+    // English localization (2026-10-02) — same CultureInfo-driven pattern
+    // every other shared partial on the site uses.
+    var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
 }
 
 <section class="@catalogueCtaClass" id="project-catalogue" style="--catalogue-bg-image: url('@Model.HeroBackgroundImageUrl')" aria-labelledby="project-catalogue-heading">
@@ -48,7 +53,7 @@
             {
                 <p class="project-catalogue-cta-eyebrow">@Model.Name</p>
             }
-            <h2 id="project-catalogue-heading" class="project-catalogue-cta-heading">Projeyi Detaylıca Keşfedin</h2>
+            <h2 id="project-catalogue-heading" class="project-catalogue-cta-heading">@(isEn ? "Explore the Project in Detail" : "Projeyi Detaylıca Keşfedin")</h2>
         </div>
         @if (Model.CatalogueComingSoon)
         {
@@ -59,11 +64,11 @@
                button to announce it's coming soon rather than download it
                yet. CatalogueComingSoon is false for every other project, so
                they keep the real download link below unchanged. *@
-            <button type="button" class="btn btn-primary project-catalogue-cta-button" data-toast-trigger data-toast-message="Proje kataloğu yakında eklenecektir.">Proje Kataloğunu İndir</button>
+            <button type="button" class="btn btn-primary project-catalogue-cta-button" data-toast-trigger data-toast-message="@(isEn ? "The project catalogue will be added soon." : "Proje kataloğu yakında eklenecektir.")">@(isEn ? "Download Project Catalogue" : "Proje Kataloğunu İndir")</button>
         }
         else
         {
-            <a class="btn btn-primary project-catalogue-cta-button" href="@Model.CatalogueUrl" download>Proje Kataloğunu İndir</a>
+            <a class="btn btn-primary project-catalogue-cta-button" href="@Model.CatalogueUrl" download>@(isEn ? "Download Project Catalogue" : "Proje Kataloğunu İndir")</a>
         }
     </div>
 </section>

@@ -8,6 +8,10 @@ public class FloorPlanRoom
     public int Id { get; set; }
     public int FloorPlanId { get; set; }
     public required string Name { get; set; }
+
+    // English localization (2026-10-02) — nullable companion; null falls
+    // back to Name above (e.g. "Salon" → "Living Room").
+    public string? NameEn { get; set; }
     public decimal AreaM2 { get; set; }
     public int DisplayOrder { get; set; }
 
