@@ -1082,7 +1082,7 @@ select[aria-invalid='true'] {
   color: var(--color-white);
 }
 
-.navbar--transparent .lang-option--active::after {
+.navbar--transparent .lang-divider {
   color: color-mix(in srgb, var(--color-white) 50%, transparent);
 }
 
@@ -1257,9 +1257,11 @@ select[aria-invalid='true'] {
   opacity: 1;
 }
 
-.lang-option--active::after {
-  content: '|';
-  margin-inline-start: var(--space-2xs);
+/* Independent flex sibling (not a pseudo-element on either language link)
+   so its position never shifts when the active language changes — see
+   Default.cshtml's .lang-divider span, placed between the TR and ENG
+   .lang-option links inside the same flex .navbar-lang row. */
+.lang-divider {
   color: var(--color-border);
   font-weight: var(--font-weight-regular);
 }
@@ -8037,65 +8039,70 @@ a.information-card__value:hover {
    (values unchanged) to match. The only new rules are the interactive
    featured-image affordance (.social-responsibility-project-featured and
    its overlay/icon/count children) — everything else below is the exact
-   same alternating-sides grid this section already had. */
+   same alternating-sides grid this section already had.
 
-.social-responsibility-heading-section {
-  padding-block-end: 0;
+   2026-10-03 revision: the plain eyebrow + H1 + intro paragraph heading
+   section (.social-responsibility-heading-section/-eyebrow/-heading/-intro)
+   was removed outright and replaced with a full-bleed banner photograph —
+   see .social-responsibility-banner below. The first project's own
+   .section top padding (48px/64px/80px, mobile/tablet/desktop — Section 7)
+   is left un-collapsed on purpose now, standing in as the whitespace
+   between the banner and "Social Responsibility Projects" instead of a
+   bespoke margin, so that gap stays on the same responsive scale as every
+   other section-to-section beat on the page. */
+
+/* ---- Full-bleed Banner ----
+   Project owner-supplied sosyal-sorumluluk-banner.png, 2560x360 — a flat
+   graphic with its own baked-in Turkish title/subtitle, not a photo meant
+   to be overlaid with separate heading markup (contrast with
+   .hero/.hero-bg, Section 4, which composites a real DOM heading on top of
+   a photographic background; intentionally untouched by this section).
+   Rendered as a plain <section> with no .container/.section wrapper so it
+   spans the true viewport width edge-to-edge, consistent with how .hero
+   itself achieves full-bleed (a bare top-level section, not a negative-
+   margin trick). Desktop/tablet height uses the same capped-clamp
+   approach as .hr-policy-image-strip-img (Section 39) rather than
+   aspect-ratio: the source is a short, wide banner, not a
+   container-relative strip, and clamp's 3 fixed points describe "~160px
+   mobile up to ~272px desktop" directly regardless of what width the
+   section itself renders at. object-fit: cover crops the banner to that
+   box on this range, which is fine there — see the mobile override below
+   for why that cropping is wrong on narrow phones specifically. */
+.social-responsibility-banner {
+  width: 100%;
+  overflow: hidden;
+  height: clamp(10rem, 15vw, 17rem);
 }
 
-.social-responsibility-eyebrow {
-  margin-block-end: var(--space-sm);
-  font-size: 1.5rem;
-  font-weight: var(--font-weight-regular);
-  line-height: var(--line-height-body);
-  color: var(--color-text-primary);
+.social-responsibility-banner-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
-.social-responsibility-heading {
-  max-width: 40ch;
-  margin-block-end: var(--space-xl);
-  font-family: var(--font-body);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
-}
-
-/* 2026-10-02 spacing correction (project owner-requested): collapsing the
-   section padding below left the intro paragraph sitting almost flush
-   against the first project, with no deliberate break between "reading the
-   intro" and "looking at a project". margin-block-end gives the intro its
-   own explicit, intentional gap instead of relying on that collapsed
-   section padding — same responsive 2xl/3xl/4xl rhythm the sitewide
-   .section padding itself uses (Section 7), so the break reads as a normal
-   editorial beat rather than a one-off page quirk. Heading->intro spacing
-   (.social-responsibility-heading's own margin-block-end) is untouched. */
-.social-responsibility-intro {
-  max-width: none;
-  color: var(--color-text-secondary);
-  line-height: var(--line-height-body);
-  margin-block-end: var(--space-2xl);
-}
-
-@media (min-width: 768px) {
-  .social-responsibility-intro {
-    margin-block-end: var(--space-3xl);
+/* Below 768px the banner's box (full viewport width x ~10rem-15vw height)
+   is far narrower than the source's native ~7.1:1 (2560x360) ratio, so
+   object-fit: cover always crops one side off — there is no crop window
+   that keeps the whole banner (baked-in title block + the people/building
+   group further right) in frame at that box shape. Per project owner
+   instruction (2026-10-03), completeness beats the fixed mobile height
+   here: height switches to auto and the image lays out at its own
+   intrinsic ratio, so the full 2560x360 graphic is always visible,
+   uncropped and undistorted (~55px tall at a 390px viewport,
+   390 / 7.1 ≈ 55). 768px+ (tablet/desktop) is untouched — reverts to the
+   clamp-height/cover box above. */
+@media (max-width: 767.98px) {
+  .social-responsibility-banner {
+    height: auto;
   }
-}
 
-@media (min-width: 1024px) {
-  .social-responsibility-intro {
-    margin-block-end: var(--space-4xl);
+  .social-responsibility-banner-img {
+    height: auto;
+    object-fit: initial;
+    object-position: initial;
   }
-}
-
-/* .social-responsibility-heading-section's own top/bottom section padding
-   already provides the gap down to the first project — collapse the first
-   project's own top padding away so the two don't stack into a too-wide
-   gap, same "collapse doubled spacing to one instance" approach as
-   .values-introduction + .core-values (Section 30a). The intro's own
-   margin-block-end above (not this collapsed section padding) is what now
-   supplies the actual visible gap. */
-.social-responsibility-heading-section + .social-responsibility-project {
-  padding-block-start: 0;
 }
 
 .social-responsibility-project-grid {

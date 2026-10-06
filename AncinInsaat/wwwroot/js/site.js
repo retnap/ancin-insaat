@@ -550,15 +550,16 @@
 // History Info Panel ↔ Carousel sync
 // Company History Section. _HistoryInfoPanel (Prev/Next only) and
 // _HistoryCarousel (card carousel) are paired at runtime by a shared
-// data-history-* id: clicking Prev/Next scrolls the matching card into
-// view via scrollIntoView, and the track's own 'scroll' event (fired for
-// that programmatic scroll same as any other) keeps the buttons'
-// disabled state in sync. Prev/Next are the only way to move the track —
-// site.css's History Carousel section sets the track to overflow: hidden
-// specifically so wheel, trackpad, touch-swipe and drag input can't
-// (2026-08-03), leaving scrollIntoView as the sole driver. An
-// IntersectionObserver on the track decides which card counts as
-// "active" rather than tracking scroll position by hand.
+// data-history-* id: clicking Prev/Next scrolls the matching card
+// horizontally into view (scrollTrackToCard, 2026-10-06 — see its own
+// comment below for why this is no longer scrollIntoView), and the
+// track's own 'scroll' event (fired for that programmatic scroll same as
+// any other) keeps the buttons' disabled state in sync. Prev/Next are the
+// only way to move the track — site.css's History Carousel section sets
+// the track to overflow: hidden specifically so wheel, trackpad,
+// touch-swipe and drag input can't (2026-08-03), leaving scrollTrackToCard
+// as the sole driver. An IntersectionObserver on the track decides which
+// card counts as "active" rather than tracking scroll position by hand.
 // ==========================================================================
 
 (function () {
@@ -613,6 +614,38 @@
     var isProgrammaticScroll = false;
     var programmaticScrollTimer = null;
 
+    // Horizontal-only Prev/Next scroll (2026-10-06, root-cause fix for
+    // mobile Timeline rapid-navigation jump — replaces a prior
+    // card.scrollIntoView({ block: 'nearest', inline: 'start' }) call).
+    // scrollIntoView's `block` axis walks every scrollable ancestor up to
+    // the document, not just this track: once .home-timeline-card got
+    // align-self: flex-start (cards no longer share one stretched height),
+    // a taller neighbour's bottom edge can sit past a short mobile
+    // viewport, so `block: 'nearest'` scrolled the whole page vertically
+    // to fit it — landing the card underneath the sticky Navbar. The
+    // earlier scroll-margin-top rule (still present below, kept as a
+    // safety net for the track's own native focus-scroll via its
+    // tabindex="0") only changes where "nearest" stops; it can't stop the
+    // page from scrolling at all, and firing scrollIntoView again on each
+    // rapid click recomputes "nearest" against a layout that's still
+    // mid-transition from the previous one, compounding the drift. Doing
+    // the horizontal math by hand and driving only this track's own
+    // scrollLeft (via scrollTo) never touches the document's vertical
+    // scroll position, so no sequence of Prev/Next clicks — however
+    // rapid — can move the page. Native scroll-snap-align: start on each
+    // card still settles the final resting position exactly as
+    // inline: 'start' did.
+    function scrollTrackToCard(targetCard) {
+      var trackRect = track.getBoundingClientRect();
+      var cardRect = targetCard.getBoundingClientRect();
+      var targetScrollLeft = track.scrollLeft + (cardRect.left - trackRect.left);
+
+      track.scrollTo({
+        left: targetScrollLeft,
+        behavior: reducedMotion ? 'auto' : 'smooth'
+      });
+    }
+
     function scrollToCard(index) {
       var card = cards[index];
       if (!card) {
@@ -627,11 +660,7 @@
         isProgrammaticScroll = false;
       }, reducedMotion ? 50 : 700);
 
-      card.scrollIntoView({
-        behavior: reducedMotion ? 'auto' : 'smooth',
-        inline: 'start',
-        block: 'nearest'
-      });
+      scrollTrackToCard(card);
     }
 
     if (prevBtn) {

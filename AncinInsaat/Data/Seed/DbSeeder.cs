@@ -3723,6 +3723,10 @@ public static class DbSeeder
         await ReconcileAlindaGoldSocialAreasSecondReplacementAsync(context);
         await ReconcileTrallesGoldSocialAreasSecondReplacementAsync(context);
         await ReconcileMagnesiaGoldSocialAreasSecondReplacementAsync(context);
+        await ReconcileAlindaGoldSocialAreasThirdReplacementAsync(context);
+        await ReconcileTrallesGoldSocialAreasThirdReplacementAsync(context);
+        await ReconcileMagnesiaGoldSocialAreasThirdReplacementAsync(context);
+        await ReconcileMagnesiaGoldInteriorGalleryReplacementAsync(context);
         await ReconcileLaFioreKarabag2EtapExteriorSocialAreasRevisionAsync(context);
         await ReconcileLaFioreKarabag2EtapRemoveSelectedSocialAreaImagesAsync(context);
         await ReconcileLaFioreKarabag2EtapInteriorExpansionAsync(context);
@@ -6011,11 +6015,18 @@ public static class DbSeeder
     // Real exterior/interior photos (Magnesia Gold Residence Gallery/
     // Concept/Floor Plans/Hero revision, 2026-08-10) — same shape as
     // BuildAlindaGoldImages. The client's interior folder has no
-    // apartment-type subfolders (just 13 flat numbered files), so — unlike
+    // apartment-type subfolders (just flat numbered files), so — unlike
     // Nysa Gold/La Fiore Karabağ 2. Etap — this stays a flat Exterior/
     // Interior split with Block/ApartmentType left null; no Interior filter
     // chips render for this project, per the client's explicit instruction
     // not to invent sub-types where the folder structure doesn't have them.
+    //
+    // Interior set updated (2026-10-06): the client replaced all 13 original
+    // interior-NN.jpg files with 12 new unpadded-numeric files (1.jpg-12.jpg)
+    // directly in gallery/interior/originals — only matters for a true
+    // from-scratch seed, since this project's real row is already seeded;
+    // see ReconcileMagnesiaGoldInteriorGalleryReplacementAsync below for the
+    // reconciliation that updates an already-seeded database.
     private static List<ProjectImage> BuildMagnesiaGoldImages()
     {
         var images = new List<ProjectImage>();
@@ -6033,12 +6044,12 @@ public static class DbSeeder
             });
         }
 
-        for (var i = 1; i <= 13; i++)
+        for (var i = 1; i <= 12; i++)
         {
             order++;
             images.Add(new ProjectImage
             {
-                ImagePath = $"/images/projects/magnesia-gold/gallery/interior/originals/interior-{i:D2}.jpg",
+                ImagePath = $"/images/projects/magnesia-gold/gallery/interior/originals/{i}.jpg",
                 AltText = $"Magnesia Gold Residence iç mekan görünümü {i}",
                 DisplayOrder = order,
                 Category = "Interior"
@@ -8822,6 +8833,342 @@ public static class DbSeeder
         AddIfMissing($"{socialAreasBase}/concierge.jpg", "Magnesia Gold Residence concierge alanı görünümü");
         AddIfMissing($"{socialAreasBase}/hamam.jpg", "Magnesia Gold Residence hamam görünümü");
         AddIfMissing($"{socialAreasBase}/indoor-parking-lot.jpg", "Magnesia Gold Residence kapalı otopark görünümü");
+
+        await context.SaveChangesAsync();
+    }
+
+    // Client-supplied Social Areas replacement (2026-10-03): the client
+    // dropped a fresh batch of edited amenity photos into each project's
+    // existing gallery/social-facilties(-ies) folder, named numerically
+    // (01.ext, 02.ext, ...) instead of descriptively — a different naming
+    // style than every prior batch, kept as-is per the "don't rename client
+    // files" precedent (see ReconcileTrallesGoldNewSocialAreasGalleryAsync
+    // above). Each numbered file was inspected to confirm its subject
+    // before writing AltText, since the filename itself carries no
+    // category information this time. A same-name WebP sibling (01.webp,
+    // 02.webp, ...) was generated for each via
+    // AncinInsaat.ImagePipeline.ThumbnailGenerator (tools/ThumbnailTool
+    // --single, 800w/82q default) directly alongside the original — this
+    // category has no originals/thumbnails split, so
+    // ProjectsController.ResolveThumbnail finds it via a same-folder
+    // extension swap (ImagePathHelper.GetThumbnailPath), same as every
+    // other flat (non-originals/thumbnails) image on the site. Same
+    // "remove stale, add new" shape as
+    // Reconcile{Alinda,Tralles,Magnesia}GoldSocialAreasSecondReplacementAsync
+    // above — guarded on both ends, so safe on every startup, including a
+    // freshly seeded database. The superseded rows' photo files stay on
+    // disk untouched per the client's instruction — only their
+    // ProjectImages rows are removed; the three *SecondReplacementAsync
+    // methods above are left unmodified so their own history/no-op safety
+    // nets still apply.
+    private static async Task ReconcileAlindaGoldSocialAreasThirdReplacementAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.Images)
+            .FirstOrDefaultAsync(p => p.Slug == "alinda-gold");
+
+        if (project is null)
+        {
+            return;
+        }
+
+        var oldPaths = new[]
+        {
+            "/images/projects/alinda-gold/gallery/social-facilities/barbecue.jpg",
+            "/images/projects/alinda-gold/gallery/social-facilities/cafeteria.jpg",
+            "/images/projects/alinda-gold/gallery/social-facilities/concierge.jpg",
+            "/images/projects/alinda-gold/gallery/social-facilities/exterior-swimming-pool.png",
+            "/images/projects/alinda-gold/gallery/social-facilities/gym.jpg",
+            "/images/projects/alinda-gold/gallery/social-facilities/hamam.jpg",
+            "/images/projects/alinda-gold/gallery/social-facilities/parking-lot.jpg",
+            "/images/projects/alinda-gold/gallery/social-facilities/spa.jpg",
+            "/images/projects/alinda-gold/gallery/social-facilities/playground-for-kid-1.jpg"
+        };
+
+        var staleImages = project.Images
+            .Where(i => i.Category == "Social Areas" && oldPaths.Contains(i.ImagePath))
+            .ToList();
+
+        if (staleImages.Count > 0)
+        {
+            context.ProjectImages.RemoveRange(staleImages);
+            foreach (var stale in staleImages)
+            {
+                project.Images.Remove(stale);
+            }
+        }
+
+        var existingPaths = new HashSet<string>(
+            project.Images.Select(i => i.ImagePath),
+            StringComparer.OrdinalIgnoreCase);
+
+        var nextOrder = project.Images.Count > 0 ? project.Images.Max(i => i.DisplayOrder) + 1 : 1;
+
+        void AddIfMissing(string imagePath, string altText)
+        {
+            if (!existingPaths.Add(imagePath))
+            {
+                return;
+            }
+
+            context.ProjectImages.Add(new ProjectImage
+            {
+                ProjectId = project.Id,
+                ImagePath = imagePath,
+                AltText = altText,
+                DisplayOrder = nextOrder++,
+                Category = "Social Areas"
+            });
+        }
+
+        const string socialAreasBase = "/images/projects/alinda-gold/gallery/social-facilities";
+        AddIfMissing($"{socialAreasBase}/01.jpg", "Alinda Gold Residence yüzme havuzu görünümü 1");
+        AddIfMissing($"{socialAreasBase}/02.png", "Alinda Gold Residence basketbol sahası görünümü");
+        AddIfMissing($"{socialAreasBase}/03.jpg", "Alinda Gold Residence kafeterya görünümü");
+        AddIfMissing($"{socialAreasBase}/04.jpg", "Alinda Gold Residence concierge alanı görünümü");
+        AddIfMissing($"{socialAreasBase}/05.jpg", "Alinda Gold Residence barbekü alanı görünümü");
+        AddIfMissing($"{socialAreasBase}/06.png", "Alinda Gold Residence yüzme havuzu görünümü 2");
+        AddIfMissing($"{socialAreasBase}/07.jpg", "Alinda Gold Residence fitness salonu görünümü");
+        AddIfMissing($"{socialAreasBase}/08.jpg", "Alinda Gold Residence hamam görünümü");
+        AddIfMissing($"{socialAreasBase}/09.jpg", "Alinda Gold Residence açık çocuk oyun alanı görünümü");
+        AddIfMissing($"{socialAreasBase}/10.jpg", "Alinda Gold Residence kapalı otopark görünümü");
+        AddIfMissing($"{socialAreasBase}/11.jpg", "Alinda Gold Residence kapalı çocuk oyun alanı görünümü");
+        AddIfMissing($"{socialAreasBase}/12.jpg", "Alinda Gold Residence spa alanı görünümü");
+
+        await context.SaveChangesAsync();
+    }
+
+    // Client-supplied Social Areas replacement (2026-10-03) — see
+    // ReconcileAlindaGoldSocialAreasThirdReplacementAsync above for the full
+    // explanation of this batch (numeric filenames, WebP siblings
+    // generated, same guarded remove/add shape).
+    private static async Task ReconcileTrallesGoldSocialAreasThirdReplacementAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.Images)
+            .FirstOrDefaultAsync(p => p.Slug == "tralles-gold");
+
+        if (project is null)
+        {
+            return;
+        }
+
+        var oldPaths = new[]
+        {
+            "/images/projects/tralles-gold/gallery/social-facilties/barbecue.png",
+            "/images/projects/tralles-gold/gallery/social-facilties/cafeteria.jpg",
+            "/images/projects/tralles-gold/gallery/social-facilties/concierge.jpg",
+            "/images/projects/tralles-gold/gallery/social-facilties/gym-1.JPG",
+            "/images/projects/tralles-gold/gallery/social-facilties/gym-2.JPG",
+            "/images/projects/tralles-gold/gallery/social-facilties/hairdresser.JPG",
+            "/images/projects/tralles-gold/gallery/social-facilties/hamam-1.JPG",
+            "/images/projects/tralles-gold/gallery/social-facilties/hamam-2.JPG",
+            "/images/projects/tralles-gold/gallery/social-facilties/indoor-playground.jpg",
+            "/images/projects/tralles-gold/gallery/social-facilties/indoor-swimming-pool.png",
+            "/images/projects/tralles-gold/gallery/social-facilties/parking-lot.jpg",
+            "/images/projects/tralles-gold/gallery/social-facilties/spa.jpg"
+        };
+
+        var staleImages = project.Images
+            .Where(i => i.Category == "Social Areas" && oldPaths.Contains(i.ImagePath))
+            .ToList();
+
+        if (staleImages.Count > 0)
+        {
+            context.ProjectImages.RemoveRange(staleImages);
+            foreach (var stale in staleImages)
+            {
+                project.Images.Remove(stale);
+            }
+        }
+
+        var existingPaths = new HashSet<string>(
+            project.Images.Select(i => i.ImagePath),
+            StringComparer.OrdinalIgnoreCase);
+
+        var nextOrder = project.Images.Count > 0 ? project.Images.Max(i => i.DisplayOrder) + 1 : 1;
+
+        void AddIfMissing(string imagePath, string altText)
+        {
+            if (!existingPaths.Add(imagePath))
+            {
+                return;
+            }
+
+            context.ProjectImages.Add(new ProjectImage
+            {
+                ProjectId = project.Id,
+                ImagePath = imagePath,
+                AltText = altText,
+                DisplayOrder = nextOrder++,
+                Category = "Social Areas"
+            });
+        }
+
+        const string socialAreasBase = "/images/projects/tralles-gold/gallery/social-facilties";
+        AddIfMissing($"{socialAreasBase}/01.jpg", "Tralles Gold Residence kapalı otopark görünümü");
+        AddIfMissing($"{socialAreasBase}/02.png", "Tralles Gold Residence spa alanı görünümü");
+        AddIfMissing($"{socialAreasBase}/03.jpg", "Tralles Gold Residence basketbol sahası görünümü");
+        AddIfMissing($"{socialAreasBase}/04.jpg", "Tralles Gold Residence kafeterya görünümü");
+        AddIfMissing($"{socialAreasBase}/05.png", "Tralles Gold Residence barbekü alanı görünümü");
+        AddIfMissing($"{socialAreasBase}/06.jpg", "Tralles Gold Residence concierge alanı görünümü");
+        AddIfMissing($"{socialAreasBase}/07.JPG", "Tralles Gold Residence fitness salonu görünümü 1");
+        AddIfMissing($"{socialAreasBase}/08.JPG", "Tralles Gold Residence fitness salonu görünümü 2");
+        AddIfMissing($"{socialAreasBase}/09.JPG", "Tralles Gold Residence kuaför görünümü");
+        AddIfMissing($"{socialAreasBase}/10.JPG", "Tralles Gold Residence hamam görünümü 1");
+        AddIfMissing($"{socialAreasBase}/11.JPG", "Tralles Gold Residence hamam görünümü 2");
+        AddIfMissing($"{socialAreasBase}/12.jpg", "Tralles Gold Residence kapalı çocuk oyun alanı görünümü");
+        AddIfMissing($"{socialAreasBase}/13.png", "Tralles Gold Residence kapalı yüzme havuzu görünümü");
+
+        await context.SaveChangesAsync();
+    }
+
+    // Client-supplied Social Areas replacement (2026-10-03) — see
+    // ReconcileAlindaGoldSocialAreasThirdReplacementAsync above for the full
+    // explanation of this batch (numeric filenames, WebP siblings
+    // generated, same guarded remove/add shape).
+    private static async Task ReconcileMagnesiaGoldSocialAreasThirdReplacementAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.Images)
+            .FirstOrDefaultAsync(p => p.Slug == "magnesia-gold");
+
+        if (project is null)
+        {
+            return;
+        }
+
+        var oldPaths = new[]
+        {
+            "/images/projects/magnesia-gold/gallery/social-facilities/barbecue.jpg",
+            "/images/projects/magnesia-gold/gallery/social-facilities/cafetaria.jpg",
+            "/images/projects/magnesia-gold/gallery/social-facilities/concierge.jpg",
+            "/images/projects/magnesia-gold/gallery/social-facilities/hamam.jpg",
+            "/images/projects/magnesia-gold/gallery/social-facilities/indoor-parking-lot.jpg"
+        };
+
+        var staleImages = project.Images
+            .Where(i => i.Category == "Social Areas" && oldPaths.Contains(i.ImagePath))
+            .ToList();
+
+        if (staleImages.Count > 0)
+        {
+            context.ProjectImages.RemoveRange(staleImages);
+            foreach (var stale in staleImages)
+            {
+                project.Images.Remove(stale);
+            }
+        }
+
+        var existingPaths = new HashSet<string>(
+            project.Images.Select(i => i.ImagePath),
+            StringComparer.OrdinalIgnoreCase);
+
+        var nextOrder = project.Images.Count > 0 ? project.Images.Max(i => i.DisplayOrder) + 1 : 1;
+
+        void AddIfMissing(string imagePath, string altText)
+        {
+            if (!existingPaths.Add(imagePath))
+            {
+                return;
+            }
+
+            context.ProjectImages.Add(new ProjectImage
+            {
+                ProjectId = project.Id,
+                ImagePath = imagePath,
+                AltText = altText,
+                DisplayOrder = nextOrder++,
+                Category = "Social Areas"
+            });
+        }
+
+        const string socialAreasBase = "/images/projects/magnesia-gold/gallery/social-facilities";
+        AddIfMissing($"{socialAreasBase}/01.jpeg", "Magnesia Gold Residence açık yüzme havuzu görünümü");
+        AddIfMissing($"{socialAreasBase}/02.JPG", "Magnesia Gold Residence fitness salonu görünümü");
+        AddIfMissing($"{socialAreasBase}/03.JPG", "Magnesia Gold Residence spa alanı görünümü");
+        AddIfMissing($"{socialAreasBase}/04.JPG", "Magnesia Gold Residence kreş ve oyun odası görünümü");
+        AddIfMissing($"{socialAreasBase}/05.jpg", "Magnesia Gold Residence barbekü alanı görünümü");
+        AddIfMissing($"{socialAreasBase}/06.jpg", "Magnesia Gold Residence kafeterya görünümü");
+        AddIfMissing($"{socialAreasBase}/07.jpg", "Magnesia Gold Residence concierge alanı görünümü");
+        AddIfMissing($"{socialAreasBase}/08.jpg", "Magnesia Gold Residence hamam görünümü");
+        AddIfMissing($"{socialAreasBase}/09.jpg", "Magnesia Gold Residence kapalı otopark görünümü");
+
+        await context.SaveChangesAsync();
+    }
+
+    // Client-supplied Interior gallery replacement (2026-10-06): the client
+    // manually swapped the contents of gallery/interior/originals — all 13
+    // old interior-NN.jpg files were removed and replaced with 12 new
+    // unpadded-numeric files (1.jpg-12.jpg, same flat folder, no
+    // apartment-type subfolders — see BuildMagnesiaGoldImages' comment).
+    // Same shape as ReconcileAlindaGoldExteriorInteriorGalleryReplacementAsync/
+    // ReconcileTrallesGoldExteriorInteriorGalleryReplacementAsync above: old
+    // rows removed from the Gallery (Category = Interior only — Exterior/
+    // Social Areas untouched) so the deleted photos stop appearing in the
+    // UI/filters, new rows appended after the current max DisplayOrder
+    // (same "don't try to re-slot into the old numeric range" idiom as
+    // those two methods). WebP thumbnails for the new originals were
+    // generated via tools/ThumbnailTool (default 800w/82q) directly into
+    // gallery/interior/thumbnails/{n}.webp; the 13 orphaned old
+    // interior-NN.webp thumbnails were deleted since ThumbnailTool never
+    // prunes thumbnails whose original no longer exists. Guarded on both
+    // ends (RemoveRange only fires on a real match, AddIfMissing only fires
+    // on a real gap), so safe on every startup, including a freshly seeded
+    // database whose BuildMagnesiaGoldImages output already reflects the
+    // new 12-file set (in which case this is a pure no-op).
+    private static async Task ReconcileMagnesiaGoldInteriorGalleryReplacementAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.Images)
+            .FirstOrDefaultAsync(p => p.Slug == "magnesia-gold");
+
+        if (project is null)
+        {
+            return;
+        }
+
+        var staleImages = project.Images
+            .Where(i => i.Category == "Interior" && i.ImagePath.Contains("/gallery/interior/originals/interior-"))
+            .ToList();
+
+        if (staleImages.Count > 0)
+        {
+            context.ProjectImages.RemoveRange(staleImages);
+            foreach (var stale in staleImages)
+            {
+                project.Images.Remove(stale);
+            }
+        }
+
+        var existingPaths = new HashSet<string>(
+            project.Images.Select(i => i.ImagePath),
+            StringComparer.OrdinalIgnoreCase);
+
+        var nextOrder = project.Images.Count > 0 ? project.Images.Max(i => i.DisplayOrder) + 1 : 1;
+
+        void AddIfMissing(string imagePath, string altText)
+        {
+            if (!existingPaths.Add(imagePath))
+            {
+                return;
+            }
+
+            context.ProjectImages.Add(new ProjectImage
+            {
+                ProjectId = project.Id,
+                ImagePath = imagePath,
+                AltText = altText,
+                DisplayOrder = nextOrder++,
+                Category = "Interior"
+            });
+        }
+
+        const string interiorBase = "/images/projects/magnesia-gold/gallery/interior/originals";
+        for (var i = 1; i <= 12; i++)
+        {
+            AddIfMissing($"{interiorBase}/{i}.jpg", $"Magnesia Gold Residence iç mekan görünümü {i}");
+        }
 
         await context.SaveChangesAsync();
     }

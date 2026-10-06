@@ -83,6 +83,7 @@
 
         <div class="navbar-lang" role="group" aria-label="@(isEn ? "Language selection" : "Dil seçimi")">
             <a href="@Model.TurkishUrl" class="lang-option @(isEn ? "" : "lang-option--active")" aria-current="@(isEn ? null : "true")" hreflang="tr" lang="tr">TR</a>
+            <span class="lang-divider" aria-hidden="true">|</span>
             <a href="@Model.EnglishUrl" class="lang-option @(isEn ? "lang-option--active" : "")" aria-current="@(isEn ? "true" : null)" hreflang="en" lang="en">ENG</a>
         </div>
 

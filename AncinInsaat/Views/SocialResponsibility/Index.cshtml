@@ -8,12 +8,16 @@
     set in SocialResponsibilityController.Index via ISeoService — see
     _Layout.cshtml's <head> and SeoStructuredDataViewComponent.
 
-    Page flow mirrors the same "no Hero Banner, plain eyebrow + H1 + intro
-    paragraph" pattern already established for About Us/Our
-    Values/Career/Contact/HR Policy/KVKK's own Folkart-reference revisions
-    (docs/14_Decisions.md) — Breadcrumb → plain heading section → exactly
-    two real projects (SocialResponsibilityProjectsViewComponent, 2026-10-02
-    — replaces the earlier four generic placeholder pillars, now removed),
+    2026-10-03 revision: the plain eyebrow + H1 + intro paragraph heading
+    block (shared with About Us/Our Values/Career/Contact/HR Policy/KVKK's
+    own Folkart-reference revisions, docs/14_Decisions.md) was replaced
+    with a full-bleed banner photograph (project owner-supplied
+    sosyal-sorumluluk-banner.png) — the banner's own baked-in title/
+    subtitle now visually carries the page heading, so no separate on-page
+    H1 text is rendered; see .social-responsibility-banner in site.css
+    Section 42. Page flow: Breadcrumb → full-bleed banner → exactly two
+    real projects (SocialResponsibilityProjectsViewComponent, 2026-10-02 —
+    replaces the earlier four generic placeholder pillars, now removed),
     each an alternating image/text pair whose featured photo opens the
     existing shared Media Viewer (_MediaViewer.cshtml) on that project's
     full gallery. CTA Banner / Project Logo Carousel / Footer are already
@@ -37,21 +41,30 @@
    Details). *@
 <partial name="_MediaViewer" />
 
-<section class="section social-responsibility-heading-section">
-    <div class="container">
-        <p class="social-responsibility-eyebrow">Ancın İnşaat</p>
-        <h1 id="social-responsibility-heading" class="social-responsibility-heading">@(isEn ? "Social Responsibility" : "Sosyal Sorumluluk")</h1>
-        <p class="social-responsibility-intro">
-            @if (isEn)
-            {
-                @:For Ançın İnşaat, responsibility does not end with the buildings we construct. We see our responsibility toward the region we work in, the people we work alongside, and future generations as part of every decision we make. We share the two projects we have brought to life below.
-            }
-            else
-            {
-                @:Ançın İnşaat için sorumluluk, inşa ettiğimiz yapılarla sınırlı değildir. Çalıştığımız bölgeye, birlikte çalıştığımız insanlara ve gelecek nesillere karşı duyduğumuz sorumluluğu, her kararımızın bir parçası olarak görürüz. Hayata geçirdiğimiz iki projeyi aşağıda paylaşıyoruz.
-            }
-        </p>
-    </div>
+@* Full-bleed banner — outside .container on purpose so it spans the true
+   viewport width (see .social-responsibility-banner, site.css Section 42).
+   The image's own baked-in title/subtitle is what visually represents the
+   page heading now, so alt carries that same text for screen-reader users
+   instead of re-rendering a separate, duplicate on-page H1.
+
+   2026-10-03: added an English-language banner variant
+   (sosyal-sorumluluk-banner-ingilizce.png) with its own baked-in English
+   title/subtitle. Source is picked from the same isEn flag the rest of
+   this page already uses — the existing TR/EN routing/localization
+   mechanism — rather than a new one; same .social-responsibility-banner-img
+   class on both, so the Section 42 desktop/mobile responsive rules apply
+   identically to either image. *@
+<section class="social-responsibility-banner">
+    <img
+        class="social-responsibility-banner-img"
+        src="@Url.Content(isEn
+            ? "~/images/sosyal-sorumluluk-projeleri/sosyal-sorumluluk-banner-ingilizce.png"
+            : "~/images/sosyal-sorumluluk-projeleri/sosyal-sorumluluk-banner.png")"
+        alt="@(isEn
+            ? "Our Social Responsibility Projects — for a stronger future, we stand by our youth, sports, culture and community."
+            : "Sosyal Sorumluluk Projelerimiz — Daha güçlü yarınlar için, gençlerimizin, sporun, kültürün ve toplumun yanındayız.")"
+        loading="eager"
+        decoding="async" />
 </section>
 
 @await Component.InvokeAsync("SocialResponsibilityProjects")
