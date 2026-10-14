@@ -3744,6 +3744,9 @@ public static class DbSeeder
         await ReconcileFutureProjectAsync(context, "davutlar-d-latis");
         await ReconcileFutureProjectAsync(context, "q-latis");
         await ReconcileTrallesGoldConceptVideoAsync(context);
+        await ReconcileLaFioreKarabagSocialAreasKatalogWalkingPathAndPoolAsync(context);
+        await ReconcileLaFioreKarabagSocialAreasBasketballCourtAsync(context);
+        await ReconcileLaFioreKarabagSocialAreasSolarCarportAsync(context);
 
         var existingSlugs = new HashSet<string>(await context.Projects.Select(p => p.Slug).ToListAsync());
 
@@ -9607,6 +9610,177 @@ public static class DbSeeder
                 DisplayOrder = conceptVideo.DisplayOrder
             });
         }
+
+        await context.SaveChangesAsync();
+    }
+
+    // La Fiore Karabağ (1. Etap) Social Areas addition (client request,
+    // 2026-10-14) — two new Social Areas photos extracted from this
+    // project's own catalogue PDF (Lafiore_katalog.pdf, pages 2 and 37: a
+    // walking-path/landscaping scene and a decorative pool scene), cropped
+    // and processed through the same ThumbnailTool --single pipeline as
+    // every other one-off asset. Unlike the six existing Social Areas files
+    // (gallery/social-facilites/*-standard-height-5000px.jpg, native
+    // 8889x5000 client renders), the catalogue PDF only embeds each page at
+    // 898x1323 — these two new files are the highest fidelity obtainable
+    // from that source without any AI-generated/reconstructed detail, so
+    // they intentionally do not carry the "-standard-height-5000px" suffix
+    // (it would misdescribe their actual resolution). Same flat-folder, no
+    // "originals/thumbnails" split convention as the existing six (see
+    // ImagePathHelper.GetThumbnailPath — a same-name ".webp" next to the
+    // ".jpg" in gallery/social-facilites/ is already what it resolves to
+    // when there's no "/originals/" segment to swap). AddIfMissing-guarded
+    // by ImagePath, same idiom as ReconcileLaFioreKarabagYeniGaleriVaziyetVeKatalogAsync
+    // above, so re-seeding an already-migrated database never duplicates
+    // these rows and a fresh database gets them too via the same call in
+    // SeedAsync.
+    private static async Task ReconcileLaFioreKarabagSocialAreasKatalogWalkingPathAndPoolAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.Images)
+            .FirstOrDefaultAsync(p => p.Slug == "la-fiore-karabag");
+
+        if (project is null)
+        {
+            return;
+        }
+
+        const string socialAreasBase = "/images/projects/la-fiore-karabag/gallery/social-facilites";
+
+        var newImages = new (string FileName, string AltText)[]
+        {
+            ("yurume-yolu-katalog-sayfa-2.jpg", "La Fiore Karabağ 1. Etap yürüyüş yolu ve peyzajlı çevre düzenlemesi"),
+            ("dekoratif-havuz-katalog-sayfa-37.jpg", "La Fiore Karabağ 1. Etap dekoratif havuz ve çevresindeki peyzaj düzenlemesi")
+        };
+
+        var nextOrder = (project.Images.Count == 0 ? 0 : project.Images.Max(i => i.DisplayOrder)) + 1;
+
+        foreach (var (fileName, altText) in newImages)
+        {
+            var imagePath = $"{socialAreasBase}/{fileName}";
+
+            if (project.Images.Any(i => i.Category == "Social Areas" && i.ImagePath == imagePath))
+            {
+                continue;
+            }
+
+            var image = new ProjectImage
+            {
+                ProjectId = project.Id,
+                ImagePath = imagePath,
+                AltText = altText,
+                DisplayOrder = nextOrder++,
+                Category = "Social Areas"
+            };
+            context.ProjectImages.Add(image);
+            project.Images.Add(image);
+        }
+
+        await context.SaveChangesAsync();
+    }
+
+    // La Fiore Karabağ (1. Etap) Social Areas addition (client request,
+    // 2026-10-14) — a new basketball court photo was dropped directly into
+    // this project's own flat gallery/social-facilites/ folder
+    // (basketball-court.jpeg, 674x1201 — confirmed this project's own asset
+    // by its folder path; NOT la-fiore-karabag-2-etap, which keeps its own
+    // separate gallery/ tree entirely). Thumbnail generated via the same
+    // ThumbnailTool --single, same-folder-same-basename ".webp" convention
+    // this project's own yurume-yolu-katalog-sayfa-2.jpg/dekoratif-havuz-
+    // katalog-sayfa-37.jpg pairs already use (see
+    // ReconcileLaFioreKarabagSocialAreasKatalogWalkingPathAndPoolAsync
+    // above — ImagePathHelper.GetThumbnailPath resolves it automatically,
+    // no "/originals/" segment in this folder to swap). Appended after this
+    // project's existing 8 Social Areas photos (DisplayOrder max + 1), per
+    // the "end of the current gallery" default. AddIfMissing-guarded by
+    // ImagePath, same idiom as every other one-off addition above — safe on
+    // every startup, including a fresh database.
+    private static async Task ReconcileLaFioreKarabagSocialAreasBasketballCourtAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.Images)
+            .FirstOrDefaultAsync(p => p.Slug == "la-fiore-karabag");
+
+        if (project is null)
+        {
+            return;
+        }
+
+        const string imagePath = "/images/projects/la-fiore-karabag/gallery/social-facilites/basketball-court.jpeg";
+
+        if (project.Images.Any(i => i.Category == "Social Areas" && i.ImagePath == imagePath))
+        {
+            return;
+        }
+
+        var nextOrder = (project.Images.Count == 0 ? 0 : project.Images.Max(i => i.DisplayOrder)) + 1;
+
+        var image = new ProjectImage
+        {
+            ProjectId = project.Id,
+            ImagePath = imagePath,
+            AltText = "La Fiore Karabağ 1. Etap basketbol sahası görünümü",
+            DisplayOrder = nextOrder,
+            Category = "Social Areas"
+        };
+        context.ProjectImages.Add(image);
+        project.Images.Add(image);
+
+        await context.SaveChangesAsync();
+    }
+
+    // La Fiore Karabağ (1. Etap) Social Areas addition — catalogue PDF page
+    // 13 (image optimization audit task, 2026-10-14). Page 13 of
+    // Lafiore_katalog.pdf depicts a solar-panelled carport with EV charging
+    // (not an exercise/sports area — flagged to and confirmed by the
+    // requester before extraction), so the AltText below describes what the
+    // image actually shows rather than the task's original assumption.
+    // Extracted via pdfimages (the embedded raster, not a pdftoppm
+    // re-render) at the page's native 929x1323, then cropped to this
+    // project's established 16:9 Social Areas presentation
+    // (929x523 — full width, bottom-aligned) to remove the page's heading
+    // text while keeping the complete carport/vehicles/landscaping/walkway
+    // scene intact. Deliberately NOT upscaled past this native resolution
+    // (unlike yurume-yolu-katalog-sayfa-2.jpg/dekoratif-havuz-katalog-sayfa-37.jpg,
+    // which were produced from a higher-DPI pdftoppm re-render) per this
+    // task's explicit "do not claim upscaling creates genuine new detail"
+    // rule — see the image optimization audit report for detail. Same flat
+    // gallery/social-facilites/ folder, same ThumbnailTool --single
+    // (800w/82q) convention as this project's other catalogue extracts.
+    // Appended after this project's current last Social Areas photo
+    // (DisplayOrder max + 1). AddIfMissing-guarded by ImagePath, same idiom
+    // as every other one-off addition above — safe on every startup,
+    // including a fresh database.
+    private static async Task ReconcileLaFioreKarabagSocialAreasSolarCarportAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.Images)
+            .FirstOrDefaultAsync(p => p.Slug == "la-fiore-karabag");
+
+        if (project is null)
+        {
+            return;
+        }
+
+        const string imagePath = "/images/projects/la-fiore-karabag/gallery/social-facilites/gunes-enerjili-otopark-katalog-sayfa-13.jpg";
+
+        if (project.Images.Any(i => i.Category == "Social Areas" && i.ImagePath == imagePath))
+        {
+            return;
+        }
+
+        var nextOrder = (project.Images.Count == 0 ? 0 : project.Images.Max(i => i.DisplayOrder)) + 1;
+
+        var image = new ProjectImage
+        {
+            ProjectId = project.Id,
+            ImagePath = imagePath,
+            AltText = "La Fiore Karabağ 1. Etap güneş enerjili karport ve elektrikli araç şarj istasyonu",
+            DisplayOrder = nextOrder,
+            Category = "Social Areas"
+        };
+        context.ProjectImages.Add(image);
+        project.Images.Add(image);
 
         await context.SaveChangesAsync();
     }
