@@ -28,18 +28,22 @@
             var alt = isEn && !string.IsNullOrWhiteSpace(entry.ImageAltEn) ? entry.ImageAltEn : entry.ImageAlt;
             var summary = isEn && !string.IsNullOrWhiteSpace(entry.SummaryEn) ? entry.SummaryEn : entry.Summary;
             var detail = isEn && !string.IsNullOrWhiteSpace(entry.DetailEn) ? entry.DetailEn : entry.Detail;
-            <article class="history-card home-timeline-card@(i == 0 ? " is-active" : "")" data-history-index="@i" data-reveal>
+            var hasDetail = !string.IsNullOrWhiteSpace(detail);
+            <article class="history-card home-timeline-card@(i == 0 ? " is-active" : "")@(hasDetail ? "" : " home-timeline-card--no-detail")" data-history-index="@i" data-reveal>
                 <img class="history-card-image" src="@entry.ImageSrc" alt="@alt" loading="lazy" decoding="async" />
                 <div class="history-card-body">
                     <span class="history-card-year">@entry.Year</span>
                     <h3 class="history-card-title">@entry.Title</h3>
                     <p class="history-card-description">@summary</p>
-                    <div class="home-timeline-more" id="@moreId">
-                        <div class="home-timeline-more-inner">
-                            <p class="home-timeline-detail">@detail</p>
+                    @if (hasDetail)
+                    {
+                        <div class="home-timeline-more" id="@moreId">
+                            <div class="home-timeline-more-inner">
+                                <p class="home-timeline-detail">@detail</p>
+                            </div>
                         </div>
-                    </div>
-                    <button type="button" class="home-timeline-toggle" data-timeline-toggle data-label-more="@labelMore" data-label-less="@labelLess" aria-expanded="false" aria-controls="@moreId">@labelMore</button>
+                        <button type="button" class="home-timeline-toggle" data-timeline-toggle data-label-more="@labelMore" data-label-less="@labelLess" aria-expanded="false" aria-controls="@moreId">@labelMore</button>
+                    }
                 </div>
             </article>
         }

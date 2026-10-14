@@ -19,8 +19,12 @@ public class HomeTimelineEntryModel
     public required string Summary { get; init; }
 
     // Additional text revealed only when the card is expanded; Summary +
-    // Detail together form the entry's complete text.
-    public required string Detail { get; init; }
+    // Detail together form the entry's complete text. Null when a card has
+    // nothing more to reveal (e.g. a "Detaylar yakında" placeholder) — see
+    // _HomeTimelineCarousel.cshtml, which then skips the "devamı..." toggle
+    // and hidden detail block entirely rather than showing a "read more"
+    // affordance that reveals the same placeholder sentence again.
+    public string? Detail { get; init; }
 
     // English localization (2026-10-02) — nullable companions; a null
     // value falls back to ImageAlt/Summary/Detail above (see

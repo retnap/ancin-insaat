@@ -3140,6 +3140,32 @@ select[aria-invalid='true'] {
   text-decoration: underline;
 }
 
+/* ---- Home Timeline cards with no "devamı..." toggle (2026-10-14) ----
+   A card with nothing to reveal (e.g. a "Detaylar yakında" placeholder,
+   see HomeTimelineEntryModel.Detail/_HomeTimelineCarousel.cshtml) skips
+   the toggle button and hidden detail block entirely rather than showing
+   a "read more" that reveals the same sentence again. Without it, the
+   card's .history-card-description naturally renders at its own
+   (shorter, 1-line) text height instead of the 3 lines every other
+   card's longer Summary already fills via -webkit-line-clamp: 3, and the
+   toggle's own row disappears too — both scoped to .home-timeline-card
+   (not the shared .history-card class) so About Us's "Our Journey"
+   carousel, which has no toggle/detail concept at all, is unaffected.
+   These two rules restore the same total card height using the same
+   font-size/line-height tokens the description and toggle already render
+   with, rather than a hardcoded pixel value: a min-height reserving the
+   description's own 3-line box regardless of how little text is in a
+   short Summary (a no-op for every existing card, whose real Summary
+   already fills all 3 lines), and extra bottom padding equal to one text
+   line, in place of the toggle row that would have occupied it. */
+.home-timeline-card .history-card-description {
+  min-height: calc(var(--font-size-small) * var(--line-height-body) * 3);
+}
+
+.home-timeline-card--no-detail .history-card-body {
+  padding-bottom: calc(var(--space-md) + var(--font-size-small) * var(--line-height-body));
+}
+
 /* ---- Shared Prev/Next Button ----
    Lives in History Info Panel, not History Carousel (the panel is the
    dedicated navigation surface) — kept as its own class since a future
@@ -4183,6 +4209,34 @@ select[aria-invalid='true'] {
   .media-viewer-image {
     max-width: min(50vw, 46rem);
     max-height: min(70vh, 48rem);
+  }
+}
+
+/* ---- Floor Plan viewer enlargement (2026-10-08) ----
+   Scoped to the "floorplans" trigger group only (is-floorplan-viewer is
+   toggled in site.js' Media Viewer open()/close()), so Gallery/Concept/
+   Site Plan keep the sizing above untouched. The rem caps above were the
+   actual bottleneck on desktop (e.g. 46rem/736px on a 1024px+ screen) —
+   the panel/figure already fill the full available viewport, so raising
+   these viewport-relative caps is what makes the visible frame larger;
+   the <img> has no explicit width/height, so it still never upscales
+   past its own source resolution. */
+.media-viewer.is-floorplan-viewer .media-viewer-image {
+  max-width: 92vw;
+  max-height: 82vh;
+}
+
+@media (min-width: 768px) {
+  .media-viewer.is-floorplan-viewer .media-viewer-image {
+    max-width: 90vw;
+    max-height: 85vh;
+  }
+}
+
+@media (min-width: 1024px) {
+  .media-viewer.is-floorplan-viewer .media-viewer-image {
+    max-width: 88vw;
+    max-height: 88vh;
   }
 }
 
@@ -6194,6 +6248,19 @@ select[aria-invalid='true'] {
   height: 100%;
   object-fit: cover;
   transition: transform var(--transition-base) var(--ease-standard);
+}
+
+/* Le Jardin floor plan full-image fix (client request, 2026-10-08) — scoped
+   to this project via _FloorPlans.cshtml's isContainFit flag, not a global
+   change to .project-floorplans-image above, since every other project's
+   floor plan drawings/photos rely on the cover-crop fill exactly as before.
+   Shows the complete drawing (no cropped edges) inside the unchanged 4:5
+   .project-floorplans-visual-item slot; any letterboxing from the drawing's
+   own aspect ratio is filled with the design system's surface colour rather
+   than transparent empty space. */
+.project-floorplans-image--contain {
+  object-fit: contain;
+  background-color: var(--color-surface);
 }
 
 .project-floorplans-image-trigger:hover .project-floorplans-image,

@@ -140,6 +140,22 @@ public class ContactController : Controller
                 });
             }
 
+            // Mobile (Contact Information correction, 2026-10-08) — a
+            // second, optional number alongside the office Phone above;
+            // omitted entirely when SiteSettings.Mobile is unset, same
+            // "absent field omits the card" convention as every other item
+            // here.
+            if (!string.IsNullOrWhiteSpace(settings.Mobile))
+            {
+                items.Add(new InformationCardItem
+                {
+                    IconMarkup = PhoneIconMarkup,
+                    Label = IsEnglish ? "Mobile" : "Cep Telefonu",
+                    Value = settings.Mobile,
+                    Href = $"tel:{NormalizePhoneHref(settings.Mobile)}"
+                });
+            }
+
             if (!string.IsNullOrWhiteSpace(settings.Email))
             {
                 items.Add(new InformationCardItem

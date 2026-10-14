@@ -1392,6 +1392,13 @@
     state.index = index;
     lastFocused = trigger || document.activeElement;
 
+    // Floor Plan viewer enlargement (2026-10-08) — the "floorplans" trigger
+    // group gets a much larger .media-viewer-image size cap (see site.css)
+    // via this class on the shared viewer root, so Gallery/Concept/Site
+    // Plan groups keep their existing sizing untouched.
+    var groupKey = trigger ? (trigger.getAttribute('data-media-viewer-group') || 'default') : 'default';
+    viewer.classList.toggle('is-floorplan-viewer', groupKey === 'floorplans');
+
     render();
     viewer.hidden = false;
     document.body.classList.add('no-scroll');
@@ -1408,6 +1415,7 @@
     }
 
     viewer.hidden = true;
+    viewer.classList.remove('is-floorplan-viewer');
     document.body.classList.remove('no-scroll');
     document.removeEventListener('keydown', onKeydown);
     resetZoom();

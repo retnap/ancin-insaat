@@ -124,7 +124,14 @@ else
             <div class="project-gallery-category-track" data-gallery-category-track>
                 @foreach (var category in Model.GalleryCategories)
                 {
-                    var firstCategoryImage = Model.GalleryImages.FirstOrDefault(image => string.Equals(image.Category, category.Value, StringComparison.OrdinalIgnoreCase));
+                    // category.CardImage (Tralles Gold Residence "Dış Mekan
+                    // Görselleri" override, 2026-10-08 — see
+                    // ProjectsController.GalleryCategoryCardImageOverridesBySlug)
+                    // takes priority when set; every other project/category
+                    // falls back to the original "first image in this
+                    // category" lookup, unchanged.
+                    var firstCategoryImage = category.CardImage
+                        ?? Model.GalleryImages.FirstOrDefault(image => string.Equals(image.Category, category.Value, StringComparison.OrdinalIgnoreCase));
 
                     <button type="button"
                             class="gallery-card"

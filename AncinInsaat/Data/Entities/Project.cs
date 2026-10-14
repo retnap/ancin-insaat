@@ -57,6 +57,15 @@ public class Project
     // before.
     public bool CatalogueComingSoon { get; set; }
 
+    // Optional separate download target for the Floor Plans section's own
+    // "Kat Planlarını İndir" button (Nysa Gold floor-plan catalog
+    // replacement, 2026-10-08) — null for every project except Nysa Gold,
+    // where _FloorPlans.cshtml prefers this over CataloguePath so that
+    // button downloads the dedicated per-unit floor-plan PDF while the
+    // separate Project Catalogue section keeps downloading CataloguePath
+    // unchanged. See ProjectsController.Details (FloorPlanCatalogueUrl).
+    public string? FloorPlanCataloguePath { get; set; }
+
     // When true, the Hero's "Kataloğu İncele" button also fires the
     // Catalogue Coming Soon toast immediately on click, in addition to its
     // existing href="#project-catalogue" scroll (Alinda Gold Residence

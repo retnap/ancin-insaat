@@ -57,6 +57,24 @@ public class ProjectsController : Controller
         ["Social Areas"] = "Sosyal Alan Görselleri"
     };
 
+    // Per-(slug, category) override for the Gallery's category picker card
+    // image (Tralles Gold Residence client request, 2026-10-08) — the
+    // client wants the "Dış Mekan Görselleri" (Exterior) card to show the
+    // category's 13th photo (dis-mekan-gorselleri-13.JPG) instead of the
+    // default "first image in this category" the picker otherwise always
+    // uses (see Details() below). The value is a case-insensitive fragment
+    // matched against each candidate image's Src within that category — not
+    // a full path — so it keeps working regardless of file extension casing.
+    // Empty for every other project/category, which keeps the default
+    // first-image behavior completely unchanged for everyone else; the
+    // underlying gallery (order, contents) is untouched either way — only
+    // which single photo this one picker card renders.
+    private static readonly IReadOnlyDictionary<(string Slug, string Category), string> GalleryCategoryCardImageOverridesBySlug =
+        new Dictionary<(string Slug, string Category), string>
+        {
+            [("tralles-gold", "Exterior")] = "dis-mekan-gorselleri-13"
+        };
+
     // English counterpart to GalleryCategoryLabels (English localization,
     // 2026-10-02) — Category values themselves are a small fixed set of
     // filter keys shared across every project, so a per-project *En
@@ -456,7 +474,12 @@ public class ProjectsController : Controller
                 Value = category,
                 Label = IsEnglish
                     ? (GalleryCategoryLabelsEn.TryGetValue(category, out var labelEn) ? labelEn : category)
-                    : (GalleryCategoryLabels.TryGetValue(category, out var label) ? label : category)
+                    : (GalleryCategoryLabels.TryGetValue(category, out var label) ? label : category),
+                CardImage = GalleryCategoryCardImageOverridesBySlug.TryGetValue((project.Slug, category), out var overridePathFragment)
+                    ? galleryImages.FirstOrDefault(image =>
+                        string.Equals(image.Category, category, StringComparison.OrdinalIgnoreCase) &&
+                        image.Src.Contains(overridePathFragment, StringComparison.OrdinalIgnoreCase))
+                    : null
             })
             .ToList();
 
@@ -575,6 +598,9 @@ public class ProjectsController : Controller
             // without CatalogueComingSoon also being true — see
             // Project.CatalogueComingSoonHeroToast.
             CatalogueComingSoonHeroToast = project.CatalogueComingSoon && project.CatalogueComingSoonHeroToast,
+            FloorPlanCatalogueUrl = !string.IsNullOrWhiteSpace(project.FloorPlanCataloguePath) && FileExistsInWebRoot(project.FloorPlanCataloguePath)
+                ? project.FloorPlanCataloguePath
+                : (!string.IsNullOrWhiteSpace(project.CataloguePath) && FileExistsInWebRoot(project.CataloguePath) ? project.CataloguePath : null),
             SitePlanComingSoon = project.SitePlanComingSoon,
             SitePlanImageUrls = project.SitePlanImages
                 .OrderBy(sitePlan => sitePlan.DisplayOrder)
@@ -610,6 +636,7 @@ public class ProjectsController : Controller
                         // project already keeps all three fields at 0 or all
                         // three real together, so this is a no-op for them.
                         SalesGrossAreaM2 = floorPlan.SalesGrossAreaM2 > 0 ? floorPlan.SalesGrossAreaM2 : null,
+                        BahceliGrossAreaM2 = floorPlan.BahceliGrossAreaM2,
                         Rooms = floorPlan.Rooms
                             .OrderBy(room => room.DisplayOrder)
                             .Select(room => new FloorPlanRoomModel { Name = Localize(room.NameEn, room.Name), AreaM2 = room.AreaM2 })

@@ -114,13 +114,23 @@ else
                        already shows the "coming soon" toast. Every other
                        project still has CatalogueComingSoon = false, so
                        they keep the real download link exactly as before. *@
+                    @* Nysa Gold floor-plan catalog replacement (2026-10-08) —
+                       this project has its own dedicated floor-plan PDF
+                       (Model.FloorPlanCatalogueUrl, sourced from
+                       Project.FloorPlanCataloguePath), so its button reads
+                       "Kat Planlarını İndir" and downloads that PDF instead
+                       of the general Project Catalogue. Every other project
+                       has no FloorPlanCataloguePath, so FloorPlanCatalogueUrl
+                       falls back to CatalogueUrl and both buttons keep
+                       downloading the exact same file/label as before. *@
                     @if (Model.CatalogueComingSoon)
                     {
                         <button type="button" class="btn btn-primary project-floorplans-catalogue" data-toast-trigger data-toast-message="@(isEn ? "The project catalogue will be added soon." : "Proje kataloğu yakında eklenecektir.")">@(isEn ? "Download Project Catalogue" : "Proje Kataloğunu İndir")</button>
                     }
-                    else if (!string.IsNullOrWhiteSpace(Model.CatalogueUrl))
+                    else if (!string.IsNullOrWhiteSpace(Model.FloorPlanCatalogueUrl))
                     {
-                        <a class="btn btn-primary project-floorplans-catalogue" href="@Model.CatalogueUrl" download>@(isEn ? "Download Project Catalogue" : "Proje Kataloğunu İndir")</a>
+                        var isDedicatedFloorPlanCatalogue = Model.Slug == "nysa-gold";
+                        <a class="btn btn-primary project-floorplans-catalogue" href="@Model.FloorPlanCatalogueUrl" download>@(isDedicatedFloorPlanCatalogue ? (isEn ? "Download Floor Plans" : "Kat Planlarını İndir") : (isEn ? "Download Project Catalogue" : "Proje Kataloğunu İndir"))</a>
                     }
                     @* No CatalogueUrl and not Coming Soon (Project Asset
                        Audit, 2026-08-17) — a project with no catalogue at
@@ -162,6 +172,19 @@ else
                                 <dd>@m2(floorPlan.SalesGrossAreaM2.Value)</dd>
                             </div>
                         }
+                        @* Nysa Gold's Zemin Kat (garden) units print a third,
+                           distinct "Bahçeli Brüt" figure alongside Net/Brüt
+                           (floor-plan catalog replacement, 2026-10-08) — see
+                           FloorPlan.BahceliGrossAreaM2. Null for every other
+                           floor plan, including Nysa Gold's own non-garden
+                           units, so this is a no-op everywhere else. *@
+                        @if (floorPlan.BahceliGrossAreaM2.HasValue)
+                        {
+                            <div class="project-floorplans-stat" data-reveal>
+                                <dt>@(isEn ? "Garden-Inclusive Gross Area" : "Bahçeli Brüt Alan")</dt>
+                                <dd>@m2(floorPlan.BahceliGrossAreaM2.Value)</dd>
+                            </div>
+                        }
                     </dl>
                 }
 
@@ -186,6 +209,15 @@ else
         @for (var i = 0; i < floorPlans.Count; i++)
         {
             var floorPlan = floorPlans[i];
+            @* Le Jardin's two real floor plan drawings (zemin-kat.jpg/1-kat.jpg)
+               are wide landscape scans (4961x3508) inside this portrait 4:5
+               visual slot — the shared .project-floorplans-image's
+               object-fit: cover crops their top/bottom edges. This project
+               only gets the --contain modifier (object-fit: contain, see
+               site.css) so the full drawing is always visible; every other
+               project's floor plan photography keeps object-fit: cover
+               completely unchanged (client request, 2026-10-08). *@
+            var isContainFit = Model.Slug == "le-jardin";
             <div class="project-floorplans-visual-item" data-floorplan-visual data-reveal="right" @(i == 0 ? null : "hidden")>
                 @if (floorPlan.Src is not null)
                 {
@@ -196,7 +228,7 @@ else
                             data-media-viewer-src="@floorPlan.Src"
                             data-media-viewer-alt="@floorPlan.ApartmentType"
                             aria-label="@(isEn ? $"{floorPlan.ApartmentType} — enlarge" : $"{floorPlan.ApartmentType} — büyüt")">
-                        <img class="project-floorplans-image" src="@floorPlan.ThumbnailSrc" alt="@floorPlan.ApartmentType" loading="lazy" decoding="async" />
+                        <img class="project-floorplans-image@(isContainFit ? " project-floorplans-image--contain" : "")" src="@floorPlan.ThumbnailSrc" alt="@floorPlan.ApartmentType" loading="lazy" decoding="async" />
                     </button>
                 }
                 else

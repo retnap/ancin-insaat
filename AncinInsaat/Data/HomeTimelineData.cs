@@ -25,7 +25,7 @@ public static class HomeTimelineData
         {
             Year = "1973",
             Title = "Seda Apartmanı",
-            ImageSrc = "/images/timeline/1973-Seda-Apartmanı.jpeg",
+            ImageSrc = "/images/timeline/thumbnails/1973-Seda-Apartmanı.webp",
             ImageAlt = "Seda Apartmanı dış cephe görünümü",
             Summary = "1973 yılında tamamlanan Seda Apartmanı, Ancın İnşaat'ın ilk yıllarından kalma projeler arasında yer alır.",
             Detail = "Şirketin kuruluş döneminde hayata geçirilen Seda Apartmanı, tek yapı ölçeğindeki konut anlayışını yansıtan bir örnektir. Proje, Ancın İnşaat'ın uzun soluklu inşaat geçmişinin ilk taşlarından birini oluşturur.",
@@ -37,7 +37,7 @@ public static class HomeTimelineData
         {
             Year = "1975",
             Title = "Çam Apartmanı",
-            ImageSrc = "/images/timeline/1975-Çam-Apartmanı.jpeg",
+            ImageSrc = "/images/timeline/thumbnails/1975-Çam-Apartmanı.webp",
             ImageAlt = "Çam Apartmanı dış cephe görünümü",
             Summary = "1975 yılında tamamlanan Çam Apartmanı, şirketin erken dönem konut projeleri arasında yer alır.",
             Detail = "Dönemin ihtiyaçlarına uygun sade ve işlevsel bir yaklaşımla inşa edilen Çam Apartmanı, Ancın İnşaat'ın ilk yıllardaki apartman ölçeğindeki yapılaşma deneyimini yansıtır. Proje, şirketin büyüyen konut portföyüne katkı sağladı.",
@@ -49,7 +49,7 @@ public static class HomeTimelineData
         {
             Year = "1977",
             Title = "Kardeş Apartmanı",
-            ImageSrc = "/images/timeline/1977-Kardeş-Apartmanı.jpeg",
+            ImageSrc = "/images/timeline/thumbnails/1977-Kardeş-Apartmanı.webp",
             ImageAlt = "Kardeş Apartmanı dış cephe görünümü",
             Summary = "1977 yılında tamamlanan Kardeş Apartmanı, şirketin 1970'li yıllarda sürdürdüğü konut projelerinden biridir.",
             Detail = "Kardeş Apartmanı, Ancın İnşaat'ın bu dönemde art arda hayata geçirdiği tek yapı ölçeğindeki projelerin bir parçası olarak inşa edildi. Proje, şirketin yerel ölçekteki inşaat deneyimini pekiştiren yapılardan biri oldu.",
@@ -61,7 +61,7 @@ public static class HomeTimelineData
         {
             Year = "1978",
             Title = "Çaltılı Cami ve Yurdu",
-            ImageSrc = "/images/timeline/1978-Çaltılı-Cami-ve-Yurdu.jpeg",
+            ImageSrc = "/images/timeline/thumbnails/1978-Çaltılı-Cami-ve-Yurdu.webp",
             ImageAlt = "Çaltılı Cami ve Yurdu dış cephe görünümü",
             Summary = "1978 yılında tamamlanan Çaltılı Cami ve Yurdu, Ancın İnşaat'ın konut dışı yapılara da imza attığı projelerden biridir.",
             Detail = "Çaltılı Cami ve Yurdu, şirketin apartman projelerinin yanı sıra toplumsal ihtiyaçlara yönelik yapılarda da yer aldığını gösteren örneklerden biridir. Proje, Ancın İnşaat'ın yerel ölçekteki inşaat faaliyetlerinin çeşitliliğini yansıtır.",
@@ -73,7 +73,7 @@ public static class HomeTimelineData
         {
             Year = "1979",
             Title = "Çaltılı Apartmanı",
-            ImageSrc = "/images/timeline/1979-Çaltılı-Apartmanı.jpeg",
+            ImageSrc = "/images/timeline/thumbnails/1979-Çaltılı-Apartmanı.webp",
             ImageAlt = "Çaltılı Apartmanı dış cephe görünümü",
             Summary = "1979 yılında tamamlanan Çaltılı Apartmanı, şirketin 1970'lerin sonundaki konut projelerinden biridir.",
             Detail = "Çaltılı Apartmanı, Ancın İnşaat'ın bu dönemde sürdürdüğü tek yapı ölçeğindeki inşaat faaliyetinin bir örneğidir. Proje, şirketin büyüyen konut portföyüne katkı sağlayan yapılardan biri oldu.",
@@ -85,7 +85,7 @@ public static class HomeTimelineData
         {
             Year = "1981",
             Title = "Cevher Apartmanı",
-            ImageSrc = "/images/timeline/1981-Cevher-Apartmanı kopyası.jpeg",
+            ImageSrc = "/images/timeline/thumbnails/1981-Cevher-Apartmanı kopyası.webp",
             ImageAlt = "Cevher Apartmanı dış cephe görünümü",
             Summary = "1981 yılında tamamlanan Cevher Apartmanı, Ancın İnşaat'ın 1980'li yıllara taşınan inşaat deneyiminin bir parçasıdır.",
             Detail = "Cevher Apartmanı, şirketin önceki yıllarda edindiği apartman inşası birikimini sürdürdüğü projelerden biri olarak hayata geçirildi. Proje, Ancın İnşaat'ın istikrarlı büyüme sürecine katkı sağladı.",
@@ -97,7 +97,7 @@ public static class HomeTimelineData
         {
             Year = "1983",
             Title = "Toker Apartmanı",
-            ImageSrc = "/images/timeline/1983-Toker-Apartmanı kopyası.jpeg",
+            ImageSrc = "/images/timeline/thumbnails/1983-Toker-Apartmanı kopyası.webp",
             ImageAlt = "Toker Apartmanı dış cephe görünümü",
             Summary = "1983 yılında tamamlanan Toker Apartmanı, şirketin 1980'li yıllardaki konut projelerinden biridir.",
             Detail = "Toker Apartmanı, Ancın İnşaat'ın bu dönemde sürdürdüğü apartman ölçeğindeki yapılaşma anlayışını yansıtan projelerden biri olarak inşa edildi. Proje, şirketin yerel ölçekteki inşaat deneyimini pekiştirdi.",
@@ -109,7 +109,7 @@ public static class HomeTimelineData
         {
             Year = "1984",
             Title = "Ancın Apartmanı",
-            ImageSrc = "/images/timeline/1984-Ancın-Apartmanı.jpeg",
+            ImageSrc = "/images/timeline/thumbnails/1984-Ancın-Apartmanı.webp",
             ImageAlt = "Ancın Apartmanı dış cephe görünümü",
             Summary = "1984 yılında tamamlanan Ancın Apartmanı, şirketin adını taşıyan projelerinden biri olarak öne çıkar.",
             Detail = "Ancın Apartmanı, 1980'li yıllardaki konut projeleri arasında yer alan, ismiyle de dikkat çeken bir yapıdır. Proje, Ancın İnşaat'ın sürdürdüğü apartman ölçeğindeki inşaat faaliyetinin bir örneğini oluşturur.",
@@ -121,7 +121,7 @@ public static class HomeTimelineData
         {
             Year = "1985",
             Title = "Testiciler Apartmanı",
-            ImageSrc = "/images/timeline/1985-Testiciler-Apartmanı kopyası.jpeg",
+            ImageSrc = "/images/timeline/thumbnails/1985-Testiciler-Apartmanı kopyası.webp",
             ImageAlt = "Testiciler Apartmanı dış cephe görünümü",
             Summary = "1985 yılında tamamlanan Testiciler Apartmanı, şirketin 1980'li yıllardaki konut projelerinden biridir.",
             Detail = "Testiciler Apartmanı, Ancın İnşaat'ın bu dönemde sürdürdüğü tek yapı ölçeğindeki inşaat faaliyetinin bir parçası olarak hayata geçirildi. Proje, şirketin büyüyen konut portföyüne katkı sağladı.",
@@ -133,7 +133,7 @@ public static class HomeTimelineData
         {
             Year = "1986",
             Title = "Esgin Apartmanı",
-            ImageSrc = "/images/timeline/1986-Esgin-Apartmanı.jpeg",
+            ImageSrc = "/images/timeline/thumbnails/1986-Esgin-Apartmanı.webp",
             ImageAlt = "Esgin Apartmanı dış cephe görünümü",
             Summary = "1986 yılında tamamlanan Esgin Apartmanı, Ancın İnşaat'ın 1980'li yıllardaki konut projeleri arasında yer alır.",
             Detail = "Esgin Apartmanı, şirketin bu dönemde sürdürdüğü apartman ölçeğindeki yapılaşma deneyimini yansıtan projelerden biri olarak inşa edildi. Proje, Ancın İnşaat'ın yerel ölçekteki inşaat geçmişine katkı sağladı.",
@@ -145,7 +145,7 @@ public static class HomeTimelineData
         {
             Year = "1987",
             Title = "Karaoğlan Apartmanı",
-            ImageSrc = "/images/timeline/1987-Karaoğlan-Apartmanı.jpeg",
+            ImageSrc = "/images/timeline/thumbnails/1987-Karaoğlan-Apartmanı.webp",
             ImageAlt = "Karaoğlan Apartmanı dış cephe görünümü",
             Summary = "1987 yılında tamamlanan Karaoğlan Apartmanı, şirketin 1980'li yıllardaki konut projelerinden biridir.",
             Detail = "Karaoğlan Apartmanı, Ancın İnşaat'ın bu dönemde sürdürdüğü apartman inşası deneyiminin bir örneği olarak hayata geçirildi. Proje, şirketin istikrarlı büyüme sürecine katkı sağlayan yapılardan biri oldu.",
@@ -157,7 +157,7 @@ public static class HomeTimelineData
         {
             Year = "1988",
             Title = "Ökten Apartmanı",
-            ImageSrc = "/images/timeline/1988-Ökten-Apartmanı.jpeg",
+            ImageSrc = "/images/timeline/thumbnails/1988-Ökten-Apartmanı.webp",
             ImageAlt = "Ökten Apartmanı dış cephe görünümü",
             Summary = "1988 yılında tamamlanan Ökten Apartmanı, Ancın İnşaat'ın 1980'li yılların sonundaki konut projeleri arasında yer alır.",
             Detail = "Ökten Apartmanı, şirketin bu dönemde sürdürdüğü apartman ölçeğindeki inşaat faaliyetinin bir parçası olarak tasarlandı. Proje, Ancın İnşaat'ın büyüyen konut portföyüne katkı sağladı.",
@@ -169,7 +169,7 @@ public static class HomeTimelineData
         {
             Year = "1990",
             Title = "Zafer Apartmanı",
-            ImageSrc = "/images/timeline/1990-Zafer-Apartmanı.jpeg",
+            ImageSrc = "/images/timeline/thumbnails/1990-Zafer-Apartmanı.webp",
             ImageAlt = "Zafer Apartmanı dış cephe görünümü",
             Summary = "1990 yılında tamamlanan Zafer Apartmanı, şirketin 1990'lı yıllara taşınan inşaat deneyiminin ilk örneklerinden biridir.",
             Detail = "Zafer Apartmanı, Ancın İnşaat'ın önceki on yıllarda edindiği apartman inşası birikimini sürdürdüğü projelerden biri olarak hayata geçirildi. Proje, şirketin yerel ölçekteki inşaat geçmişine katkı sağladı.",
@@ -181,7 +181,7 @@ public static class HomeTimelineData
         {
             Year = "1991",
             Title = "Çakmakoğlu Apartmanı",
-            ImageSrc = "/images/timeline/1991-Çakmakoğlu-Apartmanı.jpeg",
+            ImageSrc = "/images/timeline/thumbnails/1991-Çakmakoğlu-Apartmanı.webp",
             ImageAlt = "Çakmakoğlu Apartmanı dış cephe görünümü",
             Summary = "1991 yılında tamamlanan Çakmakoğlu Apartmanı, şirketin 1990'lı yıllardaki konut projelerinden biridir.",
             Detail = "Çakmakoğlu Apartmanı, Ancın İnşaat'ın bu dönemde sürdürdüğü apartman ölçeğindeki yapılaşma anlayışını yansıtan projelerden biri olarak inşa edildi. Proje, şirketin büyüyen konut portföyüne katkı sağladı.",
@@ -193,7 +193,7 @@ public static class HomeTimelineData
         {
             Year = "1992",
             Title = "Şahan Apartmanı",
-            ImageSrc = "/images/timeline/1992-Şahan-Apartmanı.jpeg",
+            ImageSrc = "/images/timeline/thumbnails/1992-Şahan-Apartmanı.webp",
             ImageAlt = "Şahan Apartmanı dış cephe görünümü",
             Summary = "1992 yılında tamamlanan Şahan Apartmanı, Ancın İnşaat'ın 1990'lı yıllardaki konut projeleri arasında yer alır.",
             Detail = "Şahan Apartmanı, şirketin bu dönemde sürdürdüğü tek yapı ölçeğindeki inşaat faaliyetinin bir örneği olarak hayata geçirildi. Proje, Ancın İnşaat'ın 1998'de Samanyolu Sitesi ile başlayacak çok bloklu site projelerine geçiş öncesindeki son dönem apartman projelerinden biri oldu.",
@@ -205,7 +205,7 @@ public static class HomeTimelineData
         {
             Year = "1998",
             Title = "Samanyolu Sitesi",
-            ImageSrc = "/images/timeline/1993-samanyolu-sitesi.jpg",
+            ImageSrc = "/images/timeline/thumbnails/1993-samanyolu-sitesi.webp",
             ImageAlt = "Samanyolu Sitesi dış cephe görünümü",
             Summary = "Ancın İnşaat'ın tek yapılardan çok bloklu site organizasyonuna geçişini simgeleyen Samanyolu Sitesi, 1998 yılında hayata geçirildi.",
             Detail = "1973'ten bu yana tamamlanan onlarca apartman projesinin ardından şirketin ilk büyük ölçekli site projesi olan Samanyolu Sitesi, çok bloklu yerleşim planı ve dönemin standartlarının üzerinde yapı kalitesiyle dikkat çekti. Proje, Ancın İnşaat'ın sonraki yıllarda yürüttüğü site ölçeğindeki projelere referans teşkil etti.",
@@ -217,7 +217,7 @@ public static class HomeTimelineData
         {
             Year = "2008",
             Title = "Meral Hanım Apt.",
-            ImageSrc = "/images/timeline/2008-meral-hanim-apt.jpg",
+            ImageSrc = "/images/timeline/thumbnails/2008-meral-hanim-apt.webp",
             ImageAlt = "Meral Hanım Apt. dış cephe görünümü",
             Summary = "2008 yılında tamamlanan Meral Hanım Apt., şehir merkezine yakın konumuyla öne çıkan bir konut projesidir.",
             Detail = "Proje kapsamında daire kullanım alanları ve ortak yaşam alanları, dönemin ihtiyaçları gözetilerek planlandı. Meral Hanım Apt., Ancın İnşaat'ın orta ölçekli şehir içi projelerdeki deneyimini pekiştiren yapılardan biri oldu.",
@@ -225,11 +225,17 @@ public static class HomeTimelineData
             SummaryEn = "Completed in 2008, Meral Hanım Apt. is a residential project notable for its location close to the city center.",
             DetailEn = "The project's unit layouts and shared living areas were planned with the needs of the time in mind. Meral Hanım Apt. became one of the buildings that reinforced Ançın İnşaat's experience with mid-scale projects within the city."
         },
+        // Client revision (2026-10-08): Tralles Gold/Alinda Gold cards now
+        // point at each project's own gallery/exterior/originals/
+        // dis-mekan-gorselleri-8 and -3 (client-selected photos), served via
+        // the existing gallery/exterior/thumbnails/*.webp derivatives —
+        // same reuse-the-gallery-thumbnail precedent as the Ferhunde/La
+        // Fiore entries below. No new .webp files were generated.
         new()
         {
             Year = "2011",
             Title = "Tralles Gold",
-            ImageSrc = "/images/timeline/2011-tralles-gold.jpg",
+            ImageSrc = "/images/projects/tralles-gold/gallery/exterior/thumbnails/dis-mekan-gorselleri-8.webp",
             ImageAlt = "Tralles Gold dış cephe görünümü",
             Summary = "Kasım 2011'de tamamlanan Tralles Gold, şirketin daha kapsamlı site projelerine geçiş sürecindeki önemli adımlarından biridir.",
             Detail = "Proje, sosyal donatı alanları ve peyzaj düzenlemesiyle birlikte planlandı. Tralles Gold, Ancın İnşaat'ın büyüyen proje ölçeğine uygun yapı ve saha organizasyonu yaklaşımının geliştirildiği dönemi temsil eder.",
@@ -241,7 +247,7 @@ public static class HomeTimelineData
         {
             Year = "2014",
             Title = "Alinda Gold",
-            ImageSrc = "/images/timeline/2014-alinda-gold.jpg",
+            ImageSrc = "/images/projects/alinda-gold/gallery/exterior/thumbnails/dis-mekan-gorselleri-3.webp",
             ImageAlt = "Alinda Gold dış cephe görünümü",
             Summary = "Mayıs 2014'te tamamlanan Alinda Gold, dönemin modern mimari anlayışını yansıtan bir konut projesidir.",
             Detail = "Proje, iç mekân planlamasında işlevselliği ön planda tutan bir yaklaşımla tasarlandı. Alinda Gold, Ancın İnşaat'ın yapı standartlarını sürekli geliştirme çabasının bir yansıması olarak tamamlandı.",
@@ -307,6 +313,46 @@ public static class HomeTimelineData
             ImageAltEn = "La Fiore Karabağ 1. Etap exterior view",
             SummaryEn = "Completed in 2026, La Fiore Karabağ 1. Etap offers a calm, private living environment with its single-story villas set within a lush pine forest in Aydın İncirliova.",
             DetailEn = "Notable for their stone-clad façades and timber detailing, the villas promise a daily life immersed in nature, with landscaped gardens and a secured entry point. La Fiore Karabağ 1. Etap became one of the buildings reflecting Ançın İnşaat's experience with villa-scale projects."
+        },
+        // D-Latis / Q-Latis placeholders (2026-10-14 client request,
+        // revised 2026-10-14) — appended after every existing card per
+        // that request; neither project has a confirmed name, date or
+        // detail yet, so Year/Title are literally "?" and Summary is a
+        // short "more info later" placeholder rather than any invented
+        // fact. Detail is intentionally omitted (null) — with nothing
+        // real to reveal, a "devamı..." toggle would only re-show the
+        // exact same "Detaylar yakında." sentence a second time, so
+        // _HomeTimelineCarousel.cshtml skips the toggle/hidden-detail
+        // block entirely for these two cards (see
+        // HomeTimelineEntryModel.Detail). Images are the client-supplied
+        // renders (wwwroot/images/timeline/dlatis.png and qlatis.png,
+        // matched to each project by the render itself — the D-Latis one
+        // is the thermal/forest-set massing shared with Davutlar D
+        // Latis's own Concept carousel, the Q-Latis one is the sea-facing
+        // render matching Hacıfeyzullah Q-Latis's coastal Concept
+        // carousel), converted to WebP via the same ThumbnailTool
+        // pipeline as every other Timeline card (800w/82q). This is a
+        // Home Timeline placeholder only — it does not change either
+        // project's own detail page or future-project behaviour.
+        new()
+        {
+            Year = "?",
+            Title = "?",
+            ImageSrc = "/images/timeline/thumbnails/dlatis.webp",
+            ImageAlt = "Yakında duyurulacak proje görseli",
+            Summary = "Detaylar yakında.",
+            ImageAltEn = "Image of a project to be announced soon",
+            SummaryEn = "Details coming soon."
+        },
+        new()
+        {
+            Year = "?",
+            Title = "?",
+            ImageSrc = "/images/timeline/thumbnails/qlatis.webp",
+            ImageAlt = "Yakında duyurulacak proje görseli",
+            Summary = "Detaylar yakında.",
+            ImageAltEn = "Image of a project to be announced soon",
+            SummaryEn = "Details coming soon."
         }
     };
 }

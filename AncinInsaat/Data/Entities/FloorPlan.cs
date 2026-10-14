@@ -28,6 +28,15 @@ public class FloorPlan
     public decimal GrossAreaM2 { get; set; }
     public decimal SalesGrossAreaM2 { get; set; }
 
+    // "Bahçeli Brüt Alan" (garden-inclusive gross area) — a distinct third
+    // figure some ground-floor/garden units print alongside Net/Brüt
+    // (Nysa Gold floor-plan catalog replacement, 2026-10-08). Nullable and
+    // separate from SalesGrossAreaM2, which already means something else
+    // ("Satışa Esas Brüt Alan") elsewhere in the project — never reuse one
+    // for the other. Null for every floor plan without a printed Bahçeli
+    // Brüt figure (every project except Nysa Gold's Zemin Kat units today).
+    public decimal? BahceliGrossAreaM2 { get; set; }
+
     public int DisplayOrder { get; set; }
 
     public Project Project { get; set; } = null!;

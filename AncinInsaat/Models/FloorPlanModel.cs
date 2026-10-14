@@ -22,6 +22,10 @@ public class FloorPlanModel
     public decimal? NetAreaM2 { get; init; }
     public decimal? GrossAreaM2 { get; init; }
     public decimal? SalesGrossAreaM2 { get; init; }
+
+    // "Bahçeli Brüt Alan" — see FloorPlan.BahceliGrossAreaM2. Independent of
+    // hasAreaStats/SalesGrossAreaM2, same null-when-not-printed contract.
+    public decimal? BahceliGrossAreaM2 { get; init; }
     public required IReadOnlyList<FloorPlanRoomModel> Rooms { get; init; }
 
     // Full-resolution original — used only by the Media Viewer, same

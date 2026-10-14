@@ -112,6 +112,12 @@ public class ProjectDetailViewModel
     // Hero button as a plain scroll link exactly as before.
     public required bool CatalogueComingSoonHeroToast { get; init; }
 
+    // Existence-checked path to Project.FloorPlanCataloguePath, falling back
+    // to CatalogueUrl when the project has no dedicated floor-plan PDF (every
+    // project except Nysa Gold today) — see _FloorPlans.cshtml's download
+    // button and ProjectsController.Details.
+    public string? FloorPlanCatalogueUrl { get; init; }
+
     // When true, the Hero's "Vaziyet Planı" button renders even though
     // SitePlanImageUrls is empty, showing a Coming Soon toast instead of the
     // Media Viewer (Alinda Gold Residence revision, 2026-08-10) — see

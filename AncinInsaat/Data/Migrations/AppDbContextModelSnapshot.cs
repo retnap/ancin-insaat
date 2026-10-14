@@ -113,6 +113,9 @@ namespace AncinInsaat.Data.Migrations
                     b.Property<string>("ApartmentTypeEn")
                         .HasColumnType("TEXT");
 
+                    b.Property<decimal?>("BahceliGrossAreaM2")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("INTEGER");
 
@@ -298,6 +301,9 @@ namespace AncinInsaat.Data.Migrations
 
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("FloorPlanCataloguePath")
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("IsFeatured")
                         .HasColumnType("INTEGER");
@@ -645,6 +651,9 @@ namespace AncinInsaat.Data.Migrations
 
                     b.Property<string>("Logo")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Mobile")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Phone")
