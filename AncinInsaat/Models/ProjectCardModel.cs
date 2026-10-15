@@ -26,6 +26,12 @@ public class ProjectCardModel
     public required string StatusFilterValue { get; init; }
     public required string DetailUrl { get; init; }
 
+    // Set only for IsFutureProject projects (D-Latis and Q-Latis,
+    // 2026-10-15 client request). When present, _ProjectCard.cshtml renders
+    // the card as a button that shows this message in the shared _Toast
+    // instead of a link to DetailUrl. Null for every other project.
+    public string? ComingSoonToastMessage { get; init; }
+
     // Rendered on the Standard card face and also read by the Projects
     // listing's Location filter dropdown via a data-project-location
     // attribute on the card's wrapper.

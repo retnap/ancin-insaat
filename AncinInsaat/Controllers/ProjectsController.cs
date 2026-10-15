@@ -145,6 +145,15 @@ public class ProjectsController : Controller
     // Ferhunde Hanım Apt. above (its own raw proje-karti file points
     // directly at the client's PNG rather than a pre-derived webp, since no
     // image-processing step was requested here).
+    // D-Latis and Q-Latis coming-soon cards (2026-10-15 client request) —
+    // both repointed at the client's new blurred "?" teaser images
+    // (proje-karti/{d,q}latis-yeni-proje-karti.png, kept on disk as the
+    // originals), derived with cwebp -q 82 -resize 1000 0 -metadata none,
+    // same lossy settings as every other card WebP above. The previous
+    // card-background.webp/"hacıfeyzullah proje kartı.png" stay on disk
+    // untouched (only this override's target changed). Their centered
+    // logo/title overlays were removed below so nothing covers the image's
+    // own question mark.
     private static readonly IReadOnlyDictionary<string, string> CardImageOverridesBySlug =
         new Dictionary<string, string>
         {
@@ -152,14 +161,14 @@ public class ProjectsController : Controller
             ["le-jardin"] = "/images/projects/le-jardin/proje-karti/card-background.webp",
             ["la-fiore-karabag"] = "/images/projects/la-fiore-karabag/proje-karti/card-background.webp",
             ["kuyulu-la-via-villalar-birinci-etap"] = "/images/projects/kuyulu-la-via-villalar-birinci-etap/proje-karti/card-background.webp",
-            ["davutlar-d-latis"] = "/images/projects/davutlar-d-latis/proje-karti/card-background.webp",
+            ["davutlar-d-latis"] = "/images/projects/davutlar-d-latis/proje-karti/dlatis-yeni-proje-karti.webp",
             ["tralles-gold"] = "/images/projects/tralles-gold/proje-karti/card-background.webp",
             ["alinda-gold"] = "/images/projects/alinda-gold/proje-karti/card-background.webp",
             ["magnesia-gold"] = "/images/projects/magnesia-gold/proje-karti/card-background.webp",
             ["nlatis"] = "/images/projects/nlatis/proje-karti/card-background.webp",
             ["ferhunde-hanim-apt"] = "/images/projects/ferhunde-hanim-apt/proje-karti/card-background.webp",
             ["la-fiore-karabag-2-etap"] = "/images/projects/la-fiore-karabag-2-etap/proje-karti/card-background.webp",
-            ["q-latis"] = "/images/projects/q-latis/proje-karti/hacıfeyzullah proje kartı.png"
+            ["q-latis"] = "/images/projects/q-latis/proje-karti/qlatis-yeni-proje-karti.webp"
         };
 
     private static readonly IReadOnlyDictionary<string, string> CardLogoImageUrlsBySlug =
@@ -169,7 +178,6 @@ public class ProjectsController : Controller
             ["le-jardin"] = "/images/projects/le-jardin/proje-karti/logo.png",
             ["la-fiore-karabag"] = "/images/projects/la-fiore-karabag/proje-karti/logo.png",
             ["kuyulu-la-via-villalar-birinci-etap"] = "/images/projects/kuyulu-la-via-villalar-birinci-etap/proje-karti/logo.png",
-            ["davutlar-d-latis"] = "/images/projects/davutlar-d-latis/proje-karti/logo.png",
             ["tralles-gold"] = "/images/projects/tralles-gold/proje-karti/logo.png",
             ["alinda-gold"] = "/images/projects/alinda-gold/proje-karti/logo.png",
             ["magnesia-gold"] = "/images/projects/magnesia-gold/proje-karti/logo.png",
@@ -184,11 +192,12 @@ public class ProjectsController : Controller
     // brand-facing title as its Hero heading override above rather than the
     // project's full record Name ("Hacıfeyzullah - Q-Latis"); Ferhunde
     // Hanım Apt.'s own Name already is that short form.
+    // Q-Latis's entry was removed with its coming-soon card (2026-10-15,
+    // see CardImageOverridesBySlug above) — its card is now image-only.
     private static readonly IReadOnlyDictionary<string, string> CardTitleOverlayTextBySlug =
         new Dictionary<string, string>
         {
-            ["ferhunde-hanim-apt"] = "Ferhunde Hanım Apt.",
-            ["q-latis"] = "Q-Latis"
+            ["ferhunde-hanim-apt"] = "Ferhunde Hanım Apt."
         };
 
     // Projects catalogue caption removal (2026-08-20 client request) — the
@@ -369,6 +378,13 @@ public class ProjectsController : Controller
                 ? "future"
                 : project.Status == ProjectStatus.Completed ? "completed" : "ongoing",
             DetailUrl = DetailUrl(project.Slug),
+            // Coming-soon cards (2026-10-15 client request) — a future
+            // project's card shows this toast instead of linking to its
+            // detail page (_ProjectCard.cshtml). Null for every other
+            // project, whose card keeps its normal link.
+            ComingSoonToastMessage = project.IsFutureProject
+                ? Localize("Details coming soon...", "Detaylar yakında...")
+                : null,
             Location = project.Location,
             ProjectType = LocalizeNullable(
                 project.ProjectType is not null && ProjectTypeLabelsEn.TryGetValue(project.ProjectType, out var typeEn) ? typeEn : project.ProjectType,

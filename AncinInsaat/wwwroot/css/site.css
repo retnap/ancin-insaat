@@ -3828,6 +3828,19 @@ select[aria-invalid='true'] {
   color: inherit;
 }
 
+/* Coming-soon cards (2026-10-15 client request) — D-Latis/Q-Latis render
+   as a <button> (shows the shared Toast instead of navigating, see
+   _ProjectCard.cshtml); this strips the browser's button chrome so the
+   card face is pixel-identical to the <a> version above. */
+.project-card-standard--coming-soon {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: none;
+  text-align: inherit;
+}
+
 .project-card-standard-media {
   position: relative;
   display: block;
