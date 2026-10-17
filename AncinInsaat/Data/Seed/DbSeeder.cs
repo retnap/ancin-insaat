@@ -4221,6 +4221,7 @@ public static class DbSeeder
         await ReconcileLaFioreKarabagSocialAreasBasketballCourtAsync(context);
         await ReconcileLaFioreKarabagSocialAreasSolarCarportAsync(context);
         await ReconcileFerhundeHanimAptRemoveBTipZeminKatInteriorAsync(context);
+        await ReconcileLaFioreKarabagSocialAreasSeyirTerasiAsync(context);
 
         var existingSlugs = new HashSet<string>(await context.Projects.Select(p => p.Slug).ToListAsync());
 
@@ -11596,6 +11597,50 @@ public static class DbSeeder
         }
 
         context.ProjectImages.RemoveRange(rowsToRemove);
+        await context.SaveChangesAsync();
+    }
+
+    // La Fiore Karabağ (1. Etap) Social Areas addition (client request,
+    // 2026-10-17) — a new viewing-terrace render was dropped directly into
+    // this project's own flat gallery/social-facilites/ folder
+    // (seyir-terasi.jpeg, 2400x1792). Thumbnail generated via the same
+    // ThumbnailTool --single (800w/82q), same-folder-same-basename ".webp"
+    // convention as basketball-court.jpeg above —
+    // ImagePathHelper.GetThumbnailPath resolves it automatically. Appended
+    // after this project's current last image (DisplayOrder max + 1).
+    // AddIfMissing-guarded by ImagePath, same idiom as every other one-off
+    // addition above — safe on every startup, including a fresh database.
+    private static async Task ReconcileLaFioreKarabagSocialAreasSeyirTerasiAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.Images)
+            .FirstOrDefaultAsync(p => p.Slug == "la-fiore-karabag");
+
+        if (project is null)
+        {
+            return;
+        }
+
+        const string imagePath = "/images/projects/la-fiore-karabag/gallery/social-facilites/seyir-terasi.jpeg";
+
+        if (project.Images.Any(i => i.Category == "Social Areas" && i.ImagePath == imagePath))
+        {
+            return;
+        }
+
+        var nextOrder = (project.Images.Count == 0 ? 0 : project.Images.Max(i => i.DisplayOrder)) + 1;
+
+        var image = new ProjectImage
+        {
+            ProjectId = project.Id,
+            ImagePath = imagePath,
+            AltText = "La Fiore Karabağ 1. Etap seyir terası ve peyzajlı çevre düzenlemesi",
+            DisplayOrder = nextOrder,
+            Category = "Social Areas"
+        };
+        context.ProjectImages.Add(image);
+        project.Images.Add(image);
+
         await context.SaveChangesAsync();
     }
 }
