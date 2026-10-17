@@ -44,6 +44,12 @@ public class SocialResponsibilityProjectItem
 
     public required string FeaturedAlt { get; init; }
 
+    // Set (2026-10-17, N-Latis video-only project) => the featured trigger
+    // itself is a video item — FeaturedSrc is then its poster, exactly like
+    // SocialResponsibilityGalleryImage.VideoSrc. Null for every photo-led
+    // project.
+    public string? FeaturedVideoSrc { get; init; }
+
     // Every other photo, then every video (2026-10-02 — unified gallery:
     // videos are appended after all existing photos, preserving their own
     // original order, never interleaved or reordering the photos

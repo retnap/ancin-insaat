@@ -8295,6 +8295,22 @@ a.information-card__value:hover {
   transform: translate(-50%, -50%) scale(1);
 }
 
+/* Video-led card (N-Latis, 2026-10-17) — reuses the home Video Showcase's
+   .video-showcase-play (Section 19) unchanged; only its hover state is
+   scoped to .video-showcase-trigger there, so the same darken + 1.06
+   scale is mirrored for this card's own trigger here. Focus ring comes
+   from the global button:focus-visible rule. */
+.social-responsibility-project-featured .video-showcase-play {
+  z-index: 2;
+  pointer-events: none;
+}
+
+.social-responsibility-project-featured:hover .video-showcase-play,
+.social-responsibility-project-featured:focus-visible .video-showcase-play {
+  background-color: color-mix(in srgb, var(--color-accent) 85%, black);
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
 .social-responsibility-project-count {
   position: absolute;
   right: var(--space-md);

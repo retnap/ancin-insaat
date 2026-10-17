@@ -7,6 +7,8 @@ namespace AncinInsaat.ViewComponents;
 // client request), replacing the earlier four generic placeholder pillars
 // (SocialResponsibilityPillarsViewComponent, removed). The page must show
 // exactly these two projects — no other content, no invented third item.
+// (2026-10-17: a third, client-supplied project — the N-Latis video — was
+// added; see BuildProject3.)
 //
 // Unlike the earlier pillars, both projects here are grounded directly in
 // the client-supplied photos themselves rather than written from scratch:
@@ -50,6 +52,7 @@ public class SocialResponsibilityProjectsViewComponent : ViewComponent
 {
     private const string Project1BasePath = "/images/sosyal-sorumluluk-projeleri/birinci-proje/web";
     private const string Project2BasePath = "/images/sosyal-sorumluluk-projeleri/ikinci-proje/web";
+    private const string Project3BasePath = "/images/sosyal-sorumluluk-projeleri/ucuncu-proje/web";
 
     public IViewComponentResult Invoke()
     {
@@ -60,7 +63,8 @@ public class SocialResponsibilityProjectsViewComponent : ViewComponent
             Projects = new List<SocialResponsibilityProjectItem>
             {
                 BuildProject1(isEnglish),
-                BuildProject2(isEnglish)
+                BuildProject2(isEnglish),
+                BuildProject3(isEnglish)
             }
         };
 
@@ -203,6 +207,57 @@ public class SocialResponsibilityProjectsViewComponent : ViewComponent
             FeaturedAlt = heading,
             OtherMedia = otherMedia,
             ImageOnRight = true
+        };
+    }
+
+    // Project 3 — N-Latis Kadına Şiddete Hayır Defilesi (client request,
+    // 2026-10-17). Video-only: the single client-supplied original
+    // (ucuncu-proje/nlatis-sosyal-sorumluluk-web.mp4, 3840x2160 60fps,
+    // ~144 MB — untouched) was re-encoded with ffmpeg to web/video.mp4
+    // (1280x720 30fps H.264 High + AAC 128k, +faststart, ~19 MB) so the
+    // Media Viewer streams a page-appropriate file. web/video-poster.webp
+    // is the 0:52 runway frame, run through ThumbnailTool --single
+    // (1280w/82q); it doubles as the on-page card image and the viewer
+    // poster, same reuse as Project 2's 01.webp. The video's own title
+    // card ("Ertan Kayıtken — Geleneksel 1 Nisan \"Kadına Şiddete Hayır!\"
+    // Defilesi") and its N-Latis building/model shots are the only facts
+    // the copy below relies on — no date, venue or figures invented.
+    // Appended last, and ImageOnRight continues the alternation.
+    private static SocialResponsibilityProjectItem BuildProject3(bool isEnglish)
+    {
+        var heading = isEnglish
+            ? "N-Latis \"Say No to Violence Against Women\" Fashion Show"
+            : "N-Latis Kadına Şiddete Hayır Defilesi";
+
+        return new SocialResponsibilityProjectItem
+        {
+            SectionId = "social-responsibility-project-3",
+            GalleryGroupKey = "sr-project-3",
+            Heading = heading,
+            Paragraphs = isEnglish
+                ? new List<string>
+                {
+                    "With our N-Latis project, we supported Ertan Kayıtken's Geleneksel 1 Nisan " +
+                        "\"Kadına Şiddete Hayır!\" (Say No to Violence Against Women) fashion show, an " +
+                        "event that uses fashion to raise public awareness of violence against women.",
+                    "We are proud to stand behind the Kadına Şiddete Hayır message and will continue " +
+                        "to support initiatives that strengthen social awareness."
+                }
+                : new List<string>
+                {
+                    "N-Latis projemizle destek verdiğimiz Ertan Kayıtken Geleneksel 1 Nisan " +
+                        "\"Kadına Şiddete Hayır!\" Defilesi, modanın gücüyle kadına yönelik şiddete karşı " +
+                        "toplumsal farkındalık oluşturmayı amaçlıyor.",
+                    "Kadına Şiddete Hayır mesajını podyuma taşıyan bu anlamlı etkinliğin bir parçası " +
+                        "olmaktan gurur duyuyor, toplumsal duyarlılığı güçlendiren çalışmaları desteklemeye " +
+                        "devam ediyoruz."
+                },
+            FeaturedThumbnailSrc = $"{Project3BasePath}/video-poster.webp",
+            FeaturedSrc = $"{Project3BasePath}/video-poster.webp",
+            FeaturedAlt = heading,
+            FeaturedVideoSrc = $"{Project3BasePath}/video.mp4",
+            OtherMedia = new List<SocialResponsibilityGalleryImage>(),
+            ImageOnRight = false
         };
     }
 }

@@ -1198,6 +1198,16 @@
       });
 
       open(groupTriggers, groupTriggers.indexOf(trigger), trigger);
+
+      // First-click playback (N-Latis video card, 2026-10-17) — a video
+      // trigger opting in via data-media-viewer-autoplay="true" (a value
+      // check, not hasAttribute — Razor renders a null data-* value as an
+      // empty attribute) starts playing straight away instead of waiting
+      // for videoPlayBtn. Called synchronously inside this same click
+      // handler so the browser still treats play() as user-initiated.
+      if (trigger.getAttribute('data-media-viewer-autoplay') === 'true') {
+        playCurrentVideo();
+      }
     });
   });
 
@@ -1483,26 +1493,31 @@
   // Lazy video source assignment (Social Responsibility unified galleries,
   // 2026-10-02) — the <video> gets its src only here, on an explicit user
   // click, never on render()/open(). This is the one and only place any of
-  // the three optimized MP4 files are ever requested.
-  if (videoPlayBtn) {
-    videoPlayBtn.addEventListener('click', function () {
-      var item = state.items[state.index];
-      var videoSrc = item && item.getAttribute('data-media-viewer-video-src');
+  // the optimized MP4 files are ever requested (also reached directly from
+  // a data-media-viewer-autoplay trigger's own click — see above).
+  function playCurrentVideo() {
+    var item = state.items[state.index];
+    var videoSrc = item && item.getAttribute('data-media-viewer-video-src');
 
-      if (!videoSrc || !videoEl) {
-        return;
-      }
+    if (!videoSrc || !videoEl) {
+      return;
+    }
 
-      videoEl.src = videoSrc;
-      videoEl.controls = true;
+    videoEl.src = videoSrc;
+    videoEl.controls = true;
+    if (videoPlayBtn) {
       videoPlayBtn.hidden = true;
-      videoEl.load();
-      videoEl.play().catch(function () {
-        // Playback can be blocked (e.g. low-power mode) — native controls
-        // are already visible at this point so the visitor can press Play
-        // themselves; nothing more to do here.
-      });
+    }
+    videoEl.load();
+    videoEl.play().catch(function () {
+      // Playback can be blocked (e.g. low-power mode) — native controls
+      // are already visible at this point so the visitor can press Play
+      // themselves; nothing more to do here.
     });
+  }
+
+  if (videoPlayBtn) {
+    videoPlayBtn.addEventListener('click', playCurrentVideo);
   }
 
   document.addEventListener('fullscreenchange', function () {
