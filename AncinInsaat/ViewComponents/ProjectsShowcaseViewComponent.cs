@@ -160,7 +160,11 @@ public class ProjectsShowcaseViewComponent : ViewComponent
         // (see Data.Entities.Project.IsFutureProject); they now surface
         // only via the Projects listing's own "Gelecek Projeler"/"Tümü"
         // tabs, never here.
-        var ongoingProjects = projects.Where(project => project.Status == ProjectStatus.Ongoing && !project.IsFutureProject);
+        // ProjectDetailAvailability (2026-10-19) — never link a card to a
+        // detail page that is currently switched off.
+        var ongoingProjects = projects.Where(project => project.Status == ProjectStatus.Ongoing
+            && !project.IsFutureProject
+            && ProjectDetailAvailability.IsDetailPageAvailable(project.Slug));
 
         var cards = ongoingProjects.Select(project => new ProjectShowcaseCardModel
         {

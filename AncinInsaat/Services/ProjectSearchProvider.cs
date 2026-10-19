@@ -28,7 +28,10 @@ public class ProjectSearchProvider : ISearchIndexProvider
 
         var projects = await _projectQueryService.GetPublishedProjectsAsync(cancellationToken);
 
+        // Projects whose detail page is switched off (ProjectDetailAvailability,
+        // 2026-10-19) are left out entirely — a result would only link to a 404.
         return projects
+            .Where(project => ProjectDetailAvailability.IsDetailPageAvailable(project.Slug))
             .Select((project, index) =>
             {
                 var shortDescription = isEnglish && !string.IsNullOrWhiteSpace(project.ShortDescriptionEn)

@@ -37,6 +37,7 @@
     statusModifierClass = Model.StatusModifierClass,
     catalogueUrl = Model.CatalogueUrl,
     catalogueComingSoonHeroToast = Model.CatalogueComingSoonHeroToast,
+    cataloguePlaceholderToastMessage = Model.CataloguePlaceholderToastMessage,
     sitePlanImageUrls = Model.SitePlanImageUrls,
     sitePlanComingSoon = Model.SitePlanComingSoon,
     scrollTargetId = "project-concept",
@@ -91,7 +92,11 @@
        Model.CatalogueUrl stays untouched so Daire Planları's own Katalog
        download button (_FloorPlans.cshtml) is unaffected. Same slug-gated
        pattern already used by _FloorPlans.cshtml's PLANLAR heading. *@
-    if (!string.IsNullOrWhiteSpace(Model.CatalogueUrl) && Model.Slug is not ("alinda-gold" or "magnesia-gold" or "tralles-gold" or "nlatis"))
+    @* La Via Villalar 1. Etap (client request, 2026-10-19) — no catalogue
+       file any more, but the section and its button stay, showing a
+       "Yakında Eklenecek..." toast (Model.CataloguePlaceholderToastMessage,
+       null for every other project). *@
+    if ((!string.IsNullOrWhiteSpace(Model.CatalogueUrl) || Model.CataloguePlaceholderToastMessage is not null) && Model.Slug is not ("alinda-gold" or "magnesia-gold" or "tralles-gold" or "nlatis"))
     {
         <partial name="_ProjectCatalogue" model="Model" />
     }

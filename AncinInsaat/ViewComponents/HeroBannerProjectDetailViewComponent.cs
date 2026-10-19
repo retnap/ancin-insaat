@@ -104,7 +104,8 @@ public class HeroBannerProjectDetailViewComponent : ViewComponent
         IReadOnlyList<string> sitePlanImageUrls,
         bool sitePlanComingSoon,
         string scrollTargetId,
-        bool isFutureProject = false)
+        bool isFutureProject = false,
+        string? cataloguePlaceholderToastMessage = null)
     {
         var model = new HeroBannerProjectDetailViewModel
         {
@@ -120,6 +121,7 @@ public class HeroBannerProjectDetailViewComponent : ViewComponent
             StatusModifierClass = statusModifierClass,
             CatalogueUrl = catalogueUrl,
             CatalogueComingSoonHeroToast = catalogueComingSoonHeroToast,
+            CataloguePlaceholderToastMessage = cataloguePlaceholderToastMessage,
             SitePlanImageUrls = sitePlanImageUrls,
             SitePlanComingSoon = sitePlanComingSoon,
             ScrollTargetId = scrollTargetId,

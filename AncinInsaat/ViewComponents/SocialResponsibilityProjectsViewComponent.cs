@@ -54,6 +54,16 @@ public class SocialResponsibilityProjectsViewComponent : ViewComponent
     private const string Project2BasePath = "/images/sosyal-sorumluluk-projeleri/ikinci-proje/web";
     private const string Project3BasePath = "/images/sosyal-sorumluluk-projeleri/ucuncu-proje/web";
 
+    // Project 1 photos removed from the gallery (client request,
+    // 2026-10-19). The client listed them by their position in the Media
+    // Viewer's "N / 37" counter — 8, 13, 18, 19, 20, 21, 27, 29, 30, 31, 34,
+    // 36 — not by filename. Position 1 is the featured 1.webp and there is
+    // no photo "2" (the original 2 is the video, shown last), so position
+    // k (k >= 2) is file (k + 1).webp; the numbers below are those files.
+    // The files themselves stay on disk for the client to remove.
+    private static readonly IReadOnlySet<int> Project1RemovedPhotoNumbers =
+        new HashSet<int> { 9, 14, 19, 20, 21, 22, 28, 30, 31, 32, 35, 37 };
+
     public IViewComponentResult Invoke()
     {
         var isEnglish = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
@@ -88,6 +98,7 @@ public class SocialResponsibilityProjectsViewComponent : ViewComponent
         var videoAltSuffix = isEnglish ? "video" : "video";
 
         var otherMedia = Enumerable.Range(3, 35) // 3..37
+            .Where(n => !Project1RemovedPhotoNumbers.Contains(n))
             .Select(n => new SocialResponsibilityGalleryImage
             {
                 Src = $"{Project1BasePath}/{n}.webp",

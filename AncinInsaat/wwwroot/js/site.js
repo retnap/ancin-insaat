@@ -1213,6 +1213,113 @@
 
   var state = { items: [], index: 0, scale: 1, translateX: 0, translateY: 0 };
   var lastFocused = null;
+  var imageLoadToken = 0;
+
+  // Only "floorplans" triggers get the thumbnail-first loading in render() —
+  // every other group (Gallery, Concept, Site Plan) keeps loading its
+  // original directly, exactly as before. Returns null when the trigger
+  // has no distinct thumbnail <img> to show.
+  function floorPlanPreviewSrc(item, fullSrc) {
+    if (item.getAttribute('data-media-viewer-group') !== 'floorplans') {
+      return null;
+    }
+
+    var thumbnail = item.querySelector('img');
+    // getAttribute (not currentSrc) so the comparison below is between the
+    // same relative URLs — a thumbnail that fell back to the original
+    // (see ProjectsController.ResolveThumbnail) is then correctly skipped.
+    var src = thumbnail ? thumbnail.getAttribute('src') : null;
+
+    return src && src !== fullSrc ? src : null;
+  }
+
+  // Floor Plan Viewer performance pass (2026-10-19) — measured on La Fiore
+  // Karabağ 2. Etap, the readable image took 2.8-4.0 s at 50 Mbps and
+  // 12.9-13.9 s at 10 Mbps to appear, entirely network-bound (the 15-18 MB
+  // originals; decoding was ~250 ms). A "floorplans" trigger now carries a
+  // screen-sized WebP (data-media-viewer-display-src, ~1-2 MB — see
+  // ImagePathHelper.GetDisplayPath) that is shown at 1x instead; the
+  // untouched original is only fetched once the visitor zooms in, where its
+  // extra detail is actually visible. Returns null for every other group,
+  // or when no derivative exists (the original then loads as before).
+  function floorPlanDisplaySrc(item) {
+    if (item.getAttribute('data-media-viewer-group') !== 'floorplans') {
+      return null;
+    }
+
+    return item.getAttribute('data-media-viewer-display-src') || null;
+  }
+
+  // Detached Image objects still downloading for the current item. Cleared
+  // (and their requests cancelled by emptying src) on every navigation and
+  // on close, so skipped plans stop competing for bandwidth with the one
+  // actually on screen — measured at 10 Mbps, three quick Next clicks
+  // previously delayed the final plan from ~13 s to ~25.7 s.
+  var pendingImages = [];
+  // The original to load on first zoom for the current item, or null.
+  var zoomUpgradeSrc = null;
+
+  // keepSrc (optional) spares a request that is already fetching the
+  // image about to be shown — e.g. Next onto a prefetched plan — so its
+  // progress is reused instead of restarted.
+  function cancelPendingImages(keepSrc) {
+    pendingImages = pendingImages.filter(function (pending) {
+      if (keepSrc && pending.getAttribute('src') === keepSrc) {
+        return true;
+      }
+      pending.onload = null;
+      pending.onerror = null;
+      pending.src = '';
+      return false;
+    });
+  }
+
+  // Loads src off-screen (download + decode) and calls onReady once it can
+  // be painted without a blank frame; onReady is skipped if the viewer has
+  // moved on (Prev/Next/close) in the meantime.
+  function loadDetached(src, priority, onReady) {
+    var token = imageLoadToken;
+    var detached = new Image();
+    detached.decoding = 'async';
+    if ('fetchPriority' in detached) {
+      detached.fetchPriority = priority;
+    }
+    pendingImages.push(detached);
+    detached.src = src;
+
+    var ready = function () {
+      pendingImages = pendingImages.filter(function (pending) {
+        return pending !== detached;
+      });
+      if (token === imageLoadToken) {
+        onReady();
+      }
+    };
+
+    if (typeof detached.decode === 'function') {
+      detached.decode().then(ready, ready);
+    } else {
+      detached.onload = ready;
+      detached.onerror = ready;
+    }
+  }
+
+  // First zoom on a floor plan shown via its display derivative swaps in the
+  // original (same box and transform, so the zoomed view stays put while the
+  // sharper pixels arrive).
+  function upgradeToOriginal() {
+    if (!zoomUpgradeSrc) {
+      return;
+    }
+
+    var originalSrc = zoomUpgradeSrc;
+    zoomUpgradeSrc = null;
+
+    loadDetached(originalSrc, 'high', function () {
+      imageEl.src = originalSrc;
+      imageEl.classList.remove('is-display', 'is-preview');
+    });
+  }
   var touchStartX = null;
   var touchStartY = null;
 
@@ -1249,6 +1356,10 @@
 
     state.scale = nextScale;
     applyTransform(true);
+
+    if (nextScale > MIN_SCALE) {
+      upgradeToOriginal();
+    }
   }
 
   function zoomIn() {
@@ -1316,12 +1427,45 @@
         videoWrapEl.hidden = true;
       }
 
+      var fullSrc = item.getAttribute('data-media-viewer-src');
+      var displaySrc = floorPlanDisplaySrc(item);
+      // What the viewer shows at 1x: the display derivative when there is
+      // one, otherwise the original (Gallery, Concept, Site Plan, and any
+      // floor plan without a derivative — unchanged behavior).
+      var targetSrc = displaySrc || fullSrc;
+      var previewSrc = floorPlanPreviewSrc(item, targetSrc);
+
+      imageLoadToken++;
+      cancelPendingImages(targetSrc);
+      zoomUpgradeSrc = displaySrc && displaySrc !== fullSrc ? fullSrc : null;
+
       imageEl.classList.remove('is-loaded');
+      imageEl.classList.toggle('is-preview', !!previewSrc);
+      imageEl.classList.toggle('is-display', !!zoomUpgradeSrc);
       imageEl.onload = function () {
         imageEl.classList.add('is-loaded');
       };
-      imageEl.src = item.getAttribute('data-media-viewer-src');
       imageEl.alt = alt;
+
+      if (previewSrc) {
+        // Progressive floor plan loading (2026-10-19) — the trigger's own
+        // 800px WebP thumbnail (already on the page) is shown straight away
+        // while targetSrc downloads and decodes off-screen; it then replaces
+        // the thumbnail (same URL, so served from the memory cache — one
+        // network request per image).
+        imageEl.src = previewSrc;
+
+        loadDetached(targetSrc, 'high', function () {
+          // Skip the swap if a zoom already upgraded to the original.
+          if (imageEl.getAttribute('src') !== fullSrc) {
+            imageEl.src = targetSrc;
+          }
+          imageEl.classList.remove('is-preview');
+          prefetchNextFloorPlan();
+        });
+      } else {
+        imageEl.src = targetSrc;
+      }
     }
 
     // Zoom only ever applies to photos — hide rather than leave visibly
@@ -1397,6 +1541,22 @@
     }
   }
 
+  // Once the current plan is on screen, warm the next plan's display
+  // derivative at low priority so Next usually opens instantly. Only the
+  // ~1-2 MB derivative, never an original; cancelled with everything else
+  // if the visitor navigates away first.
+  function prefetchNextFloorPlan() {
+    if (state.items.length < 2) {
+      return;
+    }
+
+    var nextItem = state.items[(state.index + 1) % state.items.length];
+    var nextDisplaySrc = floorPlanDisplaySrc(nextItem);
+    if (nextDisplaySrc && nextDisplaySrc !== imageEl.getAttribute('src')) {
+      loadDetached(nextDisplaySrc, 'low', function () {});
+    }
+  }
+
   function open(items, index, trigger) {
     state.items = items;
     state.index = index;
@@ -1426,6 +1586,9 @@
 
     viewer.hidden = true;
     viewer.classList.remove('is-floorplan-viewer');
+    imageLoadToken++;
+    cancelPendingImages();
+    zoomUpgradeSrc = null;
     document.body.classList.remove('no-scroll');
     document.removeEventListener('keydown', onKeydown);
     resetZoom();

@@ -112,6 +112,14 @@ public class ProjectDetailViewModel
     // Hero button as a plain scroll link exactly as before.
     public required bool CatalogueComingSoonHeroToast { get; init; }
 
+    // La Via Villalar 1. Etap catalogue removal (client request,
+    // 2026-10-19) — the project has no catalogue any more, but its catalogue
+    // buttons (Hero, Project Catalogue CTA, Floor Plans) stay visible and
+    // show this message in the shared toast instead of downloading. Null for
+    // every other project, whose catalogue buttons behave exactly as before.
+    // See ProjectsController.CatalogueComingSoonPlaceholderSlugs.
+    public string? CataloguePlaceholderToastMessage { get; init; }
+
     // Existence-checked path to Project.FloorPlanCataloguePath, falling back
     // to CatalogueUrl when the project has no dedicated floor-plan PDF (every
     // project except Nysa Gold today) — see _FloorPlans.cshtml's download

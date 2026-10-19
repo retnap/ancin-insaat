@@ -123,7 +123,15 @@ else
                        has no FloorPlanCataloguePath, so FloorPlanCatalogueUrl
                        falls back to CatalogueUrl and both buttons keep
                        downloading the exact same file/label as before. *@
-                    @if (Model.CatalogueComingSoon)
+                    @if (Model.CataloguePlaceholderToastMessage is not null)
+                    {
+                        @* La Via Villalar 1. Etap catalogue removal
+                           (2026-10-19) — same toast-only button as
+                           _ProjectCatalogue.cshtml's; null for every other
+                           project. *@
+                        <button type="button" class="btn btn-primary project-floorplans-catalogue" data-toast-trigger data-toast-message="@Model.CataloguePlaceholderToastMessage">@(isEn ? "Download Project Catalogue" : "Proje Kataloğunu İndir")</button>
+                    }
+                    else if (Model.CatalogueComingSoon)
                     {
                         <button type="button" class="btn btn-primary project-floorplans-catalogue" data-toast-trigger data-toast-message="@(isEn ? "The project catalogue will be added soon." : "Proje kataloğu yakında eklenecektir.")">@(isEn ? "Download Project Catalogue" : "Proje Kataloğunu İndir")</button>
                     }
@@ -226,6 +234,7 @@ else
                             data-media-viewer-trigger
                             data-media-viewer-group="floorplans"
                             data-media-viewer-src="@floorPlan.Src"
+                            data-media-viewer-display-src="@floorPlan.DisplaySrc"
                             data-media-viewer-alt="@floorPlan.ApartmentType"
                             aria-label="@(isEn ? $"{floorPlan.ApartmentType} — enlarge" : $"{floorPlan.ApartmentType} — büyüt")">
                         <img class="project-floorplans-image@(isContainFit ? " project-floorplans-image--contain" : "")" src="@floorPlan.ThumbnailSrc" alt="@floorPlan.ApartmentType" loading="lazy" decoding="async" />

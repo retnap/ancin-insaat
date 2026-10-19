@@ -49,7 +49,7 @@
         <meta name="twitter:image" content="@seo.OgImageUrl" />
     }
     @await Component.InvokeAsync("SeoStructuredData", new { pageSeo = seo, pageSchemaType = ViewData["SeoPageType"] as string })
-    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     @* Blocking, before any body content paints: flips no-js -> js so
        [data-reveal] can start hidden in CSS (site.css Section 18) only
        when script is actually running. Without this, disabling
@@ -87,6 +87,6 @@
        window.EmblaCarousel synchronously at parse time rather than
        waiting for DOMContentLoaded. *@
     @await RenderSectionAsync("Scripts", required: false)
-    <script src="~/js/site.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
 </body>
 </html>

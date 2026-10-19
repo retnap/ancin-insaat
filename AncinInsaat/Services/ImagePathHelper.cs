@@ -14,4 +14,19 @@ public static class ImagePathHelper
         var thumbnailFolderPath = originalPath.Replace("/originals/", "/thumbnails/");
         return Path.ChangeExtension(thumbnailFolderPath, ".webp");
     }
+
+    // Floor plan "display" derivative (Floor Plan Viewer performance pass,
+    // 2026-10-19) — a same-name WebP in a sibling "display" folder (next to
+    // "originals"/"thumbnails"), or a "display" subfolder beside an image
+    // that doesn't live in an "originals" folder. Sized for full-screen
+    // viewing (longest side 3000px) so the Media Viewer can show a sharp,
+    // readable drawing without downloading the full original; the original
+    // itself is never modified. Generated with ThumbnailTool --single.
+    public static string GetDisplayPath(string originalPath)
+    {
+        var displayPath = originalPath.Contains("/originals/", StringComparison.Ordinal)
+            ? originalPath.Replace("/originals/", "/display/")
+            : originalPath[..(originalPath.LastIndexOf('/') + 1)] + "display/" + originalPath[(originalPath.LastIndexOf('/') + 1)..];
+        return Path.ChangeExtension(displayPath, ".webp");
+    }
 }

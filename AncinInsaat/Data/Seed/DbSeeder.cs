@@ -1090,15 +1090,12 @@ public static class DbSeeder
                 Title = "Şehrin İçinde Sakin Bir Bahçe",
                 Description = "Yüksek çitlerle çevrili özel bahçe alanı, sakinlerine şehrin gürültüsünden uzak, güvenli ve huzurlu bir dış mekan yaşam alanı sunuyor. Palmiye ağaçları ve oturma gruplarıyla günün her saatinde keyifli bir mola noktası.",
                 DisplayOrder = 2
-            },
-            new()
-            {
-                ImagePath = "/images/projects/ferhunde-hanim-apt/gallery/exterior/originals/exterior-20.jpg",
-                Eyebrow = "Detaylarda Kalite",
-                Title = "Güvenli ve Düzenli Bir Yerleşim",
-                Description = "Çevre duvarları, peyzajlı ön bahçesi ve düzenli site içi düzeniyle Ferhunde Hanım Apt., günlük yaşamı kolaylaştıran ve değerini koruyan bir yatırım fırsatı sunuyor.",
-                DisplayOrder = 3
             }
+            // Former Card 3 (exterior-20.jpg, "Güvenli ve Düzenli Bir
+            // Yerleşim", DisplayOrder 3) removed per client request
+            // (2026-10-19). The photo file stays on disk, untouched. See
+            // ReconcileFerhundeHanimAptRemoveThirdConceptImageAsync for an
+            // already-seeded database.
         };
     }
 
@@ -1917,9 +1914,58 @@ public static class DbSeeder
             {
                 ApartmentType = "D Tipi Blok – Zemin Kat",
                 ImagePath = "/images/projects/la-fiore-karabag-2-etap/floorplans/originals/d-tipi-blok-zemin-kat.jpg",
+                // D/E area correction (client-supplied authoritative values,
+                // 2026-10-19; matches the TOPLAM box printed on this
+                // drawing) — the D and E rows previously held each other's
+                // Net/Gross figures. See ReconcileLaFioreKarabag2EtapDveETipiAlanDuzeltmesiAsync.
+                NetAreaM2 = 116.70m,
+                GrossAreaM2 = 166.30m,
+                DisplayOrder = 8,
+                // D/E room-list correction (client-supplied authoritative
+                // values, 2026-10-19; cross-checked against this drawing) —
+                // the D and E rows previously held each other's room lists
+                // on both floors, same swap as their Net/Gross figures above.
+                // "Hol 5,60 m²" was not in the client's list but is printed
+                // on this drawing, so it stays. See
+                // ReconcileLaFioreKarabag2EtapDveETipiOdaDuzeltmesiAsync.
+                Rooms = new List<FloorPlanRoom>
+                {
+                    new() { Name = "Yaşama Alanı", AreaM2 = 26.00m, DisplayOrder = 1 },
+                    new() { Name = "Mutfak", AreaM2 = 14.70m, DisplayOrder = 2 },
+                    new() { Name = "Giriş Holü", AreaM2 = 3.20m, DisplayOrder = 3 },
+                    new() { Name = "Hol", AreaM2 = 5.60m, DisplayOrder = 4 },
+                    new() { Name = "WC", AreaM2 = 3.00m, DisplayOrder = 5 },
+                    new() { Name = "Merdiven", AreaM2 = 3.00m, DisplayOrder = 6 },
+                    new() { Name = "Kış Bahçesi", AreaM2 = 14.20m, DisplayOrder = 7 },
+                    new() { Name = "Teras", AreaM2 = 21.00m, DisplayOrder = 8 }
+                }
+            },
+            new()
+            {
+                ApartmentType = "D Tipi Blok – 1. Kat",
+                ImagePath = "/images/projects/la-fiore-karabag-2-etap/floorplans/originals/d-tipi-blok-1-kat.jpg",
+                NetAreaM2 = 47.00m,
+                GrossAreaM2 = 63.20m,
+                DisplayOrder = 9,
+                // Two separate bathrooms (4,00 m² and 3,70 m²) — kept as
+                // distinct rows, numbered like every other duplicate room.
+                Rooms = new List<FloorPlanRoom>
+                {
+                    new() { Name = "Yatak Odası 1", AreaM2 = 18.10m, DisplayOrder = 1 },
+                    new() { Name = "Banyo 1", AreaM2 = 4.00m, DisplayOrder = 2 },
+                    new() { Name = "Giyinme Odası", AreaM2 = 3.00m, DisplayOrder = 3 },
+                    new() { Name = "Hol", AreaM2 = 3.40m, DisplayOrder = 4 },
+                    new() { Name = "Banyo 2", AreaM2 = 3.70m, DisplayOrder = 5 },
+                    new() { Name = "Yatak Odası 2", AreaM2 = 14.80m, DisplayOrder = 6 }
+                }
+            },
+            new()
+            {
+                ApartmentType = "E Tipi Blok – Zemin Kat",
+                ImagePath = "/images/projects/la-fiore-karabag-2-etap/floorplans/originals/e-tipi-blok-zemin-kat.jpg",
                 NetAreaM2 = 176.21m,
                 GrossAreaM2 = 226.24m,
-                DisplayOrder = 8,
+                DisplayOrder = 10,
                 Rooms = new List<FloorPlanRoom>
                 {
                     new() { Name = "Yaşam Alanı", AreaM2 = 33.00m, DisplayOrder = 1 },
@@ -1936,11 +1982,11 @@ public static class DbSeeder
             },
             new()
             {
-                ApartmentType = "D Tipi Blok – 1. Kat",
-                ImagePath = "/images/projects/la-fiore-karabag-2-etap/floorplans/originals/d-tipi-blok-1-kat.jpg",
+                ApartmentType = "E Tipi Blok – 1. Kat",
+                ImagePath = "/images/projects/la-fiore-karabag-2-etap/floorplans/originals/e-tipi-blok-1-kat.jpg",
                 NetAreaM2 = 69.00m,
                 GrossAreaM2 = 90.10m,
-                DisplayOrder = 9,
+                DisplayOrder = 11,
                 Rooms = new List<FloorPlanRoom>
                 {
                     new() { Name = "Yatak Odası 1", AreaM2 = 11.20m, DisplayOrder = 1 },
@@ -1951,42 +1997,6 @@ public static class DbSeeder
                     new() { Name = "Giyinme Odası", AreaM2 = 8.60m, DisplayOrder = 6 },
                     new() { Name = "Yatak Odası 3", AreaM2 = 15.20m, DisplayOrder = 7 },
                     new() { Name = "Banyo 3", AreaM2 = 3.50m, DisplayOrder = 8 }
-                }
-            },
-            new()
-            {
-                ApartmentType = "E Tipi Blok – Zemin Kat",
-                ImagePath = "/images/projects/la-fiore-karabag-2-etap/floorplans/originals/e-tipi-blok-zemin-kat.jpg",
-                NetAreaM2 = 116.70m,
-                GrossAreaM2 = 166.30m,
-                DisplayOrder = 10,
-                Rooms = new List<FloorPlanRoom>
-                {
-                    new() { Name = "Yaşama Alanı", AreaM2 = 26.00m, DisplayOrder = 1 },
-                    new() { Name = "Mutfak", AreaM2 = 14.70m, DisplayOrder = 2 },
-                    new() { Name = "Giriş Holü", AreaM2 = 3.20m, DisplayOrder = 3 },
-                    new() { Name = "Hol", AreaM2 = 5.60m, DisplayOrder = 4 },
-                    new() { Name = "WC", AreaM2 = 3.00m, DisplayOrder = 5 },
-                    new() { Name = "Merdiven", AreaM2 = 3.00m, DisplayOrder = 6 },
-                    new() { Name = "Kış Bahçesi", AreaM2 = 14.20m, DisplayOrder = 7 },
-                    new() { Name = "Teras", AreaM2 = 21.00m, DisplayOrder = 8 }
-                }
-            },
-            new()
-            {
-                ApartmentType = "E Tipi Blok – 1. Kat",
-                ImagePath = "/images/projects/la-fiore-karabag-2-etap/floorplans/originals/e-tipi-blok-1-kat.jpg",
-                NetAreaM2 = 47.00m,
-                GrossAreaM2 = 63.20m,
-                DisplayOrder = 11,
-                Rooms = new List<FloorPlanRoom>
-                {
-                    new() { Name = "Yatak Odası 1", AreaM2 = 18.10m, DisplayOrder = 1 },
-                    new() { Name = "Banyo 1", AreaM2 = 4.00m, DisplayOrder = 2 },
-                    new() { Name = "Giyinme Odası", AreaM2 = 3.00m, DisplayOrder = 3 },
-                    new() { Name = "Hol", AreaM2 = 3.40m, DisplayOrder = 4 },
-                    new() { Name = "Banyo 2", AreaM2 = 3.70m, DisplayOrder = 5 },
-                    new() { Name = "Yatak Odası 2", AreaM2 = 14.80m, DisplayOrder = 6 }
                 }
             },
             new()
@@ -2007,10 +2017,16 @@ public static class DbSeeder
                     new() { Name = "Banyo", AreaM2 = 5.13m, DisplayOrder = 7 },
                     new() { Name = "Hol", AreaM2 = 9.81m, DisplayOrder = 8 },
                     new() { Name = "Vestiyer Odası", AreaM2 = 11.81m, DisplayOrder = 9 },
-                    new() { Name = "Giriş Holü", AreaM2 = 5.50m, DisplayOrder = 10 },
-                    new() { Name = "Çamaşır Odası", AreaM2 = 2.41m, DisplayOrder = 11 },
-                    new() { Name = "Kış Bahçesi", AreaM2 = 32.00m, DisplayOrder = 12 },
-                    new() { Name = "Teras", AreaM2 = 26.30m, DisplayOrder = 13 }
+                    // The drawing prints two separate Giriş Holü per unit —
+                    // the outer 5,50 m² entry and the inner 3,77 m² one
+                    // beside Çamaşır Odası (2026-10-19 drawing audit; the
+                    // 3,77 m² room was previously missing). See
+                    // ReconcileLaFioreKarabag2EtapFTipiGirisHoluAsync.
+                    new() { Name = "Giriş Holü 1", AreaM2 = 5.50m, DisplayOrder = 10 },
+                    new() { Name = "Giriş Holü 2", AreaM2 = 3.77m, DisplayOrder = 11 },
+                    new() { Name = "Çamaşır Odası", AreaM2 = 2.41m, DisplayOrder = 12 },
+                    new() { Name = "Kış Bahçesi", AreaM2 = 32.00m, DisplayOrder = 13 },
+                    new() { Name = "Teras", AreaM2 = 26.30m, DisplayOrder = 14 }
                 }
             },
             new()
@@ -2022,10 +2038,14 @@ public static class DbSeeder
                 {
                     new() { Name = "Salon", AreaM2 = 29.70m, DisplayOrder = 1 },
                     new() { Name = "Mutfak", AreaM2 = 7.60m, DisplayOrder = 2 },
-                    new() { Name = "Yatak Odası", AreaM2 = 13.30m, DisplayOrder = 3 },
-                    new() { Name = "Banyo", AreaM2 = 4.20m, DisplayOrder = 4 },
-                    new() { Name = "Teras", AreaM2 = 10.00m, DisplayOrder = 5 },
-                    new() { Name = "Balkon", AreaM2 = 13.70m, DisplayOrder = 6 }
+                    // Client-approved addition (2026-10-19), placed after
+                    // Mutfak like every other block's Giriş Holü. See
+                    // ReconcileLaFioreKarabag2EtapGTipiGirisHoluAsync.
+                    new() { Name = "Giriş Holü", AreaM2 = 4.50m, DisplayOrder = 3 },
+                    new() { Name = "Yatak Odası", AreaM2 = 13.30m, DisplayOrder = 4 },
+                    new() { Name = "Banyo", AreaM2 = 4.20m, DisplayOrder = 5 },
+                    new() { Name = "Teras", AreaM2 = 10.00m, DisplayOrder = 6 },
+                    new() { Name = "Balkon", AreaM2 = 13.70m, DisplayOrder = 7 }
                 }
             },
             new()
@@ -2277,49 +2297,19 @@ public static class DbSeeder
                     new() { Name = "Teras", AreaM2 = 50.40m, DisplayOrder = 7 }
                 }
             },
-            new()
-            {
-                ApartmentType = "Opsiyonel Kat Planları – Zemin Kat",
-                ImagePath = "/images/projects/kuyulu-la-via-villalar-birinci-etap/floorplans/originals/opsiyonel-zemin-kat.jpg",
-                NetAreaM2 = 341.00m,
-                GrossAreaM2 = 402.80m,
-                DisplayOrder = 3,
-                Rooms = zeminKatRooms()
-            },
-            new()
-            {
-                ApartmentType = "Opsiyonel Kat Planları – 1. Kat",
-                ImagePath = "/images/projects/kuyulu-la-via-villalar-birinci-etap/floorplans/originals/opsiyonel-1-kat.jpg",
-                NetAreaM2 = 123.60m,
-                GrossAreaM2 = 156.60m,
-                DisplayOrder = 4,
-                Rooms = new List<FloorPlanRoom>
-                {
-                    new() { Name = "Çalışma Odası", AreaM2 = 21.70m, DisplayOrder = 1 },
-                    new() { Name = "Yatak Odası", AreaM2 = 17.90m, DisplayOrder = 2 },
-                    new() { Name = "Banyo 1", AreaM2 = 4.50m, DisplayOrder = 3 },
-                    new() { Name = "Banyo 2", AreaM2 = 4.40m, DisplayOrder = 4 },
-                    new() { Name = "Hol", AreaM2 = 12.40m, DisplayOrder = 5 },
-                    new() { Name = "Kiler", AreaM2 = 8.30m, DisplayOrder = 6 },
-                    new() { Name = "Balkon", AreaM2 = 4.00m, DisplayOrder = 7 },
-                    new() { Name = "Teras", AreaM2 = 50.40m, DisplayOrder = 8 }
-                }
-            },
-            // Çatı Katı (Vaziyet Planı/Çatı Katı/Katalog/Konsept revision,
-            // 2026-08-09) — a new roof-floor drawing supplied under
-            // kat-planlari/4-KUYULU ÇATI PLANI.jpeg, copied to
-            // floorplans/originals/cati-kati.jpg. One shared entry (not
-            // duplicated per Standart/Opsiyonel group) appended after the
-            // existing 4. This file is a 3D exterior render, not a floor
-            // drawing (Floor Plan Area Accuracy revision, 2026-08-21) — it
-            // prints no rooms or Net/Brüt figures, so both stay unset.
-            new()
-            {
-                ApartmentType = "Çatı Katı",
-                ImagePath = "/images/projects/kuyulu-la-via-villalar-birinci-etap/floorplans/originals/cati-kati.jpg",
-                DisplayOrder = 5,
-                Rooms = new List<FloorPlanRoom>()
-            }
+            // "Opsiyonel Kat Planları – Zemin Kat"/"– 1. Kat" (former
+            // DisplayOrder 3/4) removed per client request (2026-10-19). The
+            // opsiyonel-*.jpg drawings stay on disk, untouched. See
+            // ReconcileKuyuluLaViaVillalarRemoveOptionalFloorPlansAsync for an
+            // already-seeded database.
+            //
+            // "Çatı Katı" (former DisplayOrder 5, floorplans/originals/
+            // cati-kati.jpg — a 3D exterior render with no rooms or Net/Brüt
+            // figures, added 2026-08-09) removed per client request
+            // (2026-10-19) — only the two standard plans remain. The
+            // cati-kati.jpg file and its thumbnail stay on disk, untouched.
+            // See ReconcileKuyuluLaViaVillalarRemoveRoofFloorPlanAsync for an
+            // already-seeded database.
         };
     }
 
@@ -2329,11 +2319,20 @@ public static class DbSeeder
     // --single (1600w/88q, same recipe as La Fiore Karabağ 2. Etap's
     // site-plan-N.webp above). Only one drawing was supplied, so the Hero's
     // Media Viewer group has no Prev/Next here — see ProjectSitePlanImage.
+    //
+    // Replaced (client request, 2026-10-19) by the client's two new site
+    // plans, added under vaziyet-plani/ at their original filenames (served
+    // as-is, no WebP derivative); the old site-plan-1.webp and its
+    // 1.VAZİYET.jpg source were deleted by the client. Two entries, so the
+    // Hero's Media Viewer group now gets Prev/Next. See
+    // ReconcileKuyuluLaViaVillalarYeniVaziyetPlanlariAsync for an
+    // already-seeded database.
     private static List<ProjectSitePlanImage> BuildKuyuluLaViaVillalarSitePlanImages()
     {
         return new List<ProjectSitePlanImage>
         {
-            new() { ImagePath = "/images/projects/kuyulu-la-via-villalar-birinci-etap/site-plan-1.webp", AltText = "La Via Villalar 1. Etap vaziyet planı", DisplayOrder = 1 }
+            new() { ImagePath = "/images/projects/kuyulu-la-via-villalar-birinci-etap/vaziyet-plani/la-via-kuyulu-yeni-vaziyet-plani-1.jpeg", AltText = "La Via Villalar 1. Etap vaziyet planı 1", DisplayOrder = 1 },
+            new() { ImagePath = "/images/projects/kuyulu-la-via-villalar-birinci-etap/vaziyet-plani/la-via-kuyulu-yeni-vaziyet-plani-2.jpeg", AltText = "La Via Villalar 1. Etap vaziyet planı 2", DisplayOrder = 2 }
         };
     }
 
@@ -2367,12 +2366,19 @@ public static class DbSeeder
                 Description = "La Via Villalar 1. Etap, her biri kendi bahçesi ve garajıyla bağımsız bir villa mimarisini Kuyulu'nun sakin dokusuyla buluşturuyor. Ahşap dokulu cepheler, zarif aydınlatmalar ve modern çizgiler, Ancın İnşaat imzasının kalite anlayışını her villada yeniden tanımlıyor.",
                 DisplayOrder = 1
             },
+            // Photo swapped from 16.jpg to 13.jpg (client request,
+            // 2026-10-19) — 16.jpg's aerial shows the neighbouring shopping
+            // complex on its right; 13.jpg is the same project's own aerial
+            // of the villa rows only (already in this project's Exterior
+            // gallery). Description rewritten to match: 13.jpg shows no
+            // "sosyal tesis binası", so that phrase is gone. See
+            // ReconcileKuyuluLaViaVillalarSecondConceptImageReplacementAsync.
             new()
             {
-                ImagePath = "/images/projects/kuyulu-la-via-villalar-birinci-etap/gallery/exterior/originals/16.jpg",
+                ImagePath = SecondConceptImagePathLaVia,
                 Eyebrow = "Bugünden Yarına Değer",
                 Title = "Kuyulu'da Ayrıcalıklı Bir Yatırım",
-                Description = "Düzenli villa sıraları, geniş yeşil alanları ve sosyal tesis binasıyla bütüncül bir yerleşim planına sahip La Via Villalar 1. Etap, hem huzurlu bir yaşamı hem de Kuyulu'nun gelişen değeriyle birlikte güçlü bir yatırım fırsatını bir araya getiriyor.",
+                Description = SecondConceptDescriptionLaVia,
                 DisplayOrder = 3
             }
         };
@@ -4279,6 +4285,10 @@ public static class DbSeeder
         await ReconcileFerhundeHanimAptGaleriRevizesiAsync(context);
         await ReconcileFerhundeHanimAptRemoveApprovedInteriorRepetitionsAsync(context);
         await ReconcileFloorPlanAreaAccuracyAsync(context);
+        // Must run before ReconcileLaFioreKarabagYeniGaleriVaziyetVeKatalogAsync
+        // so the replacement site plan takes over the old row's DisplayOrder
+        // instead of being appended after it — see the method's own comment.
+        await ReconcileLaFioreKarabagYeniVaziyetPlaniAsync(context);
         await ReconcileLaFioreKarabagYeniGaleriVaziyetVeKatalogAsync(context);
         await ReconcileLaFioreKarabagKonseptGorselleriAsync(context);
         await ReconcileLaFioreKarabagKonseptMetniAsync(context);
@@ -4311,6 +4321,17 @@ public static class DbSeeder
         await ReconcileLaFioreKarabagSocialAreasSolarCarportAsync(context);
         await ReconcileFerhundeHanimAptRemoveBTipZeminKatInteriorAsync(context);
         await ReconcileLaFioreKarabagSocialAreasSeyirTerasiAsync(context);
+        await ReconcileLaFioreKarabag2EtapDveETipiAlanDuzeltmesiAsync(context);
+        await ReconcileLaFioreKarabag2EtapDveETipiOdaDuzeltmesiAsync(context);
+        await ReconcileLaFioreKarabag2EtapFTipiGirisHoluAsync(context);
+        await ReconcileKuyuluLaViaVillalarYeniVaziyetPlanlariAsync(context);
+        await ReconcileKuyuluLaViaVillalarRemoveOptionalFloorPlansAsync(context);
+        await ReconcileKuyuluLaViaVillalarRemoveCatalogueAsync(context);
+        await ReconcileKuyuluLaViaVillalarSecondConceptImageReplacementAsync(context);
+        await ReconcileKuyuluLaViaVillalarSecondConceptRemovePoolClaimAsync(context);
+        await ReconcileFerhundeHanimAptRemoveThirdConceptImageAsync(context);
+        await ReconcileKuyuluLaViaVillalarRemoveRoofFloorPlanAsync(context);
+        await ReconcileLaFioreKarabag2EtapGTipiGirisHoluAsync(context);
 
         var existingSlugs = new HashSet<string>(await context.Projects.Select(p => p.Slug).ToListAsync());
 
@@ -4710,8 +4731,13 @@ public static class DbSeeder
                 CompletionDate = null,
                 CoverImage = "/images/projects/kuyulu-la-via-villalar-birinci-etap/cover.webp",
                 LocationImagePath = "/images/projects/kuyulu-la-via-villalar-birinci-etap/lokasyon/la-via-cizim-konum.png",
-                // Placeholder catalogue — see Le Jardin above.
-                CataloguePath = "/documents/catalogues/kuyulu-la-via-villalar-birinci-etap-katalog.pdf",
+                // No catalogue (client request, 2026-10-19) — the catalogue
+                // buttons stay visible but show a "Yakında Eklenecek..."
+                // toast instead (see ReconcileKuyuluLaViaVillalarRemoveCatalogueAsync
+                // and ProjectsController.CatalogueComingSoonPlaceholderSlugs).
+                // Must stay null: ReconcileMissingCataloguePathsAsync
+                // backfills any CataloguePath seeded here onto an existing row.
+                CataloguePath = null,
                 DisplayOrder = 9,
                 IsFeatured = false,
                 IsPublished = true,
@@ -5822,7 +5848,9 @@ public static class DbSeeder
         project.Slug = "kuyulu-la-via-villalar-birinci-etap";
         project.ShortDescription = "Kendi bahçesi ve garajıyla bağımsız villa mimarisini Kuyulu'nun sakin dokusuyla buluşturan ayrıcalıklı bir yaşam alanı.";
         project.CoverImage = "/images/projects/kuyulu-la-via-villalar-birinci-etap/cover.webp";
-        project.CataloguePath = "/documents/catalogues/kuyulu-la-via-villalar-birinci-etap-katalog.pdf";
+        // No catalogue (client request, 2026-10-19) — see
+        // ReconcileKuyuluLaViaVillalarRemoveCatalogueAsync.
+        project.CataloguePath = null;
 
         await context.SaveChangesAsync();
     }
@@ -5913,25 +5941,10 @@ public static class DbSeeder
             changed = true;
         }
 
-        if (project.FloorPlans.All(fp => fp.ApartmentType != "Çatı Katı"))
-        {
-            var catiKati = BuildKuyuluLaViaVillalarFloorPlans().Single(fp => fp.ApartmentType == "Çatı Katı");
-            context.FloorPlans.Add(new FloorPlan
-            {
-                ProjectId = project.Id,
-                ApartmentType = catiKati.ApartmentType,
-                ImagePath = catiKati.ImagePath,
-                NetAreaM2 = catiKati.NetAreaM2,
-                GrossAreaM2 = catiKati.GrossAreaM2,
-                SalesGrossAreaM2 = catiKati.SalesGrossAreaM2,
-                DisplayOrder = catiKati.DisplayOrder,
-                Rooms = catiKati.Rooms
-                    .Select(r => new FloorPlanRoom { Name = r.Name, AreaM2 = r.AreaM2, DisplayOrder = r.DisplayOrder })
-                    .ToList()
-            });
-
-            changed = true;
-        }
+        // The Çatı Katı backfill that used to live here (add the roof floor
+        // plan when missing) was removed with the plan itself (client
+        // request, 2026-10-19) — otherwise it would recreate the row on every
+        // startup. See ReconcileKuyuluLaViaVillalarRemoveRoofFloorPlanAsync.
 
         if (project.ConceptImages.Count == 0)
         {
@@ -7364,8 +7377,11 @@ public static class DbSeeder
             {
                 ImagePath = "/images/projects/la-fiore-karabag/gallery/exterior/originals/exterior-03.jpg",
                 Eyebrow = "Bahçede Geçen Akşamlar",
-                Title = "Salıncaklı Bahçede Açık Hava Konforu",
-                Description = "Villa bahçesine kurulan salıncaklı oturma alanı, taş sütunlarla çevrili geniş cam cepheyle birleşerek gündüzü akşama, iç mekânı bahçeye bağlıyor. La Fiore Karabağ'da dış mekân, evin doğal bir uzantısı olarak tasarlandı.",
+                // Rewritten (client request, 2026-10-19) to stop centring the
+                // card on the garden swing — same photo, now describing the
+                // glass-fronted garden room, lawn and planting it shows.
+                Title = "Bahçeyle Bütünleşen Açık Hava Konforu",
+                Description = "Taş sütunlarla çevrelenen geniş cam cepheli kış bahçesi, yemyeşil çimenler ve çiçek açan bitkilerle bezeli bahçeye doğrudan açılıyor. Peyzajla iç içe bu huzurlu dış mekân, gündüzü akşama ve iç mekânı bahçeye bağlayarak La Fiore Karabağ'da dinlenmeyi günlük yaşamın doğal bir parçası hâline getiriyor.",
                 DisplayOrder = 2
             },
             new()
@@ -10307,8 +10323,10 @@ public static class DbSeeder
             ),
             [2] = (
                 "Bahçede Geçen Akşamlar",
-                "Salıncaklı Bahçede Açık Hava Konforu",
-                "Villa bahçesine kurulan salıncaklı oturma alanı, taş sütunlarla çevrili geniş cam cepheyle birleşerek gündüzü akşama, iç mekânı bahçeye bağlıyor. La Fiore Karabağ'da dış mekân, evin doğal bir uzantısı olarak tasarlandı."
+                // 2026-10-19 client request — no longer centred on the swing;
+                // see BuildLaFioreKarabagConceptImages' Card 2.
+                "Bahçeyle Bütünleşen Açık Hava Konforu",
+                "Taş sütunlarla çevrelenen geniş cam cepheli kış bahçesi, yemyeşil çimenler ve çiçek açan bitkilerle bezeli bahçeye doğrudan açılıyor. Peyzajla iç içe bu huzurlu dış mekân, gündüzü akşama ve iç mekânı bahçeye bağlayarak La Fiore Karabağ'da dinlenmeyi günlük yaşamın doğal bir parçası hâline getiriyor."
             ),
             [3] = (
                 "Karşılamanın İlk Adımı",
@@ -10553,7 +10571,11 @@ public static class DbSeeder
             AddIfMissing($"{socialAreasBase}/{socialAreaFiles[i]}", $"La Fiore Karabağ sosyal alan görünümü {i + 1}", "Social Areas");
         }
 
-        const string sitePlanPath = "/images/projects/la-fiore-karabag/vaziyet/vaziyet.png";
+        // Repointed (client request, 2026-10-19) from the deleted
+        // vaziyet/vaziyet.png to the client's new site plan — see
+        // ReconcileLaFioreKarabagYeniVaziyetPlaniAsync, which runs just before
+        // this and swaps an already-seeded old row out first.
+        const string sitePlanPath = LaFioreKarabagNewSitePlanPath;
         if (!project.SitePlanImages.Any(sitePlan => sitePlan.ImagePath == sitePlanPath))
         {
             var nextSitePlanOrder = (project.SitePlanImages.Count == 0 ? 0 : project.SitePlanImages.Max(sitePlan => sitePlan.DisplayOrder)) + 1;
@@ -11731,6 +11753,516 @@ public static class DbSeeder
         };
         context.ProjectImages.Add(image);
         project.Images.Add(image);
+
+        await context.SaveChangesAsync();
+    }
+
+    private const string LaFioreKarabagNewSitePlanPath = "/images/projects/la-fiore-karabag/vaziyet/la-fiore-birinci-yeni-vaziyet-plani.jpeg";
+
+    // Not a seed — replaces La Fiore Karabağ (1. Etap)'s Vaziyet Planı with
+    // the client's new drawing (client request, 2026-10-19). The client
+    // deleted vaziyet/vaziyet.png (and its vaziyet.webp derivative) and
+    // added vaziyet/la-fiore-birinci-yeni-vaziyet-plani.jpeg in its place.
+    // The old row is removed and the new one takes over its DisplayOrder/
+    // AltText, so the Hero's "Vaziyet Planı" button keeps the same single-
+    // image behavior. Runs before
+    // ReconcileLaFioreKarabagYeniGaleriVaziyetVeKatalogAsync (whose own
+    // add-if-missing now points at the new path), so that method never
+    // appends a duplicate. Guarded on an old row still existing, so this is a
+    // no-op on every later startup. Physical files are never touched.
+    private static async Task ReconcileLaFioreKarabagYeniVaziyetPlaniAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.SitePlanImages)
+            .FirstOrDefaultAsync(p => p.Slug == "la-fiore-karabag");
+
+        if (project is null)
+        {
+            return;
+        }
+
+        var staleRows = project.SitePlanImages
+            .Where(sitePlan => sitePlan.ImagePath is "/images/projects/la-fiore-karabag/vaziyet/vaziyet.png"
+                or "/images/projects/la-fiore-karabag/vaziyet/vaziyet.webp")
+            .ToList();
+
+        if (staleRows.Count == 0)
+        {
+            return;
+        }
+
+        if (!project.SitePlanImages.Any(sitePlan => sitePlan.ImagePath == LaFioreKarabagNewSitePlanPath))
+        {
+            context.ProjectSitePlanImages.Add(new ProjectSitePlanImage
+            {
+                ProjectId = project.Id,
+                ImagePath = LaFioreKarabagNewSitePlanPath,
+                AltText = staleRows[0].AltText,
+                AltTextEn = staleRows[0].AltTextEn,
+                DisplayOrder = staleRows.Min(sitePlan => sitePlan.DisplayOrder)
+            });
+        }
+
+        context.ProjectSitePlanImages.RemoveRange(staleRows);
+
+        await context.SaveChangesAsync();
+    }
+
+    // Not a seed — corrects La Fiore Karabağ 2. Etap's D Tipi/E Tipi Blok
+    // Net/Gross areas (client-supplied authoritative values, 2026-10-19).
+    // The two blocks' rows held each other's figures: the drawing at
+    // d-tipi-blok-zemin-kat.jpg prints TOPLAM BRÜT 166,30 / NET 116,70 and
+    // d-tipi-blok-1-kat.jpg prints BRÜT 63,20 / NET 47,00, matching the
+    // client's list, while the D rows stored 226,24/176,21 and 90,10/69,00
+    // (E's figures), and vice versa. Only NetAreaM2/GrossAreaM2 change —
+    // ApartmentType, ImagePath, DisplayOrder and Rooms are left exactly as
+    // they are. Each row is matched by its exact ApartmentType (skipped if
+    // missing or duplicated) and only updated while it still holds the old
+    // swapped pair, so this never overwrites a later edit and is a no-op on
+    // every startup after the first.
+    private static async Task ReconcileLaFioreKarabag2EtapDveETipiAlanDuzeltmesiAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.FloorPlans)
+            .FirstOrDefaultAsync(p => p.Slug == "la-fiore-karabag-2-etap");
+
+        if (project is null)
+        {
+            return;
+        }
+
+        var corrections = new (string ApartmentType, decimal OldNet, decimal OldGross, decimal Net, decimal Gross)[]
+        {
+            ("D Tipi Blok – Zemin Kat", 176.21m, 226.24m, 116.70m, 166.30m),
+            ("D Tipi Blok – 1. Kat", 69.00m, 90.10m, 47.00m, 63.20m),
+            ("E Tipi Blok – Zemin Kat", 116.70m, 166.30m, 176.21m, 226.24m),
+            ("E Tipi Blok – 1. Kat", 47.00m, 63.20m, 69.00m, 90.10m)
+        };
+
+        var changed = false;
+
+        foreach (var correction in corrections)
+        {
+            var matches = project.FloorPlans
+                .Where(fp => fp.ApartmentType == correction.ApartmentType)
+                .ToList();
+
+            if (matches.Count != 1)
+            {
+                continue;
+            }
+
+            var floorPlan = matches[0];
+            if (floorPlan.NetAreaM2 == correction.OldNet && floorPlan.GrossAreaM2 == correction.OldGross)
+            {
+                floorPlan.NetAreaM2 = correction.Net;
+                floorPlan.GrossAreaM2 = correction.Gross;
+                changed = true;
+            }
+        }
+
+        if (changed)
+        {
+            await context.SaveChangesAsync();
+        }
+    }
+
+    // Not a seed — finishes the D/E correction above for the room lists
+    // (client-supplied authoritative values, 2026-10-19, cross-checked
+    // against each drawing). Both floors' room lists were swapped between
+    // the D and E rows exactly like their Net/Gross figures: the "D Tipi
+    // Blok – Zemin Kat" row listed E's rooms (Antre 7,10 m² etc.) and vice
+    // versa, and the same for 1. Kat. The room rows themselves are correct,
+    // just attached to the wrong FloorPlan, so they are moved across by
+    // FloorPlanId — no rows are added, deleted or duplicated, and their
+    // Names/AreaM2/DisplayOrder stay exactly as they are. Each pair only
+    // swaps while both sides still carry the old swapped signature (a room
+    // unique to the other block's drawing), so this never undoes a later
+    // edit and is a no-op on every startup after the first.
+    private static async Task ReconcileLaFioreKarabag2EtapDveETipiOdaDuzeltmesiAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.FloorPlans)
+            .ThenInclude(fp => fp.Rooms)
+            .FirstOrDefaultAsync(p => p.Slug == "la-fiore-karabag-2-etap");
+
+        if (project is null)
+        {
+            return;
+        }
+
+        var pairs = new (string DType, string ETypeSignature, decimal ESignatureArea, string EType, string DTypeSignature, decimal DSignatureArea)[]
+        {
+            ("D Tipi Blok – Zemin Kat", "Antre", 7.10m, "E Tipi Blok – Zemin Kat", "Yaşama Alanı", 26.00m),
+            ("D Tipi Blok – 1. Kat", "Yatak Odası 3", 15.20m, "E Tipi Blok – 1. Kat", "Yatak Odası 1", 18.10m)
+        };
+
+        var changed = false;
+
+        foreach (var pair in pairs)
+        {
+            var dMatches = project.FloorPlans.Where(fp => fp.ApartmentType == pair.DType).ToList();
+            var eMatches = project.FloorPlans.Where(fp => fp.ApartmentType == pair.EType).ToList();
+
+            if (dMatches.Count != 1 || eMatches.Count != 1)
+            {
+                continue;
+            }
+
+            var dFloorPlan = dMatches[0];
+            var eFloorPlan = eMatches[0];
+
+            var stillSwapped =
+                dFloorPlan.Rooms.Any(r => r.Name == pair.ETypeSignature && r.AreaM2 == pair.ESignatureArea)
+                && eFloorPlan.Rooms.Any(r => r.Name == pair.DTypeSignature && r.AreaM2 == pair.DSignatureArea);
+
+            if (!stillSwapped)
+            {
+                continue;
+            }
+
+            var roomsFromD = dFloorPlan.Rooms.ToList();
+            var roomsFromE = eFloorPlan.Rooms.ToList();
+
+            foreach (var room in roomsFromD)
+            {
+                room.FloorPlanId = eFloorPlan.Id;
+            }
+
+            foreach (var room in roomsFromE)
+            {
+                room.FloorPlanId = dFloorPlan.Id;
+            }
+
+            changed = true;
+        }
+
+        if (changed)
+        {
+            await context.SaveChangesAsync();
+        }
+    }
+
+    // Not a seed — adds La Fiore Karabağ 2. Etap F Tipi Blok's missing inner
+    // "Giriş Holü" (3,77 m², printed beside Çamaşır Odası on
+    // f-tipi-blok.jpg; 2026-10-19 drawing audit). The drawing prints two
+    // Giriş Holü per unit, so the existing 5,50 m² row becomes "Giriş Holü 1"
+    // and the new row "Giriş Holü 2", numbered like every other duplicate
+    // room; the rooms after it shift down one DisplayOrder to make room —
+    // same order as BuildLaFioreKarabag2EtapFloorPlans. Guarded on no 3,77 m²
+    // room existing yet, so it runs once and never duplicates.
+    private static async Task ReconcileLaFioreKarabag2EtapFTipiGirisHoluAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.FloorPlans)
+            .ThenInclude(fp => fp.Rooms)
+            .FirstOrDefaultAsync(p => p.Slug == "la-fiore-karabag-2-etap");
+
+        var matches = project?.FloorPlans.Where(fp => fp.ApartmentType == "F Tipi Blok").ToList();
+        if (matches is null || matches.Count != 1)
+        {
+            return;
+        }
+
+        var floorPlan = matches[0];
+        if (floorPlan.Rooms.Any(r => r.AreaM2 == 3.77m))
+        {
+            return;
+        }
+
+        var outerEntries = floorPlan.Rooms.Where(r => r.Name == "Giriş Holü" && r.AreaM2 == 5.50m).ToList();
+        if (outerEntries.Count != 1)
+        {
+            return;
+        }
+
+        var outerEntry = outerEntries[0];
+        outerEntry.Name = "Giriş Holü 1";
+
+        foreach (var room in floorPlan.Rooms.Where(r => r.DisplayOrder > outerEntry.DisplayOrder))
+        {
+            room.DisplayOrder++;
+        }
+
+        context.FloorPlanRooms.Add(new FloorPlanRoom
+        {
+            FloorPlanId = floorPlan.Id,
+            Name = "Giriş Holü 2",
+            AreaM2 = 3.77m,
+            DisplayOrder = outerEntry.DisplayOrder + 1
+        });
+
+        await context.SaveChangesAsync();
+    }
+
+    // Not a seed — replaces La Via Villalar 1. Etap's single old Vaziyet
+    // Planı row (site-plan-1.webp, derived from vaziyet-plani/1.VAZİYET.jpg —
+    // both deleted by the client) with the client's two new site plans
+    // (client request, 2026-10-19) — see BuildKuyuluLaViaVillalarSitePlanImages.
+    // Only the two known old paths are removed; any other site-plan row is
+    // left alone. Guarded on an old row still existing, so this runs once
+    // and is a no-op on every later startup. Physical files are never touched.
+    private static async Task ReconcileKuyuluLaViaVillalarYeniVaziyetPlanlariAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.SitePlanImages)
+            .FirstOrDefaultAsync(p => p.Slug == "kuyulu-la-via-villalar-birinci-etap");
+
+        if (project is null)
+        {
+            return;
+        }
+
+        var staleRows = project.SitePlanImages
+            .Where(sitePlan => sitePlan.ImagePath is "/images/projects/kuyulu-la-via-villalar-birinci-etap/site-plan-1.webp"
+                or "/images/projects/kuyulu-la-via-villalar-birinci-etap/vaziyet-plani/1.VAZİYET.jpg")
+            .ToList();
+
+        if (staleRows.Count == 0)
+        {
+            return;
+        }
+
+        context.ProjectSitePlanImages.RemoveRange(staleRows);
+
+        foreach (var sitePlanImage in BuildKuyuluLaViaVillalarSitePlanImages())
+        {
+            if (project.SitePlanImages.Any(sitePlan => sitePlan.ImagePath == sitePlanImage.ImagePath))
+            {
+                continue;
+            }
+
+            context.ProjectSitePlanImages.Add(new ProjectSitePlanImage
+            {
+                ProjectId = project.Id,
+                ImagePath = sitePlanImage.ImagePath,
+                AltText = sitePlanImage.AltText,
+                DisplayOrder = sitePlanImage.DisplayOrder
+            });
+        }
+
+        await context.SaveChangesAsync();
+    }
+
+    // Not a seed — removes La Via Villalar 1. Etap's two "Opsiyonel Kat
+    // Planları" FloorPlan rows (Zemin Kat/1. Kat) per client request
+    // (2026-10-19). Only rows whose ApartmentType explicitly starts with
+    // "Opsiyonel Kat Planları" are removed; the two "Standart Kat Planları"
+    // rows and the shared "Çatı Katı" row keep their IDs, data and
+    // DisplayOrder. Their FloorPlanRooms go with them. The opsiyonel-*.jpg
+    // drawings stay on disk, untouched; the separate "Optional Interior"
+    // gallery category is not a floor plan and is not touched. No-op once
+    // no such row remains.
+    private static async Task ReconcileKuyuluLaViaVillalarRemoveOptionalFloorPlansAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.FloorPlans)
+            .ThenInclude(fp => fp.Rooms)
+            .FirstOrDefaultAsync(p => p.Slug == "kuyulu-la-via-villalar-birinci-etap");
+
+        var optionalFloorPlans = project?.FloorPlans
+            .Where(fp => fp.ApartmentType.StartsWith("Opsiyonel Kat Planları", StringComparison.Ordinal))
+            .ToList();
+
+        if (optionalFloorPlans is null || optionalFloorPlans.Count == 0)
+        {
+            return;
+        }
+
+        context.FloorPlanRooms.RemoveRange(optionalFloorPlans.SelectMany(fp => fp.Rooms));
+        context.FloorPlans.RemoveRange(optionalFloorPlans);
+
+        await context.SaveChangesAsync();
+    }
+
+    // Not a seed — removes La Via Villalar 1. Etap's Proje Kataloğu
+    // (client request, 2026-10-19). Clearing CataloguePath means no catalogue
+    // URL is ever exposed for this project; unlike
+    // ReconcileFerhundeHanimAptRemoveCatalogueAsync, the catalogue buttons
+    // themselves stay visible and show a "Yakında Eklenecek..." toast —
+    // driven by ProjectsController.CatalogueComingSoonPlaceholderSlugs, not
+    // by CatalogueComingSoon (whose message/visibility rules other projects
+    // still rely on). The seed definition's CataloguePath is null too, so
+    // ReconcileMissingCataloguePathsAsync never backfills it. The PDF file
+    // itself is left on disk for the client to remove. No-op once
+    // CataloguePath is already null.
+    private static async Task ReconcileKuyuluLaViaVillalarRemoveCatalogueAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .FirstOrDefaultAsync(p => p.Slug == "kuyulu-la-via-villalar-birinci-etap");
+
+        if (project is null || project.CataloguePath is null)
+        {
+            return;
+        }
+
+        project.CataloguePath = null;
+        project.CatalogueComingSoon = false;
+        project.CatalogueComingSoonHeroToast = false;
+
+        await context.SaveChangesAsync();
+    }
+
+    private const string SecondConceptImagePathLaVia = "/images/projects/kuyulu-la-via-villalar-birinci-etap/gallery/exterior/originals/13.jpg";
+
+    private const string SecondConceptDescriptionLaVia = "Yemyeşil bir dokuyla çevrili düzenli villa sıraları ve peyzajlı bahçeleriyle bütüncül bir yerleşim planına sahip La Via Villalar 1. Etap, hem huzurlu bir yaşamı hem de Kuyulu'nun gelişen değeriyle birlikte güçlü bir yatırım fırsatını bir araya getiriyor.";
+
+    // Not a seed — swaps La Via Villalar 1. Etap's second Concept card
+    // (DisplayOrder 3, "Kuyulu'da Ayrıcalıklı Bir Yatırım") from 16.jpg —
+    // whose aerial shows the neighbouring shopping complex on the right —
+    // to 13.jpg, the project's own aerial of the villa rows only (client
+    // request, 2026-10-19). The Description is rewritten to match (13.jpg
+    // shows no "sosyal tesis binası"); Eyebrow/Title stay. Updated in place,
+    // so the row keeps its ID and DisplayOrder. 16.jpg stays on disk and in
+    // the Exterior gallery. No-op once no concept row points at 16.jpg.
+    private static async Task ReconcileKuyuluLaViaVillalarSecondConceptImageReplacementAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.ConceptImages)
+            .FirstOrDefaultAsync(p => p.Slug == "kuyulu-la-via-villalar-birinci-etap");
+
+        var staleSlide = project?.ConceptImages
+            .FirstOrDefault(i => i.ImagePath.EndsWith("/gallery/exterior/originals/16.jpg", StringComparison.Ordinal));
+
+        if (staleSlide is null)
+        {
+            return;
+        }
+
+        staleSlide.ImagePath = SecondConceptImagePathLaVia;
+        staleSlide.Description = SecondConceptDescriptionLaVia;
+
+        await context.SaveChangesAsync();
+    }
+
+    // Not a seed — drops the "her villaya özel havuzları" claim from La Via
+    // Villalar 1. Etap's second Concept card (client request, 2026-10-19:
+    // not every villa has a private pool). Only the Description changes;
+    // image, Eyebrow, Title and DisplayOrder stay. No-op once no concept row
+    // of this project carries the claim.
+    private static async Task ReconcileKuyuluLaViaVillalarSecondConceptRemovePoolClaimAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.ConceptImages)
+            .FirstOrDefaultAsync(p => p.Slug == "kuyulu-la-via-villalar-birinci-etap");
+
+        var staleSlide = project?.ConceptImages
+            .FirstOrDefault(i => i.Description.Contains("her villaya özel havuzları", StringComparison.Ordinal));
+
+        if (staleSlide is null)
+        {
+            return;
+        }
+
+        staleSlide.Description = SecondConceptDescriptionLaVia;
+
+        await context.SaveChangesAsync();
+    }
+
+    // Not a seed — removes Ferhunde Hanım Apt.'s third Concept card
+    // (exterior-20.jpg, "Güvenli ve Düzenli Bir Yerleşim", DisplayOrder 3)
+    // per client request (2026-10-19). Cards 1/2 are untouched.
+    // ReconcileFerhundeHanimAptRevisionAsync (the only other writer of this
+    // project's ConceptImages) is guarded on ConceptImages being empty, so
+    // it never re-adds the card. The photo file stays on disk. No-op once
+    // the row is gone.
+    private static async Task ReconcileFerhundeHanimAptRemoveThirdConceptImageAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.ConceptImages)
+            .FirstOrDefaultAsync(p => p.Slug == "ferhunde-hanim-apt");
+
+        var staleSlide = project?.ConceptImages
+            .FirstOrDefault(i => i.DisplayOrder == 3
+                && i.ImagePath.EndsWith("/gallery/exterior/originals/exterior-20.jpg", StringComparison.Ordinal));
+
+        if (staleSlide is null)
+        {
+            return;
+        }
+
+        context.ProjectConceptImages.Remove(staleSlide);
+
+        await context.SaveChangesAsync();
+    }
+
+    // Not a seed — removes La Via Villalar 1. Etap's (formerly "Lavia
+    // Kuyulu") "Çatı Katı" FloorPlan row per client request (2026-10-19).
+    // Matched on this project's slug plus the exact ApartmentType and
+    // ImagePath, so the two "Standart Kat Planları" rows and every other
+    // project's roof plans (e.g. Davutlar D Latis' "A Blok – Çatı Katı") are
+    // untouched. The row has no FloorPlanRooms today; any it ever had would
+    // go with it (removed explicitly, same as
+    // ReconcileKuyuluLaViaVillalarRemoveOptionalFloorPlansAsync).
+    // BuildKuyuluLaViaVillalarFloorPlans no longer contains the plan and
+    // ReconcileKuyuluLaViaVillalarVaziyetPlaniCatiKatiVeKonseptAsync no
+    // longer backfills it, so nothing recreates it. cati-kati.jpg and its
+    // thumbnail stay on disk. No-op once the row is gone.
+    private static async Task ReconcileKuyuluLaViaVillalarRemoveRoofFloorPlanAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.FloorPlans)
+            .ThenInclude(fp => fp.Rooms)
+            .FirstOrDefaultAsync(p => p.Slug == "kuyulu-la-via-villalar-birinci-etap");
+
+        var roofFloorPlans = project?.FloorPlans
+            .Where(fp => fp.ApartmentType == "Çatı Katı"
+                && fp.ImagePath == "/images/projects/kuyulu-la-via-villalar-birinci-etap/floorplans/originals/cati-kati.jpg")
+            .ToList();
+
+        if (roofFloorPlans is null || roofFloorPlans.Count == 0)
+        {
+            return;
+        }
+
+        context.FloorPlanRooms.RemoveRange(roofFloorPlans.SelectMany(fp => fp.Rooms));
+        context.FloorPlans.RemoveRange(roofFloorPlans);
+
+        await context.SaveChangesAsync();
+    }
+
+    // Not a seed — adds La Fiore Karabağ 2. Etap G Tipi Blok (1+1)'s missing
+    // "Giriş Holü" (4,50 m², client-approved 2026-10-19), placed after
+    // Mutfak like every other block's Giriş Holü; the rooms after it shift
+    // down one DisplayOrder, matching BuildLaFioreKarabag2EtapFloorPlans.
+    // Names/areas of the existing rooms are untouched. Guarded on the plan
+    // having no "Giriş Holü" yet, so it runs once and never duplicates.
+    private static async Task ReconcileLaFioreKarabag2EtapGTipiGirisHoluAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.FloorPlans)
+            .ThenInclude(fp => fp.Rooms)
+            .FirstOrDefaultAsync(p => p.Slug == "la-fiore-karabag-2-etap");
+
+        var matches = project?.FloorPlans.Where(fp => fp.ApartmentType == "G Tipi Blok (1+1)").ToList();
+        if (matches is null || matches.Count != 1)
+        {
+            return;
+        }
+
+        var floorPlan = matches[0];
+        if (floorPlan.Rooms.Any(r => r.Name == "Giriş Holü"))
+        {
+            return;
+        }
+
+        var kitchens = floorPlan.Rooms.Where(r => r.Name == "Mutfak").ToList();
+        var insertOrder = kitchens.Count == 1
+            ? kitchens[0].DisplayOrder + 1
+            : (floorPlan.Rooms.Count == 0 ? 1 : floorPlan.Rooms.Max(r => r.DisplayOrder) + 1);
+
+        foreach (var room in floorPlan.Rooms.Where(r => r.DisplayOrder >= insertOrder))
+        {
+            room.DisplayOrder++;
+        }
+
+        context.FloorPlanRooms.Add(new FloorPlanRoom
+        {
+            FloorPlanId = floorPlan.Id,
+            Name = "Giriş Holü",
+            AreaM2 = 4.50m,
+            DisplayOrder = insertOrder
+        });
 
         await context.SaveChangesAsync();
     }

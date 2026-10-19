@@ -173,7 +173,14 @@
                     @(isEn ? "Site Plan" : "Vaziyet Planı")
                 </button>
             }
-            @if (!string.IsNullOrWhiteSpace(Model.CatalogueUrl) && !hideCatalogueHeroButton)
+            @if (Model.CataloguePlaceholderToastMessage is not null && !hideCatalogueHeroButton)
+            {
+                @* La Via Villalar 1. Etap catalogue removal (2026-10-19) —
+                   same scroll link to the (still rendered) catalogue CTA,
+                   plus the shared toast; no catalogue file is linked. *@
+                <a class="btn btn-hero-segment btn-hero-segment--accent" href="#project-catalogue" data-toast-trigger data-toast-message="@Model.CataloguePlaceholderToastMessage">@(isEn ? "Explore Project" : "Kataloğu İncele")</a>
+            }
+            else if (!string.IsNullOrWhiteSpace(Model.CatalogueUrl) && !hideCatalogueHeroButton)
             {
                 @* Alinda Gold Residence revision (2026-08-10) —
                    CatalogueComingSoonHeroToast opts a project into also

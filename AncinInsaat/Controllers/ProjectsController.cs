@@ -216,6 +216,15 @@ public class ProjectsController : Controller
             "la-fiore-karabag-2-etap", "ferhunde-hanim-apt", "q-latis"
         };
 
+    // Projects whose catalogue was removed but whose catalogue buttons must
+    // stay visible, showing a "Yakında Eklenecek..." toast instead of a
+    // download (La Via Villalar 1. Etap, client request 2026-10-19 — see
+    // DbSeeder.ReconcileKuyuluLaViaVillalarRemoveCatalogueAsync). Kept
+    // separate from Project.CatalogueComingSoon, whose message and
+    // visibility rules other projects still rely on.
+    private static readonly IReadOnlySet<string> CatalogueComingSoonPlaceholderSlugs =
+        new HashSet<string> { "kuyulu-la-via-villalar-birinci-etap" };
+
     // Project Detail Hero background overrides for La Via Villalar 1. Etap
     // and D-Latis (2026-08-20 client request) — same "freshly uploaded, not
     // yet converted to banner.webp" treatment as Nysa Gold/Le Jardin below,
@@ -382,7 +391,10 @@ public class ProjectsController : Controller
             // project's card shows this toast instead of linking to its
             // detail page (_ProjectCard.cshtml). Null for every other
             // project, whose card keeps its normal link.
-            ComingSoonToastMessage = project.IsFutureProject
+            // Also forced for any project whose detail page is switched off
+            // (ProjectDetailAvailability, 2026-10-19), so the listing never
+            // renders a link to a 404 even if IsFutureProject is cleared first.
+            ComingSoonToastMessage = project.IsFutureProject || !ProjectDetailAvailability.IsDetailPageAvailable(project.Slug)
                 ? Localize("Details coming soon...", "Detaylar yakında...")
                 : null,
             Location = project.Location,
@@ -430,6 +442,15 @@ public class ProjectsController : Controller
     [HttpGet("en/projects/{slug}")]
     public async Task<IActionResult> Details(string slug)
     {
+        // Checked before the database lookup: a project whose detail page is
+        // switched off (D Latis / Q Latis, client request 2026-10-19 — see
+        // ProjectDetailAvailability) returns the same 404 as an unknown slug,
+        // for both /projects/{slug} and /en/projects/{slug}.
+        if (!ProjectDetailAvailability.IsDetailPageAvailable(slug))
+        {
+            return NotFound();
+        }
+
         var project = await _projectQueryService.GetPublishedProjectBySlugAsync(slug);
 
         if (project is null)
@@ -614,6 +635,9 @@ public class ProjectsController : Controller
             // without CatalogueComingSoon also being true — see
             // Project.CatalogueComingSoonHeroToast.
             CatalogueComingSoonHeroToast = project.CatalogueComingSoon && project.CatalogueComingSoonHeroToast,
+            CataloguePlaceholderToastMessage = CatalogueComingSoonPlaceholderSlugs.Contains(project.Slug)
+                ? Localize("Coming soon...", "Yakında Eklenecek...")
+                : null,
             FloorPlanCatalogueUrl = !string.IsNullOrWhiteSpace(project.FloorPlanCataloguePath) && FileExistsInWebRoot(project.FloorPlanCataloguePath)
                 ? project.FloorPlanCataloguePath
                 : (!string.IsNullOrWhiteSpace(project.CataloguePath) && FileExistsInWebRoot(project.CataloguePath) ? project.CataloguePath : null),
@@ -658,7 +682,10 @@ public class ProjectsController : Controller
                             .Select(room => new FloorPlanRoomModel { Name = Localize(room.NameEn, room.Name), AreaM2 = room.AreaM2 })
                             .ToList(),
                         Src = FileExistsInWebRoot(floorPlan.ImagePath) ? floorPlan.ImagePath : null,
-                        ThumbnailSrc = FileExistsInWebRoot(floorPlan.ImagePath) ? ResolveThumbnail(floorPlan.ImagePath) : null
+                        ThumbnailSrc = FileExistsInWebRoot(floorPlan.ImagePath) ? ResolveThumbnail(floorPlan.ImagePath) : null,
+                        DisplaySrc = FileExistsInWebRoot(floorPlan.ImagePath) && FileExistsInWebRoot(ImagePathHelper.GetDisplayPath(floorPlan.ImagePath))
+                            ? ImagePathHelper.GetDisplayPath(floorPlan.ImagePath)
+                            : null
                     };
                 })
                 .ToList()

@@ -89,7 +89,27 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+
+// Static asset caching (docs/11_Performance.md "Caching"; performance pass,
+// 2026-10-19) — previously no Cache-Control header was sent at all, so
+// browsers only cached heuristically and large images (e.g. 15-18 MB floor
+// plan originals) could be re-downloaded on every view. A request carrying
+// a version query (asp-append-version's ?v=<hash> on site.css/site.js, or a
+// hand-added ?v= like the location images) can never go stale, so it is
+// cached for a year. Every other file keeps a short 1-day lifetime because
+// client assets are sometimes replaced in place under the same path;
+// after that the browser revalidates with the existing ETag/Last-Modified
+// (a cheap 304 when unchanged).
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = staticFileContext =>
+    {
+        var headers = staticFileContext.Context.Response.Headers;
+        headers.CacheControl = staticFileContext.Context.Request.Query.ContainsKey("v")
+            ? "public, max-age=31536000, immutable"
+            : "public, max-age=86400";
+    }
+});
 
 app.UseRequestLocalization(requestLocalizationOptions);
 

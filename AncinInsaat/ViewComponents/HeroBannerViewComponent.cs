@@ -81,8 +81,10 @@ public class HeroBannerViewComponent : ViewComponent
                             ? "/images/projects/la-fiore-karabag-2-etap/banner/la-fiore-2-etap-banner-36.jpeg"
                             : $"/images/projects/{latestProject.Slug}/banner.webp"
                 : null,
-            ProjectCtaLabel = latestProject is not null ? (isEnglish ? "View Project" : "Projeye Git") : null,
-            ProjectCtaUrl = latestProject is not null ? $"{pathPrefix}/projects/{latestProject.Slug}" : null,
+            // No CTA when the featured project's detail page is switched off
+            // (ProjectDetailAvailability, 2026-10-19) — never link to a 404.
+            ProjectCtaLabel = latestProject is not null && ProjectDetailAvailability.IsDetailPageAvailable(latestProject.Slug) ? (isEnglish ? "View Project" : "Projeye Git") : null,
+            ProjectCtaUrl = latestProject is not null && ProjectDetailAvailability.IsDetailPageAvailable(latestProject.Slug) ? $"{pathPrefix}/projects/{latestProject.Slug}" : null,
             // Mobile Performance & Responsive Pass (2026-10-02) — same
             // ProjectHeroMobileFocusMap the Project Detail Hero resolves
             // from, so the Home Hero crops the latest featured project's own

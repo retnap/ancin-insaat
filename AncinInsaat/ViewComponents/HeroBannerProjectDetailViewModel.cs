@@ -64,6 +64,13 @@ public class HeroBannerProjectDetailViewModel
     // scroll link exactly as before.
     public bool CatalogueComingSoonHeroToast { get; init; }
 
+    // La Via Villalar 1. Etap catalogue removal (2026-10-19) — non-null
+    // keeps the "Kataloğu İncele" button visible with no CatalogueUrl; it
+    // still scrolls to #project-catalogue and also shows this message in
+    // the shared toast. Null for every other project. See
+    // ProjectDetailViewModel.CataloguePlaceholderToastMessage.
+    public string? CataloguePlaceholderToastMessage { get; init; }
+
     // Empty omits the Vaziyet Planı button entirely — unless
     // SitePlanComingSoon is true, in which case the button still renders,
     // showing a Coming Soon toast instead of opening the Media Viewer

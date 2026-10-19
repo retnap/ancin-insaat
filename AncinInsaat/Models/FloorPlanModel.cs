@@ -35,4 +35,11 @@ public class FloorPlanModel
     // Lightweight WebP thumbnail — what the panel's own visual actually
     // renders. Same fallback-to-Src contract as GalleryImageModel.ThumbnailSrc.
     public string? ThumbnailSrc { get; init; }
+
+    // Screen-sized WebP derivative of Src (longest side 3000px, see
+    // ImagePathHelper.GetDisplayPath) — what the Media Viewer shows at 1x,
+    // so opening a plan no longer waits for the 15-18 MB original; Src is
+    // still loaded once the visitor zooms in. Null when no derivative has
+    // been generated, in which case the viewer loads Src as before.
+    public string? DisplaySrc { get; init; }
 }

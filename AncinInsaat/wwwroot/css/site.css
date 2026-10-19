@@ -1769,12 +1769,25 @@ select[aria-invalid='true'] {
 
 .cta-banner {
   background-color: var(--color-near-black);
+  /* Performance pass (2026-10-19): this banner renders on every page, and
+     the 6000x3375 / 2.4 MB original was downloaded on each one. A 3200px
+     WebP (~375 KB, same crop/colors, generated with ThumbnailTool --single
+     at q85) now serves every screen up to 1600 CSS px wide at 2x density;
+     wider high-density screens still get the untouched original below. */
   background-image:
     linear-gradient(rgba(28, 28, 28, 0.5), rgba(28, 28, 28, 0.5)),
-    url('/images/logos/skyscrapper-2.jpg');
+    url('/images/logos/skyscrapper-2-3200w.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+@media (min-width: 1601px) and (min-resolution: 2dppx) {
+  .cta-banner {
+    background-image:
+      linear-gradient(rgba(28, 28, 28, 0.5), rgba(28, 28, 28, 0.5)),
+      url('/images/logos/skyscrapper-2.jpg');
+  }
 }
 
 .cta-banner-link {
@@ -4251,6 +4264,21 @@ select[aria-invalid='true'] {
     max-width: 88vw;
     max-height: 88vh;
   }
+}
+
+/* Progressive floor plan loading (2026-10-19) — while the 800px WebP
+   thumbnail stands in for the full-resolution original (see site.js
+   Media Viewer render()), stretch its box to the same max-width/max-height
+   caps above and contain the drawing inside it, so the preview appears at
+   the exact size the original will, with no jump when it swaps in. */
+/* .is-display (2026-10-19): same box for the screen-sized display
+   derivative (site.js floorPlanDisplaySrc), so preview -> display ->
+   original (on zoom) all render at exactly the same size and position. */
+.media-viewer.is-floorplan-viewer .media-viewer-image.is-preview,
+.media-viewer.is-floorplan-viewer .media-viewer-image.is-display {
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain;
 }
 
 .media-viewer-image.is-loaded {
