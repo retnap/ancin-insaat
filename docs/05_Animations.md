@@ -4,7 +4,7 @@
 
 ## Purpose
 
-This document defines the animation philosophy used throughout the Ançın İnşaat website.
+This document defines the animation philosophy used throughout the Ancın İnşaat website.
 
 Animations should improve user experience, reinforce the premium brand identity and guide attention without becoming distracting.
 

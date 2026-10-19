@@ -223,7 +223,7 @@ Impact
 **2026-07-28**
 
 Decision: CTA Banner and Partner Logos (renamed in practice to "Project
-Logo Carousel" — Ançın's own project wordmarks, not third-party
+Logo Carousel" — Ancın's own project wordmarks, not third-party
 partners) became global shared-layout sections, rendered once in
 `_Layout.cshtml` on every page, instead of a page-specific section each
 page composes individually.

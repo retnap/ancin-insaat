@@ -48,7 +48,7 @@ public class HeroBannerViewComponent : ViewComponent
         {
             Heading = "LA FIORE KARABAĞ 2. ETAP",
             Subheading = isEnglish
-                ? "Ançın İnşaat carries living spaces into the future through projects shaped by trust and craftsmanship."
+                ? "Ancın İnşaat carries living spaces into the future through projects shaped by trust and craftsmanship."
                 : "Ancın İnşaat, güven ve zanaatkârlıkla şekillenen projeleriyle yaşam alanlarını geleceğe taşıyor.",
             PrimaryCtaLabel = isEnglish ? "Explore Our Projects" : "Projelerimizi İnceleyin",
             PrimaryCtaUrl = $"{pathPrefix}/projects",

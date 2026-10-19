@@ -47,6 +47,7 @@ public static class DbSeeder
         await SeedCareerPositionsAsync(context);
         await ReconcileCareerPositionPlaceholderPrefixAsync(context);
         await SeedSeoMetadataAsync(context);
+        await ReconcileCompanyNameSpellingAsync(context);
     }
 
     private static async Task SeedSiteSettingsAsync(AppDbContext context)
@@ -332,8 +333,8 @@ public static class DbSeeder
                 // SeoService falls back to the Turkish fields above when
                 // null. See LanguageUrlService for how the canonical URL
                 // itself is localized without a second CanonicalUrl column.
-                MetaTitleEn = "Ançın İnşaat | Trusted Residential Projects in Aydın",
-                MetaDescriptionEn = "Ançın İnşaat carries living spaces into the future through residential projects shaped by trust and craftsmanship in Aydın. Explore our ongoing and completed projects.",
+                MetaTitleEn = "Ancın İnşaat | Trusted Residential Projects in Aydın",
+                MetaDescriptionEn = "Ancın İnşaat carries living spaces into the future through residential projects shaped by trust and craftsmanship in Aydın. Explore our ongoing and completed projects.",
                 CanonicalUrl = "/",
                 OpenGraphImage = "/images/seo/og-home.webp"
             },
@@ -346,8 +347,8 @@ public static class DbSeeder
                 Page = "projects",
                 MetaTitle = "Projelerimiz | Ancın İnşaat",
                 MetaDescription = "Ancın İnşaat'ın Aydın'da tamamladığı ve devam eden tüm konut projelerini keşfedin.",
-                MetaTitleEn = "Our Projects | Ançın İnşaat",
-                MetaDescriptionEn = "Explore all of Ançın İnşaat's completed and ongoing residential projects in Aydın.",
+                MetaTitleEn = "Our Projects | Ancın İnşaat",
+                MetaDescriptionEn = "Explore all of Ancın İnşaat's completed and ongoing residential projects in Aydın.",
                 CanonicalUrl = "/projects",
                 OpenGraphImage = "/images/seo/og-home.webp"
             },
@@ -357,8 +358,8 @@ public static class DbSeeder
                 Page = "contact",
                 MetaTitle = "İletişim | Ancın İnşaat",
                 MetaDescription = "Ancın İnşaat ile iletişime geçin. Adres, telefon, e-posta bilgilerimiz ve iletişim formumuz.",
-                MetaTitleEn = "Contact | Ançın İnşaat",
-                MetaDescriptionEn = "Get in touch with Ançın İnşaat — our address, phone, email details and contact form.",
+                MetaTitleEn = "Contact | Ancın İnşaat",
+                MetaDescriptionEn = "Get in touch with Ancın İnşaat — our address, phone, email details and contact form.",
                 CanonicalUrl = "/contact",
                 OpenGraphImage = "/images/seo/og-home.webp"
             },
@@ -371,8 +372,8 @@ public static class DbSeeder
                 Page = "about-us",
                 MetaTitle = "Hakkımızda | Ancın İnşaat",
                 MetaDescription = "Ancın İnşaat'ın 1973'ten bugüne uzanan hikayesini, değerlerini ve Aydın'daki yolculuğunu keşfedin.",
-                MetaTitleEn = "About Us | Ançın İnşaat",
-                MetaDescriptionEn = "Discover Ançın İnşaat's story since 1973, our values and our journey in Aydın.",
+                MetaTitleEn = "About Us | Ancın İnşaat",
+                MetaDescriptionEn = "Discover Ancın İnşaat's story since 1973, our values and our journey in Aydın.",
                 CanonicalUrl = "/about-us",
                 OpenGraphImage = "/images/seo/og-home.webp"
             },
@@ -385,8 +386,8 @@ public static class DbSeeder
                 Page = "values",
                 MetaTitle = "Değerlerimiz | Ancın İnşaat",
                 MetaDescription = "Ancın İnşaat'ın kurumsal kültürünü ve inşaat anlayışını şekillendiren temel değerleri keşfedin.",
-                MetaTitleEn = "Our Values | Ançın İnşaat",
-                MetaDescriptionEn = "Discover the core values that shape Ançın İnşaat's corporate culture and approach to construction.",
+                MetaTitleEn = "Our Values | Ancın İnşaat",
+                MetaDescriptionEn = "Discover the core values that shape Ancın İnşaat's corporate culture and approach to construction.",
                 CanonicalUrl = "/values",
                 OpenGraphImage = "/images/seo/og-home.webp"
             },
@@ -399,8 +400,8 @@ public static class DbSeeder
                 Page = "career",
                 MetaTitle = "Kariyer | Ancın İnşaat",
                 MetaDescription = "Ancın İnşaat'ta kariyer fırsatlarını keşfedin, açık pozisyonlarımıza CV'nizle başvurun.",
-                MetaTitleEn = "Career | Ançın İnşaat",
-                MetaDescriptionEn = "Explore career opportunities at Ançın İnşaat and apply to our open positions with your CV.",
+                MetaTitleEn = "Career | Ancın İnşaat",
+                MetaDescriptionEn = "Explore career opportunities at Ancın İnşaat and apply to our open positions with your CV.",
                 CanonicalUrl = "/career",
                 OpenGraphImage = "/images/seo/og-home.webp"
             },
@@ -413,8 +414,8 @@ public static class DbSeeder
                 Page = "hr-policy",
                 MetaTitle = "İnsan Kaynakları Politikası | Ancın İnşaat",
                 MetaDescription = "Ancın İnşaat'ın çalışan gelişimi, kurum kültürü ve insan kaynakları ilkelerini keşfedin.",
-                MetaTitleEn = "Human Resources Policy | Ançın İnşaat",
-                MetaDescriptionEn = "Discover Ançın İnşaat's approach to employee development, corporate culture and human resources principles.",
+                MetaTitleEn = "Human Resources Policy | Ancın İnşaat",
+                MetaDescriptionEn = "Discover Ancın İnşaat's approach to employee development, corporate culture and human resources principles.",
                 CanonicalUrl = "/hr-policy",
                 OpenGraphImage = "/images/seo/og-home.webp"
             },
@@ -427,8 +428,8 @@ public static class DbSeeder
                 Page = "kvkk",
                 MetaTitle = "KVKK Aydınlatma Metni | Ancın İnşaat",
                 MetaDescription = "Ancın İnşaat'ın 6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) kapsamında kişisel verilerin işlenmesine ilişkin aydınlatma metni.",
-                MetaTitleEn = "KVKK Privacy Notice | Ançın İnşaat",
-                MetaDescriptionEn = "Ançın İnşaat's notice on the processing of personal data under Turkish Law No. 6698 on the Protection of Personal Data (KVKK).",
+                MetaTitleEn = "KVKK Privacy Notice | Ancın İnşaat",
+                MetaDescriptionEn = "Ancın İnşaat's notice on the processing of personal data under Turkish Law No. 6698 on the Protection of Personal Data (KVKK).",
                 CanonicalUrl = "/kvkk",
                 OpenGraphImage = "/images/seo/og-home.webp"
             },
@@ -456,8 +457,8 @@ public static class DbSeeder
                 Page = "sosyal-sorumluluk-projelerimiz",
                 MetaTitle = "Sosyal Sorumluluk | Ancın İnşaat",
                 MetaDescription = "Ancın İnşaat'ın çalışanlara, çevreye ve yerel topluma karşı sorumluluk anlayışını şekillendiren yaklaşımları keşfedin.",
-                MetaTitleEn = "Social Responsibility | Ançın İnşaat",
-                MetaDescriptionEn = "Discover the approach that shapes Ançın İnşaat's sense of responsibility toward its employees, the environment and the local community.",
+                MetaTitleEn = "Social Responsibility | Ancın İnşaat",
+                MetaDescriptionEn = "Discover the approach that shapes Ancın İnşaat's sense of responsibility toward its employees, the environment and the local community.",
                 CanonicalUrl = "/sosyal-sorumluluk-projelerimiz",
                 OpenGraphImage = "/images/seo/og-home.webp"
             }
@@ -521,6 +522,94 @@ public static class DbSeeder
         }
     }
 
+    // Not a seed — site-wide company-name spelling correction (client
+    // decision, 2026-10-19): the company name is "Ancın İnşaat" (Latin c)
+    // everywhere. Earlier seed copy misspelled it with a cedilla ç, and
+    // seeding never overwrites an existing row, so a database seeded before
+    // this fix keeps the old spelling even though every seed string in this
+    // file is now correct. Rewrites only that one word, only in the
+    // description/SEO text columns the seeder ever filled with it (plus
+    // their sibling language columns), and only on rows that still contain
+    // it — so once applied it loads nothing and never calls SaveChanges,
+    // safe on every startup and on a freshly seeded database. Runs last in
+    // SeedAsync so no earlier seed or reconcile step can reintroduce the old
+    // spelling after it. Supersedes the 2026-10-08 Concept-text-only fixes
+    // (ReconcileKuyuluLaViaVillalarKonseptMetniAsync,
+    // ReconcileLaFioreKarabag2EtapKonseptMetniAsync).
+    private static async Task ReconcileCompanyNameSpellingAsync(AppDbContext context)
+    {
+        // The misspelled form, written with escapes so the wrong spelling
+        // never appears as literal text in source: "An" + ç (U+00E7) +
+        // ı (U+0131) + "n".
+        const string misspelled = "An\u00e7\u0131n";
+        const string correct = "Ancın";
+
+        static string? Fix(string? value) => value?.Replace(misspelled, correct, StringComparison.Ordinal);
+
+        var projects = await context.Projects
+            .Where(p => p.Description.Contains(misspelled) ||
+                p.ShortDescription.Contains(misspelled) ||
+                (p.DescriptionEn != null && p.DescriptionEn.Contains(misspelled)) ||
+                (p.ShortDescriptionEn != null && p.ShortDescriptionEn.Contains(misspelled)) ||
+                (p.ConceptDescription != null && p.ConceptDescription.Contains(misspelled)) ||
+                (p.ConceptDescriptionEn != null && p.ConceptDescriptionEn.Contains(misspelled)))
+            .ToListAsync();
+
+        foreach (var project in projects)
+        {
+            project.Description = Fix(project.Description)!;
+            project.ShortDescription = Fix(project.ShortDescription)!;
+            project.DescriptionEn = Fix(project.DescriptionEn);
+            project.ShortDescriptionEn = Fix(project.ShortDescriptionEn);
+            project.ConceptDescription = Fix(project.ConceptDescription);
+            project.ConceptDescriptionEn = Fix(project.ConceptDescriptionEn);
+        }
+
+        var conceptImages = await context.ProjectConceptImages
+            .Where(i => i.Description.Contains(misspelled) ||
+                (i.DescriptionEn != null && i.DescriptionEn.Contains(misspelled)))
+            .ToListAsync();
+
+        foreach (var image in conceptImages)
+        {
+            image.Description = Fix(image.Description)!;
+            image.DescriptionEn = Fix(image.DescriptionEn);
+        }
+
+        var conceptVideos = await context.ProjectConceptVideos
+            .Where(v => v.Description.Contains(misspelled) ||
+                (v.DescriptionEn != null && v.DescriptionEn.Contains(misspelled)))
+            .ToListAsync();
+
+        foreach (var video in conceptVideos)
+        {
+            video.Description = Fix(video.Description)!;
+            video.DescriptionEn = Fix(video.DescriptionEn);
+        }
+
+        var seoRows = await context.SeoMetadata
+            .Where(s => s.MetaTitle.Contains(misspelled) ||
+                s.MetaDescription.Contains(misspelled) ||
+                (s.MetaTitleEn != null && s.MetaTitleEn.Contains(misspelled)) ||
+                (s.MetaDescriptionEn != null && s.MetaDescriptionEn.Contains(misspelled)))
+            .ToListAsync();
+
+        foreach (var row in seoRows)
+        {
+            row.MetaTitle = Fix(row.MetaTitle)!;
+            row.MetaDescription = Fix(row.MetaDescription)!;
+            row.MetaTitleEn = Fix(row.MetaTitleEn);
+            row.MetaDescriptionEn = Fix(row.MetaDescriptionEn);
+        }
+
+        if (projects.Count == 0 && conceptImages.Count == 0 && conceptVideos.Count == 0 && seoRows.Count == 0)
+        {
+            return;
+        }
+
+        await context.SaveChangesAsync();
+    }
+
     // Names/slugs mirror SeedProjectsAsync's project list exactly — kept as
     // a second, explicit list (rather than deriving it from the Project
     // seed data) so this method has no ordering dependency on
@@ -551,8 +640,8 @@ public static class DbSeeder
             // English localization (2026-10-02) — p.Name is never
             // translated (project names are brand names), only the
             // surrounding template text.
-            MetaTitleEn = $"{p.Name} | Ançın İnşaat",
-            MetaDescriptionEn = $"Explore Ançın İnşaat's {p.Name} project. Location, status and project details.",
+            MetaTitleEn = $"{p.Name} | Ancın İnşaat",
+            MetaDescriptionEn = $"Explore Ancın İnşaat's {p.Name} project. Location, status and project details.",
             CanonicalUrl = $"/projects/{p.Slug}",
             OpenGraphImage = $"/images/projects/{p.Slug}/cover.webp"
         });
@@ -1136,7 +1225,7 @@ public static class DbSeeder
                 ImagePath = "/images/projects/kuyulu-avm/gallery/originals/kuyulu-avm-01.jpg",
                 Eyebrow = "Kuyulu'nun Yeni Merkezi",
                 Title = "Zeytinliklerin Eşiğinde Bir Yaşam Merkezi",
-                Description = "Aydın Efeler'de, geniş bir zeytinlik dokusunun kenarında yükselen La Via AVM, alışverişi gündelik bir ihtiyaçtan çok bir yaşam deneyimine dönüştürüyor. Gölgelikli teraslar, geniş yürüyüş alanları ve özenle tasarlanmış peyzajıyla proje, Ançın İnşaat'ın imza kalite anlayışını ticari ölçekte yeniden yorumluyor.",
+                Description = "Aydın Efeler'de, geniş bir zeytinlik dokusunun kenarında yükselen La Via AVM, alışverişi gündelik bir ihtiyaçtan çok bir yaşam deneyimine dönüştürüyor. Gölgelikli teraslar, geniş yürüyüş alanları ve özenle tasarlanmış peyzajıyla proje, Ancın İnşaat'ın imza kalite anlayışını ticari ölçekte yeniden yorumluyor.",
                 DisplayOrder = 1
             },
             new()
@@ -1208,7 +1297,7 @@ public static class DbSeeder
                 PosterPath = "/images/projects/q-latis/concept/poster.webp",
                 Eyebrow = "Kuşadası'nda Yeni Bir Yaşam",
                 Title = "Hacıfeyzullah - Q-Latis'e Hoş Geldiniz",
-                Description = "Kuşadası'nın eşsiz doğasıyla iç içe, Ançın İnşaat güvencesiyle hayata geçen Hacıfeyzullah - Q-Latis, modern mimarisi ve deniz manzaralı yaşam alanlarıyla ayrıcalıklı bir yaşamı sizlere sunuyor.",
+                Description = "Kuşadası'nın eşsiz doğasıyla iç içe, Ancın İnşaat güvencesiyle hayata geçen Hacıfeyzullah - Q-Latis, modern mimarisi ve deniz manzaralı yaşam alanlarıyla ayrıcalıklı bir yaşamı sizlere sunuyor.",
                 DisplayOrder = 1
             }
         };
@@ -4410,7 +4499,7 @@ public static class DbSeeder
                 Name = "Tralles Gold Residence",
                 Slug = "tralles-gold",
                 ShortDescription = "Beyaz cepheleri ve dikey kırmızı vurgularıyla Aydın Efeler'in siluetinde öne çıkan, güçlü bir mimari kimliğe sahip tamamlanmış rezidans.",
-                Description = "Aydın Efeler'in dokusu içinde yükselen Tralles Gold Residence, beyaz cepheleri ve dikey kırmızı vurgularıyla çevresinden hemen ayrışan güçlü bir mimari kimlik taşıyor. Akşam saatlerinde ışıklandırılan cephesiyle şehrin gece silüetinde kendine özgü bir karakter kazanan proje, gündüzün sadeliğini gecenin canlılığıyla buluşturuyor. Tamamlanmış bu proje, Ançın İnşaat'ın zanaatkârlık anlayışını yansıtan kalıcı bir yaşam alanı olarak sakinlerine sunuluyor.",
+                Description = "Aydın Efeler'in dokusu içinde yükselen Tralles Gold Residence, beyaz cepheleri ve dikey kırmızı vurgularıyla çevresinden hemen ayrışan güçlü bir mimari kimlik taşıyor. Akşam saatlerinde ışıklandırılan cephesiyle şehrin gece silüetinde kendine özgü bir karakter kazanan proje, gündüzün sadeliğini gecenin canlılığıyla buluşturuyor. Tamamlanmış bu proje, Ancın İnşaat'ın zanaatkârlık anlayışını yansıtan kalıcı bir yaşam alanı olarak sakinlerine sunuluyor.",
                 Status = ProjectStatus.Completed,
                 Location = "Aydın Efeler",
                 ProjectType = "Residence",
@@ -4493,7 +4582,7 @@ public static class DbSeeder
                 Name = "Alinda Gold Residence",
                 Slug = "alinda-gold",
                 ShortDescription = "Akıcı hatları ve zarif çatı aydınlatmasıyla Aydın Efeler'in siluetine yeni bir karakter katan, tamamlanmış modern rezidans.",
-                Description = "Aydın Efeler'in ufkunda yükselen Alinda Gold Residence, akıcı hatları ve zarif çatı aydınlatmasıyla şehrin siluetine yeni bir karakter katıyor. Bloklar arasına özenle yerleştirilen havuz, yürüyüş yolları ve peyzaj alanları, sakinlerine güne açık havada başlama ve günü dinginlikle bitirme imkânı sunuyor. Özenli aydınlatma tasarımı ve ferah kompozisyonuyla proje girişi, Ançın İnşaat imzasının premium yaklaşımını en baştan hissettiriyor.",
+                Description = "Aydın Efeler'in ufkunda yükselen Alinda Gold Residence, akıcı hatları ve zarif çatı aydınlatmasıyla şehrin siluetine yeni bir karakter katıyor. Bloklar arasına özenle yerleştirilen havuz, yürüyüş yolları ve peyzaj alanları, sakinlerine güne açık havada başlama ve günü dinginlikle bitirme imkânı sunuyor. Özenli aydınlatma tasarımı ve ferah kompozisyonuyla proje girişi, Ancın İnşaat imzasının premium yaklaşımını en baştan hissettiriyor.",
                 Status = ProjectStatus.Completed,
                 Location = "Aydın Efeler",
                 ProjectType = "Residence",
@@ -4614,7 +4703,7 @@ public static class DbSeeder
                 Name = "La Via Villalar 1. Etap",
                 Slug = "kuyulu-la-via-villalar-birinci-etap",
                 ShortDescription = "Kendi bahçesi ve garajıyla bağımsız villa mimarisini Kuyulu'nun sakin dokusuyla buluşturan ayrıcalıklı bir yaşam alanı.",
-                Description = "La Via Villalar 1. Etap, her biri kendi bahçesi ve garajıyla bağımsız bir villa mimarisini Kuyulu'nun sakin dokusuyla buluşturuyor. Ahşap dokulu cepheler, zarif aydınlatmalar ve modern çizgiler, Ançın İnşaat imzasının kalite anlayışını her villada yeniden tanımlıyor. Her villanın kendi çatı terası, özel havuzu ve peyzajlı bahçesiyle tasarlanan proje, sosyal yaşamı ailenizin kendi mahremiyetine taşıyarak hem huzurlu bir yaşamı hem de Kuyulu'nun gelişen değeriyle güçlü bir yatırım fırsatını bir araya getiriyor.",
+                Description = "La Via Villalar 1. Etap, her biri kendi bahçesi ve garajıyla bağımsız bir villa mimarisini Kuyulu'nun sakin dokusuyla buluşturuyor. Ahşap dokulu cepheler, zarif aydınlatmalar ve modern çizgiler, Ancın İnşaat imzasının kalite anlayışını her villada yeniden tanımlıyor. Her villanın kendi çatı terası, özel havuzu ve peyzajlı bahçesiyle tasarlanan proje, sosyal yaşamı ailenizin kendi mahremiyetine taşıyarak hem huzurlu bir yaşamı hem de Kuyulu'nun gelişen değeriyle güçlü bir yatırım fırsatını bir araya getiriyor.",
                 Status = ProjectStatus.Ongoing,
                 Location = "Aydın Kuyulu",
                 ProjectType = "Villa",
@@ -4658,7 +4747,7 @@ public static class DbSeeder
                 // client's explicit "do not use the exact same text in both
                 // places" instruction.
                 ShortDescription = "Kuşadası'nın bakir doğasında, termal şifayla buluşan ayrıcalıklı bir yaşam alanı.",
-                Description = "Kuşadası'nın binlerce yıllık tarihi ve doğal güzellikleriyle iç içe konumlanan Davutlar D Latis, bölgenin termal su kaynaklarını modern mimari bir yaşam deneyimiyle buluşturuyor. Spa, fitness ve sosyal donatılarıyla tamamlanan proje, hem gündelik yaşamın konforunu hem de Ege'nin gözde turizm merkezlerinden birinde uzun vadeli bir yatırım fırsatını bir arada sunuyor. Ançın İnşaat güvencesiyle hayata geçen bu proje, huzurlu bir yaşamı termal şifayla buluşturan ayrıcalıklı bir adres olmayı hedefliyor.",
+                Description = "Kuşadası'nın binlerce yıllık tarihi ve doğal güzellikleriyle iç içe konumlanan Davutlar D Latis, bölgenin termal su kaynaklarını modern mimari bir yaşam deneyimiyle buluşturuyor. Spa, fitness ve sosyal donatılarıyla tamamlanan proje, hem gündelik yaşamın konforunu hem de Ege'nin gözde turizm merkezlerinden birinde uzun vadeli bir yatırım fırsatını bir arada sunuyor. Ancın İnşaat güvencesiyle hayata geçen bu proje, huzurlu bir yaşamı termal şifayla buluşturan ayrıcalıklı bir adres olmayı hedefliyor.",
                 ConceptDescription = "Dilek Yarımadası Milli Parkı'nın eteğinde, Efes ve Meryem Ana Evi gibi kadim mirasların komşuluğunda yükselen Davutlar D Latis, Davutlar'ın eşsiz termal sularını modern mimariyle buluşturuyor. Spa, fitness ve sosyal yaşam alanlarıyla tamamlanan bu wellness konsepti, Ege'nin turizm başkentinde huzurlu bir yaşamı güçlü bir yatırım fırsatıyla bir araya getiriyor.",
                 Status = ProjectStatus.Ongoing,
                 Location = "Kuşadası",
@@ -4795,7 +4884,7 @@ public static class DbSeeder
                 Name = "La Via AVM",
                 Slug = "kuyulu-avm",
                 ShortDescription = "Gölgelikli teraslar ve özenle tasarlanmış peyzajıyla alışverişi bir yaşam deneyimine dönüştüren, Aydın Efeler'de yükselen ticari proje.",
-                Description = "Aydın Efeler'de geniş bir zeytinlik dokusunun kenarında yükselen La Via AVM, alışverişi gündelik bir ihtiyaçtan çok bir yaşam deneyimine dönüştürüyor. Gölgelikli teraslar, geniş yürüyüş alanları ve özenle tasarlanmış peyzajıyla proje, Ançın İnşaat'ın imza kalite anlayışını ticari ölçekte yeniden yorumluyor. Doğal taş kaplamalar, ahşap lamel dokular ve gece boyunca yumuşak bir çizgiyle beliren aydınlatma, cepheye kalıcı ve zarif bir karakter kazandırıyor.",
+                Description = "Aydın Efeler'de geniş bir zeytinlik dokusunun kenarında yükselen La Via AVM, alışverişi gündelik bir ihtiyaçtan çok bir yaşam deneyimine dönüştürüyor. Gölgelikli teraslar, geniş yürüyüş alanları ve özenle tasarlanmış peyzajıyla proje, Ancın İnşaat'ın imza kalite anlayışını ticari ölçekte yeniden yorumluyor. Doğal taş kaplamalar, ahşap lamel dokular ve gece boyunca yumuşak bir çizgiyle beliren aydınlatma, cepheye kalıcı ve zarif bir karakter kazandırıyor.",
                 Status = ProjectStatus.Ongoing,
                 Location = "Aydın - Efeler",
                 ProjectType = "Commercial",
@@ -5211,16 +5300,16 @@ public static class DbSeeder
         {
             ["nysa-gold"] = "Aydın Efeler'in gelişen bölgesinde yükselen Nysa Gold Residence, modern mimariyi konforlu ve güvenli bir yaşamla buluşturuyor. Yüzme havuzu, basketbol sahası, çocuk oyun alanı ve peyzajlı bahçeleriyle proje, her yaştan sakinine günün her saatinde keyifle vakit geçirebileceği sosyal alanlar sunuyor. Geniş balkonları ve ferah iç mekânlarıyla her daire, doğal ışığı içeri taşıyacak şekilde tasarlandı.",
             ["le-jardin"] = "Akdeniz'in sıcak karakterini modern mimariyle buluşturan Le Jardin, begonvillerle sarılı girişi ve açık renk taş kaplamalı cephesiyle sakinlerini davetkâr bir atmosferle karşılıyor. Özel havuzu, gölgelikli terası ve geniş bahçesiyle proje, iç mekânın konforunu dış mekânın huzuruyla bütünleştiriyor. Aydın Efeler'de konumlanan Le Jardin, hem günlük yaşamın hem de misafirlerinizi ağırlamanın keyfini çıkarabileceğiniz ayrıcalıklı bir villa deneyimi sunuyor.",
-            ["tralles-gold"] = "Aydın Efeler'in dokusu içinde yükselen Tralles Gold Residence, beyaz cepheleri ve dikey kırmızı vurgularıyla çevresinden hemen ayrışan güçlü bir mimari kimlik taşıyor. Akşam saatlerinde ışıklandırılan cephesiyle şehrin gece silüetinde kendine özgü bir karakter kazanan proje, gündüzün sadeliğini gecenin canlılığıyla buluşturuyor. Tamamlanmış bu proje, Ançın İnşaat'ın zanaatkârlık anlayışını yansıtan kalıcı bir yaşam alanı olarak sakinlerine sunuluyor.",
+            ["tralles-gold"] = "Aydın Efeler'in dokusu içinde yükselen Tralles Gold Residence, beyaz cepheleri ve dikey kırmızı vurgularıyla çevresinden hemen ayrışan güçlü bir mimari kimlik taşıyor. Akşam saatlerinde ışıklandırılan cephesiyle şehrin gece silüetinde kendine özgü bir karakter kazanan proje, gündüzün sadeliğini gecenin canlılığıyla buluşturuyor. Tamamlanmış bu proje, Ancın İnşaat'ın zanaatkârlık anlayışını yansıtan kalıcı bir yaşam alanı olarak sakinlerine sunuluyor.",
             ["nlatis"] = "İzmir'de tamamlanan Nlatis, kıvrımlı ahşap tonlu çatı hattı ve cam kaplı cephesiyle özgün bir mimari kimlik taşıyor. Koyu renkli cephe panelleri ve dikey ahşap vurgularının oluşturduğu katmanlı ritim, cam balkonlarla desteklenerek modern ve sade bir görünüm sunuyor. Zemin kattaki sosyal kullanım alanları, binayı çevresiyle buluşturan canlı bir karşılama noktası oluşturuyor.",
-            ["alinda-gold"] = "Aydın Efeler'in ufkunda yükselen Alinda Gold Residence, akıcı hatları ve zarif çatı aydınlatmasıyla şehrin siluetine yeni bir karakter katıyor. Bloklar arasına özenle yerleştirilen havuz, yürüyüş yolları ve peyzaj alanları, sakinlerine güne açık havada başlama ve günü dinginlikle bitirme imkânı sunuyor. Özenli aydınlatma tasarımı ve ferah kompozisyonuyla proje girişi, Ançın İnşaat imzasının premium yaklaşımını en baştan hissettiriyor.",
+            ["alinda-gold"] = "Aydın Efeler'in ufkunda yükselen Alinda Gold Residence, akıcı hatları ve zarif çatı aydınlatmasıyla şehrin siluetine yeni bir karakter katıyor. Bloklar arasına özenle yerleştirilen havuz, yürüyüş yolları ve peyzaj alanları, sakinlerine güne açık havada başlama ve günü dinginlikle bitirme imkânı sunuyor. Özenli aydınlatma tasarımı ve ferah kompozisyonuyla proje girişi, Ancın İnşaat imzasının premium yaklaşımını en baştan hissettiriyor.",
             ["magnesia-gold"] = "Aydın'ın ufkunda yan yana yükselen Magnesia Gold Residence blokları, geniş peyzaj alanları ve özenle tasarlanmış ortak yaşam alanlarıyla bir aradalığı ön plana çıkarıyor. Palmiyelerle çevrili yürüyüş yolları, havuzlar ve geniş çim alanları günün her saatinde huzurlu bir mola sunarken, akşam saatlerinde özenli aydınlatmayla öne çıkan havuz çevresi sosyalleşmek isteyen sakinler için davetkâr bir buluşma noktasına dönüşüyor. Tamamlanan bu proje, yeşille mimarinin uyumunu günlük yaşamın merkezine taşıyor.",
             ["la-fiore-karabag"] = "Aydın İncirliova'da gür çam ormanının içine özenle yerleştirilen La Fiore Karabağ, tek katlı villalarıyla sakin ve mahremiyeti önceleyen bir yaşam alanı sunuyor. Yerleşim içindeki kesintisiz yürüyüş yolları ve peyzaj düzenlemesi doğayla iç içe bir günlük yaşam deneyimi vaat ederken, villa bahçelerindeki pergola altı oturma grupları ve şömineler iç mekânı bahçeyle bütünleştiriyor. Taş kaplı cephesi ve ahşap detaylarıyla dikkat çeken proje girişi, güvenlikli giriş noktasıyla sakinlerinin huzurunu güvence altına alıyor.",
             ["la-fiore-karabag-2-etap"] = "Aydın Karabağ'ın yüzlerce yıllık zeytin ağaçları arasında konumlanan La Fiore Karabağ 2. Etap, arazinin doğal eğimini ve dokusunu koruyan bir yerleşim planıyla hayat buluyor. Geniş yürüyüş yolları, peyzajlı meydanlar ve ortak sosyal alanlarla örülen proje, sakinlerini binalardan çok bir arada yaşama davet ediyor. Taş duvarları, zarif aydınlatması ve zeytin ağaçlarıyla çevrili villalarıyla La Fiore Karabağ 2. Etap, hem huzurlu bir yaşamı hem de Karabağ'ın gelişen değeriyle güçlü bir yatırım fırsatını bir araya getiriyor.",
-            ["kuyulu-la-via-villalar-birinci-etap"] = "La Via Villalar 1. Etap, her biri kendi bahçesi ve garajıyla bağımsız bir villa mimarisini Kuyulu'nun sakin dokusuyla buluşturuyor. Ahşap dokulu cepheler, zarif aydınlatmalar ve modern çizgiler, Ançın İnşaat imzasının kalite anlayışını her villada yeniden tanımlıyor. Her villanın kendi çatı terası, özel havuzu ve peyzajlı bahçesiyle tasarlanan proje, sosyal yaşamı ailenizin kendi mahremiyetine taşıyarak hem huzurlu bir yaşamı hem de Kuyulu'nun gelişen değeriyle güçlü bir yatırım fırsatını bir araya getiriyor.",
-            ["davutlar-d-latis"] = "Kuşadası'nın binlerce yıllık tarihi ve doğal güzellikleriyle iç içe konumlanan Davutlar D Latis, bölgenin termal su kaynaklarını modern mimari bir yaşam deneyimiyle buluşturuyor. Spa, fitness ve sosyal donatılarıyla tamamlanan proje, hem gündelik yaşamın konforunu hem de Ege'nin gözde turizm merkezlerinden birinde uzun vadeli bir yatırım fırsatını bir arada sunuyor. Ançın İnşaat güvencesiyle hayata geçen bu proje, huzurlu bir yaşamı termal şifayla buluşturan ayrıcalıklı bir adres olmayı hedefliyor.",
+            ["kuyulu-la-via-villalar-birinci-etap"] = "La Via Villalar 1. Etap, her biri kendi bahçesi ve garajıyla bağımsız bir villa mimarisini Kuyulu'nun sakin dokusuyla buluşturuyor. Ahşap dokulu cepheler, zarif aydınlatmalar ve modern çizgiler, Ancın İnşaat imzasının kalite anlayışını her villada yeniden tanımlıyor. Her villanın kendi çatı terası, özel havuzu ve peyzajlı bahçesiyle tasarlanan proje, sosyal yaşamı ailenizin kendi mahremiyetine taşıyarak hem huzurlu bir yaşamı hem de Kuyulu'nun gelişen değeriyle güçlü bir yatırım fırsatını bir araya getiriyor.",
+            ["davutlar-d-latis"] = "Kuşadası'nın binlerce yıllık tarihi ve doğal güzellikleriyle iç içe konumlanan Davutlar D Latis, bölgenin termal su kaynaklarını modern mimari bir yaşam deneyimiyle buluşturuyor. Spa, fitness ve sosyal donatılarıyla tamamlanan proje, hem gündelik yaşamın konforunu hem de Ege'nin gözde turizm merkezlerinden birinde uzun vadeli bir yatırım fırsatını bir arada sunuyor. Ancın İnşaat güvencesiyle hayata geçen bu proje, huzurlu bir yaşamı termal şifayla buluşturan ayrıcalıklı bir adres olmayı hedefliyor.",
             ["ferhunde-hanim-apt"] = "Ferhunde Hanım Apt., yumuşak hatlı balkonları ve özenle seçilmiş cephe dokusuyla Aydın Efeler'de dikkat çeken bir mimari kimlik sunuyor. Geniş camları ve ferah balkonlarıyla her kat doğal ışığı içeri taşırken, yüksek çitlerle çevrili özel bahçe alanı sakinlerine şehrin gürültüsünden uzak, güvenli ve huzurlu bir dış mekân yaşamı sağlıyor. Çevre duvarları ve peyzajlı ön bahçesiyle tamamlanan proje, günlük yaşamı kolaylaştıran ve değerini koruyan bir yatırım fırsatı sunuyor.",
-            ["kuyulu-avm"] = "Aydın Efeler'de geniş bir zeytinlik dokusunun kenarında yükselen La Via AVM, alışverişi gündelik bir ihtiyaçtan çok bir yaşam deneyimine dönüştürüyor. Gölgelikli teraslar, geniş yürüyüş alanları ve özenle tasarlanmış peyzajıyla proje, Ançın İnşaat'ın imza kalite anlayışını ticari ölçekte yeniden yorumluyor. Doğal taş kaplamalar, ahşap lamel dokular ve gece boyunca yumuşak bir çizgiyle beliren aydınlatma, cepheye kalıcı ve zarif bir karakter kazandırıyor.",
+            ["kuyulu-avm"] = "Aydın Efeler'de geniş bir zeytinlik dokusunun kenarında yükselen La Via AVM, alışverişi gündelik bir ihtiyaçtan çok bir yaşam deneyimine dönüştürüyor. Gölgelikli teraslar, geniş yürüyüş alanları ve özenle tasarlanmış peyzajıyla proje, Ancın İnşaat'ın imza kalite anlayışını ticari ölçekte yeniden yorumluyor. Doğal taş kaplamalar, ahşap lamel dokular ve gece boyunca yumuşak bir çizgiyle beliren aydınlatma, cepheye kalıcı ve zarif bir karakter kazandırıyor.",
             ["q-latis"] = "Kuşadası'nın eşsiz doğasıyla iç içe konumlanan Hacıfeyzullah - Q-Latis, ahşap dokulu cepheleri ve geniş camekânlarıyla bölgenin karakterine saygılı, çağdaş bir mimari dil sunuyor. Üst kat dairelerin geniş balkonlarından izlenen Ege Denizi manzarası her günü ayrıcalıklı kılarken, açık teras, fitness salonu ve aeroyoga/pilates stüdyosu gibi sosyal donatılar aktif bir yaşam tarzını destekliyor. Zeytinliklerle çevrili tepelik konumuyla proje, Kuşadası'nın doğal dokusunu koruyan bir yerleşim anlayışıyla tasarlandı."
         };
 
@@ -5232,16 +5321,16 @@ public static class DbSeeder
         {
             ["nysa-gold"] = "Rising in the developing district of Aydın Efeler, Nysa Gold Residence brings modern architecture together with a comfortable, secure way of life. With its swimming pool, basketball court, children's playground and landscaped gardens, the project offers social spaces residents of every age can enjoy at any hour of the day. Every apartment is designed with wide balconies and bright interiors that carry natural light deep inside.",
             ["le-jardin"] = "Bringing the warm character of the Mediterranean together with modern architecture, Le Jardin welcomes its residents with an inviting atmosphere through its bougainvillea-wrapped entrance and light-toned stone-clad façade. With its private pool, shaded terrace and spacious garden, the project unites the comfort of indoor living with the calm of the outdoors. Located in Aydın Efeler, Le Jardin offers an exclusive villa experience for enjoying both everyday life and hosting your guests.",
-            ["tralles-gold"] = "Rising within the fabric of Aydın Efeler, Tralles Gold Residence carries a strong architectural identity that sets it apart from its surroundings at a glance, with white façades and vertical red accents. Lit up in the evening hours, the project takes on a distinctive character in the city's night silhouette, bringing together the simplicity of day with the vibrancy of night. Now complete, the project is offered to its residents as a lasting living space that reflects Ançın İnşaat's commitment to craftsmanship.",
+            ["tralles-gold"] = "Rising within the fabric of Aydın Efeler, Tralles Gold Residence carries a strong architectural identity that sets it apart from its surroundings at a glance, with white façades and vertical red accents. Lit up in the evening hours, the project takes on a distinctive character in the city's night silhouette, bringing together the simplicity of day with the vibrancy of night. Now complete, the project is offered to its residents as a lasting living space that reflects Ancın İnşaat's commitment to craftsmanship.",
             ["nlatis"] = "Completed in İzmir, N-Latis carries a distinctive architectural identity with its curved, timber-toned roofline and glass-clad façade. The layered rhythm created by dark façade panels and vertical timber accents, supported by glass balconies, offers a modern, understated look. The ground-floor social amenity areas form a lively welcome point that connects the building with its surroundings.",
-            ["alinda-gold"] = "Rising on the Aydın Efeler skyline, Alinda Gold Residence brings a new character to the city's silhouette with its flowing lines and elegant roofline lighting. The pool, walking paths and landscaped areas thoughtfully placed between the blocks give residents the chance to start the day outdoors and end it in calm. With its careful lighting design and open composition, the project's entrance makes Ançın İnşaat's premium approach felt from the very first moment.",
+            ["alinda-gold"] = "Rising on the Aydın Efeler skyline, Alinda Gold Residence brings a new character to the city's silhouette with its flowing lines and elegant roofline lighting. The pool, walking paths and landscaped areas thoughtfully placed between the blocks give residents the chance to start the day outdoors and end it in calm. With its careful lighting design and open composition, the project's entrance makes Ancın İnşaat's premium approach felt from the very first moment.",
             ["magnesia-gold"] = "Rising side by side on Aydın's skyline, the Magnesia Gold Residence blocks put togetherness first, with extensive landscaped grounds and thoughtfully designed shared living spaces. Palm-lined walking paths, pools and wide lawns offer a peaceful break at any hour of the day, while the pool surrounds — highlighted by careful lighting in the evening — become an inviting gathering point for residents who want to socialize. Now complete, the project places the harmony of greenery and architecture at the center of everyday life.",
             ["la-fiore-karabag"] = "Carefully set within a lush pine forest in Aydın İncirliova, La Fiore Karabağ offers a living environment that prioritizes calm and privacy through its single-story villas. Uninterrupted walking paths and landscaping throughout the development promise a daily life immersed in nature, while the pergola-covered seating areas and fireplaces in each villa's garden bring the indoors and the garden together as one. Notable for its stone-clad façade and timber detailing, the project's entrance secures residents' peace of mind with a guarded entry point.",
             ["la-fiore-karabag-2-etap"] = "Set among centuries-old olive trees in Aydın Karabağ, La Fiore Karabağ 2. Etap comes to life with a site plan that preserves the land's natural slope and character. Woven together with wide walking paths, landscaped squares and shared social areas, the project invites its residents into a life together rather than simply a collection of buildings. With its stone walls, elegant lighting and villas surrounded by olive trees, La Fiore Karabağ 2. Etap brings together a peaceful way of life and a strong investment opportunity backed by Karabağ's rising value.",
-            ["kuyulu-la-via-villalar-birinci-etap"] = "La Via Villalar 1. Etap brings independent villa architecture — each with its own garden and garage — together with Kuyulu's tranquil character. Timber-textured façades, elegant lighting and modern lines redefine Ançın İnşaat's commitment to quality in every villa. Designed with its own roof terrace, private pool and landscaped garden for every villa, the project brings social life into your family's own privacy, combining a peaceful way of life with a strong investment opportunity backed by Kuyulu's rising value.",
-            ["davutlar-d-latis"] = "Set amid Kuşadası's thousands of years of history and natural beauty, Davutlar D Latis brings the region's thermal water sources together with a modern architectural living experience. Complete with its spa, fitness and social amenities, the project offers both everyday comfort and a long-term investment opportunity in one of the Aegean's most sought-after tourism destinations. Brought to life under the Ançın İnşaat guarantee, the project aims to be an exclusive address that brings a peaceful life together with thermal healing.",
+            ["kuyulu-la-via-villalar-birinci-etap"] = "La Via Villalar 1. Etap brings independent villa architecture — each with its own garden and garage — together with Kuyulu's tranquil character. Timber-textured façades, elegant lighting and modern lines redefine Ancın İnşaat's commitment to quality in every villa. Designed with its own roof terrace, private pool and landscaped garden for every villa, the project brings social life into your family's own privacy, combining a peaceful way of life with a strong investment opportunity backed by Kuyulu's rising value.",
+            ["davutlar-d-latis"] = "Set amid Kuşadası's thousands of years of history and natural beauty, Davutlar D Latis brings the region's thermal water sources together with a modern architectural living experience. Complete with its spa, fitness and social amenities, the project offers both everyday comfort and a long-term investment opportunity in one of the Aegean's most sought-after tourism destinations. Brought to life under the Ancın İnşaat guarantee, the project aims to be an exclusive address that brings a peaceful life together with thermal healing.",
             ["ferhunde-hanim-apt"] = "Ferhunde Hanım Apt. presents an architectural identity that stands out in Aydın Efeler with its softly curved balconies and carefully chosen façade texture. With large windows and spacious balconies, every floor carries natural light inside, while the private garden area enclosed by tall hedges gives residents a safe, peaceful outdoor life away from the noise of the city. Complete with its perimeter walls and landscaped front garden, the project offers an investment opportunity that makes everyday life easier while holding its value.",
-            ["kuyulu-avm"] = "Rising at the edge of a wide olive grove in Aydın Efeler, La Via Shopping Center turns shopping into a lifestyle experience rather than simply a daily errand. With its shaded terraces, wide walkways and thoughtfully designed landscaping, the project reinterprets Ançın İnşaat's signature quality approach at a commercial scale. Natural stone cladding, timber-lamella textures and lighting that traces a soft line through the night give the façade a lasting, elegant character.",
+            ["kuyulu-avm"] = "Rising at the edge of a wide olive grove in Aydın Efeler, La Via Shopping Center turns shopping into a lifestyle experience rather than simply a daily errand. With its shaded terraces, wide walkways and thoughtfully designed landscaping, the project reinterprets Ancın İnşaat's signature quality approach at a commercial scale. Natural stone cladding, timber-lamella textures and lighting that traces a soft line through the night give the façade a lasting, elegant character.",
             ["q-latis"] = "Set amid Kuşadası's unique natural surroundings, Hacıfeyzullah - Q-Latis offers a contemporary architectural language that respects the character of the region, with timber-textured façades and wide glazing. The Aegean Sea view from the upper-floor apartments' wide balconies makes every day feel special, while social amenities such as an open terrace, fitness room and an aero-yoga/pilates studio support an active lifestyle. With its hillside position surrounded by olive groves, the project was designed with a site plan that preserves Kuşadası's natural character."
         };
 
@@ -6010,9 +6099,10 @@ public static class DbSeeder
 
     // Not a seed — corrects an already-seeded La Via Villalar 1. Etap row's
     // Concept Card 1 Description text (client typo correction, 2026-10-08):
-    // "Ançın İnşaat" wrongly used the company name with a cedilla-ç; the
-    // client's requested spelling is "Ancın İnşaat" (Latin c), for this
-    // visible Concept text only — not a site-wide rename. Same text
+    // the company name was misspelled with a cedilla ç instead of the Latin
+    // c of the correct "Ancın İnşaat". Originally scoped to this visible
+    // Concept text only; superseded 2026-10-19 by the site-wide correction
+    // in ReconcileCompanyNameSpellingAsync. Same text
     // BuildKuyuluLaViaVillalarConceptImages now seeds fresh — see that
     // method's own Card 1 Description — applied here by DisplayOrder so a
     // database seeded before this fix converges on it too. Unconditional
@@ -8615,9 +8705,10 @@ public static class DbSeeder
 
     // Not a seed — corrects an already-seeded La Fiore Karabağ 2. Etap row's
     // Concept Card 1 Description text (client typo correction, 2026-10-08):
-    // "Ançın İnşaat" wrongly used the company name with a cedilla-ç; the
-    // client's requested spelling is "Ancın İnşaat" (Latin c), for this
-    // visible Concept text only — not a site-wide rename. Same text
+    // the company name was misspelled with a cedilla ç instead of the Latin
+    // c of the correct "Ancın İnşaat". Originally scoped to this visible
+    // Concept text only; superseded 2026-10-19 by the site-wide correction
+    // in ReconcileCompanyNameSpellingAsync. Same text
     // BuildLaFioreKarabag2EtapConceptImages now seeds fresh — see that
     // method's own Card 1 Description — applied here by DisplayOrder so a
     // database seeded before this fix converges on it too. Unconditional

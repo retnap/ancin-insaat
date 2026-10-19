@@ -4,7 +4,7 @@
 
 ## Purpose
 
-This document defines the security principles for the Ançın İnşaat website.
+This document defines the security principles for the Ancın İnşaat website.
 
 Security should be considered throughout development without introducing unnecessary complexity.
 

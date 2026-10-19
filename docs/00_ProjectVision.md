@@ -1,7 +1,7 @@
 ---
 
 Document: 00_ProjectVision.md
-Project: Ançın İnşaat Corporate Website
+Project: Ancın İnşaat Corporate Website
 Version: 1.0
 Status: Approved
 Last Updated: 2026-07-26
@@ -16,7 +16,7 @@ Language: English
 
 # Project Purpose
 
-This project is a premium corporate website developed for **Ançın İnşaat**.
+This project is a premium corporate website developed for **Ancın İnşaat**.
 
 The website is intended to strengthen the company's corporate identity, present its completed and ongoing projects, attract potential customers, and provide a modern digital experience that reflects the company's vision.
 
@@ -79,13 +79,13 @@ The visual language should reflect a professional construction company with more
 
 # Brand Identity
 
-The website must represent Ançın İnşaat's own identity.
+The website must represent Ancın İnşaat's own identity.
 
 Reference websites are used only for inspiration.
 
 The project must never become a visual copy of another website.
 
-Components, spacing, typography and interactions should be adapted to Ançın's own corporate identity.
+Components, spacing, typography and interactions should be adapted to Ancın's own corporate identity.
 
 ---
 

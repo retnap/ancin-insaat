@@ -6,11 +6,11 @@ namespace AncinInsaat.ViewComponents;
 
 // Real logo images (wwwroot/images/logos/project-logos/), supplied
 // 2026-07-28. Confirmed with the client the same day: despite the
-// component/folder naming, these are Ançın's own project wordmarks (a
+// component/folder naming, these are Ancın's own project wordmarks (a
 // portfolio trust strip), not third-party partner logos — nothing
 // user-facing says "Partners" (see the section's aria-label in
 // Default.cshtml). logo_01-removebg-preview is excluded per client
-// instruction; it is Ançın's own company mark, not a project. ImageAlt
+// instruction; it is Ancın's own company mark, not a project. ImageAlt
 // transcribes the wordmark text visible in each source file rather than
 // inventing a label. Part of the shared layout (renders on every page
 // below the CTA Banner), so content here must stay generic rather than

@@ -13,12 +13,12 @@ namespace AncinInsaat.ViewComponents;
 // Unlike the earlier pillars, both projects here are grounded directly in
 // the client-supplied photos themselves rather than written from scratch:
 // Project 2's own photo is an official event flyer whose printed text
-// ("Ançın Geleceğin Mimarları Etkinliği", "23 Nisan Ulusal Egemenlik ve
+// ("Ancın Geleceğin Mimarları Etkinliği", "23 Nisan Ulusal Egemenlik ve
 // Çocuk Bayramı", "25 Nisan 2026 Cumartesi, Aydın OPSmall AVM", organized
 // with "Neşeli Oyunlar Etkinlik & Oyun Atölyesi") is quoted/paraphrased
-// below, not invented. Project 1's photos show an "ANÇIN"-branded youth
+// below, not invented. Project 1's photos show an "ANCIN"-branded youth
 // performance team at an Aydın Gençlik ve Spor İl Müdürlüğü event and a
-// costume/achievement recognition at the Ançın office — described only in
+// costume/achievement recognition at the Ancın office — described only in
 // general terms actually visible in the photos, with no specific club
 // name, date or statistic invented beyond what the images show.
 //
@@ -110,7 +110,7 @@ public class SocialResponsibilityProjectsViewComponent : ViewComponent
             Paragraphs = isEnglish
                 ? new List<string>
                 {
-                    "As Ançın İnşaat, we support the young athletes and dancers who wear the Ançın " +
+                    "As Ancın İnşaat, we support the young athletes and dancers who wear the Ancın " +
                         "jersey at youth sports events organized in cooperation with the Aydın " +
                         "Directorate of Youth and Sports.",
                     "Alongside their achievements on the field, we also welcome our young " +
@@ -119,8 +119,8 @@ public class SocialResponsibilityProjectsViewComponent : ViewComponent
                 }
                 : new List<string>
                 {
-                    "Ançın İnşaat olarak, Aydın Gençlik ve Spor İl Müdürlüğü iş birliğiyle düzenlenen " +
-                        "gençlik spor etkinliklerinde Ançın forması taşıyan genç sporcu ve dansçılara destek " +
+                    "Ancın İnşaat olarak, Aydın Gençlik ve Spor İl Müdürlüğü iş birliğiyle düzenlenen " +
+                        "gençlik spor etkinliklerinde Ancın forması taşıyan genç sporcu ve dansçılara destek " +
                         "veriyoruz.",
                     "Sahadaki başarılarının yanı sıra, bölgenin kültürel mirasını yaşatan genç " +
                         "performansçılarımızı da ofisimizde ağırlayarak emeklerini takdir ediyoruz."
@@ -144,7 +144,7 @@ public class SocialResponsibilityProjectsViewComponent : ViewComponent
     // in that order, after all 55 other photos.
     private static SocialResponsibilityProjectItem BuildProject2(bool isEnglish)
     {
-        var heading = isEnglish ? "Ançın \"Architects of the Future\" Event" : "Ançın Geleceğin Mimarları Etkinliği";
+        var heading = isEnglish ? "Ancın \"Architects of the Future\" Event" : "Ancın Geleceğin Mimarları Etkinliği";
         var altSuffix = isEnglish ? "photo" : "fotoğraf";
         var videoAltSuffix = isEnglish ? "video" : "video";
 
@@ -178,8 +178,8 @@ public class SocialResponsibilityProjectsViewComponent : ViewComponent
                 ? new List<string>
                 {
                     "To mark April 23rd National Sovereignty and Children's Day, we held the " +
-                        "\"Ançın Architects of the Future\" event at Aydın OPSmall Mall. Wearing their " +
-                        "own Ançın hard hats and vests, our youngest engineers experienced " +
+                        "\"Ancın Architects of the Future\" event at Aydın OPSmall Mall. Wearing their " +
+                        "own Ancın hard hats and vests, our youngest engineers experienced " +
                         "construction firsthand.",
                     "Held in partnership with Neşeli Oyunlar Etkinlik & Oyun Atölyesi, the event " +
                         "gave children an enjoyable time at a mini construction site, a junior " +
@@ -188,7 +188,7 @@ public class SocialResponsibilityProjectsViewComponent : ViewComponent
                 : new List<string>
                 {
                     "23 Nisan Ulusal Egemenlik ve Çocuk Bayramı kapsamında, Aydın OPSmall AVM'de " +
-                        "\"Ançın Geleceğin Mimarları Etkinliği\"ni düzenledik. Ançın bareti ve yeleğiyle " +
+                        "\"Ancın Geleceğin Mimarları Etkinliği\"ni düzenledik. Ancın bareti ve yeleğiyle " +
                         "minik mühendisler, inşaatı kendi elleriyle deneyimledi.",
                     "Neşeli Oyunlar Etkinlik & Oyun Atölyesi iş birliğiyle hayata geçirdiğimiz etkinlikte " +
                         "çocuklar; küçük inşaat alanında, minik mühendis atölyesinde ve halk oyunları " +

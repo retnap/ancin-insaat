@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Ançın İnşaat — Design System Foundation
+   Ancın İnşaat — Design System Foundation
    Milestone 1 · Commit 2 — Core Design Tokens
 
    This file defines the reusable visual-language tokens approved in
@@ -14,7 +14,7 @@
    Self-hosted, WOFF2 only, font-display: swap.
    Each weight ships two subsets — "latin" and "latin-ext" — because the
    site is Turkish (lang="tr") and characters such as ş / İ used in
-   "Ançın İnşaat" itself fall in the latin-ext Unicode range.
+   "Ancın İnşaat" itself fall in the latin-ext Unicode range.
    ========================================================================== */
 
 /* ---- Playfair Display (headings only) ---- */
@@ -1887,7 +1887,7 @@ select[aria-invalid='true'] {
    15. Partner Logos
    Milestone 2 · Visual Refresh — real logo images replacing the text
    placeholder (2026-07-28), rebuilt as an infinite horizontal carousel.
-   Confirmed with the client 2026-07-28: this strip shows Ançın's own
+   Confirmed with the client 2026-07-28: this strip shows Ancın's own
    project wordmarks (a portfolio trust strip), not third-party partner
    logos — the "Partner Logos" name is kept only because it's what the
    component/class names were already called; nothing user-facing says
@@ -4401,7 +4401,7 @@ select[aria-invalid='true'] {
 /* ==========================================================================
    26. Project Detail — Cinematic Redesign
    2026-07-31. Inspired by (not copying) Inspirationals/Folkart's Orion
-   project page — layout/interaction feel only, restyled in Ançın's own
+   project page — layout/interaction feel only, restyled in Ancın's own
    Design System (Section 2 tokens). Covers: Hero's third variant (full
    viewport, centered, logo + two buttons), Concept, Location & Distances,
    Gallery's header/category badge, Project Catalogue's cinematic CTA,
@@ -6973,7 +6973,7 @@ a.information-card__value:hover {
 /* ==========================================================================
    32. Career Page
    Folkart-reference revision (2026-08-17, project owner-approved): Hero
-   Banner and Why Join Ançın (WhyJoinAncinViewComponent) were dropped from
+   Banner and Why Join Ancın (WhyJoinAncinViewComponent) were dropped from
    this page; the Open Positions listing section was removed outright. Page
    flow is now: plain page heading "Ancın'da Kariyer" + wide placeholder
    text column (.career-heading-section/.career-heading/.career-intro-*,
@@ -7372,7 +7372,7 @@ a.information-card__value:hover {
    37. Project Gallery — Category Cards
    Gallery Category Cards redesign (2026-08-04). Inspired by, not copying,
    Inspirationals/Folkart's Orion gallery: a top-right category selector
-   above a grid of image cards, restyled entirely in Ançın's own palette and
+   above a grid of image cards, restyled entirely in Ancın's own palette and
    type system. Only #project-gallery's own dropdown is restyled here —
    .filter-dropdown itself (Section 22) stays untouched for Projects/Index's
    Project Type / Location filters.

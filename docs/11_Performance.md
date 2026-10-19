@@ -4,7 +4,7 @@
 
 ## Purpose
 
-This document defines the performance goals for the Ançın İnşaat website.
+This document defines the performance goals for the Ancın İnşaat website.
 
 The objective is to provide a fast, responsive and smooth user experience across all supported devices.
 

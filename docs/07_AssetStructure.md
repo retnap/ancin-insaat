@@ -4,7 +4,7 @@
 
 ## Purpose
 
-This document defines how static assets are organised within the Ançın İnşaat website.
+This document defines how static assets are organised within the Ancın İnşaat website.
 
 A consistent asset structure improves maintainability, scalability and collaboration.
 

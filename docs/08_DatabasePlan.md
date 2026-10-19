@@ -4,7 +4,7 @@
 
 ## Purpose
 
-This document defines the database structure for the Ançın İnşaat website.
+This document defines the database structure for the Ancın İnşaat website.
 
 The database should support current website requirements while remaining flexible for future Admin Panel features.
 

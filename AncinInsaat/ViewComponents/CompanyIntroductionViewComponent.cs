@@ -26,7 +26,7 @@ public class CompanyIntroductionViewComponent : ViewComponent
 {
     private static readonly IReadOnlyList<string> IntroParagraphs = new List<string>
     {
-        "Ançın İnşaat, Aydın'da attığı ilk adımlardan bu yana, sağlam mühendislik anlayışını " +
+        "Ancın İnşaat, Aydın'da attığı ilk adımlardan bu yana, sağlam mühendislik anlayışını " +
             "insana değer veren bir yaklaşımla birleştirerek yaşam alanları inşa ediyor. Yarım " +
             "asra yaklaşan yolculuğumuz boyunca, her projede kalıcı değer yaratma hedefinden hiç " +
             "vazgeçmedik.",
@@ -45,7 +45,7 @@ public class CompanyIntroductionViewComponent : ViewComponent
             "benimsiyoruz. Kalite kontrolü, bizim için bir aşama değil, sürecin her adımında var " +
             "olan bir ilkedir.",
         "Sakinlerimizle kurduğumuz güven ilişkisini, teslim sonrasında da sürdürmeye özen " +
-            "gösteriyoruz. Şeffaf iletişim ve hızlı çözüm odaklı yaklaşımımız, Ançın İnşaat " +
+            "gösteriyoruz. Şeffaf iletişim ve hızlı çözüm odaklı yaklaşımımız, Ancın İnşaat " +
             "imzasını taşıyan her projenin ayrılmaz bir parçası.",
         "Geleceğe baktığımızda, Aydın ve çevresinde daha fazla aileye kaliteli ve güvenli yaşam " +
             "alanları sunmaya devam etmeyi hedefliyoruz. Yarım asırlık tecrübemizi yeni nesil " +
@@ -59,7 +59,7 @@ public class CompanyIntroductionViewComponent : ViewComponent
     // business fact introduced.
     private static readonly IReadOnlyList<string> IntroParagraphsEn = new List<string>
     {
-        "Since its very first steps in Aydın, Ançın İnşaat has built living spaces by combining " +
+        "Since its very first steps in Aydın, Ancın İnşaat has built living spaces by combining " +
             "sound engineering with a people-first approach. Throughout a journey now " +
             "approaching half a century, we have never lost sight of our goal of creating " +
             "lasting value in every project.",
@@ -80,7 +80,7 @@ public class CompanyIntroductionViewComponent : ViewComponent
             "at every step of the process.",
         "We take care to maintain the trust we build with our residents even after handover. " +
             "Transparent communication and a fast, solution-focused approach are an " +
-            "inseparable part of every project that carries the Ançın İnşaat signature.",
+            "inseparable part of every project that carries the Ancın İnşaat signature.",
         "Looking to the future, our goal is to continue offering more families in and around " +
             "Aydın quality, safe living spaces. As we carry our half-century of experience into " +
             "a new generation of projects, we never compromise on our people-first philosophy."

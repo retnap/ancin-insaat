@@ -1,4 +1,4 @@
-// Ançın İnşaat — Site Scripts
+// Ancın İnşaat — Site Scripts
 // Milestone 2 · Commit 2 — Navbar dropdown menus (desktop only, ≥1024px).
 // Milestone 2 · Commit 3 — Mobile menu (hamburger-triggered panel).
 // Implements the WAI-ARIA Menu Button pattern for the Corporate and
@@ -2680,7 +2680,7 @@
     }
 
     // AND across words: every word must appear somewhere in the item's
-    // haystack, each as a partial/substring match — so "ançın vadi"
+    // haystack, each as a partial/substring match — so "ancın vadi"
     // narrows to results containing both, in any field, any order.
     var matches = index.filter(function (item) {
       return words.every(function (word) {

@@ -4,7 +4,7 @@
 
 ## Purpose
 
-This document defines the visual language of the Ançın İnşaat website.
+This document defines the visual language of the Ancın İnşaat website.
 
 It establishes consistent design rules for layouts, typography, colours, spacing and reusable UI patterns.
 

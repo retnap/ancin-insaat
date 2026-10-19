@@ -4,7 +4,7 @@
 
 ## Purpose
 
-This document defines the structure and purpose of every public page within the Ançın İnşaat website.
+This document defines the structure and purpose of every public page within the Ancın İnşaat website.
 
 Rather than describing implementation details, it focuses on page hierarchy, user flow and the reusable components required to build each page.
 
@@ -41,7 +41,7 @@ provided:
 - **Navbar** — global navigation.
 - **CTA Banner** — a single page-agnostic "Tüm Projeler" (All Projects)
   banner, not a different variant per page.
-- **Project Logo Carousel** — a marquee of Ançın's own confirmed project
+- **Project Logo Carousel** — a marquee of Ancın's own confirmed project
   wordmarks (component name `PartnerLogos` for historical reasons; these
   are not third-party partners — see 04_ComponentLibrary.md).
 - **Footer** (includes the Social Media icon list).
@@ -58,7 +58,7 @@ own Business Partners logos).
 
 The Home page is the primary entry point of the website.
 
-It introduces Ançın İnşaat, highlights featured projects, builds trust and directs visitors toward the most important sections of the website.
+It introduces Ancın İnşaat, highlights featured projects, builds trust and directs visitors toward the most important sections of the website.
 
 ---
 
@@ -95,7 +95,7 @@ Secondary CTA → Contact
 
 **Purpose**
 
-Provide a brief introduction to Ançın İnşaat.
+Provide a brief introduction to Ancın İnşaat.
 
 **Components**
 
@@ -149,7 +149,7 @@ Project Card → Project Detail
 
 ---
 
-### Why Choose Ançın
+### Why Choose Ancın
 
 **Purpose**
 
@@ -184,7 +184,7 @@ Page)" above. Not composed as Home-specific sections.
 - Hero Content
 - Featured Projects
 - Company Overview
-- Why Choose Ançın
+- Why Choose Ancın
 - CTA Content
 - Social Media Links
 - SEO Metadata
@@ -195,7 +195,7 @@ Page)" above. Not composed as Home-specific sections.
 
 ## Purpose
 
-Introduce Ançın İnşaat, its history, mission and areas of expertise.
+Introduce Ancın İnşaat, its history, mission and areas of expertise.
 
 ---
 
@@ -339,7 +339,7 @@ Provide global navigation.
 
 ## Purpose
 
-Present the principles that define Ançın İnşaat's corporate culture and approach to construction.
+Present the principles that define Ancın İnşaat's corporate culture and approach to construction.
 
 ---
 
@@ -466,7 +466,7 @@ Provide global navigation.
 
 ## Purpose
 
-Present the complete portfolio of Ançın İnşaat and allow visitors to browse projects by status.
+Present the complete portfolio of Ancın İnşaat and allow visitors to browse projects by status.
 
 ---
 
@@ -759,7 +759,7 @@ Provide global navigation.
 
 ## Purpose
 
-Allow visitors to contact Ançın İnşaat through multiple communication channels.
+Allow visitors to contact Ancın İnşaat through multiple communication channels.
 
 ---
 
@@ -867,7 +867,7 @@ Provide global navigation.
 
 ## Purpose
 
-Encourage talented professionals to join Ançın İnşaat and submit job applications.
+Encourage talented professionals to join Ancın İnşaat and submit job applications.
 
 ---
 
@@ -891,7 +891,7 @@ Introduce the Career page.
 
 ---
 
-### Why Join Ançın
+### Why Join Ancın
 
 **Purpose**
 
@@ -980,7 +980,7 @@ Provide global navigation.
 
 ## Purpose
 
-Present Ançın İnşaat's approach to employee development, workplace culture and human resources.
+Present Ancın İnşaat's approach to employee development, workplace culture and human resources.
 
 ---
 

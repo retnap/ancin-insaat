@@ -18,7 +18,7 @@ namespace AncinInsaat.ViewComponents;
 // PLACEHOLDER LEGAL TEXT — DO NOT SHIP AS FINAL.
 // The paragraphs below follow the standard structure of a Turkish KVKK
 // Aydınlatma Metni (6698 sayılı Kanun) but are NOT reviewed or approved by
-// the client or legal counsel. They must be replaced with Ançın İnşaat's
+// the client or legal counsel. They must be replaced with Ancın İnşaat's
 // lawyer-approved KVKK disclosure text before this page goes to production.
 // ============================================================================
 public class KvkkPolicyViewComponent : ViewComponent

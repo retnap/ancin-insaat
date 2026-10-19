@@ -105,7 +105,7 @@ public class StaticPageSearchProvider : ISearchIndexProvider
         new()
         {
             Title = "Home",
-            Description = "An overview of Ançın İnşaat and our featured projects.",
+            Description = "An overview of Ancın İnşaat and our featured projects.",
             Url = "/en",
             Category = "Page",
             Keywords = "home landing construction company",

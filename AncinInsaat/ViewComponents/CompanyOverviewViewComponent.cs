@@ -39,7 +39,7 @@ public class CompanyOverviewViewComponent : ViewComponent
                 Eyebrow = isEnglish ? "ABOUT US" : "HAKKIMIZDA",
                 Title = isEnglish ? "50 Years of Experience" : "50 Yıllık Tecrübe",
                 Description = isEnglish
-                    ? "Ançın İnşaat creates living spaces by bringing together reliability, " +
+                    ? "Ancın İnşaat creates living spaces by bringing together reliability, " +
                         "craftsmanship and a modern architectural philosophy. In every project, " +
                         "we aim to create lasting value and offer our residents a peaceful, " +
                         "functional way of life."
@@ -55,7 +55,7 @@ public class CompanyOverviewViewComponent : ViewComponent
                 // see CompanyHistorySectionViewComponent's Image for the
                 // flip side. Same video widget as before, just relocated.
                 Id = "company-overview",
-                Title = isEnglish ? "Ançın İnşaat Promotional Film" : "Ancın İnşaat Tanıtım Filmi",
+                Title = isEnglish ? "Ancın İnşaat Promotional Film" : "Ancın İnşaat Tanıtım Filmi",
                 // Frame extracted directly from video-optimized.mp4 at exactly
                 // 1.33s (project owner's explicit timestamp) via ffmpeg,
                 // cropped to the section's 1:1 trigger and re-encoded as

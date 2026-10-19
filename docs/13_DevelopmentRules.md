@@ -4,7 +4,7 @@
 
 ## Purpose
 
-This document defines the development standards for the Ançın İnşaat website.
+This document defines the development standards for the Ancın İnşaat website.
 
 All code should follow these rules to ensure consistency, maintainability and scalability.
 

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AncinInsaat.ViewComponents;
 
-// Career page "Why Join Ançın" section (docs/03_PageBlueprints.md — Page
+// Career page "Why Join Ancın" section (docs/03_PageBlueprints.md — Page
 // Career). Reuses the Information Card component in its Grid layout,
 // same precedent as AreasOfExpertiseViewComponent/MissionVisionViewComponent
 // rather than the doc's separately-named Feature Card — a responsive
@@ -45,7 +45,7 @@ public class WhyJoinAncinViewComponent : ViewComponent
             SectionHeader = new SectionHeaderModel
             {
                 HeadingId = "why-join-heading",
-                Eyebrow = "NEDEN ANÇIN?",
+                Eyebrow = "NEDEN ANCIN?",
                 Title = "Neden Ancın İnşaat'ta Çalışmalısınız?",
                 Description = "Yarım asra yaklaşan bir aile şirketinde, güven ve zanaatkârlıkla şekillenen bir kültürün parçası olun."
             },

@@ -4,7 +4,7 @@
 
 ## Purpose
 
-This document defines the reusable UI components used throughout the Ançın İnşaat website.
+This document defines the reusable UI components used throughout the Ancın İnşaat website.
 
 It describes each component's purpose, available variants and where it is used.
 
@@ -482,7 +482,7 @@ Project Detail
 
 **Purpose**
 
-Marquee/carousel of Ançın's own confirmed project wordmarks — a portfolio
+Marquee/carousel of Ancın's own confirmed project wordmarks — a portfolio
 trust strip, not third-party partner logos (component/folder name is
 historical). Rendered once by the shared layout, below the CTA Banner.
 Content must stay generic (no page-specific project highlighting).

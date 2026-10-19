@@ -4,7 +4,7 @@
 
 ## Purpose
 
-This document defines the future Admin Panel architecture for the Ançın İnşaat website.
+This document defines the future Admin Panel architecture for the Ancın İnşaat website.
 
 The Admin Panel is **not included in Version 1** but the public website should be developed with future integration in mind.
 

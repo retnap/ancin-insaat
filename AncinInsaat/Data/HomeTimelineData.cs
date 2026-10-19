@@ -30,8 +30,8 @@ public static class HomeTimelineData
             Summary = "1973 yılında tamamlanan Seda Apartmanı, Ancın İnşaat'ın ilk yıllarından kalma projeler arasında yer alır.",
             Detail = "Şirketin kuruluş döneminde hayata geçirilen Seda Apartmanı, tek yapı ölçeğindeki konut anlayışını yansıtan bir örnektir. Proje, Ancın İnşaat'ın uzun soluklu inşaat geçmişinin ilk taşlarından birini oluşturur.",
             ImageAltEn = "Seda Apartmanı exterior view",
-            SummaryEn = "Completed in 1973, Seda Apartmanı is one of Ançın İnşaat's earliest projects.",
-            DetailEn = "Built during the company's founding years, Seda Apartmanı reflects a single-building approach to residential construction. The project represents one of the first milestones in Ançın İnşaat's long construction history."
+            SummaryEn = "Completed in 1973, Seda Apartmanı is one of Ancın İnşaat's earliest projects.",
+            DetailEn = "Built during the company's founding years, Seda Apartmanı reflects a single-building approach to residential construction. The project represents one of the first milestones in Ancın İnşaat's long construction history."
         },
         new()
         {
@@ -43,7 +43,7 @@ public static class HomeTimelineData
             Detail = "Dönemin ihtiyaçlarına uygun sade ve işlevsel bir yaklaşımla inşa edilen Çam Apartmanı, Ancın İnşaat'ın ilk yıllardaki apartman ölçeğindeki yapılaşma deneyimini yansıtır. Proje, şirketin büyüyen konut portföyüne katkı sağladı.",
             ImageAltEn = "Çam Apartmanı exterior view",
             SummaryEn = "Completed in 1975, Çam Apartmanı is among the company's early residential projects.",
-            DetailEn = "Built with a simple, functional approach suited to the needs of its time, Çam Apartmanı reflects Ançın İnşaat's early experience with single-building residential construction. The project contributed to the company's growing residential portfolio."
+            DetailEn = "Built with a simple, functional approach suited to the needs of its time, Çam Apartmanı reflects Ancın İnşaat's early experience with single-building residential construction. The project contributed to the company's growing residential portfolio."
         },
         new()
         {
@@ -55,7 +55,7 @@ public static class HomeTimelineData
             Detail = "Kardeş Apartmanı, Ancın İnşaat'ın bu dönemde art arda hayata geçirdiği tek yapı ölçeğindeki projelerin bir parçası olarak inşa edildi. Proje, şirketin yerel ölçekteki inşaat deneyimini pekiştiren yapılardan biri oldu.",
             ImageAltEn = "Kardeş Apartmanı exterior view",
             SummaryEn = "Completed in 1977, Kardeş Apartmanı is one of the residential projects the company carried out during the 1970s.",
-            DetailEn = "Kardeş Apartmanı was built as part of the series of single-building projects Ançın İnşaat completed one after another during this period. The project became one of the buildings that reinforced the company's local construction experience."
+            DetailEn = "Kardeş Apartmanı was built as part of the series of single-building projects Ancın İnşaat completed one after another during this period. The project became one of the buildings that reinforced the company's local construction experience."
         },
         new()
         {
@@ -66,8 +66,8 @@ public static class HomeTimelineData
             Summary = "1978 yılında tamamlanan Çaltılı Cami ve Yurdu, Ancın İnşaat'ın konut dışı yapılara da imza attığı projelerden biridir.",
             Detail = "Çaltılı Cami ve Yurdu, şirketin apartman projelerinin yanı sıra toplumsal ihtiyaçlara yönelik yapılarda da yer aldığını gösteren örneklerden biridir. Proje, Ancın İnşaat'ın yerel ölçekteki inşaat faaliyetlerinin çeşitliliğini yansıtır.",
             ImageAltEn = "Çaltılı Cami ve Yurdu exterior view",
-            SummaryEn = "Completed in 1978, Çaltılı Cami ve Yurdu is one of the projects through which Ançın İnşaat also left its mark on non-residential buildings.",
-            DetailEn = "Çaltılı Cami ve Yurdu is one of the examples showing that, alongside its apartment projects, the company also took part in buildings serving community needs. The project reflects the diversity of Ançın İnşaat's local construction activity."
+            SummaryEn = "Completed in 1978, Çaltılı Cami ve Yurdu is one of the projects through which Ancın İnşaat also left its mark on non-residential buildings.",
+            DetailEn = "Çaltılı Cami ve Yurdu is one of the examples showing that, alongside its apartment projects, the company also took part in buildings serving community needs. The project reflects the diversity of Ancın İnşaat's local construction activity."
         },
         new()
         {
@@ -79,7 +79,7 @@ public static class HomeTimelineData
             Detail = "Çaltılı Apartmanı, Ancın İnşaat'ın bu dönemde sürdürdüğü tek yapı ölçeğindeki inşaat faaliyetinin bir örneğidir. Proje, şirketin büyüyen konut portföyüne katkı sağlayan yapılardan biri oldu.",
             ImageAltEn = "Çaltılı Apartmanı exterior view",
             SummaryEn = "Completed in 1979, Çaltılı Apartmanı is one of the company's residential projects from the late 1970s.",
-            DetailEn = "Çaltılı Apartmanı is an example of the single-building construction activity Ançın İnşaat carried out during this period. The project was one of the buildings that contributed to the company's growing residential portfolio."
+            DetailEn = "Çaltılı Apartmanı is an example of the single-building construction activity Ancın İnşaat carried out during this period. The project was one of the buildings that contributed to the company's growing residential portfolio."
         },
         new()
         {
@@ -90,8 +90,8 @@ public static class HomeTimelineData
             Summary = "1981 yılında tamamlanan Cevher Apartmanı, Ancın İnşaat'ın 1980'li yıllara taşınan inşaat deneyiminin bir parçasıdır.",
             Detail = "Cevher Apartmanı, şirketin önceki yıllarda edindiği apartman inşası birikimini sürdürdüğü projelerden biri olarak hayata geçirildi. Proje, Ancın İnşaat'ın istikrarlı büyüme sürecine katkı sağladı.",
             ImageAltEn = "Cevher Apartmanı exterior view",
-            SummaryEn = "Completed in 1981, Cevher Apartmanı is part of Ançın İnşaat's construction experience carried into the 1980s.",
-            DetailEn = "Cevher Apartmanı was brought to life as one of the projects continuing the apartment-building expertise the company had gained in previous years. The project contributed to Ançın İnşaat's steady growth."
+            SummaryEn = "Completed in 1981, Cevher Apartmanı is part of Ancın İnşaat's construction experience carried into the 1980s.",
+            DetailEn = "Cevher Apartmanı was brought to life as one of the projects continuing the apartment-building expertise the company had gained in previous years. The project contributed to Ancın İnşaat's steady growth."
         },
         new()
         {
@@ -103,7 +103,7 @@ public static class HomeTimelineData
             Detail = "Toker Apartmanı, Ancın İnşaat'ın bu dönemde sürdürdüğü apartman ölçeğindeki yapılaşma anlayışını yansıtan projelerden biri olarak inşa edildi. Proje, şirketin yerel ölçekteki inşaat deneyimini pekiştirdi.",
             ImageAltEn = "Toker Apartmanı exterior view",
             SummaryEn = "Completed in 1983, Toker Apartmanı is one of the company's residential projects from the 1980s.",
-            DetailEn = "Toker Apartmanı was built as one of the projects reflecting Ançın İnşaat's apartment-scale construction approach during this period. The project reinforced the company's local construction experience."
+            DetailEn = "Toker Apartmanı was built as one of the projects reflecting Ancın İnşaat's apartment-scale construction approach during this period. The project reinforced the company's local construction experience."
         },
         new()
         {
@@ -115,7 +115,7 @@ public static class HomeTimelineData
             Detail = "Ancın Apartmanı, 1980'li yıllardaki konut projeleri arasında yer alan, ismiyle de dikkat çeken bir yapıdır. Proje, Ancın İnşaat'ın sürdürdüğü apartman ölçeğindeki inşaat faaliyetinin bir örneğini oluşturur.",
             ImageAltEn = "Ancın Apartmanı exterior view",
             SummaryEn = "Completed in 1984, Ancın Apartmanı stands out as one of the company's projects bearing its own name.",
-            DetailEn = "Ancın Apartmanı is a building from among the residential projects of the 1980s that also drew attention for its name. The project is an example of the apartment-scale construction activity Ançın İnşaat continued to carry out."
+            DetailEn = "Ancın Apartmanı is a building from among the residential projects of the 1980s that also drew attention for its name. The project is an example of the apartment-scale construction activity Ancın İnşaat continued to carry out."
         },
         new()
         {
@@ -127,7 +127,7 @@ public static class HomeTimelineData
             Detail = "Testiciler Apartmanı, Ancın İnşaat'ın bu dönemde sürdürdüğü tek yapı ölçeğindeki inşaat faaliyetinin bir parçası olarak hayata geçirildi. Proje, şirketin büyüyen konut portföyüne katkı sağladı.",
             ImageAltEn = "Testiciler Apartmanı exterior view",
             SummaryEn = "Completed in 1985, Testiciler Apartmanı is one of the company's residential projects from the 1980s.",
-            DetailEn = "Testiciler Apartmanı was brought to life as part of the single-building construction activity Ançın İnşaat carried out during this period. The project contributed to the company's growing residential portfolio."
+            DetailEn = "Testiciler Apartmanı was brought to life as part of the single-building construction activity Ancın İnşaat carried out during this period. The project contributed to the company's growing residential portfolio."
         },
         new()
         {
@@ -138,8 +138,8 @@ public static class HomeTimelineData
             Summary = "1986 yılında tamamlanan Esgin Apartmanı, Ancın İnşaat'ın 1980'li yıllardaki konut projeleri arasında yer alır.",
             Detail = "Esgin Apartmanı, şirketin bu dönemde sürdürdüğü apartman ölçeğindeki yapılaşma deneyimini yansıtan projelerden biri olarak inşa edildi. Proje, Ancın İnşaat'ın yerel ölçekteki inşaat geçmişine katkı sağladı.",
             ImageAltEn = "Esgin Apartmanı exterior view",
-            SummaryEn = "Completed in 1986, Esgin Apartmanı is among Ançın İnşaat's residential projects from the 1980s.",
-            DetailEn = "Esgin Apartmanı was built as one of the projects reflecting the company's apartment-scale construction experience during this period. The project contributed to Ançın İnşaat's local construction history."
+            SummaryEn = "Completed in 1986, Esgin Apartmanı is among Ancın İnşaat's residential projects from the 1980s.",
+            DetailEn = "Esgin Apartmanı was built as one of the projects reflecting the company's apartment-scale construction experience during this period. The project contributed to Ancın İnşaat's local construction history."
         },
         new()
         {
@@ -151,7 +151,7 @@ public static class HomeTimelineData
             Detail = "Karaoğlan Apartmanı, Ancın İnşaat'ın bu dönemde sürdürdüğü apartman inşası deneyiminin bir örneği olarak hayata geçirildi. Proje, şirketin istikrarlı büyüme sürecine katkı sağlayan yapılardan biri oldu.",
             ImageAltEn = "Karaoğlan Apartmanı exterior view",
             SummaryEn = "Completed in 1987, Karaoğlan Apartmanı is one of the company's residential projects from the 1980s.",
-            DetailEn = "Karaoğlan Apartmanı was brought to life as an example of Ançın İnşaat's apartment-building experience during this period. The project became one of the buildings that contributed to the company's steady growth."
+            DetailEn = "Karaoğlan Apartmanı was brought to life as an example of Ancın İnşaat's apartment-building experience during this period. The project became one of the buildings that contributed to the company's steady growth."
         },
         new()
         {
@@ -162,8 +162,8 @@ public static class HomeTimelineData
             Summary = "1988 yılında tamamlanan Ökten Apartmanı, Ancın İnşaat'ın 1980'li yılların sonundaki konut projeleri arasında yer alır.",
             Detail = "Ökten Apartmanı, şirketin bu dönemde sürdürdüğü apartman ölçeğindeki inşaat faaliyetinin bir parçası olarak tasarlandı. Proje, Ancın İnşaat'ın büyüyen konut portföyüne katkı sağladı.",
             ImageAltEn = "Ökten Apartmanı exterior view",
-            SummaryEn = "Completed in 1988, Ökten Apartmanı is among Ançın İnşaat's residential projects from the late 1980s.",
-            DetailEn = "Ökten Apartmanı was designed as part of the apartment-scale construction activity the company carried out during this period. The project contributed to Ançın İnşaat's growing residential portfolio."
+            SummaryEn = "Completed in 1988, Ökten Apartmanı is among Ancın İnşaat's residential projects from the late 1980s.",
+            DetailEn = "Ökten Apartmanı was designed as part of the apartment-scale construction activity the company carried out during this period. The project contributed to Ancın İnşaat's growing residential portfolio."
         },
         new()
         {
@@ -175,7 +175,7 @@ public static class HomeTimelineData
             Detail = "Zafer Apartmanı, Ancın İnşaat'ın önceki on yıllarda edindiği apartman inşası birikimini sürdürdüğü projelerden biri olarak hayata geçirildi. Proje, şirketin yerel ölçekteki inşaat geçmişine katkı sağladı.",
             ImageAltEn = "Zafer Apartmanı exterior view",
             SummaryEn = "Completed in 1990, Zafer Apartmanı is one of the first examples of the company's construction experience carried into the 1990s.",
-            DetailEn = "Zafer Apartmanı was brought to life as one of the projects continuing the apartment-building expertise Ançın İnşaat had gained over the previous decades. The project contributed to the company's local construction history."
+            DetailEn = "Zafer Apartmanı was brought to life as one of the projects continuing the apartment-building expertise Ancın İnşaat had gained over the previous decades. The project contributed to the company's local construction history."
         },
         new()
         {
@@ -187,7 +187,7 @@ public static class HomeTimelineData
             Detail = "Çakmakoğlu Apartmanı, Ancın İnşaat'ın bu dönemde sürdürdüğü apartman ölçeğindeki yapılaşma anlayışını yansıtan projelerden biri olarak inşa edildi. Proje, şirketin büyüyen konut portföyüne katkı sağladı.",
             ImageAltEn = "Çakmakoğlu Apartmanı exterior view",
             SummaryEn = "Completed in 1991, Çakmakoğlu Apartmanı is one of the company's residential projects from the 1990s.",
-            DetailEn = "Çakmakoğlu Apartmanı was built as one of the projects reflecting Ançın İnşaat's apartment-scale construction approach during this period. The project contributed to the company's growing residential portfolio."
+            DetailEn = "Çakmakoğlu Apartmanı was built as one of the projects reflecting Ancın İnşaat's apartment-scale construction approach during this period. The project contributed to the company's growing residential portfolio."
         },
         new()
         {
@@ -199,7 +199,7 @@ public static class HomeTimelineData
             Detail = "Şahan Apartmanı, şirketin bu dönemde sürdürdüğü tek yapı ölçeğindeki inşaat faaliyetinin bir örneği olarak hayata geçirildi. Proje, Ancın İnşaat'ın 1998'de Samanyolu Sitesi ile başlayacak çok bloklu site projelerine geçiş öncesindeki son dönem apartman projelerinden biri oldu.",
             ImageAltEn = "Şahan Apartmanı exterior view",
             SummaryEn = "Completed in 1992, Şahan Apartmanı is among the company's residential projects from the 1990s.",
-            DetailEn = "Şahan Apartmanı was brought to life as an example of the single-building construction activity the company carried out during this period. The project was one of the last apartment projects before Ançın İnşaat's transition to multi-block housing developments, which began with Samanyolu Sitesi in 1998."
+            DetailEn = "Şahan Apartmanı was brought to life as an example of the single-building construction activity the company carried out during this period. The project was one of the last apartment projects before Ancın İnşaat's transition to multi-block housing developments, which began with Samanyolu Sitesi in 1998."
         },
         new()
         {
@@ -210,8 +210,8 @@ public static class HomeTimelineData
             Summary = "Ancın İnşaat'ın tek yapılardan çok bloklu site organizasyonuna geçişini simgeleyen Samanyolu Sitesi, 1998 yılında hayata geçirildi.",
             Detail = "1973'ten bu yana tamamlanan onlarca apartman projesinin ardından şirketin ilk büyük ölçekli site projesi olan Samanyolu Sitesi, çok bloklu yerleşim planı ve dönemin standartlarının üzerinde yapı kalitesiyle dikkat çekti. Proje, Ancın İnşaat'ın sonraki yıllarda yürüttüğü site ölçeğindeki projelere referans teşkil etti.",
             ImageAltEn = "Samanyolu Sitesi exterior view",
-            SummaryEn = "Samanyolu Sitesi, which symbolizes Ançın İnşaat's transition from single buildings to multi-block housing developments, was completed in 1998.",
-            DetailEn = "Following dozens of apartment projects completed since 1973, Samanyolu Sitesi — the company's first large-scale housing development — stood out for its multi-block layout and a build quality above the standards of its time. The project served as a reference for the development-scale projects Ançın İnşaat carried out in later years."
+            SummaryEn = "Samanyolu Sitesi, which symbolizes Ancın İnşaat's transition from single buildings to multi-block housing developments, was completed in 1998.",
+            DetailEn = "Following dozens of apartment projects completed since 1973, Samanyolu Sitesi — the company's first large-scale housing development — stood out for its multi-block layout and a build quality above the standards of its time. The project served as a reference for the development-scale projects Ancın İnşaat carried out in later years."
         },
         new()
         {
@@ -223,7 +223,7 @@ public static class HomeTimelineData
             Detail = "Proje kapsamında daire kullanım alanları ve ortak yaşam alanları, dönemin ihtiyaçları gözetilerek planlandı. Meral Hanım Apt., Ancın İnşaat'ın orta ölçekli şehir içi projelerdeki deneyimini pekiştiren yapılardan biri oldu.",
             ImageAltEn = "Meral Hanım Apt. exterior view",
             SummaryEn = "Completed in 2008, Meral Hanım Apt. is a residential project notable for its location close to the city center.",
-            DetailEn = "The project's unit layouts and shared living areas were planned with the needs of the time in mind. Meral Hanım Apt. became one of the buildings that reinforced Ançın İnşaat's experience with mid-scale projects within the city."
+            DetailEn = "The project's unit layouts and shared living areas were planned with the needs of the time in mind. Meral Hanım Apt. became one of the buildings that reinforced Ancın İnşaat's experience with mid-scale projects within the city."
         },
         // Client revision (2026-10-08): Tralles Gold/Alinda Gold cards now
         // point at each project's own gallery/exterior/originals/
@@ -241,7 +241,7 @@ public static class HomeTimelineData
             Detail = "Proje, sosyal donatı alanları ve peyzaj düzenlemesiyle birlikte planlandı. Tralles Gold, Ancın İnşaat'ın büyüyen proje ölçeğine uygun yapı ve saha organizasyonu yaklaşımının geliştirildiği dönemi temsil eder.",
             ImageAltEn = "Tralles Gold exterior view",
             SummaryEn = "Completed in November 2011, Tralles Gold was an important step in the company's transition toward larger-scale developments.",
-            DetailEn = "The project was planned together with its social amenity areas and landscaping. Tralles Gold represents the period in which Ançın İnşaat developed a building and site-organization approach suited to its growing project scale."
+            DetailEn = "The project was planned together with its social amenity areas and landscaping. Tralles Gold represents the period in which Ancın İnşaat developed a building and site-organization approach suited to its growing project scale."
         },
         new()
         {
@@ -253,7 +253,7 @@ public static class HomeTimelineData
             Detail = "Proje, iç mekân planlamasında işlevselliği ön planda tutan bir yaklaşımla tasarlandı. Alinda Gold, Ancın İnşaat'ın yapı standartlarını sürekli geliştirme çabasının bir yansıması olarak tamamlandı.",
             ImageAltEn = "Alinda Gold exterior view",
             SummaryEn = "Completed in May 2014, Alinda Gold is a residential project reflecting the modern architectural approach of its time.",
-            DetailEn = "The project was designed with an approach that prioritized functionality in its interior planning. Alinda Gold was completed as a reflection of Ançın İnşaat's continuous effort to raise its construction standards."
+            DetailEn = "The project was designed with an approach that prioritized functionality in its interior planning. Alinda Gold was completed as a reflection of Ancın İnşaat's continuous effort to raise its construction standards."
         },
         new()
         {
@@ -264,8 +264,8 @@ public static class HomeTimelineData
             Summary = "2019 yılında tamamlanan N-Latis, Ancın İnşaat'ın Kuşadası'ndaki mimari vizyonunu yansıtan çarpıcı bir projedir.",
             Detail = "Kıvrımlı çatı hattı ve cam ağırlıklı cephesiyle dikkat çeken proje, zemin katındaki sosyal kullanım alanlarıyla şehir yaşamını binaya taşıdı. N-Latis, Ancın İnşaat'ın kıyı bölgelerindeki modern konut anlayışını temsil eden projelerden biri oldu.",
             ImageAltEn = "N-Latis exterior view",
-            SummaryEn = "Completed in 2019, N-Latis is a striking project reflecting Ançın İnşaat's architectural vision in Kuşadası.",
-            DetailEn = "Notable for its curved roofline and glass-dominant façade, the project brought city life into the building through its ground-floor social amenity areas. N-Latis became one of the projects representing Ançın İnşaat's modern residential approach in coastal regions."
+            SummaryEn = "Completed in 2019, N-Latis is a striking project reflecting Ancın İnşaat's architectural vision in Kuşadası.",
+            DetailEn = "Notable for its curved roofline and glass-dominant façade, the project brought city life into the building through its ground-floor social amenity areas. N-Latis became one of the projects representing Ancın İnşaat's modern residential approach in coastal regions."
         },
         new()
         {
@@ -276,8 +276,8 @@ public static class HomeTimelineData
             Summary = "2021 yılında tamamlanan Magnesia Gold, Ancın İnşaat'ın Aydın'daki en kapsamlı site projelerinden biri olarak hayata geçirildi.",
             Detail = "Çok bloklu yerleşim planı, geniş peyzaj alanları ve sosyal donatılarıyla tasarlanan proje, şirketin büyük ölçekli site organizasyonundaki deneyimini bir üst seviyeye taşıdı. Magnesia Gold, Ancın İnşaat'ın konut projelerinde sürdürdüğü kalite ve yaşam standardı anlayışının güçlü bir yansımasıdır.",
             ImageAltEn = "Magnesia Gold exterior view",
-            SummaryEn = "Completed in 2021, Magnesia Gold was brought to life as one of Ançın İnşaat's most comprehensive housing developments in Aydın.",
-            DetailEn = "Designed with a multi-block layout, extensive landscaped areas and social amenities, the project took the company's experience in large-scale development organization to the next level. Magnesia Gold is a strong reflection of the quality and standard of living Ançın İnşaat maintains across its residential projects."
+            SummaryEn = "Completed in 2021, Magnesia Gold was brought to life as one of Ancın İnşaat's most comprehensive housing developments in Aydın.",
+            DetailEn = "Designed with a multi-block layout, extensive landscaped areas and social amenities, the project took the company's experience in large-scale development organization to the next level. Magnesia Gold is a strong reflection of the quality and standard of living Ancın İnşaat maintains across its residential projects."
         },
         // Ferhunde Hanım Apartmanı ve La Fiore Karabağ 1. Etap
         // (Q-Latis/D-Latis revision, 2026-09-28 — client-requested Zaman
@@ -300,7 +300,7 @@ public static class HomeTimelineData
             Detail = "Geniş camları ve ferah balkonlarıyla her kata bol doğal ışık taşıyan proje, yüksek çitlerle çevrili özel bahçe alanıyla sakinlerine güvenli ve huzurlu bir dış mekân yaşamı sunuyor. Ferhunde Hanım Apartmanı, Ancın İnşaat'ın Aydın Efeler'deki şehir içi konut projelerindeki deneyimini yansıtan yapılardan biri oldu.",
             ImageAltEn = "Ferhunde Hanım Apartmanı exterior view",
             SummaryEn = "Completed in 2026, Ferhunde Hanım Apartmanı is a residential project in Aydın Efeler notable for its softly curved balconies and carefully chosen façade texture.",
-            DetailEn = "With large windows and spacious balconies bringing abundant natural light to every floor, the project offers its residents a safe and peaceful outdoor living experience through a private garden enclosed by tall hedges. Ferhunde Hanım Apartmanı became one of the buildings reflecting Ançın İnşaat's experience with urban residential projects in Aydın Efeler."
+            DetailEn = "With large windows and spacious balconies bringing abundant natural light to every floor, the project offers its residents a safe and peaceful outdoor living experience through a private garden enclosed by tall hedges. Ferhunde Hanım Apartmanı became one of the buildings reflecting Ancın İnşaat's experience with urban residential projects in Aydın Efeler."
         },
         new()
         {
@@ -312,7 +312,7 @@ public static class HomeTimelineData
             Detail = "Taş kaplı cepheleri ve ahşap detaylarıyla dikkat çeken villalar, peyzajlı bahçeleri ve güvenlikli giriş noktasıyla doğayla iç içe bir günlük yaşam vaat ediyor. La Fiore Karabağ 1. Etap, Ancın İnşaat'ın villa ölçeğindeki proje deneyimini yansıtan yapılardan biri oldu.",
             ImageAltEn = "La Fiore Karabağ 1. Etap exterior view",
             SummaryEn = "Completed in 2026, La Fiore Karabağ 1. Etap offers a calm, private living environment with its single-story villas set within a lush pine forest in Aydın İncirliova.",
-            DetailEn = "Notable for their stone-clad façades and timber detailing, the villas promise a daily life immersed in nature, with landscaped gardens and a secured entry point. La Fiore Karabağ 1. Etap became one of the buildings reflecting Ançın İnşaat's experience with villa-scale projects."
+            DetailEn = "Notable for their stone-clad façades and timber detailing, the villas promise a daily life immersed in nature, with landscaped gardens and a secured entry point. La Fiore Karabağ 1. Etap became one of the buildings reflecting Ancın İnşaat's experience with villa-scale projects."
         },
         // D-Latis / Q-Latis placeholders (2026-10-14 client request,
         // revised 2026-10-14) — appended after every existing card per

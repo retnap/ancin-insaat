@@ -4,7 +4,7 @@
 
 ## Purpose
 
-This document defines the SEO strategy for the Ançın İnşaat website.
+This document defines the SEO strategy for the Ancın İnşaat website.
 
 The goal is to maximise search engine visibility while maintaining clean, semantic and maintainable code.
 

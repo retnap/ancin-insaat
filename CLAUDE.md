@@ -50,7 +50,7 @@ Do not ask the user to restate previously approved decisions.
 
 ## Purpose
 
-This document defines how Claude Code should understand, interpret and build the Ançın İnşaat website.
+This document defines how Claude Code should understand, interpret and build the Ancın İnşaat website.
 
 All project decisions should follow this document before generating code.
 
@@ -178,7 +178,7 @@ Never guess.
 
 # Primary Objective
 
-Build a premium corporate construction website for Ançın İnşaat.
+Build a premium corporate construction website for Ancın İnşaat.
 
 The final result should feel comparable in quality to leading real estate websites while remaining completely original.
 
