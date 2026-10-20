@@ -63,12 +63,18 @@ public class CompanyOverviewViewComponent : ViewComponent
                 // opening fade-in, so the frame is a near-solid white square
                 // rather than a recognizable photo — intentional per the
                 // 2026-09-22 instruction to use this exact timestamp.
+                // Kept after the 2026-10-20 video replacement below: the
+                // new video's 1.33s frame is the same near-white fade-in.
                 PosterSrc = "/images/company/video-poster.webp",
 
                 // Empty on purpose — the poster is a frame from the video
                 // itself, decorative for screen-reader purposes.
                 PosterAlt = "",
-                VideoSrc = "/images/logos/video-optimized.mp4",
+                // Video replacement (2026-10-20 request) — the client's new
+                // promotional film replaces video-optimized.mp4, which is no
+                // longer referenced anywhere (removed together with the
+                // unused video-original.mp4; both remain in Git history).
+                VideoSrc = "/images/logos/ancin-tanitim-videosu-web.mp4",
                 CssClass = "company-overview-video"
             },
             CtaLabel = isEnglish ? "Read More" : "Devamını Oku",

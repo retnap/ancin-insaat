@@ -792,8 +792,30 @@ public class ProjectsController : Controller
         "la-fiore-karabag"
     };
 
+    // La Via Villalar 1. Etap Konsept 1 performance fix, 2026-10-20 — its
+    // first Konsept slide reused the 29.4MB, 8887x5000 Gallery original
+    // (gallery/exterior/originals/01.jpg) as an eager-loaded card image
+    // rendered at ~560x325, holding the page's load event for ~16s on a
+    // 20 Mbit/s connection. Scoped per image rather than per slug (unlike
+    // ConceptCardThumbnailSlugs above) so Konsept 2 keeps rendering exactly
+    // as before. The derivative is a 1600w/88q WebP generated via
+    // tools/ThumbnailTool --single into a sibling display/ folder (same
+    // originals/display/thumbnails split the floor plans use) — sharper on
+    // high-density screens than the 800w gallery thumbnail. LightboxUrl
+    // still carries the untouched original for the Media Viewer.
+    private static readonly IReadOnlyDictionary<string, string> ConceptCardDisplayImages = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+    {
+        ["/images/projects/kuyulu-la-via-villalar-birinci-etap/gallery/exterior/originals/01.jpg"] =
+            "/images/projects/kuyulu-la-via-villalar-birinci-etap/gallery/exterior/display/01.webp"
+    };
+
     private string ResolveConceptCardImage(string slug, string originalImagePath)
     {
+        if (ConceptCardDisplayImages.TryGetValue(originalImagePath, out var displayPath) && FileExistsInWebRoot(displayPath))
+        {
+            return displayPath;
+        }
+
         return ConceptCardThumbnailSlugs.Contains(slug) ? ResolveThumbnail(originalImagePath) : originalImagePath;
     }
 

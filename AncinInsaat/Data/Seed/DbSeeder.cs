@@ -1872,13 +1872,56 @@ public static class DbSeeder
                     new() { Name = "Banyo 2", AreaM2 = 3.50m, DisplayOrder = 6 }
                 }
             },
+            // B Tipi Blok 3+1 duplex (client-supplied drawings, 2026-10-20) —
+            // same Zemin Kat = TOPLAM / 1. Kat = own-floor convention as
+            // every other duplex above; both figures and every room area are
+            // transcribed from the drawings' printed boxes. The 3+1 1. Kat
+            // drawing prints the same rooms/areas as "B Tipi Blok – 1. Kat".
+            // See ReconcileLaFioreKarabag2EtapUcArtiBirKatPlanlariAsync.
+            new()
+            {
+                ApartmentType = "B Tipi Blok (3+1) – Zemin Kat",
+                ImagePath = "/images/projects/la-fiore-karabag-2-etap/floorplans/originals/b-tipi-blok-uc-arti-bir-zemin-kat.jpg",
+                NetAreaM2 = 130.45m,
+                GrossAreaM2 = 166.75m,
+                DisplayOrder = 6,
+                Rooms = new List<FloorPlanRoom>
+                {
+                    new() { Name = "Salon", AreaM2 = 27.00m, DisplayOrder = 1 },
+                    new() { Name = "Mutfak", AreaM2 = 18.53m, DisplayOrder = 2 },
+                    new() { Name = "Giriş Holü", AreaM2 = 4.89m, DisplayOrder = 3 },
+                    new() { Name = "Hol", AreaM2 = 5.88m, DisplayOrder = 4 },
+                    new() { Name = "WC", AreaM2 = 1.82m, DisplayOrder = 5 },
+                    new() { Name = "Merdiven", AreaM2 = 5.70m, DisplayOrder = 6 },
+                    new() { Name = "Yatak Odası", AreaM2 = 9.72m, DisplayOrder = 7 },
+                    new() { Name = "Banyo", AreaM2 = 3.19m, DisplayOrder = 8 },
+                    new() { Name = "Teras", AreaM2 = 15.00m, DisplayOrder = 9 }
+                }
+            },
+            new()
+            {
+                ApartmentType = "B Tipi Blok (3+1) – 1. Kat",
+                ImagePath = "/images/projects/la-fiore-karabag-2-etap/floorplans/originals/b-tipi-blok-uc-arti-bir-birinci-kat.jpg",
+                NetAreaM2 = 53.72m,
+                GrossAreaM2 = 62.70m,
+                DisplayOrder = 7,
+                Rooms = new List<FloorPlanRoom>
+                {
+                    new() { Name = "Yatak Odası", AreaM2 = 16.70m, DisplayOrder = 1 },
+                    new() { Name = "Banyo 1", AreaM2 = 5.10m, DisplayOrder = 2 },
+                    new() { Name = "Hol", AreaM2 = 2.70m, DisplayOrder = 3 },
+                    new() { Name = "Merdiven", AreaM2 = 8.52m, DisplayOrder = 4 },
+                    new() { Name = "Ebeveyn Yatak Odası", AreaM2 = 17.20m, DisplayOrder = 5 },
+                    new() { Name = "Banyo 2", AreaM2 = 3.50m, DisplayOrder = 6 }
+                }
+            },
             new()
             {
                 ApartmentType = "C Tipi Blok – Zemin Kat",
                 ImagePath = "/images/projects/la-fiore-karabag-2-etap/floorplans/originals/c-tipi-blok-zemin-kat.jpg",
                 NetAreaM2 = 134.94m,
                 GrossAreaM2 = 180.50m,
-                DisplayOrder = 6,
+                DisplayOrder = 8,
                 Rooms = new List<FloorPlanRoom>
                 {
                     new() { Name = "Yaşam Alanı", AreaM2 = 31.40m, DisplayOrder = 1 },
@@ -1897,7 +1940,52 @@ public static class DbSeeder
                 ImagePath = "/images/projects/la-fiore-karabag-2-etap/floorplans/originals/c-tipi-blok-1-kat.jpg",
                 NetAreaM2 = 49.28m,
                 GrossAreaM2 = 68.50m,
-                DisplayOrder = 7,
+                DisplayOrder = 9,
+                Rooms = new List<FloorPlanRoom>
+                {
+                    new() { Name = "Yatak Odası", AreaM2 = 11.37m, DisplayOrder = 1 },
+                    new() { Name = "Banyo", AreaM2 = 3.28m, DisplayOrder = 2 },
+                    new() { Name = "Hol", AreaM2 = 3.91m, DisplayOrder = 3 },
+                    new() { Name = "Merdiven", AreaM2 = 8.25m, DisplayOrder = 4 },
+                    new() { Name = "Giyinme Odası", AreaM2 = 4.11m, DisplayOrder = 5 },
+                    new() { Name = "Ebeveyn Banyo", AreaM2 = 3.86m, DisplayOrder = 6 },
+                    new() { Name = "Ebeveyn Yatak Odası", AreaM2 = 14.92m, DisplayOrder = 7 },
+                    new() { Name = "Balkon", AreaM2 = 7.83m, DisplayOrder = 8 }
+                }
+            },
+            // C Tipi Blok 3+1 duplex (client-supplied drawings, 2026-10-20) —
+            // same convention as the B Tipi Blok (3+1) pair above. The Zemin
+            // Kat drawing prints the two mirrored units' Teras as 14,54 m²
+            // and 14,50 m²; 14,50 m² is used, matching "C Tipi Blok – Zemin
+            // Kat". The 3+1 1. Kat drawing prints the same rooms/areas as
+            // "C Tipi Blok – 1. Kat", so its room names follow that row.
+            new()
+            {
+                ApartmentType = "C Tipi Blok (3+1) – Zemin Kat",
+                ImagePath = "/images/projects/la-fiore-karabag-2-etap/floorplans/originals/c-tipi-blok-uc-arti-bir-zemin-kat.jpg",
+                NetAreaM2 = 132.08m,
+                GrossAreaM2 = 178.50m,
+                DisplayOrder = 10,
+                Rooms = new List<FloorPlanRoom>
+                {
+                    new() { Name = "Salon", AreaM2 = 30.19m, DisplayOrder = 1 },
+                    new() { Name = "Mutfak", AreaM2 = 22.61m, DisplayOrder = 2 },
+                    new() { Name = "Giriş Holü", AreaM2 = 4.09m, DisplayOrder = 3 },
+                    new() { Name = "Hol", AreaM2 = 4.47m, DisplayOrder = 4 },
+                    new() { Name = "WC", AreaM2 = 2.92m, DisplayOrder = 5 },
+                    new() { Name = "Merdiven", AreaM2 = 5.60m, DisplayOrder = 6 },
+                    new() { Name = "Yatak Odası", AreaM2 = 9.66m, DisplayOrder = 7 },
+                    new() { Name = "Banyo", AreaM2 = 3.26m, DisplayOrder = 8 },
+                    new() { Name = "Teras", AreaM2 = 14.50m, DisplayOrder = 9 }
+                }
+            },
+            new()
+            {
+                ApartmentType = "C Tipi Blok (3+1) – 1. Kat",
+                ImagePath = "/images/projects/la-fiore-karabag-2-etap/floorplans/originals/c-tipi-blok-uc-arti-bir-birinci-kat.jpg",
+                NetAreaM2 = 49.28m,
+                GrossAreaM2 = 68.50m,
+                DisplayOrder = 11,
                 Rooms = new List<FloorPlanRoom>
                 {
                     new() { Name = "Yatak Odası", AreaM2 = 11.37m, DisplayOrder = 1 },
@@ -1920,7 +2008,7 @@ public static class DbSeeder
                 // Net/Gross figures. See ReconcileLaFioreKarabag2EtapDveETipiAlanDuzeltmesiAsync.
                 NetAreaM2 = 116.70m,
                 GrossAreaM2 = 166.30m,
-                DisplayOrder = 8,
+                DisplayOrder = 12,
                 // D/E room-list correction (client-supplied authoritative
                 // values, 2026-10-19; cross-checked against this drawing) —
                 // the D and E rows previously held each other's room lists
@@ -1946,7 +2034,7 @@ public static class DbSeeder
                 ImagePath = "/images/projects/la-fiore-karabag-2-etap/floorplans/originals/d-tipi-blok-1-kat.jpg",
                 NetAreaM2 = 47.00m,
                 GrossAreaM2 = 63.20m,
-                DisplayOrder = 9,
+                DisplayOrder = 13,
                 // Two separate bathrooms (4,00 m² and 3,70 m²) — kept as
                 // distinct rows, numbered like every other duplicate room.
                 Rooms = new List<FloorPlanRoom>
@@ -1965,7 +2053,7 @@ public static class DbSeeder
                 ImagePath = "/images/projects/la-fiore-karabag-2-etap/floorplans/originals/e-tipi-blok-zemin-kat.jpg",
                 NetAreaM2 = 176.21m,
                 GrossAreaM2 = 226.24m,
-                DisplayOrder = 10,
+                DisplayOrder = 14,
                 Rooms = new List<FloorPlanRoom>
                 {
                     new() { Name = "Yaşam Alanı", AreaM2 = 33.00m, DisplayOrder = 1 },
@@ -1986,7 +2074,7 @@ public static class DbSeeder
                 ImagePath = "/images/projects/la-fiore-karabag-2-etap/floorplans/originals/e-tipi-blok-1-kat.jpg",
                 NetAreaM2 = 69.00m,
                 GrossAreaM2 = 90.10m,
-                DisplayOrder = 11,
+                DisplayOrder = 15,
                 Rooms = new List<FloorPlanRoom>
                 {
                     new() { Name = "Yatak Odası 1", AreaM2 = 11.20m, DisplayOrder = 1 },
@@ -2005,7 +2093,7 @@ public static class DbSeeder
                 ImagePath = "/images/projects/la-fiore-karabag-2-etap/floorplans/originals/f-tipi-blok.jpg",
                 NetAreaM2 = 159.95m,
                 GrossAreaM2 = 215.60m,
-                DisplayOrder = 12,
+                DisplayOrder = 16,
                 Rooms = new List<FloorPlanRoom>
                 {
                     new() { Name = "Salon", AreaM2 = 27.02m, DisplayOrder = 1 },
@@ -2033,7 +2121,7 @@ public static class DbSeeder
             {
                 ApartmentType = "G Tipi Blok (1+1)",
                 ImagePath = "/images/projects/la-fiore-karabag-2-etap/floorplans/originals/g-tipi-blok-1-1.jpg",
-                DisplayOrder = 13,
+                DisplayOrder = 17,
                 Rooms = new List<FloorPlanRoom>
                 {
                     new() { Name = "Salon", AreaM2 = 29.70m, DisplayOrder = 1 },
@@ -2054,7 +2142,7 @@ public static class DbSeeder
                 ImagePath = "/images/projects/la-fiore-karabag-2-etap/floorplans/originals/h-tipi-blok-zemin-kat.jpg",
                 NetAreaM2 = 121.50m,
                 GrossAreaM2 = 171.60m,
-                DisplayOrder = 14,
+                DisplayOrder = 18,
                 Rooms = new List<FloorPlanRoom>
                 {
                     new() { Name = "Salon", AreaM2 = 27.10m, DisplayOrder = 1 },
@@ -2073,7 +2161,7 @@ public static class DbSeeder
                 ImagePath = "/images/projects/la-fiore-karabag-2-etap/floorplans/originals/h-tipi-blok-1-kat.jpg",
                 NetAreaM2 = 46.30m,
                 GrossAreaM2 = 62.60m,
-                DisplayOrder = 15,
+                DisplayOrder = 19,
                 Rooms = new List<FloorPlanRoom>
                 {
                     new() { Name = "Yatak Odası 1", AreaM2 = 17.70m, DisplayOrder = 1 },
@@ -4332,6 +4420,7 @@ public static class DbSeeder
         await ReconcileFerhundeHanimAptRemoveThirdConceptImageAsync(context);
         await ReconcileKuyuluLaViaVillalarRemoveRoofFloorPlanAsync(context);
         await ReconcileLaFioreKarabag2EtapGTipiGirisHoluAsync(context);
+        await ReconcileLaFioreKarabag2EtapUcArtiBirKatPlanlariAsync(context);
 
         var existingSlugs = new HashSet<string>(await context.Projects.Select(p => p.Slug).ToListAsync());
 
@@ -12263,6 +12352,75 @@ public static class DbSeeder
             AreaM2 = 4.50m,
             DisplayOrder = insertOrder
         });
+
+        await context.SaveChangesAsync();
+    }
+
+    // Not a seed — adds La Fiore Karabağ 2. Etap's four 3+1 floor plans
+    // (B/C Tipi Blok (3+1) Zemin Kat + 1. Kat, client-supplied drawings,
+    // 2026-10-20) to an already-seeded row, each placed right after its
+    // block's existing "– 1. Kat" plan. Every existing row's DisplayOrder is
+    // realigned to BuildLaFioreKarabag2EtapFloorPlans' order (matched by
+    // ApartmentType) to make room; Names/areas/rooms of existing rows are
+    // untouched. Only runs while at least one of the four is still missing,
+    // and only adds the missing ones, so it never duplicates and is a no-op
+    // on every startup after the first.
+    private static async Task ReconcileLaFioreKarabag2EtapUcArtiBirKatPlanlariAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.FloorPlans)
+            .FirstOrDefaultAsync(p => p.Slug == "la-fiore-karabag-2-etap");
+
+        if (project is null || project.FloorPlans.Count == 0)
+        {
+            return;
+        }
+
+        var newApartmentTypes = new HashSet<string>
+        {
+            "B Tipi Blok (3+1) – Zemin Kat",
+            "B Tipi Blok (3+1) – 1. Kat",
+            "C Tipi Blok (3+1) – Zemin Kat",
+            "C Tipi Blok (3+1) – 1. Kat"
+        };
+
+        var builtFloorPlans = BuildLaFioreKarabag2EtapFloorPlans();
+        var missingFloorPlans = builtFloorPlans
+            .Where(fp => newApartmentTypes.Contains(fp.ApartmentType)
+                && project.FloorPlans.All(existing => existing.ApartmentType != fp.ApartmentType))
+            .ToList();
+
+        if (missingFloorPlans.Count == 0)
+        {
+            return;
+        }
+
+        var displayOrderByApartmentType = builtFloorPlans.ToDictionary(fp => fp.ApartmentType, fp => fp.DisplayOrder);
+
+        foreach (var floorPlan in project.FloorPlans)
+        {
+            if (displayOrderByApartmentType.TryGetValue(floorPlan.ApartmentType, out var displayOrder))
+            {
+                floorPlan.DisplayOrder = displayOrder;
+            }
+        }
+
+        foreach (var floorPlan in missingFloorPlans)
+        {
+            context.FloorPlans.Add(new FloorPlan
+            {
+                ProjectId = project.Id,
+                ApartmentType = floorPlan.ApartmentType,
+                ImagePath = floorPlan.ImagePath,
+                NetAreaM2 = floorPlan.NetAreaM2,
+                GrossAreaM2 = floorPlan.GrossAreaM2,
+                SalesGrossAreaM2 = floorPlan.SalesGrossAreaM2,
+                DisplayOrder = floorPlan.DisplayOrder,
+                Rooms = floorPlan.Rooms
+                    .Select(r => new FloorPlanRoom { Name = r.Name, AreaM2 = r.AreaM2, DisplayOrder = r.DisplayOrder })
+                    .ToList()
+            });
+        }
 
         await context.SaveChangesAsync();
     }
