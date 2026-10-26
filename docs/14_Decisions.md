@@ -790,6 +790,65 @@ implemented. No existing page's markup, CSS, or behaviour changed.
 
 ---
 
+**2026-10-26**
+
+Decision: Legacy-site 301 redirects and form email notifications.
+
+1. **Old static-site URLs.** The previous ancin.com.tr served flat `*.html`
+   pages that are still indexed. `LegacyUrlRedirectMiddleware` (registered
+   before `UseStaticFiles`/routing, so no database access) answers GET/HEAD
+   `*.html` requests with a permanent 301 using an explicit map:
+
+   | Old URL | New route |
+   |---|---|
+   | `/index.html` | `/` |
+   | `/hakkimizda.html` | `/about-us` |
+   | `/iletisim.html` | `/contact` |
+   | `/tamamlanan.html` | `/projects` |
+   | `/nysagold.html` | `/projects/nysa-gold` |
+   | `/lejardin.html` | `/projects/le-jardin` |
+   | `/lafiore.html` | `/projects/la-fiore-karabag` |
+   | `/lafiore02.html` | `/projects/la-fiore-karabag-2-etap` |
+   | `/ferhunde.html` | `/projects/ferhunde-hanim-apt` |
+   | `/trallesgold.html` | `/projects/tralles-gold` |
+   | `/alindagold.html` | `/projects/alinda-gold` |
+   | `/magnesiagold.html` | `/projects/magnesia-gold` |
+   | `/nlatis.html` | `/projects/nlatis` |
+
+   Any other `*.html` path falls back to the homepage instead of a 404:
+   `/en` when the path is under `/en/`, `/` otherwise. Matching is
+   case-insensitive on the path; query strings are ignored and not carried
+   over. Real files under `wwwroot` ending in `.html` are served normally.
+2. **Form notification emails.** After a contact message or job
+   application is saved, `EmailNotificationService` (MailKit) emails the
+   company inbox. The database is always written first, and the service
+   never throws — a failed or disabled send is only logged, so a visitor's
+   submission is never lost or shown as failed. Emails are plain-text
+   Turkish (whatever the visitor's language); Reply-To is the visitor's
+   address; the job application email attaches the CV PDF. Header values
+   are stripped of control characters to prevent header injection. The SMTP
+   EHLO name is the sender address's domain rather than the machine name,
+   because Google's SMTP relay can reject a non-domain EHLO.
+   Configuration is the `Smtp` section (`Host`, `Port` = 587, `UseStartTls`
+   = true, optional `Username`/`Password`, `From`, `To`), supplied only via
+   environment variables on the server (`Smtp__Host`, …) per the Claude.md
+   secrets rule — never in `appsettings*.json` or source. An empty `Host`
+   disables email; forms then only save to the database. The SMTP values
+   are configured on the server separately; `deploy/` is unchanged.
+
+Reason: Preserve the old site's search ranking and inbound links at launch
+(`10_SEO.md` "Redirects"), and let the team see form submissions without an
+Admin Panel in Version 1, without risking data loss when email fails.
+
+Impact: New `Services/LegacyUrlRedirectMiddleware.cs`,
+`Services/IEmailNotificationService.cs`, `Services/EmailNotificationService.cs`,
+`Services/SmtpOptions.cs`; `Program.cs` registers the middleware and the
+email service; `ContactController`/`CareerController` call the notifier
+after saving; `AncinInsaat.csproj` adds the MailKit package. No database
+schema change.
+
+---
+
 # Current Status
 
 Current project phase:

@@ -39,17 +39,20 @@ public class ContactController : Controller
     private readonly ISiteSettingsService _siteSettingsService;
     private readonly IContactMessageService _contactMessageService;
     private readonly ISeoService _seoService;
+    private readonly IEmailNotificationService _emailNotificationService;
     private readonly ILogger<ContactController> _logger;
 
     public ContactController(
         ISiteSettingsService siteSettingsService,
         IContactMessageService contactMessageService,
         ISeoService seoService,
+        IEmailNotificationService emailNotificationService,
         ILogger<ContactController> logger)
     {
         _siteSettingsService = siteSettingsService;
         _contactMessageService = contactMessageService;
         _seoService = seoService;
+        _emailNotificationService = emailNotificationService;
         _logger = logger;
     }
 
@@ -109,14 +112,19 @@ public class ContactController : Controller
             return View(nameof(Index), invalidModel);
         }
 
-        await _contactMessageService.SaveAsync(new ContactMessage
+        var message = new ContactMessage
         {
             FullName = form.FullName.Trim(),
             Email = form.Email.Trim(),
             Phone = string.IsNullOrWhiteSpace(form.Phone) ? null : form.Phone.Trim(),
             Subject = string.IsNullOrWhiteSpace(form.Subject) ? null : form.Subject.Trim(),
             Message = form.Message.Trim()
-        });
+        };
+
+        // Database first, email second — the notification never throws, so
+        // a failed send can't lose the saved message or the success state.
+        await _contactMessageService.SaveAsync(message);
+        await _emailNotificationService.NotifyContactMessageAsync(message);
 
         TempData[SuccessTempDataKey] = true;
         return RedirectToIndex();

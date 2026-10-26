@@ -16,17 +16,20 @@ public class CareerController : Controller
     private readonly ICareerPositionQueryService _careerPositionQueryService;
     private readonly IJobApplicationService _jobApplicationService;
     private readonly ISeoService _seoService;
+    private readonly IEmailNotificationService _emailNotificationService;
     private readonly ILogger<CareerController> _logger;
 
     public CareerController(
         ICareerPositionQueryService careerPositionQueryService,
         IJobApplicationService jobApplicationService,
         ISeoService seoService,
+        IEmailNotificationService emailNotificationService,
         ILogger<CareerController> logger)
     {
         _careerPositionQueryService = careerPositionQueryService;
         _jobApplicationService = jobApplicationService;
         _seoService = seoService;
+        _emailNotificationService = emailNotificationService;
         _logger = logger;
     }
 
@@ -82,7 +85,7 @@ public class CareerController : Controller
             return View(nameof(Index), invalidModel);
         }
 
-        var result = await _jobApplicationService.SubmitAsync(new JobApplicationSubmission
+        var submission = new JobApplicationSubmission
         {
             Position = form.Position.Trim(),
             FullName = form.FullName.Trim(),
@@ -90,7 +93,9 @@ public class CareerController : Controller
             Phone = string.IsNullOrWhiteSpace(form.Phone) ? null : form.Phone.Trim(),
             Message = string.IsNullOrWhiteSpace(form.Message) ? null : form.Message.Trim(),
             Cv = form.CV!
-        });
+        };
+
+        var result = await _jobApplicationService.SubmitAsync(submission);
 
         if (result.Status != JobApplicationSubmitStatus.Success)
         {
@@ -104,6 +109,10 @@ public class CareerController : Controller
 
             return View(nameof(Index), invalidModel);
         }
+
+        // Saved (CV stored + row inserted) before notifying — same
+        // database-first rule as ContactController.Submit.
+        await _emailNotificationService.NotifyJobApplicationAsync(submission);
 
         TempData[SuccessTempDataKey] = true;
         return RedirectToIndex();

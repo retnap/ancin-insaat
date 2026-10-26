@@ -39,6 +39,11 @@ builder.Services.AddScoped<ICareerPositionQueryService, CareerPositionQueryServi
 builder.Services.AddScoped<IJobApplicationService, JobApplicationService>();
 builder.Services.AddSingleton<IDisplayImageResolver, DisplayImageResolver>();
 
+// Form notification emails — SMTP settings come only from configuration
+// (Smtp__* environment variables on the server); see SmtpOptions.
+builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection(SmtpOptions.SectionName));
+builder.Services.AddSingleton<IEmailNotificationService, EmailNotificationService>();
+
 // Global Search Service (docs/14_Decisions.md, Global Navigation & Search
 // milestone) — every ISearchIndexProvider registered here is combined by
 // ISearchService. A future content type becomes searchable by adding one
@@ -90,6 +95,11 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Old static-site *.html URLs → 301 to their new routes (see
+// LegacyUrlRedirectMiddleware). Runs before UseStaticFiles/routing so the
+// redirect is answered without touching the database.
+app.UseMiddleware<LegacyUrlRedirectMiddleware>();
 
 // Static asset caching (docs/11_Performance.md "Caching"; performance pass,
 // 2026-10-19) — previously no Cache-Control header was sent at all, so
