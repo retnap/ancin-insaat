@@ -74,7 +74,7 @@ public static class DbSeeder
             Facebook = "https://www.facebook.com/ancininsaat",
             Instagram = "https://www.instagram.com/ancininsaat",
             LinkedIn = "https://www.linkedin.com/company/ancininsaat",
-            YouTube = "https://www.youtube.com/@ancininsaat",
+            YouTube = "https://www.youtube.com/channel/UC8eBEHzMF4z0pL1Ru-HuUTA",
             GoogleMaps = "https://maps.google.com/?q=Ancin+Insaat+Aydin",
             Logo = "/images/logos/ancin-logo.png",
             FooterText = "Building lasting value across Aydın, one project at a time."

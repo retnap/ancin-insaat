@@ -1,4 +1,9 @@
 @model SocialMediaViewModel
+@using System.Globalization
+
+@{
+    var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+}
 
 <ul class="social-links @(Model.OnLight ? "social-links--on-light" : "")">
     @foreach (var link in Model.Links)
@@ -8,7 +13,7 @@
                href="@link.Url"
                target="_blank"
                rel="noopener noreferrer"
-               aria-label="@(link.Platform) — opens in a new tab">
+               aria-label="@(link.Platform) — @(isEn ? "opens in a new tab" : "yeni sekmede açılır")">
                 <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
                     @* Static, developer-authored markup — see SocialMediaViewModel.IconMarkup. *@
                     @Html.Raw(link.IconMarkup)

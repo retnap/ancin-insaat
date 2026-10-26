@@ -43,7 +43,7 @@ public class SocialMediaViewComponent : ViewComponent
         new()
         {
             Platform = "YouTube",
-            Url = "https://www.youtube.com/@ancininsaat",
+            Url = "https://www.youtube.com/channel/UC8eBEHzMF4z0pL1Ru-HuUTA",
             IconMarkup = """
                 <rect x="3" y="5.5" width="18" height="13" rx="4" fill="none" stroke="currentColor" stroke-width="1.6" />
                 <path d="M10.2 9.3v5.4l4.8-2.7z" fill="currentColor" />
