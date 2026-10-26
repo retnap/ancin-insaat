@@ -37,6 +37,7 @@ builder.Services.AddScoped<ISiteSettingsService, SiteSettingsService>();
 builder.Services.AddScoped<IContactMessageService, ContactMessageService>();
 builder.Services.AddScoped<ICareerPositionQueryService, CareerPositionQueryService>();
 builder.Services.AddScoped<IJobApplicationService, JobApplicationService>();
+builder.Services.AddSingleton<IDisplayImageResolver, DisplayImageResolver>();
 
 // Global Search Service (docs/14_Decisions.md, Global Navigation & Search
 // milestone) — every ISearchIndexProvider registered here is combined by

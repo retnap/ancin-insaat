@@ -310,6 +310,51 @@ Videos should be:
 
 ---
 
+# Display Images
+
+Original photos are the archival source and are never modified.
+
+Every lightbox image, banner and in-page image without a thumbnail is served as a web-sized "display" WebP stored in a `display/` folder next to the original.
+
+Path rule:
+
+- If the original path contains `/originals/`, that segment is replaced with `/display/`.
+- Otherwise a `display/` folder is added in the same directory as the original.
+- The extension is always changed to `.webp`.
+
+Example:
+
+```text
+projects/le-jardin/konum/konum.jpg
+→ projects/le-jardin/konum/display/konum.webp
+
+projects/x/gallery/originals/photo-01.jpg
+→ projects/x/gallery/display/photo-01.webp
+```
+
+Settings (AncinInsaat.ImagePipeline/DisplayImageGenerator.cs):
+
+| Usage | Long edge | WebP quality |
+| --- | --- | --- |
+| Lightbox and in-page images | 1920px | 80 |
+| Banners, hero and full-width images | 2560px | 85 |
+
+- Lossy WebP is always used, also for PNG sources.
+- Images are never upscaled.
+- EXIF metadata is stripped; the ICC profile is kept.
+
+If a display file would be larger than its original (for example a small, already optimised JPEG), no display file is kept and the site falls back to the original.
+
+Display files are stored in normal Git (not Git LFS).
+
+Generate a display version with:
+
+```text
+dotnet run --project tools/ThumbnailTool -- --display <source> <dest> [--wide]
+```
+
+---
+
 # Future Admin Compatibility
 
 The Admin Panel should support:

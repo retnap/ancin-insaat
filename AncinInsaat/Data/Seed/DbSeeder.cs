@@ -467,13 +467,11 @@ public static class DbSeeder
         pages.AddRange(BuildProjectSeoMetadata());
 
         var missingPages = pages.Where(p => !existingPages.Contains(p.Page)).ToList();
-        if (missingPages.Count == 0)
+        if (missingPages.Count > 0)
         {
-            return;
+            context.SeoMetadata.AddRange(missingPages);
+            await context.SaveChangesAsync();
         }
-
-        context.SeoMetadata.AddRange(missingPages);
-        await context.SaveChangesAsync();
 
         // English localization (2026-10-02) — SeedSeoMetadataAsync only
         // inserts rows for pages not already present (missingPages above),
@@ -2856,13 +2854,17 @@ public static class DbSeeder
     // Eyebrow/Title/Description are unchanged from the original
     // client-adapted copy (2026-08-09) — out of scope for this swap, per
     // client instruction to touch only the video/poster.
+    // Image performance pass (2026-10-26) — VideoPath now points at
+    // le-jardin-konsept-video-web.mp4, a ~3Mbps two-pass H.264 re-encode
+    // (+faststart) of the delivered file; the delivered ~4.3Mbps original
+    // stays on disk untouched.
     private static List<ProjectConceptVideo> BuildLeJardinConceptVideos()
     {
         return new List<ProjectConceptVideo>
         {
             new()
             {
-                VideoPath = "/images/projects/le-jardin/concept/le-jardin-konsept-video-optimized.mp4",
+                VideoPath = "/images/projects/le-jardin/concept/le-jardin-konsept-video-web.mp4",
                 PosterPath = "/images/projects/le-jardin/concept/le-jardin-konsept-video-optimized-poster.webp",
                 Eyebrow = "Davetkâr Bir Karşılama",
                 Title = "Begonvillerin Sardığı Giriş",
@@ -11285,6 +11287,9 @@ public static class DbSeeder
     // being the old file, so safe on every startup and a permanent no-op
     // afterward. Eyebrow/Title/Description/DisplayOrder are untouched, per
     // client instruction to swap only the video/poster.
+    // Also moves a row still on the delivered le-jardin-konsept-video-
+    // optimized.mp4 to its web re-encode (image performance pass,
+    // 2026-10-26 — see BuildLeJardinConceptVideos).
     private static async Task ReconcileLeJardinConceptVideoReplacementAsync(AppDbContext context)
     {
         var project = await context.Projects
@@ -11296,11 +11301,15 @@ public static class DbSeeder
             return;
         }
 
-        const string oldVideoPath = "/images/projects/le-jardin/concept/video2.mp4";
-        const string newVideoPath = "/images/projects/le-jardin/concept/le-jardin-konsept-video-optimized.mp4";
+        string[] oldVideoPaths =
+        {
+            "/images/projects/le-jardin/concept/video2.mp4",
+            "/images/projects/le-jardin/concept/le-jardin-konsept-video-optimized.mp4"
+        };
+        const string newVideoPath = "/images/projects/le-jardin/concept/le-jardin-konsept-video-web.mp4";
         const string newPosterPath = "/images/projects/le-jardin/concept/le-jardin-konsept-video-optimized-poster.webp";
 
-        var conceptVideo = project.ConceptVideos.FirstOrDefault(v => v.VideoPath == oldVideoPath);
+        var conceptVideo = project.ConceptVideos.FirstOrDefault(v => oldVideoPaths.Contains(v.VideoPath));
         if (conceptVideo is null)
         {
             return;

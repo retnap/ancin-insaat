@@ -35,7 +35,12 @@
         }
         else
         {
-            <form class="contact-form" asp-controller="Contact" asp-action="Submit" method="post" aria-labelledby="contact-form-heading">
+            @* Explicit per-language action rather than asp-controller/asp-action —
+               Submit has both "contact" and "en/contact" routes and link
+               generation ignores the current culture. asp-antiforgery="true"
+               keeps the token, which the form tag helper otherwise omits when
+               a plain action attribute is given. *@
+            <form class="contact-form" action="@Url.Content(isEn ? "~/en/contact" : "~/contact")" asp-antiforgery="true" method="post" aria-labelledby="contact-form-heading">
                 <h2 id="contact-form-heading" class="sr-only">@(isEn ? "Contact Form" : "İletişim Formu")</h2>
 
                 @if (!ViewData.ModelState.IsValid)

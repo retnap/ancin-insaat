@@ -2530,7 +2530,7 @@
       // validation (required/type=email/etc.) has already passed, so no
       // extra checkValidity() guard is needed here.
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Gönderiliyor...';
+      submitBtn.textContent = document.documentElement.lang === 'en' ? 'Sending...' : 'Gönderiliyor...';
     });
   }
 
@@ -2570,7 +2570,7 @@
   if (form && submitBtn) {
     form.addEventListener('submit', function () {
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Gönderiliyor...';
+      submitBtn.textContent = document.documentElement.lang === 'en' ? 'Sending...' : 'Gönderiliyor...';
     });
   }
 })();

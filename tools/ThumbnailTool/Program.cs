@@ -21,6 +21,7 @@ using AncinInsaat.ImagePipeline;
 // Usage:
 //   dotnet run --project tools/ThumbnailTool -- [path] [--force]
 //   dotnet run --project tools/ThumbnailTool -- --single <source> <dest> [--width N] [--quality N]
+//   dotnet run --project tools/ThumbnailTool -- --display <source> <dest> [--wide]
 //
 //   [path]     Optional. Defaults to the repo's own wwwroot/images/projects.
 //   --force    Rebuild every thumbnail, ignoring both existence and
@@ -35,12 +36,45 @@ using AncinInsaat.ImagePipeline;
 //              (and therefore every other thumbnail on the site).
 //              --width/--quality default to DefaultWidth/DefaultQuality
 //              when omitted.
+//   --display  Generates one display version (lightbox / in-page WebP)
+//              via DisplayImageGenerator: 1920px long edge at quality 80,
+//              or 2560px at quality 85 with --wide (banners, hero and
+//              full-width images).
 //
 // Examples:
 //   dotnet run --project tools/ThumbnailTool
 //   dotnet run --project tools/ThumbnailTool -- --force
 //   dotnet run --project tools/ThumbnailTool -- /path/to/wwwroot/images/projects --force
 //   dotnet run --project tools/ThumbnailTool -- --single wwwroot/images/projects/x/gallery/originals/photo.jpg wwwroot/images/projects/x/cover.webp --width 1000 --quality 88
+
+if (args.Any(a => string.Equals(a, "--display", StringComparison.OrdinalIgnoreCase)))
+{
+    var wide = args.Any(a => string.Equals(a, "--wide", StringComparison.OrdinalIgnoreCase));
+    var displayPositional = args.Where(a => !a.StartsWith("--", StringComparison.Ordinal)).ToArray();
+
+    if (displayPositional.Length != 2)
+    {
+        Console.Error.WriteLine("--display requires exactly <source> <dest> (optionally followed by --wide).");
+        return 1;
+    }
+
+    var longEdge = wide ? DisplayImageGenerator.WideLongEdge : DisplayImageGenerator.StandardLongEdge;
+    var displayQuality = wide ? DisplayImageGenerator.WideQuality : DisplayImageGenerator.StandardQuality;
+    var displaySource = Path.GetFullPath(displayPositional[0]);
+    var displayDest = Path.GetFullPath(displayPositional[1]);
+
+    try
+    {
+        await DisplayImageGenerator.GenerateAsync(displaySource, displayDest, longEdge, displayQuality);
+        Console.WriteLine($"  generated    {displayDest} ({longEdge}px long edge/{displayQuality}q, from {displaySource})");
+        return 0;
+    }
+    catch (Exception ex)
+    {
+        Console.Error.WriteLine($"  FAILED       {displayDest} — {ex.Message}");
+        return 1;
+    }
+}
 
 if (args.Any(a => string.Equals(a, "--single", StringComparison.OrdinalIgnoreCase)))
 {

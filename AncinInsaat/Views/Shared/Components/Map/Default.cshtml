@@ -1,4 +1,8 @@
 @model MapViewModel
+@using System.Globalization
+@{
+    var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+}
 
 <div class="map-component">
     @if (!string.IsNullOrWhiteSpace(Model.EmbedUrl))
@@ -6,7 +10,7 @@
         <div class="map-component__embed">
             <iframe
                 src="@Model.EmbedUrl"
-                title="Ancın İnşaat konumu — Google Haritalar"
+                title="@(isEn ? "Ancın İnşaat location — Google Maps" : "Ancın İnşaat konumu — Google Haritalar")"
                 loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade">
             </iframe>
@@ -21,15 +25,15 @@
            actual office location, so it carries information for screen
            reader users too, alongside the visible link. *@
         <div class="map-component__placeholder">
-            <img src="/images/company/ancin-konum.png" alt="Ancın İnşaat ofis konumu" loading="lazy" decoding="async" />
+            <img src="/images/company/ancin-konum.png" alt="@(isEn ? "Ancın İnşaat office location" : "Ancın İnşaat ofis konumu")" loading="lazy" decoding="async" />
         </div>
     }
 
     @if (!string.IsNullOrWhiteSpace(Model.LinkUrl))
     {
         <a class="btn btn-secondary map-component__link" href="@Model.LinkUrl" target="_blank" rel="noopener noreferrer">
-            Google Maps'te Aç
-            <span class="sr-only">— yeni sekmede açılır</span>
+            @(isEn ? "Open in Google Maps" : "Google Maps'te Aç")
+            <span class="sr-only">@(isEn ? "— opens in a new tab" : "— yeni sekmede açılır")</span>
         </a>
     }
 </div>

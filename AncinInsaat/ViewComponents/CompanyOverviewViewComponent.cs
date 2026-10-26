@@ -74,7 +74,10 @@ public class CompanyOverviewViewComponent : ViewComponent
                 // promotional film replaces video-optimized.mp4, which is no
                 // longer referenced anywhere (removed together with the
                 // unused video-original.mp4; both remain in Git history).
-                VideoSrc = "/images/logos/ancin-tanitim-videosu-web.mp4",
+                // Image performance pass (2026-10-26) — 30fps re-encode
+                // (+faststart) of the delivered 60fps file, which stays on
+                // disk untouched.
+                VideoSrc = "/images/logos/ancin-tanitim-videosu-web-30fps.mp4",
                 CssClass = "company-overview-video"
             },
             CtaLabel = isEnglish ? "Read More" : "Devamını Oku",

@@ -59,6 +59,12 @@ public class ContactController : Controller
     private bool IsEnglish =>
         CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
 
+    // PRG redirect target in the current language. RedirectToAction(nameof(Index))
+    // can't be used here — Index carries both "contact" and "en/contact"
+    // attribute routes and link generation picks one regardless of culture.
+    private IActionResult RedirectToIndex() =>
+        LocalRedirect(IsEnglish ? "~/en/contact" : "~/contact");
+
     [HttpGet("contact")]
     [HttpGet("en/contact")]
     public async Task<IActionResult> Index()
@@ -88,7 +94,7 @@ public class ContactController : Controller
         {
             _logger.LogWarning("Contact form honeypot triggered — submission discarded.");
             TempData[SuccessTempDataKey] = true;
-            return RedirectToAction(nameof(Index));
+            return RedirectToIndex();
         }
 
         if (!ModelState.IsValid)
@@ -113,7 +119,7 @@ public class ContactController : Controller
         });
 
         TempData[SuccessTempDataKey] = true;
-        return RedirectToAction(nameof(Index));
+        return RedirectToIndex();
     }
 
     private async Task<ContactPageViewModel> BuildPageModelAsync(ContactFormViewModel form, bool showSuccess)

@@ -56,7 +56,11 @@ public static class ThumbnailGenerator
             Mode = ResizeMode.Max
         }));
 
-        var encoder = new WebpEncoder { Quality = quality };
+        // FileFormat must be explicit (2026-10-26): left unset, ImageSharp
+        // carries a PNG source's lossless format over, which is why the La
+        // Fiore Karabağ interior and timeline PNG thumbnails came out at
+        // 300-700KB instead of ~100KB.
+        var encoder = new WebpEncoder { FileFormat = WebpFileFormatType.Lossy, Quality = quality };
         await image.SaveAsync(destinationPath, encoder, cancellationToken);
     }
 }

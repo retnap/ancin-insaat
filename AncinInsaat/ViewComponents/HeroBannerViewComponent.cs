@@ -24,10 +24,12 @@ namespace AncinInsaat.ViewComponents;
 public class HeroBannerViewComponent : ViewComponent
 {
     private readonly IProjectQueryService _projectQueryService;
+    private readonly IDisplayImageResolver _displayImageResolver;
 
-    public HeroBannerViewComponent(IProjectQueryService projectQueryService)
+    public HeroBannerViewComponent(IProjectQueryService projectQueryService, IDisplayImageResolver displayImageResolver)
     {
         _projectQueryService = projectQueryService;
+        _displayImageResolver = displayImageResolver;
     }
 
     public async Task<IViewComponentResult> InvokeAsync()
@@ -73,13 +75,13 @@ public class HeroBannerViewComponent : ViewComponent
             // on the exact same physical asset; the previous "la-fiore-
             // karabag-ikinci-yeni-banner-2.jpeg" stays on disk untouched.
             BackgroundImageUrl = latestProject is not null
-                ? latestProject.Slug == "nysa-gold"
+                ? _displayImageResolver.Resolve(latestProject.Slug == "nysa-gold"
                     ? "/images/projects/nysa-gold/banner/nysa gold 4k.png"
                     : latestProject.Slug == "le-jardin"
                         ? "/images/projects/le-jardin/banner/le jardin banner.png"
                         : latestProject.Slug == "la-fiore-karabag-2-etap"
                             ? "/images/projects/la-fiore-karabag-2-etap/banner/la-fiore-2-etap-banner-36.jpeg"
-                            : $"/images/projects/{latestProject.Slug}/banner.webp"
+                            : $"/images/projects/{latestProject.Slug}/banner.webp")
                 : null,
             // No CTA when the featured project's detail page is switched off
             // (ProjectDetailAvailability, 2026-10-19) — never link to a 404.
@@ -116,9 +118,17 @@ public class HeroBannerViewComponent : ViewComponent
             HeadingLogoImgModifierClass = latestProject?.Slug == "la-fiore-karabag-2-etap"
                 ? "hero-heading-logo-img--la-fiore-karabag"
                 : null,
+            // Existence-filtered like the Project Detail Hero's
+            // SitePlanImageUrls (2026-10-26) — La Fiore Karabağ 2. Etap's
+            // first three site plan rows point at site-plan-{1,2,3}.webp
+            // files that were never supplied, so the Home "Vaziyet Planı"
+            // button opened a 404; it now opens the same first existing
+            // plan the project's own page shows.
             SitePlanImageUrl = latestProject?.SitePlanImages
                 .OrderBy(sitePlan => sitePlan.DisplayOrder)
                 .Select(sitePlan => sitePlan.ImagePath)
+                .Where(_displayImageResolver.Exists)
+                .Select(_displayImageResolver.Resolve)
                 .FirstOrDefault()
         };
 

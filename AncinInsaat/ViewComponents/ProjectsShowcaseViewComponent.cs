@@ -136,11 +136,13 @@ public class ProjectsShowcaseViewComponent : ViewComponent
 
     private readonly IProjectQueryService _projectQueryService;
     private readonly IWebHostEnvironment _webHostEnvironment;
+    private readonly IDisplayImageResolver _displayImageResolver;
 
-    public ProjectsShowcaseViewComponent(IProjectQueryService projectQueryService, IWebHostEnvironment webHostEnvironment)
+    public ProjectsShowcaseViewComponent(IProjectQueryService projectQueryService, IWebHostEnvironment webHostEnvironment, IDisplayImageResolver displayImageResolver)
     {
         _projectQueryService = projectQueryService;
         _webHostEnvironment = webHostEnvironment;
+        _displayImageResolver = displayImageResolver;
     }
 
     public async Task<IViewComponentResult> InvokeAsync()
@@ -172,7 +174,7 @@ public class ProjectsShowcaseViewComponent : ViewComponent
                 ? displayNameOverride
                 : project.Name,
             CoverImageSrc = CardImageOverridesBySlug.TryGetValue(project.Slug, out var cardImageOverride)
-                ? cardImageOverride
+                ? _displayImageResolver.Resolve(cardImageOverride)
                 : ResolveCoverImage(project.CoverImage),
             StatusLabel = project.Status == ProjectStatus.Completed
                 ? (isEnglish ? "Completed" : "Tamamlandı")
@@ -181,7 +183,9 @@ public class ProjectsShowcaseViewComponent : ViewComponent
                 ? "project-status-badge--completed"
                 : "project-status-badge--ongoing",
             DetailUrl = $"{pathPrefix}/projects/{project.Slug}",
-            LogoImageUrl = CardLogoImageUrlsBySlug.GetValueOrDefault(project.Slug)
+            LogoImageUrl = CardLogoImageUrlsBySlug.TryGetValue(project.Slug, out var logoImageUrl)
+                ? _displayImageResolver.Resolve(logoImageUrl)
+                : null
         }).ToList();
 
         var model = new ProjectsShowcaseViewModel

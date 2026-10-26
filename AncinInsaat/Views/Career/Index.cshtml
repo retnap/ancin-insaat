@@ -89,7 +89,8 @@
         }
         else
         {
-            <form class="career-form" asp-controller="Career" asp-action="Submit" method="post" enctype="multipart/form-data" aria-labelledby="career-application-heading">
+            @* Per-language action + asp-antiforgery — see _ContactInfo.cshtml's form. *@
+            <form class="career-form" action="@Url.Content(isEn ? "~/en/career" : "~/career")" asp-antiforgery="true" method="post" enctype="multipart/form-data" aria-labelledby="career-application-heading">
                 @if (!ViewData.ModelState.IsValid)
                 {
                     <p class="form-error form-summary-error" role="alert">@(isEn ? "Please correct the errors in the form and try again." : "Lütfen formdaki hataları düzeltip tekrar deneyin.")</p>

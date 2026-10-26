@@ -1,6 +1,7 @@
 using System.Globalization;
 using AncinInsaat.Data;
 using AncinInsaat.Models;
+using AncinInsaat.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AncinInsaat.ViewComponents;
@@ -45,6 +46,13 @@ namespace AncinInsaat.ViewComponents;
 // exactly one header design.
 public class CompanyHistorySectionViewComponent : ViewComponent
 {
+    private readonly IDisplayImageResolver _displayImageResolver;
+
+    public CompanyHistorySectionViewComponent(IDisplayImageResolver displayImageResolver)
+    {
+        _displayImageResolver = displayImageResolver;
+    }
+
     public IViewComponentResult Invoke()
     {
         var isEnglish = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
@@ -68,7 +76,7 @@ public class CompanyHistorySectionViewComponent : ViewComponent
                 // Media swap (2026-08-28 request): this slot and Company
                 // Overview's now show each other's original media — see
                 // CompanyOverviewViewComponent's Video for the flip side.
-                Src = "/images/logos/50-yil.jpeg",
+                Src = _displayImageResolver.Resolve("/images/logos/50-yil.jpeg"),
 
                 // Empty on purpose — decorative stand-in graphic, same
                 // reasoning as its previous placement in Company Overview.

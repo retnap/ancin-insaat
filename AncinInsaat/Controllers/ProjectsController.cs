@@ -323,15 +323,18 @@ public class ProjectsController : Controller
     private readonly IProjectQueryService _projectQueryService;
     private readonly ISeoService _seoService;
     private readonly IWebHostEnvironment _webHostEnvironment;
+    private readonly IDisplayImageResolver _displayImageResolver;
 
     public ProjectsController(
         IProjectQueryService projectQueryService,
         ISeoService seoService,
-        IWebHostEnvironment webHostEnvironment)
+        IWebHostEnvironment webHostEnvironment,
+        IDisplayImageResolver displayImageResolver)
     {
         _projectQueryService = projectQueryService;
         _seoService = seoService;
         _webHostEnvironment = webHostEnvironment;
+        _displayImageResolver = displayImageResolver;
     }
 
     // English localization (2026-10-02) — the request culture is derived
@@ -401,7 +404,9 @@ public class ProjectsController : Controller
             ProjectType = LocalizeNullable(
                 project.ProjectType is not null && ProjectTypeLabelsEn.TryGetValue(project.ProjectType, out var typeEn) ? typeEn : project.ProjectType,
                 project.ProjectType),
-            LogoImageUrl = CardLogoImageUrlsBySlug.GetValueOrDefault(project.Slug),
+            LogoImageUrl = CardLogoImageUrlsBySlug.TryGetValue(project.Slug, out var logoImageUrl)
+                ? _displayImageResolver.Resolve(logoImageUrl)
+                : null,
             TitleOverlayText = CardTitleOverlayTextBySlug.GetValueOrDefault(project.Slug),
             HideCaption = CardsWithCaptionHidden.Contains(project.Slug)
         }).ToList();
@@ -474,7 +479,10 @@ public class ProjectsController : Controller
             // 2026-08-09).
             .Select(image => new GalleryImageModel
             {
-                Src = image.ImagePath,
+                // Display WebP when generated (image performance pass,
+                // 2026-10-26) — Src only ever feeds the Media Viewer, video
+                // posters and the Concept fallback image, never the grid.
+                Src = _displayImageResolver.Resolve(image.ImagePath),
                 ThumbnailSrc = ResolveThumbnail(image.ImagePath),
                 Alt = Localize(image.AltTextEn, image.AltText),
                 Category = string.IsNullOrWhiteSpace(image.Category) ? null : image.Category,
@@ -560,7 +568,7 @@ public class ProjectsController : Controller
             // client's newest banner photo (2026-09-17 client asset
             // refresh); the previous "le jardin banner.png" stays on disk
             // untouched.
-            HeroBackgroundImageUrl = HeroBannerImageOverridesBySlug.TryGetValue(project.Slug, out var heroBannerOverride)
+            HeroBackgroundImageUrl = _displayImageResolver.Resolve(HeroBannerImageOverridesBySlug.TryGetValue(project.Slug, out var heroBannerOverride)
                 ? heroBannerOverride
                 : project.Slug == "nysa-gold"
                     ? "/images/projects/nysa-gold/banner/nysa gold 4k.png"
@@ -571,7 +579,7 @@ public class ProjectsController : Controller
                         // the original 32MB "le-jardin-yeni-banner.png"
                         // stays on disk untouched.
                         ? "/images/projects/le-jardin/banner/le-jardin-banner.webp"
-                        : $"/images/projects/{project.Slug}/banner.webp",
+                        : $"/images/projects/{project.Slug}/banner.webp"),
             ShortDescription = LocalizeNullable(project.ShortDescriptionEn, string.IsNullOrWhiteSpace(project.ShortDescription) ? null : project.ShortDescription),
             DescriptionParagraphs = SplitDescription(Localize(project.DescriptionEn, project.Description)),
             Information = new ProjectInformationModel
@@ -586,7 +594,7 @@ public class ProjectsController : Controller
                 ? project.ConceptVideoPath
                 : null,
             ConceptVideoPosterUrl = !string.IsNullOrWhiteSpace(project.ConceptVideoPosterPath) && FileExistsInWebRoot(project.ConceptVideoPosterPath)
-                ? project.ConceptVideoPosterPath
+                ? _displayImageResolver.Resolve(project.ConceptVideoPosterPath)
                 : null,
             // Video and image slides merged into one carousel, ordered by
             // DisplayOrder across both (Le Jardin Concept carousel
@@ -599,8 +607,8 @@ public class ProjectsController : Controller
                 .Select(video => new { video.DisplayOrder, Slide = new ConceptSlideModel
                 {
                     MediaType = ConceptMediaType.Video,
-                    PosterUrl = video.PosterPath,
-                    LightboxUrl = video.PosterPath,
+                    PosterUrl = _displayImageResolver.Resolve(video.PosterPath),
+                    LightboxUrl = _displayImageResolver.Resolve(video.PosterPath),
                     VideoUrl = video.VideoPath,
                     Eyebrow = Localize(video.EyebrowEn, video.Eyebrow),
                     Title = Localize(video.TitleEn, video.Title),
@@ -612,7 +620,7 @@ public class ProjectsController : Controller
                     {
                         MediaType = ConceptMediaType.Image,
                         PosterUrl = ResolveConceptCardImage(project.Slug, image.ImagePath),
-                        LightboxUrl = image.ImagePath,
+                        LightboxUrl = _displayImageResolver.Resolve(image.ImagePath),
                         VideoUrl = null,
                         Eyebrow = Localize(image.EyebrowEn, image.Eyebrow),
                         Title = Localize(image.TitleEn, image.Title),
@@ -645,10 +653,10 @@ public class ProjectsController : Controller
             SitePlanImageUrls = project.SitePlanImages
                 .OrderBy(sitePlan => sitePlan.DisplayOrder)
                 .Where(sitePlan => FileExistsInWebRoot(sitePlan.ImagePath))
-                .Select(sitePlan => sitePlan.ImagePath)
+                .Select(sitePlan => _displayImageResolver.Resolve(sitePlan.ImagePath))
                 .ToList(),
             LocationImageUrl = !string.IsNullOrWhiteSpace(project.LocationImagePath) && FileExistsInWebRoot(project.LocationImagePath)
-                ? WithCacheBust(project.LocationImagePath)
+                ? WithCacheBust(_displayImageResolver.Resolve(project.LocationImagePath))
                 : null,
             SocialFacilities = socialFacilities,
             // Not existence-filtered like GalleryImages — every apartment
@@ -816,7 +824,7 @@ public class ProjectsController : Controller
             return displayPath;
         }
 
-        return ConceptCardThumbnailSlugs.Contains(slug) ? ResolveThumbnail(originalImagePath) : originalImagePath;
+        return ConceptCardThumbnailSlugs.Contains(slug) ? ResolveThumbnail(originalImagePath) : _displayImageResolver.Resolve(originalImagePath);
     }
 
     // Shared by ResolveCoverImage and Details' Gallery/Floor Plans filtering

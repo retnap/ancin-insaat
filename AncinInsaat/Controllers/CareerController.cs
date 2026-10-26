@@ -35,6 +35,11 @@ public class CareerController : Controller
     private bool IsEnglish =>
         CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
 
+    // PRG redirect target in the current language — see ContactController's
+    // own RedirectToIndex for why RedirectToAction isn't used.
+    private IActionResult RedirectToIndex() =>
+        LocalRedirect(IsEnglish ? "~/en/career" : "~/career");
+
     [HttpGet("career")]
     [HttpGet("en/career")]
     public async Task<IActionResult> Index()
@@ -60,7 +65,7 @@ public class CareerController : Controller
         {
             _logger.LogWarning("Career form honeypot triggered — submission discarded.");
             TempData[SuccessTempDataKey] = true;
-            return RedirectToAction(nameof(Index));
+            return RedirectToIndex();
         }
 
         var positions = await _careerPositionQueryService.GetPublishedAsync();
@@ -101,7 +106,7 @@ public class CareerController : Controller
         }
 
         TempData[SuccessTempDataKey] = true;
-        return RedirectToAction(nameof(Index));
+        return RedirectToIndex();
     }
 
     private void AddSubmitFailureModelError(JobApplicationSubmitStatus status)

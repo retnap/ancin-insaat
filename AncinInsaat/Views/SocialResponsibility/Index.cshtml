@@ -26,6 +26,7 @@
 *@
 
 @using System.Globalization
+@inject AncinInsaat.Services.IDisplayImageResolver DisplayImageResolver
 @{
     var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
 
@@ -57,9 +58,9 @@
 <section class="social-responsibility-banner">
     <img
         class="social-responsibility-banner-img"
-        src="@Url.Content(isEn
-            ? "~/images/sosyal-sorumluluk-projeleri/sosyal-sorumluluk-banner-ingilizce.png"
-            : "~/images/sosyal-sorumluluk-projeleri/sosyal-sorumluluk-banner.png")"
+        src="@Url.Content(DisplayImageResolver.Resolve(isEn
+            ? "/images/sosyal-sorumluluk-projeleri/sosyal-sorumluluk-banner-ingilizce.png"
+            : "/images/sosyal-sorumluluk-projeleri/sosyal-sorumluluk-banner.png"))"
         alt="@(isEn
             ? "Our Social Responsibility Projects — for a stronger future, we stand by our youth, sports, culture and community."
             : "Sosyal Sorumluluk Projelerimiz — Daha güçlü yarınlar için, gençlerimizin, sporun, kültürün ve toplumun yanındayız.")"
