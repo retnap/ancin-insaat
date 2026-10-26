@@ -133,9 +133,14 @@ else
                     var firstCategoryImage = category.CardImage
                         ?? Model.GalleryImages.FirstOrDefault(image => string.Equals(image.Category, category.Value, StringComparison.OrdinalIgnoreCase));
 
+                    @* data-gallery-category-card-src (2026-10-26) — lets
+                       site.js open the viewer on this card's own cover
+                       photo (e.g. Tralles' photo 13), not the category's
+                       first photo. *@
                     <button type="button"
                             class="gallery-card"
-                            data-gallery-category-card="@category.Label">
+                            data-gallery-category-card="@category.Label"
+                            data-gallery-category-card-src="@firstCategoryImage?.Src">
                         @if (firstCategoryImage is not null)
                         {
                             <img class="gallery-card-image" src="@firstCategoryImage.ThumbnailSrc" alt="" loading="lazy" decoding="async" />
@@ -235,6 +240,7 @@ else
                                 data-media-viewer-group="gallery-all"
                                 data-media-viewer-group-category="@groupKey"
                                 data-media-viewer-src="@image.Src"
+                                data-media-viewer-thumbnail-src="@(image.HasThumbnail ? image.ThumbnailSrc : null)"
                                 data-media-viewer-alt="@image.Alt"
                                 aria-label="@(isEn ? $"{category.Label} — enlarge" : $"{category.Label} — büyüt")">
                             <img class="gallery-card-image" src="@image.ThumbnailSrc" alt="@image.Alt" loading="lazy" decoding="async" />
@@ -268,6 +274,7 @@ else
                         data-media-viewer-group="gallery-all"
                         data-media-viewer-group-category="gallery-all"
                         data-media-viewer-src="@image.Src"
+                        data-media-viewer-thumbnail-src="@(image.HasThumbnail ? image.ThumbnailSrc : null)"
                         data-media-viewer-alt="@image.Alt"
                         aria-label="@(isEn ? $"{accessibleLabel} — enlarge" : $"{accessibleLabel} — büyüt")">
                     <img class="gallery-card-image" src="@image.ThumbnailSrc" alt="@image.Alt" loading="lazy" decoding="async" />

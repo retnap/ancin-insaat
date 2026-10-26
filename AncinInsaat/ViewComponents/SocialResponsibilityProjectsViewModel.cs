@@ -3,8 +3,9 @@ namespace AncinInsaat.ViewComponents;
 // One other (non-featured) photo OR video belonging to a Social
 // Responsibility project's unified gallery. Only ever rendered as a hidden
 // Media Viewer trigger (see SocialResponsibilityProjects/Default.cshtml) —
-// never displayed in the page itself, so it carries no ThumbnailSrc, unlike
-// GalleryImageModel.
+// never displayed in the page itself. ThumbnailSrc (photos only,
+// 2026-10-26) is a small web/thumbnails/ WebP the Media Viewer shows and
+// prefetches while browsing quickly, before the photo itself has arrived.
 //
 // VideoSrc null => a photo; Src is that photo's own lightbox-resolution
 // image. VideoSrc set (2026-10-02, unified gallery task) => a video; Src is
@@ -17,6 +18,7 @@ public class SocialResponsibilityGalleryImage
 {
     public required string Src { get; init; }
     public required string Alt { get; init; }
+    public string? ThumbnailSrc { get; init; }
     public string? VideoSrc { get; init; }
 }
 

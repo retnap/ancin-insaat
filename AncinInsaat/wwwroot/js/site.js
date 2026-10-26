@@ -1211,14 +1211,33 @@
     });
   });
 
+  // Site plan intent preloading (2026-10-26) — the visible Vaziyet Planı
+  // button starts a low-priority detached load of its display image on
+  // hover/focus (touchstart on mobile), so it is usually decoded by the
+  // time the click opens the viewer. Never on page load; preloadPhotos
+  // skips an image that is already available or still loading.
+  triggers.forEach(function (trigger) {
+    if (trigger.hidden || trigger.getAttribute('data-media-viewer-group') !== 'site-plan') {
+      return;
+    }
+
+    var preloadSitePlan = function () {
+      preloadPhotos([trigger.getAttribute('data-media-viewer-src')]);
+    };
+
+    trigger.addEventListener('pointerenter', preloadSitePlan);
+    trigger.addEventListener('focus', preloadSitePlan);
+    trigger.addEventListener('touchstart', preloadSitePlan, { passive: true });
+  });
+
   var state = { items: [], index: 0, scale: 1, translateX: 0, translateY: 0 };
   var lastFocused = null;
   var imageLoadToken = 0;
 
-  // Only "floorplans" triggers get the thumbnail-first loading in render() —
-  // every other group (Gallery, Concept, Site Plan) keeps loading its
-  // original directly, exactly as before. Returns null when the trigger
-  // has no distinct thumbnail <img> to show.
+  // Thumbnail for renderFloorPlan()'s thumbnail-first loading — other
+  // groups (Gallery, Concept, Site Plan) use photoPreviewSrc() in
+  // renderPhoto() instead. Returns null when the trigger has no distinct
+  // thumbnail <img> to show.
   function floorPlanPreviewSrc(item, fullSrc) {
     if (item.getAttribute('data-media-viewer-group') !== 'floorplans') {
       return null;
@@ -1258,13 +1277,32 @@
   var pendingImages = [];
   // The original to load on first zoom for the current item, or null.
   var zoomUpgradeSrc = null;
+  // URLs a detached load has fully downloaded and decoded, mapped to that
+  // Image. Holding the Image keeps its decoded resource in the browser's
+  // memory cache — once it is garbage-collected, setting imageEl.src to the
+  // same URL is no longer guaranteed to paint synchronously. Capped (oldest
+  // dropped first) so a long browse doesn't pin every photo in memory.
+  var readyImages = {};
+  var readyOrder = [];
+  var READY_IMAGE_LIMIT = 24;
 
-  // keepSrc (optional) spares a request that is already fetching the
-  // image about to be shown — e.g. Next onto a prefetched plan — so its
-  // progress is reused instead of restarted.
+  function markReady(src, img) {
+    if (!readyImages[src]) {
+      readyOrder.push(src);
+      if (readyOrder.length > READY_IMAGE_LIMIT) {
+        delete readyImages[readyOrder.shift()];
+      }
+    }
+    readyImages[src] = img;
+  }
+
+  // keepSrc (optional; one URL or an array of them) spares requests that
+  // are already fetching an image about to be shown — e.g. Next onto a
+  // prefetched plan — so their progress is reused instead of restarted.
   function cancelPendingImages(keepSrc) {
+    var keep = [].concat(keepSrc || []);
     pendingImages = pendingImages.filter(function (pending) {
-      if (keepSrc && pending.getAttribute('src') === keepSrc) {
+      if (keep.indexOf(pending.getAttribute('src')) !== -1) {
         return true;
       }
       pending.onload = null;
@@ -1276,8 +1314,9 @@
 
   // Loads src off-screen (download + decode) and calls onReady once it can
   // be painted without a blank frame; onReady is skipped if the viewer has
-  // moved on (Prev/Next/close) in the meantime.
-  function loadDetached(src, priority, onReady) {
+  // moved on (Prev/Next/close) in the meantime. remember (photos only, see
+  // renderPhoto) keeps the decoded Image in readyImages.
+  function loadDetached(src, priority, onReady, remember) {
     var token = imageLoadToken;
     var detached = new Image();
     detached.decoding = 'async';
@@ -1287,21 +1326,49 @@
     pendingImages.push(detached);
     detached.src = src;
 
-    var ready = function () {
+    var ready = function (loaded) {
       pendingImages = pendingImages.filter(function (pending) {
         return pending !== detached;
       });
+      if (loaded && remember) {
+        markReady(src, detached);
+      }
       if (token === imageLoadToken) {
         onReady();
       }
     };
+    var loaded = function () { ready(true); };
+    var failed = function () { ready(false); };
 
     if (typeof detached.decode === 'function') {
-      detached.decode().then(ready, ready);
+      detached.decode().then(loaded, failed);
     } else {
-      detached.onload = ready;
-      detached.onerror = ready;
+      detached.onload = loaded;
+      detached.onerror = failed;
     }
+  }
+
+  function isPending(src) {
+    return pendingImages.some(function (pending) {
+      return pending.getAttribute('src') === src;
+    });
+  }
+
+  // True when src can be painted right away: already decoded by a detached
+  // load, or rendered by some <img> on the page (e.g. a gallery card's
+  // thumbnail that has scrolled into view). A lazy thumbnail that hasn't
+  // loaded yet is not complete, so it never counts.
+  function isImageAvailable(src) {
+    if (!src) {
+      return false;
+    }
+    if (readyImages[src]) {
+      return true;
+    }
+
+    return Array.prototype.some.call(document.images, function (img) {
+      return img !== imageEl && img.getAttribute('src') === src && img.complete && img.naturalWidth > 0;
+    });
   }
 
   // First zoom on a floor plan shown via its display derivative swaps in the
@@ -1320,6 +1387,176 @@
       imageEl.classList.remove('is-display', 'is-preview');
     });
   }
+
+  // ---- Instant photo browsing (Gallery/Concept/Site Plan, 2026-10-26) ----
+  // Gallery, Concept and Site Plan photos previously set imageEl.src
+  // straight to the display image, so the frame stayed empty after every
+  // Next until that file finished downloading. They now follow the floor
+  // plans' thumbnail-first shape: show whatever version of the photo is
+  // already in memory at once (the display image itself if prefetched,
+  // otherwise its on-page thumbnail), swap to the display image once it is
+  // decoded, and prefetch the neighbours. Floor plans keep their own,
+  // unchanged path (renderFloorPlan).
+
+  // The trigger's data-media-viewer-thumbnail-src, else its own thumbnail
+  // <img> (Gallery cards), or for a Concept trigger the slide image it sits
+  // beside. Null when there is none or it is the display image itself.
+  function photoPreviewSrc(item, targetSrc) {
+    var explicit = item.getAttribute('data-media-viewer-thumbnail-src');
+    if (explicit) {
+      return explicit !== targetSrc ? explicit : null;
+    }
+
+    var thumbnail = item.querySelector('img');
+    if (!thumbnail && item.getAttribute('data-media-viewer-group') === 'concept' && item.parentElement) {
+      thumbnail = item.parentElement.querySelector('img');
+    }
+    var src = thumbnail ? thumbnail.getAttribute('src') : null;
+
+    return src && src !== targetSrc ? src : null;
+  }
+
+  function photoItemAt(index) {
+    var count = itemCount();
+    var item = state.items[((index % count) + count) % count];
+
+    return item.getAttribute('data-media-viewer-type') === 'video' ? null : item;
+  }
+
+  function photoSrcAt(index) {
+    var item = photoItemAt(index);
+
+    return item ? item.getAttribute('data-media-viewer-src') : null;
+  }
+
+  // Next 2 and previous 1, the directions a visitor is most likely to go.
+  function photoNeighbourSrcs() {
+    var srcs = [];
+    if (itemCount() < 2) {
+      return srcs;
+    }
+
+    [1, 2, -1].forEach(function (offset) {
+      var src = photoSrcAt(state.index + offset);
+      if (src && srcs.indexOf(src) === -1) {
+        srcs.push(src);
+      }
+    });
+
+    return srcs;
+  }
+
+  // The item's preview when it is a real, lightweight thumbnail, safe to
+  // fetch ahead: the server sets data-media-viewer-thumbnail-src only when
+  // one exists (e.g. Le Jardin's thumbnails sit beside their originals,
+  // Social Responsibility's hidden triggers have no <img>); otherwise only
+  // a card image from a /thumbnails/ folder counts — a card whose thumbnail
+  // fell back to its original (ResolveThumbnail) never does.
+  function photoThumbnailSrc(item) {
+    var targetSrc = item.getAttribute('data-media-viewer-src');
+    var src = photoPreviewSrc(item, targetSrc);
+
+    // getAttribute, not hasAttribute: Razor renders a null data-* value as
+    // an empty attribute rather than omitting it.
+    return src && (item.getAttribute('data-media-viewer-thumbnail-src') || src.indexOf('/thumbnails/') !== -1) ? src : null;
+  }
+
+  // Thumbnails (~30-100 KB) of the next 5 and previous 2: a visitor
+  // clicking faster than display images download still gets an instant
+  // preview at every step.
+  function photoThumbnailSrcs() {
+    var srcs = [];
+    if (itemCount() < 2) {
+      return srcs;
+    }
+
+    [1, 2, 3, 4, 5, -1, -2].forEach(function (offset) {
+      var item = photoItemAt(state.index + offset);
+      var src = item ? photoThumbnailSrc(item) : null;
+      if (src && srcs.indexOf(src) === -1) {
+        srcs.push(src);
+      }
+    });
+
+    return srcs;
+  }
+
+  // Low priority so a prefetch never slows the photo on screen; tracked in
+  // pendingImages, so a later navigation cancels whatever is no longer a
+  // neighbour.
+  function preloadPhotos(srcs) {
+    srcs.forEach(function (src) {
+      if (!isImageAvailable(src) && !isPending(src)) {
+        loadDetached(src, 'low', function () {}, true);
+      }
+    });
+  }
+
+  // Sets imageEl.src and reports whether it painted synchronously (true for
+  // any image in the document's list of available images).
+  function showImmediately(src) {
+    imageEl.src = src;
+    if (imageEl.complete && imageEl.naturalWidth > 0) {
+      imageEl.classList.add('is-loaded');
+      return true;
+    }
+
+    return false;
+  }
+
+  function renderPhoto(item, alt) {
+    var targetSrc = item.getAttribute('data-media-viewer-src');
+    var previewSrc = photoPreviewSrc(item, targetSrc);
+    var thumbnailSrcs = photoThumbnailSrcs();
+
+    imageLoadToken++;
+    // Spare the photo being opened and its new neighbours, so rapid
+    // Next/Prev keeps the progress already made on them.
+    cancelPendingImages(photoNeighbourSrcs().concat(thumbnailSrcs, targetSrc, previewSrc || []));
+    zoomUpgradeSrc = null;
+
+    imageEl.classList.remove('is-display');
+    imageEl.alt = alt;
+    imageEl.onload = function () {
+      imageEl.classList.add('is-loaded');
+    };
+
+    // Called once the display image has decoded (or failed — a failed
+    // download never replaces a preview already on screen).
+    var showTarget = function () {
+      if (readyImages[targetSrc] && showImmediately(targetSrc)) {
+        imageEl.classList.remove('is-preview');
+      }
+      preloadPhotos(photoNeighbourSrcs());
+    };
+
+    if (isImageAvailable(targetSrc) && showImmediately(targetSrc)) {
+      imageEl.classList.remove('is-preview');
+      preloadPhotos(photoNeighbourSrcs());
+    } else {
+      if (previewSrc && isImageAvailable(previewSrc) && showImmediately(previewSrc)) {
+        imageEl.classList.add('is-preview');
+      } else {
+        // Nothing of this photo is in memory yet (e.g. a lazy card never
+        // scrolled into view whose prefetch hasn't finished) — the frame
+        // stays transparent (never a stale or broken image) until the
+        // thumbnail or the display image decodes, whichever comes first.
+        imageEl.classList.remove('is-loaded', 'is-preview');
+        if (previewSrc && previewSrc === photoThumbnailSrc(item)) {
+          loadDetached(previewSrc, 'high', function () {
+            if (readyImages[previewSrc] && !imageEl.classList.contains('is-loaded') && showImmediately(previewSrc)) {
+              imageEl.classList.add('is-preview');
+            }
+          }, true);
+        }
+      }
+      loadDetached(targetSrc, 'high', showTarget, true);
+    }
+
+    // Issued after the photo itself so it is requested first.
+    preloadPhotos(thumbnailSrcs);
+  }
+
   var touchStartX = null;
   var touchStartY = null;
 
@@ -1427,44 +1664,10 @@
         videoWrapEl.hidden = true;
       }
 
-      var fullSrc = item.getAttribute('data-media-viewer-src');
-      var displaySrc = floorPlanDisplaySrc(item);
-      // What the viewer shows at 1x: the display derivative when there is
-      // one, otherwise the original (Gallery, Concept, Site Plan, and any
-      // floor plan without a derivative — unchanged behavior).
-      var targetSrc = displaySrc || fullSrc;
-      var previewSrc = floorPlanPreviewSrc(item, targetSrc);
-
-      imageLoadToken++;
-      cancelPendingImages(targetSrc);
-      zoomUpgradeSrc = displaySrc && displaySrc !== fullSrc ? fullSrc : null;
-
-      imageEl.classList.remove('is-loaded');
-      imageEl.classList.toggle('is-preview', !!previewSrc);
-      imageEl.classList.toggle('is-display', !!zoomUpgradeSrc);
-      imageEl.onload = function () {
-        imageEl.classList.add('is-loaded');
-      };
-      imageEl.alt = alt;
-
-      if (previewSrc) {
-        // Progressive floor plan loading (2026-10-19) — the trigger's own
-        // 800px WebP thumbnail (already on the page) is shown straight away
-        // while targetSrc downloads and decodes off-screen; it then replaces
-        // the thumbnail (same URL, so served from the memory cache — one
-        // network request per image).
-        imageEl.src = previewSrc;
-
-        loadDetached(targetSrc, 'high', function () {
-          // Skip the swap if a zoom already upgraded to the original.
-          if (imageEl.getAttribute('src') !== fullSrc) {
-            imageEl.src = targetSrc;
-          }
-          imageEl.classList.remove('is-preview');
-          prefetchNextFloorPlan();
-        });
+      if (item.getAttribute('data-media-viewer-group') !== 'floorplans') {
+        renderPhoto(item, alt);
       } else {
-        imageEl.src = targetSrc;
+        renderFloorPlan(item, alt);
       }
     }
 
@@ -1484,6 +1687,48 @@
     nextBtn.hidden = !hasMultiple;
 
     resetZoom();
+  }
+
+  function renderFloorPlan(item, alt) {
+    var fullSrc = item.getAttribute('data-media-viewer-src');
+    var displaySrc = floorPlanDisplaySrc(item);
+    // What the viewer shows at 1x: the display derivative when there is
+    // one, otherwise the original (a floor plan without a derivative —
+    // unchanged behavior).
+    var targetSrc = displaySrc || fullSrc;
+    var previewSrc = floorPlanPreviewSrc(item, targetSrc);
+
+    imageLoadToken++;
+    cancelPendingImages(targetSrc);
+    zoomUpgradeSrc = displaySrc && displaySrc !== fullSrc ? fullSrc : null;
+
+    imageEl.classList.remove('is-loaded');
+    imageEl.classList.toggle('is-preview', !!previewSrc);
+    imageEl.classList.toggle('is-display', !!zoomUpgradeSrc);
+    imageEl.onload = function () {
+      imageEl.classList.add('is-loaded');
+    };
+    imageEl.alt = alt;
+
+    if (previewSrc) {
+      // Progressive floor plan loading (2026-10-19) — the trigger's own
+      // 800px WebP thumbnail (already on the page) is shown straight away
+      // while targetSrc downloads and decodes off-screen; it then replaces
+      // the thumbnail (same URL, so served from the memory cache — one
+      // network request per image).
+      imageEl.src = previewSrc;
+
+      loadDetached(targetSrc, 'high', function () {
+        // Skip the swap if a zoom already upgraded to the original.
+        if (imageEl.getAttribute('src') !== fullSrc) {
+          imageEl.src = targetSrc;
+        }
+        imageEl.classList.remove('is-preview');
+        prefetchNextFloorPlan();
+      });
+    } else {
+      imageEl.src = targetSrc;
+    }
   }
 
   // 'video[controls]' added (Social Responsibility unified galleries,
@@ -1570,6 +1815,11 @@
     viewer.classList.toggle('is-floorplan-viewer', groupKey === 'floorplans');
 
     render();
+    // Warm the start of the list too, so going back to the beginning is
+    // instant as well.
+    if (groupKey !== 'floorplans') {
+      preloadPhotos([0, 1].map(photoSrcAt).filter(Boolean));
+    }
     viewer.hidden = false;
     document.body.classList.add('no-scroll');
     document.addEventListener('keydown', onKeydown);
@@ -2429,7 +2679,15 @@
           galleryCard.setAttribute('data-media-viewer-group', groupKey);
         });
 
-        categoryCards[0].click();
+        // Open on the photo this card shows as its cover (2026-10-26) — a
+        // category card image override (Tralles' Exterior, photo 13) would
+        // otherwise open on photo 1. Falls back to the first card.
+        var coverSrc = card.getAttribute('data-gallery-category-card-src');
+        var coverCard = coverSrc && categoryCards.filter(function (galleryCard) {
+          return galleryCard.getAttribute('data-media-viewer-src') === coverSrc;
+        })[0];
+
+        (coverCard || categoryCards[0]).click();
       });
     });
 

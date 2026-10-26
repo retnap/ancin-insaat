@@ -484,6 +484,7 @@ public class ProjectsController : Controller
                 // posters and the Concept fallback image, never the grid.
                 Src = _displayImageResolver.Resolve(image.ImagePath),
                 ThumbnailSrc = ResolveThumbnail(image.ImagePath),
+                HasThumbnail = ResolveThumbnail(image.ImagePath) != image.ImagePath,
                 Alt = Localize(image.AltTextEn, image.AltText),
                 Category = string.IsNullOrWhiteSpace(image.Category) ? null : image.Category,
                 Block = string.IsNullOrWhiteSpace(image.Block) ? null : image.Block,

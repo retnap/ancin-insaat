@@ -102,6 +102,7 @@ public class SocialResponsibilityProjectsViewComponent : ViewComponent
             .Select(n => new SocialResponsibilityGalleryImage
             {
                 Src = $"{Project1BasePath}/{n}.webp",
+                ThumbnailSrc = $"{Project1BasePath}/thumbnails/{n}.webp",
                 Alt = $"{heading} — {altSuffix} {n}"
             })
             .ToList();
@@ -163,6 +164,7 @@ public class SocialResponsibilityProjectsViewComponent : ViewComponent
             .Select(n => new SocialResponsibilityGalleryImage
             {
                 Src = $"{Project2BasePath}/{n:D2}.webp",
+                ThumbnailSrc = $"{Project2BasePath}/thumbnails/{n:D2}.webp",
                 Alt = $"{heading} — {altSuffix} {n}"
             })
             .ToList();

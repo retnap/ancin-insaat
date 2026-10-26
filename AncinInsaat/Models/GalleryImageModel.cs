@@ -16,6 +16,12 @@ public class GalleryImageModel
     // project never shows a broken image while its thumbnails are pending.
     public required string ThumbnailSrc { get; init; }
 
+    // False when ThumbnailSrc fell back to the original (no thumbnail
+    // generated). Only a real thumbnail is emitted as the Media Viewer's
+    // data-media-viewer-thumbnail-src, which site.js prefetches while
+    // browsing — an original would be far too heavy for that.
+    public bool HasThumbnail { get; init; }
+
     public required string Alt { get; init; }
 
     // Nullable — mirrors ProjectImage.Category. Null means the image never
