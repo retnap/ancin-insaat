@@ -24,7 +24,7 @@ public class SocialMediaViewComponent : ViewComponent
         new()
         {
             Platform = "Facebook",
-            Url = "https://www.facebook.com/ancininsaat",
+            Url = "https://www.facebook.com/ancin.com.tr",
             IconMarkup = """
                 <path d="M14.5 21v-7.5h2.5l.4-3H14.5V8.3c0-.9.3-1.5 1.6-1.5h1.7V4.1C17.5 4 16.4 4 15.2 4c-2.5 0-4.2 1.5-4.2 4.3v2.2H8.5v3H11V21h3.5z" fill="currentColor" />
                 """

@@ -43,6 +43,7 @@ public static class DbSeeder
         await ReconcileSiteSettingsContactInfoAsync(context);
         await ReconcileSiteSettingsAddressNumberAsync(context);
         await ReconcileSiteSettingsWorkingHoursAsync(context);
+        await ReconcileSiteSettingsFacebookAsync(context);
         await SeedProjectsAsync(context);
         await SeedCareerPositionsAsync(context);
         await ReconcileCareerPositionPlaceholderPrefixAsync(context);
@@ -71,7 +72,7 @@ public static class DbSeeder
             Email = "info@ancin.com.tr",
             WorkingHours = "Pazartesi - Cuma, 09:00 - 18:00",
             WorkingHoursEn = "Monday - Friday, 09:00 - 18:00",
-            Facebook = "https://www.facebook.com/ancininsaat",
+            Facebook = "https://www.facebook.com/ancin.com.tr",
             Instagram = "https://www.instagram.com/ancininsaat",
             LinkedIn = "https://www.linkedin.com/company/ancininsaat",
             YouTube = "https://www.youtube.com/channel/UC8eBEHzMF4z0pL1Ru-HuUTA",
@@ -171,6 +172,27 @@ public static class DbSeeder
         }
 
         settings.Address = correctAddress;
+        await context.SaveChangesAsync();
+    }
+
+    // Not a seed — corrects an already-seeded SiteSettings row's Facebook
+    // URL (client correction, 2026-10-28): the page is
+    // facebook.com/ancin.com.tr, not the originally seeded
+    // facebook.com/ancininsaat. Guarded against the exact known wrong URL,
+    // so this never clobbers a real edit and is a no-op once applied.
+    private static async Task ReconcileSiteSettingsFacebookAsync(AppDbContext context)
+    {
+        const string oldFacebook = "https://www.facebook.com/ancininsaat";
+        const string correctFacebook = "https://www.facebook.com/ancin.com.tr";
+
+        var settings = await context.SiteSettings.FirstOrDefaultAsync();
+
+        if (settings is null || settings.Facebook != oldFacebook)
+        {
+            return;
+        }
+
+        settings.Facebook = correctFacebook;
         await context.SaveChangesAsync();
     }
 
