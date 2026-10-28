@@ -68,7 +68,7 @@ public static class DbSeeder
             Address = "Zeybek Mahallesi 5 cd. No:7/A/31 Blok Magnesia Gold Residence Efeler / AYDIN",
             Phone = "0256 212 9444",
             Mobile = "0532 232 22 09",
-            Email = "info@ancininsaat.com.tr",
+            Email = "info@ancin.com.tr",
             WorkingHours = "Pazartesi - Cuma, 09:00 - 18:00",
             WorkingHoursEn = "Monday - Friday, 09:00 - 18:00",
             Facebook = "https://www.facebook.com/ancininsaat",
@@ -99,12 +99,17 @@ public static class DbSeeder
     {
         const string oldAddress = "Kültür Mahallesi, İnşaat Caddesi No:12, Aydın, Türkiye";
         const string oldPhone = "+90 256 123 45 67";
-        const string oldEmail = "info@ancininsaat.com";
+        // Both known-wrong addresses: the original placeholder and the
+        // ancininsaat.com.tr value this method itself used to write — that
+        // domain is not the company's (2026-10-28 correction; the company's
+        // domain and Google Workspace are on ancin.com.tr). Any other value
+        // is treated as a deliberate edit and left alone.
+        string[] wrongEmails = ["info@ancininsaat.com", "info@ancininsaat.com.tr"];
 
         const string correctAddress = "Zeybek Mahallesi 5 cd. No: 31 7/1 A Blok Magnesia Gold Residence Efeler / AYDIN";
         const string correctPhone = "0256 212 9444";
         const string correctMobile = "0532 232 22 09";
-        const string correctEmail = "info@ancininsaat.com.tr";
+        const string correctEmail = "info@ancin.com.tr";
 
         var settings = await context.SiteSettings.FirstOrDefaultAsync();
 
@@ -133,7 +138,7 @@ public static class DbSeeder
             changed = true;
         }
 
-        if (settings.Email == oldEmail)
+        if (wrongEmails.Contains(settings.Email))
         {
             settings.Email = correctEmail;
             changed = true;
