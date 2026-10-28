@@ -704,7 +704,7 @@ public class ProjectsController : Controller
         // section — the pageKey is the project's own slug, so per-project
         // rows sit in the same SeoMetadata table as "home"/"projects" rather
         // than a second mechanism (see DbSeeder.SeedSeoMetadataAsync).
-        ViewData["Seo"] = await _seoService.GetPageSeoAsync(project.Slug, Request);
+        ViewData["Seo"] = await _seoService.GetPageSeoAsync(project.Slug, Request, model.HeroBackgroundImageUrl);
         ViewData["SeoPageType"] = "RealEstateListing";
 
         // Read by _Layout.cshtml to stamp <body data-page-slug="...">, the

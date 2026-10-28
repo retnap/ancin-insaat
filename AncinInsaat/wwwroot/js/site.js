@@ -2679,9 +2679,10 @@
           galleryCard.setAttribute('data-media-viewer-group', groupKey);
         });
 
-        // Open on the photo this card shows as its cover (2026-10-26) — a
-        // category card image override (Tralles' Exterior, photo 13) would
-        // otherwise open on photo 1. Falls back to the first card.
+        // Open on the photo named by data-gallery-category-card-src — the
+        // category's first photo, even when the card shows an override
+        // cover such as Tralles' photo 13 (2026-10-28). Falls back to the
+        // first card.
         var coverSrc = card.getAttribute('data-gallery-category-card-src');
         var coverCard = coverSrc && categoryCards.filter(function (galleryCard) {
           return galleryCard.getAttribute('data-media-viewer-src') === coverSrc;

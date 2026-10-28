@@ -9,5 +9,8 @@ namespace AncinInsaat.Services;
 // service rather than each hand-rolling its own meta tags.
 public interface ISeoService
 {
-    Task<SeoModel> GetPageSeoAsync(string pageKey, HttpRequest request, CancellationToken cancellationToken = default);
+    // ogImageFallbackPath (2026-10-28): used when the row's OpenGraphImage
+    // file does not exist on disk — e.g. Project Detail passes its resolved
+    // hero banner, since most projects' seeded cover.webp was removed.
+    Task<SeoModel> GetPageSeoAsync(string pageKey, HttpRequest request, string? ogImageFallbackPath = null, CancellationToken cancellationToken = default);
 }

@@ -130,17 +130,18 @@ else
                     // takes priority when set; every other project/category
                     // falls back to the original "first image in this
                     // category" lookup, unchanged.
-                    var firstCategoryImage = category.CardImage
-                        ?? Model.GalleryImages.FirstOrDefault(image => string.Equals(image.Category, category.Value, StringComparison.OrdinalIgnoreCase));
+                    var categoryFirstImage = Model.GalleryImages.FirstOrDefault(image => string.Equals(image.Category, category.Value, StringComparison.OrdinalIgnoreCase));
+                    var firstCategoryImage = category.CardImage ?? categoryFirstImage;
 
-                    @* data-gallery-category-card-src (2026-10-26) — lets
-                       site.js open the viewer on this card's own cover
-                       photo (e.g. Tralles' photo 13), not the category's
-                       first photo. *@
+                    @* data-gallery-category-card-src (2026-10-26) — the photo
+                       site.js opens the viewer on. Always the category's
+                       first photo (2026-10-28 client request): a card image
+                       override such as Tralles' photo 13 changes only the
+                       card's cover, the viewer still starts at photo 1. *@
                     <button type="button"
                             class="gallery-card"
                             data-gallery-category-card="@category.Label"
-                            data-gallery-category-card-src="@firstCategoryImage?.Src">
+                            data-gallery-category-card-src="@categoryFirstImage?.Src">
                         @if (firstCategoryImage is not null)
                         {
                             <img class="gallery-card-image" src="@firstCategoryImage.ThumbnailSrc" alt="" loading="lazy" decoding="async" />

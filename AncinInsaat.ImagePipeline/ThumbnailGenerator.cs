@@ -47,6 +47,10 @@ public static class ThumbnailGenerator
 
         using var image = await Image.LoadAsync(sourcePath, cancellationToken);
 
+        // Rotate per the EXIF Orientation tag before the profile is
+        // stripped — rotation only, mirror flags ignored (see ExifOrientation).
+        ExifOrientation.ApplyRotationOnly(image);
+
         image.Metadata.ExifProfile = null;
 
         var targetWidth = Math.Min(width, image.Width);

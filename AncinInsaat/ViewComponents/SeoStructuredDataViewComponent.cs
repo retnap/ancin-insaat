@@ -46,7 +46,7 @@ public class SeoStructuredDataViewComponent : ViewComponent
             return Content(string.Empty);
         }
 
-        var baseUrl = $"{Request.Scheme}://{Request.Host}";
+        var baseUrl = SiteUrls.CanonicalBaseUrl;
         var siteUrl = baseUrl + "/";
         var logoUrl = settings.Logo.StartsWith("http", StringComparison.OrdinalIgnoreCase)
             ? settings.Logo

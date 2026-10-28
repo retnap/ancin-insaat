@@ -32,6 +32,10 @@ public static class DisplayImageGenerator
 
         using var image = await Image.LoadAsync(sourcePath, cancellationToken);
 
+        // Rotate per the EXIF Orientation tag before the profile is
+        // stripped — rotation only, mirror flags ignored (see ExifOrientation).
+        ExifOrientation.ApplyRotationOnly(image);
+
         image.Metadata.ExifProfile = null;
 
         if (image.Width > longEdge || image.Height > longEdge)

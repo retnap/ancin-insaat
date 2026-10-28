@@ -17,13 +17,15 @@ public class SeoService : ISeoService
     private const string DefaultOgImage = "/images/seo/og-home.webp";
 
     private readonly AppDbContext _context;
+    private readonly IDisplayImageResolver _displayImageResolver;
 
-    public SeoService(AppDbContext context)
+    public SeoService(AppDbContext context, IDisplayImageResolver displayImageResolver)
     {
         _context = context;
+        _displayImageResolver = displayImageResolver;
     }
 
-    public async Task<SeoModel> GetPageSeoAsync(string pageKey, HttpRequest request, CancellationToken cancellationToken = default)
+    public async Task<SeoModel> GetPageSeoAsync(string pageKey, HttpRequest request, string? ogImageFallbackPath = null, CancellationToken cancellationToken = default)
     {
         var metadata = await _context.SeoMetadata
             .AsNoTracking()
@@ -37,7 +39,7 @@ public class SeoService : ISeoService
         // always pointing at the Turkish page.
         var isEnglish = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
 
-        var baseUrl = $"{request.Scheme}://{request.Host}";
+        var baseUrl = SiteUrls.CanonicalBaseUrl;
         var turkishCanonicalPath = metadata is not null && !string.IsNullOrWhiteSpace(metadata.CanonicalUrl)
             ? metadata.CanonicalUrl
             : "/";
@@ -47,6 +49,15 @@ public class SeoService : ISeoService
         var ogImagePath = metadata is not null && !string.IsNullOrWhiteSpace(metadata.OpenGraphImage)
             ? metadata.OpenGraphImage
             : DefaultOgImage;
+
+        // Never advertise a missing file as og:image (2026-10-28) — several
+        // seeded project rows still point at a removed cover.webp.
+        if (!_displayImageResolver.Exists(ogImagePath))
+        {
+            ogImagePath = ogImageFallbackPath is not null && _displayImageResolver.Exists(ogImageFallbackPath)
+                ? ogImageFallbackPath
+                : DefaultOgImage;
+        }
 
         var title = isEnglish
             ? FirstNonEmpty(metadata?.MetaTitleEn, metadata?.MetaTitle, DefaultTitleEn)

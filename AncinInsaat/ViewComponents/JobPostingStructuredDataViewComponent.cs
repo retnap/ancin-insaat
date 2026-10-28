@@ -40,7 +40,7 @@ public class JobPostingStructuredDataViewComponent : ViewComponent
             return Content(string.Empty);
         }
 
-        var baseUrl = $"{Request.Scheme}://{Request.Host}";
+        var baseUrl = SiteUrls.CanonicalBaseUrl;
         var pageUrl = $"{baseUrl}/career";
 
         // A JobPosting with no description would fail Google's rich-result
