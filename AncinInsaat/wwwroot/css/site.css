@@ -319,6 +319,13 @@
   --color-light-gray: #F0EEEB;
   --color-white: #FFFFFF;
 
+  /* Footer background (2026-10-29 client request — no pure black).
+     Warm dark gray from the same family as --color-dark-gray. Alternatives
+     to try: #44403C (slightly lighter — note .footer-copyright's 0.56
+     alpha drops to ~4.49:1 there, just under AA, so raise it to 0.6 if
+     switching) and #2E2B29 (slightly darker). */
+  --color-footer-bg: #3A3633;
+
   /* Semantic aliases (map approved colours to the usage roles
      described in 02_DesignSystem.md — no new hues introduced) */
   --color-background: var(--color-white);
@@ -326,6 +333,13 @@
   --color-border: var(--color-light-gray);
   --color-text-primary: var(--color-near-black);
   --color-text-secondary: var(--color-dark-gray);
+
+  /* Hero Background Zoom (Section 16) — default cycle/peak for every
+     banner using @keyframes hero-bg-zoom. A modifier (e.g.
+     .hero--zoom-strong) overrides these on an ancestor; .hero-bg and
+     .project-catalogue-cta-bg inherit them from there. */
+  --hero-zoom-duration: 22s;
+  --hero-zoom-scale: 1.1;
 
 
   /* --------------------------------------------------------------------
@@ -1582,7 +1596,7 @@ select[aria-invalid='true'] {
    ========================================================================== */
 
 .footer {
-  background-color: #000000;
+  background-color: var(--color-footer-bg);
   color: rgba(255, 255, 255, 0.72);
 }
 
@@ -2076,7 +2090,8 @@ select[aria-invalid='true'] {
 }
 
 /* ---- Hero Background Zoom ----
-   A continuous, transform-only scale "breathe": in from 1.00 to 1.10
+   A continuous, transform-only scale "breathe": in from 1.00 to
+   --hero-zoom-scale (1.10 default, see :root; 1.15 under .hero--zoom-strong)
    and back out, never past 1.00 so .hero-bg's -5% inset bleed always
    covers .hero with no edge exposed. transform (never width/height,
    which are not compositor-accelerated and sit outside the "animate
@@ -2109,7 +2124,7 @@ select[aria-invalid='true'] {
      so no desktop composition changes — this only touches banners narrow
      enough to crop away a wide aerial/exterior render's actual subject. */
   background-position: var(--hero-bg-position-mobile, center);
-  animation: hero-bg-zoom 22s ease-in-out infinite;
+  animation: hero-bg-zoom var(--hero-zoom-duration) ease-in-out infinite;
 }
 
 @media (min-width: 768px) {
@@ -2125,8 +2140,18 @@ select[aria-invalid='true'] {
   }
 
   50% {
-    transform: scale(1.1);
+    transform: scale(var(--hero-zoom-scale));
   }
+}
+
+/* Stronger, faster zoom (2026-10-29 client request — "it doesn't move").
+   Home Hero only today (HeroBanner/Default.cshtml); add the same class to
+   another banner's section to give it these values. Scaling up from
+   1.00 only ever enlarges the -5% inset bleed, so 1.15 still covers
+   every edge. */
+.hero--zoom-strong {
+  --hero-zoom-duration: 16s;
+  --hero-zoom-scale: 1.15;
 }
 
 .hero-inner {
@@ -5711,7 +5736,7 @@ select[aria-invalid='true'] {
     var(--catalogue-bg-image, linear-gradient(160deg, var(--color-near-black) 0%, var(--color-dark-gray) 100%));
   background-size: cover;
   background-position: center;
-  animation: hero-bg-zoom 22s ease-in-out infinite;
+  animation: hero-bg-zoom var(--hero-zoom-duration) ease-in-out infinite;
 }
 
 .project-catalogue-cta-inner {
