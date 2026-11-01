@@ -67,6 +67,10 @@
                         <path d="M9 7l9 5-9 5V7z" fill="currentColor" />
                     </svg>
                 </button>
+                @* Campaign videos only (2026-11-01) — shown when the browser
+                   refuses to start them with sound and site.js falls back to
+                   muted playback. *@
+                <button type="button" class="media-viewer-unmute" data-media-viewer-unmute hidden>@(isEn ? "Turn sound on" : "Sesi aç")</button>
             </div>
         </figure>
         <button type="button" class="media-viewer-nav media-viewer-next" data-media-viewer-next aria-label="@(isEn ? "Next image" : "Sonraki görsel")">
@@ -74,6 +78,9 @@
                 <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
         </button>
+        @* Campaign videos only (2026-11-01) — site.js sets href and unhides
+           it for a trigger carrying data-media-viewer-project-url. *@
+        <a class="btn btn-primary media-viewer-project-link" data-media-viewer-project-link hidden>@(isEn ? "View Project" : "Projeyi İncele")</a>
         <p class="media-viewer-counter" data-media-viewer-counter aria-live="polite"></p>
     </div>
 </div>

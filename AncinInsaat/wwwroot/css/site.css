@@ -1141,6 +1141,33 @@ select[aria-invalid='true'] {
   display: block;
 }
 
+/* Narrow phones: the full-size logo plus .navbar-actions don't fit. The logo
+   PNG has ~14% transparent margin per side, so the negative margin first lets
+   the actions overlap that empty area (no visible change, full size down to
+   ~360px); below that the logo alone gives up the remaining width. The actions
+   cluster and its 44px touch targets never shrink. */
+@media (max-width: 767px) {
+  .navbar-logo {
+    flex-shrink: 1;
+    min-width: 0;
+    margin-inline-end: -1.25rem;
+  }
+
+  .navbar-logo img {
+    height: auto;
+    max-height: 4.8rem;
+    max-width: 100%;
+  }
+}
+
+/* Keeps the logo mark from touching the language selector on the narrowest
+   phones, where the transparent margin itself has scaled down. */
+@media (max-width: 359px) {
+  .navbar-logo {
+    margin-inline-end: -0.75rem;
+  }
+}
+
 @media (min-width: 768px) {
   .navbar-logo img {
     /* Sized up from 4.5rem for more visual presence — only from the
@@ -2145,8 +2172,8 @@ select[aria-invalid='true'] {
 }
 
 /* Stronger, faster zoom (2026-10-29 client request — "it doesn't move").
-   Home Hero only today (HeroBanner/Default.cshtml); add the same class to
-   another banner's section to give it these values. Scaling up from
+   Home Hero, then every Project Detail Hero (2026-11-01 request); add the
+   same class to another banner's section to give it these values. Scaling up from
    1.00 only ever enlarges the -5% inset bleed, so 1.15 still covers
    every edge. */
 .hero--zoom-strong {
@@ -2506,8 +2533,23 @@ select[aria-invalid='true'] {
   transform: translateX(0);
 }
 
+/* Kept below the container's own padding at each breakpoint: an offset larger
+   than the gutter pushes the element past the viewport's right edge until it
+   is revealed, which widens the page (left offsets can't cause this). */
 .js [data-reveal='right'] {
-  transform: translateX(32px);
+  transform: translateX(12px);
+}
+
+@media (min-width: 768px) {
+  .js [data-reveal='right'] {
+    transform: translateX(20px);
+  }
+}
+
+@media (min-width: 1024px) {
+  .js [data-reveal='right'] {
+    transform: translateX(32px);
+  }
 }
 
 .js [data-reveal='right'].is-visible {
@@ -4808,6 +4850,37 @@ select[aria-invalid='true'] {
   max-width: min(94vw, 40rem);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+}
+
+/* Below 768px the bar spans the container width and its labels may wrap, so
+   every segment stays on screen (2026-11-01 fix — "Size Ulaşalım" used to be
+   clipped at the end of the scroll area). 768px+ keeps the rule above.
+   .hero-bottom's left: 50% only leaves half the screen as available width,
+   hence the switch to left/right here. Later in source order than Section 16,
+   and .btn-hero-segment below is scoped under this modifier to outrank it. */
+@media (max-width: 767.98px) {
+  .hero-bottom {
+    left: 0;
+    right: 0;
+    transform: none;
+    padding-inline: var(--container-padding-mobile);
+  }
+
+  .hero-actions--attached {
+    width: 100%;
+    max-width: 40rem;
+    overflow-x: visible;
+  }
+
+  .hero-actions--attached .btn-hero-segment {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-inline: var(--space-xs);
+    font-size: 0.8125rem;
+    line-height: 1.2;
+    text-align: center;
+    white-space: normal;
+  }
 }
 
 .btn-hero-segment {
@@ -8476,4 +8549,245 @@ a.information-card__value:hover {
    render() hides Zoom In/Out for video items. */
 .media-viewer-tool[hidden] {
   display: none;
+}
+
+
+/* ==========================================================================
+   43. Home Campaigns (2026-11-01 request)
+   Vertical video posters between the Hero Banner and Company Overview. The
+   hover zoom and radius follow .project-card; the play badge follows
+   .media-viewer-video-play. Below 768px the list becomes a swipe row that
+   runs to the screen edges, so the next card peeks in.
+   ========================================================================== */
+
+#campaigns {
+  scroll-margin-top: 5rem;
+}
+
+/* Same heading font as Company Overview's, see #company-overview-heading. */
+#campaigns-heading {
+  font-family: 'Caviar Dreams', var(--font-heading);
+}
+
+.campaigns-list {
+  display: flex;
+  gap: var(--space-md);
+  margin: 0 calc(var(--container-padding-mobile) * -1);
+  padding: 0 var(--container-padding-mobile);
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--container-padding-mobile);
+  scrollbar-width: none;
+}
+
+.campaigns-list::-webkit-scrollbar {
+  display: none;
+}
+
+.campaigns-item {
+  flex: 0 0 78%;
+  scroll-snap-align: start;
+}
+
+@media (min-width: 768px) {
+  .campaigns-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--grid-gap-md);
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+  }
+}
+
+.campaign-card {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: start;
+  cursor: pointer;
+}
+
+.campaign-card-media {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 9 / 16;
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+}
+
+.campaign-card-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 400ms var(--ease-standard);
+}
+
+/* The global reduced-motion rule only shortens the transition, which would
+   still snap the poster to its larger size. */
+@media (prefers-reduced-motion: no-preference) {
+  .campaign-card:hover .campaign-card-image,
+  .campaign-card:focus-visible .campaign-card-image {
+    transform: scale(1.04);
+  }
+}
+
+.campaign-card-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1.5px solid var(--color-white);
+  background-color: color-mix(in srgb, var(--color-near-black) 45%, transparent);
+  color: var(--color-white);
+  transition: background-color var(--transition-base) var(--ease-standard);
+}
+
+.campaign-card:hover .campaign-card-play,
+.campaign-card:focus-visible .campaign-card-play {
+  background-color: color-mix(in srgb, var(--color-white) 25%, transparent);
+}
+
+/* min-height rather than height: at the narrowest columns the text may need
+   more than the bottom 45%, and the gradient then grows with it. */
+.campaign-card-overlay {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 45%;
+  padding: var(--space-lg) var(--space-md) var(--space-md);
+  background-image: linear-gradient(
+    to bottom,
+    transparent,
+    color-mix(in srgb, var(--color-near-black) 88%, transparent) 40%,
+    color-mix(in srgb, var(--color-near-black) 96%, transparent)
+  );
+  font-family: var(--font-body);
+  color: var(--color-white);
+}
+
+.campaign-card-eyebrow {
+  margin-block-end: var(--space-xs);
+  font-size: 0.6875rem;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.1em;
+  line-height: 1.3;
+  /* Plain --color-accent is only ~2.3:1 here (see .btn-secondary--on-dark), so
+     small text needs this lighter mix of it to stay readable (~4.5:1). */
+  color: color-mix(in srgb, var(--color-accent) 68%, white);
+}
+
+.campaign-card-name {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-bold);
+  font-size: 1.3125rem; /* 21px */
+  line-height: var(--line-height-heading);
+}
+
+.campaign-card-location {
+  margin-block-start: var(--space-2xs);
+  font-size: var(--font-size-small);
+  line-height: 1.4;
+  color: var(--color-light-gray);
+}
+
+.campaign-card-watch {
+  margin-block-start: var(--space-sm);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.4;
+}
+
+.campaign-card-eyebrow,
+.campaign-card-location,
+.campaign-card-watch {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .campaign-card-overlay {
+    padding: var(--space-3xl) var(--space-lg) var(--space-lg);
+  }
+
+  .campaign-card-name {
+    font-size: clamp(1.5rem, 2.2vw, 1.75rem); /* 24-28px */
+  }
+}
+
+/* ---- Media Viewer, campaign videos ----
+   Scoped to .is-campaign-viewer so every other trigger group keeps its
+   layout. The panel stacks the video over the "View Project" button; each
+   video opens alone, so Prev/Next and the "1 / 1" counter have no job here. */
+
+.media-viewer-project-link[hidden],
+.media-viewer-unmute[hidden] {
+  display: none;
+}
+
+.media-viewer.is-campaign-viewer .media-viewer-panel {
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.media-viewer.is-campaign-viewer .media-viewer-nav,
+.media-viewer.is-campaign-viewer .media-viewer-counter {
+  display: none;
+}
+
+.media-viewer.is-campaign-viewer .media-viewer-video-el {
+  max-height: min(72vh, 40rem);
+}
+
+@media (min-width: 768px) {
+  .media-viewer.is-campaign-viewer .media-viewer-video-el {
+    max-height: 72vh;
+  }
+}
+
+.media-viewer-project-link {
+  flex-shrink: 0;
+}
+
+/* Replaces .btn-primary's invert-to-white hover here (2026-11-01 request):
+   a lighter accent with the label staying white. */
+.media-viewer-project-link:hover,
+.media-viewer-project-link:focus-visible {
+  background-color: color-mix(in srgb, var(--color-accent) 82%, white);
+  border-color: color-mix(in srgb, var(--color-accent) 82%, white);
+  color: var(--color-white);
+  box-shadow: var(--shadow-sm);
+}
+
+.media-viewer-unmute {
+  position: absolute;
+  top: var(--space-sm);
+  left: var(--space-sm);
+  min-height: 2.75rem;
+  padding-inline: var(--space-md);
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--color-white);
+  background-color: color-mix(in srgb, var(--color-near-black) 65%, transparent);
+  color: var(--color-white);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
 }

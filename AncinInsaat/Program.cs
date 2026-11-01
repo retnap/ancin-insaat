@@ -38,6 +38,7 @@ builder.Services.AddScoped<IContactMessageService, ContactMessageService>();
 builder.Services.AddScoped<ICareerPositionQueryService, CareerPositionQueryService>();
 builder.Services.AddScoped<IJobApplicationService, JobApplicationService>();
 builder.Services.AddSingleton<IDisplayImageResolver, DisplayImageResolver>();
+builder.Services.AddSingleton<ICampaignService, CampaignService>();
 
 // Form notification emails — SMTP settings come only from configuration
 // (Smtp__* environment variables on the server); see SmtpOptions.

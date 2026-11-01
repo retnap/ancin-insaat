@@ -1155,6 +1155,15 @@
   var videoEl = viewer.querySelector('[data-media-viewer-video-el]');
   var videoPlayBtn = viewer.querySelector('[data-media-viewer-video-play]');
 
+  // ---- Campaign videos (Home "Kampanyalar", 2026-11-01) ----
+  // A trigger with data-media-viewer-project-url shows projectLinkEl and
+  // sends the visitor to that page whenever the viewer closes, however it was
+  // closed. campaignProjectUrl stays null for every other trigger, so none of
+  // this touches them.
+  var projectLinkEl = viewer.querySelector('[data-media-viewer-project-link]');
+  var unmuteBtn = viewer.querySelector('[data-media-viewer-unmute]');
+  var campaignProjectUrl = null;
+
   // ---- Zoom / Pan / Fullscreen (La Fiore Karabağ 2. Etap Vaziyet Planı/
   // Concept/Gallery phase, 2026-08-09) — upgrades this one shared instance
   // in place, so every existing and future trigger group (Gallery, Floor
@@ -1629,9 +1638,13 @@
     videoEl.removeAttribute('src');
     videoEl.load();
     videoEl.controls = false;
+    videoEl.muted = false;
 
     if (videoPlayBtn) {
       videoPlayBtn.hidden = false;
+    }
+    if (unmuteBtn) {
+      unmuteBtn.hidden = true;
     }
   }
 
@@ -1737,7 +1750,7 @@
   // Tab-trap includes the <video> once its native controls appear after
   // Play is pressed.
   function focusableElements() {
-    return Array.prototype.slice.call(viewer.querySelectorAll('button, video[controls]')).filter(function (el) {
+    return Array.prototype.slice.call(viewer.querySelectorAll('a[href], button, video[controls]')).filter(function (el) {
       // offsetParent (not el.hidden) so a button that is only hidden via an
       // ancestor's [hidden] — videoPlayBtn sits inside
       // [data-media-viewer-video-wrap], which is what actually toggles —
@@ -1814,6 +1827,17 @@
     var groupKey = trigger ? (trigger.getAttribute('data-media-viewer-group') || 'default') : 'default';
     viewer.classList.toggle('is-floorplan-viewer', groupKey === 'floorplans');
 
+    campaignProjectUrl = trigger ? trigger.getAttribute('data-media-viewer-project-url') : null;
+    viewer.classList.toggle('is-campaign-viewer', !!campaignProjectUrl);
+    if (projectLinkEl) {
+      projectLinkEl.hidden = !campaignProjectUrl;
+      if (campaignProjectUrl) {
+        projectLinkEl.setAttribute('href', campaignProjectUrl);
+      } else {
+        projectLinkEl.removeAttribute('href');
+      }
+    }
+
     render();
     // Warm the start of the list too, so going back to the beginning is
     // instant as well.
@@ -1846,6 +1870,13 @@
 
     if (lastFocused && typeof lastFocused.focus === 'function') {
       lastFocused.focus();
+    }
+
+    if (campaignProjectUrl) {
+      var projectUrl = campaignProjectUrl;
+      campaignProjectUrl = null;
+      viewer.classList.remove('is-campaign-viewer');
+      window.location.assign(projectUrl);
     }
   }
 
@@ -1922,15 +1953,51 @@
       videoPlayBtn.hidden = true;
     }
     videoEl.load();
-    videoEl.play().catch(function () {
+    videoEl.play().catch(function (error) {
       // Playback can be blocked (e.g. low-power mode) — native controls
       // are already visible at this point so the visitor can press Play
-      // themselves; nothing more to do here.
+      // themselves; nothing more to do here. A campaign video retries
+      // muted first, with unmuteBtn on screen to bring the sound back.
+      if (campaignProjectUrl && !viewer.hidden && error.name === 'NotAllowedError') {
+        videoEl.muted = true;
+        if (unmuteBtn) {
+          unmuteBtn.hidden = false;
+        }
+        videoEl.play().catch(function () {});
+      }
     });
   }
 
   if (videoPlayBtn) {
     videoPlayBtn.addEventListener('click', playCurrentVideo);
+  }
+
+  // Goes through close() so Back from the project page never restores the
+  // viewer still open. Modified clicks (new tab) stay native.
+  if (projectLinkEl) {
+    projectLinkEl.addEventListener('click', function (event) {
+      if (!event.metaKey && !event.ctrlKey && !event.shiftKey) {
+        event.preventDefault();
+        close();
+      }
+    });
+  }
+
+  if (unmuteBtn && videoEl) {
+    unmuteBtn.addEventListener('click', function () {
+      videoEl.muted = false;
+      videoEl.play().catch(function () {});
+      if (closeBtn) {
+        closeBtn.focus();
+      }
+    });
+
+    // Also covers the visitor unmuting through the native controls instead.
+    videoEl.addEventListener('volumechange', function () {
+      if (!videoEl.muted) {
+        unmuteBtn.hidden = true;
+      }
+    });
   }
 
   document.addEventListener('fullscreenchange', function () {

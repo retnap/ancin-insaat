@@ -1,3 +1,5 @@
+using AncinInsaat.Data.Entities;
+
 namespace AncinInsaat.Services;
 
 // Projects whose public Project Detail page (/projects/{slug} and
@@ -29,4 +31,14 @@ public static class ProjectDetailAvailability
 
     public static bool IsDetailPageAvailable(string slug) =>
         !string.IsNullOrWhiteSpace(slug) && !DisabledDetailPageSlugs.Contains(slug);
+
+    // A future project's location, or that of any project whose detail page is
+    // switched off, is not public yet (client request, 2026-11-01). Every
+    // public surface (Projects listing and its filter, detail page, search
+    // index, campaign cards) reads a project's location through this method
+    // instead of Project.Location, so it returns null for those projects.
+    public static string? GetPublicLocation(Project project) =>
+        project.IsFutureProject || !IsDetailPageAvailable(project.Slug) || string.IsNullOrWhiteSpace(project.Location)
+            ? null
+            : project.Location;
 }

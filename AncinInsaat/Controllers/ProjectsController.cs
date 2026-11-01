@@ -161,7 +161,10 @@ public class ProjectsController : Controller
             ["le-jardin"] = "/images/projects/le-jardin/proje-karti/card-background.webp",
             ["la-fiore-karabag"] = "/images/projects/la-fiore-karabag/proje-karti/card-background.webp",
             ["kuyulu-la-via-villalar-birinci-etap"] = "/images/projects/kuyulu-la-via-villalar-birinci-etap/proje-karti/card-background.webp",
-            ["davutlar-d-latis"] = "/images/projects/davutlar-d-latis/proje-karti/dlatis-yeni-proje-karti.webp",
+            // Byte-identical copy of davutlar-d-latis/proje-karti/
+            // dlatis-yeni-proje-karti.webp under a path without the place name
+            // (client request, 2026-11-01 — see CardNameOverridesBySlug).
+            ["davutlar-d-latis"] = "/images/projects/coming-soon/d-latis-card.webp",
             ["tralles-gold"] = "/images/projects/tralles-gold/proje-karti/card-background.webp",
             ["alinda-gold"] = "/images/projects/alinda-gold/proje-karti/card-background.webp",
             ["magnesia-gold"] = "/images/projects/magnesia-gold/proje-karti/card-background.webp",
@@ -169,6 +172,17 @@ public class ProjectsController : Controller
             ["ferhunde-hanim-apt"] = "/images/projects/ferhunde-hanim-apt/proje-karti/card-background.webp",
             ["la-fiore-karabag-2-etap"] = "/images/projects/la-fiore-karabag-2-etap/proje-karti/card-background.webp",
             ["q-latis"] = "/images/projects/q-latis/proje-karti/qlatis-yeni-proje-karti.webp"
+        };
+
+    // Future project cards' accessible name (client request, 2026-11-01) —
+    // both record Names contain a place name ("Davutlar", "Hacıfeyzullah"),
+    // which _ProjectCard.cshtml would otherwise expose through aria-label
+    // while the location is meant to stay undisclosed.
+    private static readonly IReadOnlyDictionary<string, string> CardNameOverridesBySlug =
+        new Dictionary<string, string>
+        {
+            ["davutlar-d-latis"] = "D-Latis",
+            ["q-latis"] = "Q-Latis"
         };
 
     private static readonly IReadOnlyDictionary<string, string> CardLogoImageUrlsBySlug =
@@ -365,7 +379,7 @@ public class ProjectsController : Controller
         var cards = projects.Select(project => new ProjectCardModel
         {
             Slug = project.Slug,
-            Name = project.Name,
+            Name = CardNameOverridesBySlug.GetValueOrDefault(project.Slug, project.Name),
             CoverImageSrc = CardImageOverridesBySlug.TryGetValue(project.Slug, out var cardImageOverride)
                 ? cardImageOverride
                 : ResolveCoverImage(project.CoverImage),
@@ -400,7 +414,10 @@ public class ProjectsController : Controller
             ComingSoonToastMessage = project.IsFutureProject || !ProjectDetailAvailability.IsDetailPageAvailable(project.Slug)
                 ? Localize("Details coming soon...", "Detaylar yakında...")
                 : null,
-            Location = project.Location,
+            // Null for projects whose location isn't public yet, which keeps
+            // it out of the card, its data-project-location attribute and the
+            // location filter options built from these cards below.
+            Location = ProjectDetailAvailability.GetPublicLocation(project),
             ProjectType = LocalizeNullable(
                 project.ProjectType is not null && ProjectTypeLabelsEn.TryGetValue(project.ProjectType, out var typeEn) ? typeEn : project.ProjectType,
                 project.ProjectType),
@@ -586,7 +603,7 @@ public class ProjectsController : Controller
             Information = new ProjectInformationModel
             {
                 Name = project.Name,
-                Location = string.IsNullOrWhiteSpace(project.Location) ? null : project.Location,
+                Location = ProjectDetailAvailability.GetPublicLocation(project),
                 StatusLabel = statusLabel,
                 CompletionDateLabel = project.CompletionDate is { } completionDate ? FormatCompletionDate(completionDate) : null
             },

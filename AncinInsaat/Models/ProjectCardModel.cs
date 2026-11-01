@@ -34,7 +34,9 @@ public class ProjectCardModel
 
     // Rendered on the Standard card face and also read by the Projects
     // listing's Location filter dropdown via a data-project-location
-    // attribute on the card's wrapper.
+    // attribute on the card's wrapper. Null while the location isn't public
+    // (see ProjectDetailAvailability.GetPublicLocation): the attribute is then
+    // omitted and the card matches no specific location filter.
     public string? Location { get; init; }
 
     // Not rendered on the card — read only by the Project Type filter

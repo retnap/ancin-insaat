@@ -1,0 +1,29 @@
+[
+  {
+    "order": 1,
+    "projectSlug": "le-jardin",
+    "name": "Le Jardin",
+    "videoPath": "/images/kampanyalar/le-jardin-kampanya.mp4",
+    "posterPath": "/images/kampanyalar/le-jardin-kampanya-poster.webp",
+    "active": true,
+    "endDate": null
+  },
+  {
+    "order": 2,
+    "projectSlug": "nysa-gold",
+    "name": "Nysa Gold",
+    "videoPath": "/images/kampanyalar/nysa-gold-kampanya.mp4",
+    "posterPath": "/images/kampanyalar/nysa-gold-kampanya-poster.webp",
+    "active": true,
+    "endDate": null
+  },
+  {
+    "order": 3,
+    "projectSlug": "la-fiore-karabag",
+    "name": "La Fiore Karabağ 1. Etap",
+    "videoPath": "/images/kampanyalar/la-fiore-birinci-kampanya.mp4",
+    "posterPath": "/images/kampanyalar/la-fiore-birinci-kampanya-poster.webp",
+    "active": true,
+    "endDate": null
+  }
+]

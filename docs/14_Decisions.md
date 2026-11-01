@@ -849,6 +849,28 @@ schema change.
 
 ---
 
+**2026-11-01**
+
+Decision: Future projects never reveal their location.
+
+A future project's location, or that of any project whose detail page is
+switched off, is not public. `ProjectDetailAvailability.GetPublicLocation`
+is the single source for a project's public location: it returns null for
+those projects, and every public surface (Projects listing and its filter,
+detail page, search index, campaign cards) reads the location through it
+instead of `Project.Location`. New public surfaces must do the same.
+
+Reason: Client request. Locations of projects not yet announced must not
+appear anywhere on the public site, and one shared method keeps a new
+surface from exposing them by accident.
+
+Impact: `ProjectDetailAvailability.cs` gained `GetPublicLocation`;
+`ProjectsController`, `ProjectSearchProvider` and `CampaignsViewComponent`
+call it. The stored `Project.Location` values are unchanged. No database
+schema change.
+
+---
+
 # Current Status
 
 Current project phase:

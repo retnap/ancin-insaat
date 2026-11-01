@@ -52,7 +52,7 @@ public class ProjectSearchProvider : ISearchIndexProvider
                     // as ProjectsController/ProjectsShowcaseViewComponent.
                     Keywords = string.Join(' ', new[]
                     {
-                        project.Location,
+                        ProjectDetailAvailability.GetPublicLocation(project),
                         project.Status == ProjectStatus.Completed
                             ? (isEnglish ? "Completed" : "Tamamlandı")
                             : (isEnglish ? "Ongoing" : "Devam Ediyor"),

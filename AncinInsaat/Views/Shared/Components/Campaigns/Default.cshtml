@@ -1,0 +1,52 @@
+@model CampaignsViewModel
+
+@* Each card is its own Media Viewer group, so a campaign video opens alone
+   (no Prev/Next). data-media-viewer-project-url is what turns on the campaign
+   behaviour in site.js: the "View Project" button and going to that page when
+   the viewer closes. The video is only requested once a card is clicked. *@
+
+<section class="section campaigns" id="campaigns" aria-labelledby="@Model.SectionHeader.HeadingId">
+    <div class="container" data-reveal-group>
+        <div data-reveal>
+            <partial name="_SectionHeader" model="Model.SectionHeader" />
+        </div>
+
+        <ul class="campaigns-list" data-reveal-group>
+            @foreach (var card in Model.Cards)
+            {
+                <li class="campaigns-item" data-reveal>
+                    <button
+                        type="button"
+                        class="campaign-card"
+                        aria-label="@card.PlayLabel"
+                        data-media-viewer-trigger
+                        data-media-viewer-group="campaign-@card.Slug"
+                        data-media-viewer-type="video"
+                        data-media-viewer-video-src="@card.VideoSrc"
+                        data-media-viewer-src="@card.PosterSrc"
+                        data-media-viewer-alt="@card.VideoAlt"
+                        data-media-viewer-autoplay="true"
+                        data-media-viewer-project-url="@card.ProjectUrl">
+                        <span class="campaign-card-media">
+                            <img class="campaign-card-image" src="@card.PosterSrc" alt="" width="720" height="1280" loading="lazy" decoding="async" />
+                            <span class="campaign-card-play" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+                                    <path d="M9 7l9 5-9 5V7z" fill="currentColor" />
+                                </svg>
+                            </span>
+                            <span class="campaign-card-overlay">
+                                <span class="campaign-card-eyebrow">@card.Eyebrow</span>
+                                <span class="campaign-card-name">@card.Name</span>
+                                @if (!string.IsNullOrWhiteSpace(card.Location))
+                                {
+                                    <span class="campaign-card-location">@card.Location</span>
+                                }
+                                <span class="campaign-card-watch">@card.WatchLabel</span>
+                            </span>
+                        </span>
+                    </button>
+                </li>
+            }
+        </ul>
+    </div>
+</section>
