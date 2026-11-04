@@ -43,7 +43,7 @@
                         aria-haspopup="true"
                         aria-expanded="false"
                         aria-controls="nav-dropdown-menu-corporate">
-                    @(isEn ? "Corporate" : "Kurumsal")
+                    @(isEn ? "Company" : "Kurumsal")
                     <span class="nav-chevron" aria-hidden="true"></span>
                 </button>
                 <ul class="nav-dropdown"
@@ -71,7 +71,7 @@
                 <a href="@Href("/projects", "/en/projects")" class="nav-link @(Model.IsProjectsActive ? "nav-link--active" : "")">@(isEn ? "Projects" : "Projeler")</a>
             </li>
             <li>
-                <a href="@Href("/career", "/en/career")" class="nav-link @(Model.IsCareerActive ? "nav-link--active" : "")">@(isEn ? "Career" : "Kariyer")</a>
+                <a href="@Href("/career", "/en/career")" class="nav-link @(Model.IsCareerActive ? "nav-link--active" : "")">@(isEn ? "Careers" : "Kariyer")</a>
             </li>
             <li>
                 <a href="@Href("/contact", "/en/contact")" class="nav-link @(Model.IsContactActive ? "nav-link--active" : "")">@(isEn ? "Contact" : "İletişim")</a>
@@ -84,7 +84,7 @@
         <div class="navbar-lang" role="group" aria-label="@(isEn ? "Language selection" : "Dil seçimi")">
             <a href="@Model.TurkishUrl" class="lang-option @(isEn ? "" : "lang-option--active")" aria-current="@(isEn ? null : "true")" hreflang="tr" lang="tr">TR</a>
             <span class="lang-divider" aria-hidden="true">|</span>
-            <a href="@Model.EnglishUrl" class="lang-option @(isEn ? "lang-option--active" : "")" aria-current="@(isEn ? "true" : null)" hreflang="en" lang="en">ENG</a>
+            <a href="@Model.EnglishUrl" class="lang-option @(isEn ? "lang-option--active" : "")" aria-current="@(isEn ? "true" : null)" hreflang="en" lang="en">EN</a>
         </div>
 
         <button type="button"

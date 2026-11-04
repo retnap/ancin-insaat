@@ -22,7 +22,7 @@
         <partial name="_TimelineHeader" model="@(new TimelineHeaderModel
         {
             DecorativeTitle = isEn ? "LOCATION" : "LOKASYON",
-            Subtitle = isEn ? "At the New Center of Life" : "Hayatın Yeni Merkezinde",
+            Subtitle = isEn ? "At the Centre of Everyday Life" : "Hayatın Yeni Merkezinde",
             HeadingId = "project-location-heading"
         })" />
 
@@ -47,7 +47,7 @@
     <div class="project-location-media" data-reveal="right">
         @if (!string.IsNullOrWhiteSpace(Model.LocationImageUrl))
         {
-            <img src="@Model.LocationImageUrl" alt="@(isEn ? $"{Model.Name} location image" : $"{Model.Name} konum görseli")" loading="lazy" decoding="async" />
+            <img src="@Model.LocationImageUrl" alt="@(isEn ? $"{Model.Name} location map" : $"{Model.Name} konum görseli")" loading="lazy" decoding="async" />
         }
         else
         {

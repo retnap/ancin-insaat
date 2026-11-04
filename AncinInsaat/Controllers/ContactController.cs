@@ -186,7 +186,7 @@ public class ContactController : Controller
                 items.Add(new InformationCardItem
                 {
                     IconMarkup = EmailIconMarkup,
-                    Label = IsEnglish ? "For Job Applications" : "İş Başvuruları İçin",
+                    Label = IsEnglish ? "Job Applications" : "İş Başvuruları İçin",
                     Value = settings.Email,
                     Href = $"mailto:{settings.Email}"
                 });

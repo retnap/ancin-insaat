@@ -83,7 +83,7 @@ public class StaticPageSearchProvider : ISearchIndexProvider
         new()
         {
             Title = "Kariyer",
-            Description = "Açık pozisyonlar ve iş başvuru formu.",
+            Description = "Kariyer fırsatları ve iş başvuru formu.",
             Url = "/career",
             Category = "Sayfa",
             Keywords = "iş ilanları başvuru pozisyon istihdam",
@@ -105,7 +105,7 @@ public class StaticPageSearchProvider : ISearchIndexProvider
         new()
         {
             Title = "Home",
-            Description = "An overview of Ancın İnşaat and our featured projects.",
+            Description = "An introduction to Ancın İnşaat and our featured projects.",
             Url = "/en",
             Category = "Page",
             Keywords = "home landing construction company",
@@ -114,52 +114,52 @@ public class StaticPageSearchProvider : ISearchIndexProvider
         new()
         {
             Title = "About Us",
-            Description = "Our corporate history, story and journey.",
+            Description = "Our history, our story and our journey.",
             Url = "/en/about-us",
-            Category = "Corporate",
+            Category = "Company",
             Keywords = "company history corporate identity about",
             SortOrder = 10
         },
         new()
         {
             Title = "Our Values",
-            Description = "The principles that define us and our approach to quality.",
+            Description = "The principles that define us and our commitment to quality.",
             Url = "/en/values",
-            Category = "Corporate",
+            Category = "Company",
             Keywords = "principles mission vision quality approach",
             SortOrder = 11
         },
         new()
         {
             Title = "Human Resources Policy",
-            Description = "Information about employee development and our corporate culture.",
+            Description = "Our approach to employee development and corporate culture.",
             Url = "/en/hr-policy",
-            Category = "Corporate",
+            Category = "Company",
             Keywords = "hr human resources employee corporate culture policy",
             SortOrder = 12
         },
         new()
         {
-            Title = "KVKK",
+            Title = "Personal Data Protection Notice (KVKK)",
             Description = "Our notice on the protection of personal data.",
             Url = "/en/kvkk",
-            Category = "Corporate",
+            Category = "Company",
             Keywords = "personal data protection privacy notice",
             SortOrder = 13
         },
         new()
         {
             Title = "Social Responsibility",
-            Description = "Our social responsibility projects that give back to the community.",
+            Description = "Our social responsibility projects and contribution to the community.",
             Url = "/en/social-responsibility",
-            Category = "Corporate",
+            Category = "Company",
             Keywords = "social responsibility community youth sport event",
             SortOrder = 14
         },
         new()
         {
             Title = "Projects",
-            Description = "All of our ongoing and completed projects.",
+            Description = "All our ongoing and completed projects.",
             Url = "/en/projects",
             Category = "Projects",
             Keywords = "residence villa office commercial project list",
@@ -167,8 +167,8 @@ public class StaticPageSearchProvider : ISearchIndexProvider
         },
         new()
         {
-            Title = "Career",
-            Description = "Open positions and the job application form.",
+            Title = "Careers",
+            Description = "Career opportunities and the job application form.",
             Url = "/en/career",
             Category = "Page",
             Keywords = "jobs application position employment",
@@ -176,8 +176,8 @@ public class StaticPageSearchProvider : ISearchIndexProvider
         },
         new()
         {
-            Title = "Contact",
-            Description = "Get in touch with us — address, phone and map information.",
+            Title = "Contact Us",
+            Description = "Get in touch: address, phone and map.",
             Url = "/en/contact",
             Category = "Page",
             Keywords = "address phone map contact email",

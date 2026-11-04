@@ -24,7 +24,12 @@ if (!builder.Environment.IsDevelopment())
     builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 }
 
-builder.Services.AddControllersWithViews();
+// DataAnnotations localization (English copy revision, 2026-11-03) — form
+// validation messages stay Turkish in the view models; on /en requests
+// ValidationMessageLocalizer swaps in the English text (see that class).
+builder.Services.AddControllersWithViews()
+    .AddDataAnnotationsLocalization(options =>
+        options.DataAnnotationLocalizerProvider = (_, _) => new ValidationMessageLocalizer());
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 

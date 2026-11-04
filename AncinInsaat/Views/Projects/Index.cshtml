@@ -33,7 +33,7 @@
                    data-project-filter value against each card's
                    data-project-status generically, so no script change was
                    needed for this 4th tab. *@
-                <button type="button" class="project-tab" data-project-filter="future" aria-pressed="false">@(isEn ? "Future Projects" : "Gelecek Projeler")</button>
+                <button type="button" class="project-tab" data-project-filter="future" aria-pressed="false">@(isEn ? "Upcoming Projects" : "Gelecek Projeler")</button>
             </div>
 
             <div class="filter-row">
@@ -48,7 +48,7 @@
     <div class="container">
         @if (Model.Cards.Count == 0)
         {
-            <p class="projects-grid-empty">@(isEn ? "There are no projects to list right now. We will be here soon." : "Şu anda listelenecek bir proje bulunmuyor. Yakında burada olacağız.")</p>
+            <p class="projects-grid-empty">@(isEn ? "There are currently no projects to display. Please check back soon." : "Şu anda listelenecek bir proje bulunmuyor. Yakında burada olacağız.")</p>
         }
         else
         {

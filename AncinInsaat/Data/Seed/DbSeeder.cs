@@ -1,4 +1,5 @@
 using AncinInsaat.Data.Entities;
+using AncinInsaat.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace AncinInsaat.Data.Seed;
@@ -45,10 +46,15 @@ public static class DbSeeder
         await ReconcileSiteSettingsWorkingHoursAsync(context);
         await ReconcileSiteSettingsFacebookAsync(context);
         await SeedProjectsAsync(context);
-        await SeedCareerPositionsAsync(context);
         await ReconcileCareerPositionPlaceholderPrefixAsync(context);
+        await RemovePlaceholderCareerPositionsAsync(context);
         await SeedSeoMetadataAsync(context);
         await ReconcileCompanyNameSpellingAsync(context);
+        await ReconcileTurkishCopyRevisionAsync(context);
+        // English copy revision (2026-11-03) — must stay last: it fills or
+        // revises English columns on rows any step above may have
+        // (re)inserted. Idempotent; see EnglishCopyRevision.
+        await EnglishCopyRevision.ApplyAsync(context);
     }
 
     private static async Task SeedSiteSettingsAsync(AppDbContext context)
@@ -71,7 +77,7 @@ public static class DbSeeder
             Mobile = "0532 232 22 09",
             Email = "info@ancin.com.tr",
             WorkingHours = "Pazartesi - Cuma, 09:00 - 18:00",
-            WorkingHoursEn = "Monday - Friday, 09:00 - 18:00",
+            WorkingHoursEn = "Monday to Friday, 09:00–18:00",
             Facebook = "https://www.facebook.com/ancin.com.tr",
             Instagram = "https://www.instagram.com/ancininsaat",
             LinkedIn = "https://www.linkedin.com/company/ancininsaat",
@@ -209,9 +215,9 @@ public static class DbSeeder
     // (where both fields already match and this is a no-op).
     private static async Task ReconcileSiteSettingsWorkingHoursAsync(AppDbContext context)
     {
-        const string oldWorkingHours = "Monday - Friday, 09:00 - 18:00";
+        const string oldWorkingHours = "Monday to Friday, 09:00–18:00";
         const string correctWorkingHours = "Pazartesi - Cuma, 09:00 - 18:00";
-        const string correctWorkingHoursEn = "Monday - Friday, 09:00 - 18:00";
+        const string correctWorkingHoursEn = "Monday to Friday, 09:00–18:00";
 
         var settings = await context.SiteSettings.FirstOrDefaultAsync();
 
@@ -247,55 +253,61 @@ public static class DbSeeder
     // per-Title (CareerPosition has no slug/unique key) rather than a
     // single blanket "table is empty" check, matching SeedProjectsAsync's
     // per-slug pattern.
-    private static async Task SeedCareerPositionsAsync(AppDbContext context)
+    // Not a seed — deletes the three example positions this seeder used to
+    // insert (Şantiye Şefi, İnşaat Mühendisi, Muhasebe Uzmanı; marked
+    // PLACEHOLDER DATA, never real openings) from any database that still
+    // has them (2026-11-03 client request: the live site lists no
+    // positions). A row is deleted only while every content field still
+    // equals exactly what the seeder (and the English copy revision) wrote,
+    // so a position someone has edited, or a real one, is never touched.
+    // JobApplications are never deleted: their Position is free text, not a
+    // reference to these rows. Runs after
+    // ReconcileCareerPositionPlaceholderPrefixAsync, which first strips the
+    // old "Placeholder position description. " prefix from these rows.
+    private static readonly (string Title, string Department, string Location, string Description, string TitleEn, string DepartmentEn, string DescriptionEn)[] PlaceholderCareerPositions =
     {
-        var existingTitles = new HashSet<string>(await context.CareerPositions.Select(c => c.Title).ToListAsync());
+        ("Şantiye Şefi", "İnşaat", "Aydın, Türkiye",
+            "Devam eden konut projelerimizde saha operasyonlarını yönetecek, iş güvenliği ve kalite standartlarını denetleyecek deneyimli bir Şantiye Şefi arıyoruz.",
+            "Site Manager", "Construction",
+            "We are looking for an experienced Site Manager to run site operations on our ongoing residential projects and oversee health and safety and quality standards."),
+        ("İnşaat Mühendisi", "Teknik Ofis", "Aydın, Türkiye",
+            "Proje uygulama süreçlerinde teknik ofis ekibimize katılacak, metraj ve keşif çalışmalarında görev alacak bir İnşaat Mühendisi arıyoruz.",
+            "Civil Engineer", "Technical Office",
+            "We are looking for a Civil Engineer to join our technical office team on project delivery, working on quantity take-offs and cost estimates."),
+        ("Muhasebe Uzmanı", "Finans", "Aydın, Türkiye",
+            "Şirketimizin finans ve muhasebe süreçlerini yürütecek, detay odaklı bir Muhasebe Uzmanı arıyoruz.",
+            "Accounting Specialist", "Finance",
+            "We are looking for a detail-oriented Accounting Specialist to manage our company's finance and accounting processes.")
+    };
 
-        var now = DateTime.UtcNow;
+    private static async Task RemovePlaceholderCareerPositionsAsync(AppDbContext context)
+    {
+        // Empty, or exactly the English text the copy revision would write.
+        static bool IsSeededEnglish(string? value, string seeded) =>
+            string.IsNullOrEmpty(value) || string.Equals(value, seeded, StringComparison.Ordinal);
 
-        var positions = new List<CareerPosition>
-        {
-            new()
-            {
-                Title = "Şantiye Şefi",
-                Department = "İnşaat",
-                Location = "Aydın, Türkiye",
-                Description = "Devam eden konut projelerimizde saha " +
-                    "operasyonlarını yönetecek, iş güvenliği ve kalite standartlarını denetleyecek deneyimli " +
-                    "bir Şantiye Şefi arıyoruz.",
-                IsPublished = true,
-                CreatedAt = now
-            },
-            new()
-            {
-                Title = "İnşaat Mühendisi",
-                Department = "Teknik Ofis",
-                Location = "Aydın, Türkiye",
-                Description = "Proje uygulama süreçlerinde teknik ofis " +
-                    "ekibimize katılacak, metraj ve keşif çalışmalarında görev alacak bir İnşaat Mühendisi " +
-                    "arıyoruz.",
-                IsPublished = true,
-                CreatedAt = now
-            },
-            new()
-            {
-                Title = "Muhasebe Uzmanı",
-                Department = "Finans",
-                Location = "Aydın, Türkiye",
-                Description = "Şirketimizin finans ve muhasebe " +
-                    "süreçlerini yürütecek, detay odaklı bir Muhasebe Uzmanı arıyoruz.",
-                IsPublished = true,
-                CreatedAt = now
-            }
-        };
+        var titles = PlaceholderCareerPositions.Select(p => p.Title).ToList();
+        var candidates = await context.CareerPositions
+            .Where(c => titles.Contains(c.Title))
+            .ToListAsync();
 
-        var missingPositions = positions.Where(p => !existingTitles.Contains(p.Title)).ToList();
-        if (missingPositions.Count == 0)
+        var placeholders = candidates
+            .Where(c => PlaceholderCareerPositions.Any(p =>
+                c.Title == p.Title &&
+                c.Department == p.Department &&
+                c.Location == p.Location &&
+                c.Description == p.Description &&
+                IsSeededEnglish(c.TitleEn, p.TitleEn) &&
+                IsSeededEnglish(c.DepartmentEn, p.DepartmentEn) &&
+                IsSeededEnglish(c.DescriptionEn, p.DescriptionEn)))
+            .ToList();
+
+        if (placeholders.Count == 0)
         {
             return;
         }
 
-        context.CareerPositions.AddRange(missingPositions);
+        context.CareerPositions.RemoveRange(placeholders);
         await context.SaveChangesAsync();
     }
 
@@ -360,8 +372,8 @@ public static class DbSeeder
                 // SeoService falls back to the Turkish fields above when
                 // null. See LanguageUrlService for how the canonical URL
                 // itself is localized without a second CanonicalUrl column.
-                MetaTitleEn = "Ancın İnşaat | Trusted Residential Projects in Aydın",
-                MetaDescriptionEn = "Ancın İnşaat carries living spaces into the future through residential projects shaped by trust and craftsmanship in Aydın. Explore our ongoing and completed projects.",
+                MetaTitleEn = "Ancın İnşaat | Trusted Residential Developments in Aydın",
+                MetaDescriptionEn = "Ancın İnşaat creates homes for the future in Aydın, shaped by trust and craftsmanship. Explore our ongoing and completed projects.",
                 CanonicalUrl = "/",
                 OpenGraphImage = "/images/seo/og-home.webp"
             },
@@ -375,7 +387,7 @@ public static class DbSeeder
                 MetaTitle = "Projelerimiz | Ancın İnşaat",
                 MetaDescription = "Ancın İnşaat'ın Aydın'da tamamladığı ve devam eden tüm konut projelerini keşfedin.",
                 MetaTitleEn = "Our Projects | Ancın İnşaat",
-                MetaDescriptionEn = "Explore all of Ancın İnşaat's completed and ongoing residential projects in Aydın.",
+                MetaDescriptionEn = "Discover all of Ancın İnşaat's completed and ongoing residential projects in Aydın.",
                 CanonicalUrl = "/projects",
                 OpenGraphImage = "/images/seo/og-home.webp"
             },
@@ -385,8 +397,8 @@ public static class DbSeeder
                 Page = "contact",
                 MetaTitle = "İletişim | Ancın İnşaat",
                 MetaDescription = "Ancın İnşaat ile iletişime geçin. Adres, telefon, e-posta bilgilerimiz ve iletişim formumuz.",
-                MetaTitleEn = "Contact | Ancın İnşaat",
-                MetaDescriptionEn = "Get in touch with Ancın İnşaat — our address, phone, email details and contact form.",
+                MetaTitleEn = "Contact Us | Ancın İnşaat",
+                MetaDescriptionEn = "Get in touch with Ancın İnşaat: our address, phone number, email and contact form.",
                 CanonicalUrl = "/contact",
                 OpenGraphImage = "/images/seo/og-home.webp"
             },
@@ -400,7 +412,7 @@ public static class DbSeeder
                 MetaTitle = "Hakkımızda | Ancın İnşaat",
                 MetaDescription = "Ancın İnşaat'ın 1973'ten bugüne uzanan hikayesini, değerlerini ve Aydın'daki yolculuğunu keşfedin.",
                 MetaTitleEn = "About Us | Ancın İnşaat",
-                MetaDescriptionEn = "Discover Ancın İnşaat's story since 1973, our values and our journey in Aydın.",
+                MetaDescriptionEn = "Discover the story of Ancın İnşaat since 1973, our values and our journey in Aydın.",
                 CanonicalUrl = "/about-us",
                 OpenGraphImage = "/images/seo/og-home.webp"
             },
@@ -426,9 +438,9 @@ public static class DbSeeder
             {
                 Page = "career",
                 MetaTitle = "Kariyer | Ancın İnşaat",
-                MetaDescription = "Ancın İnşaat'ta kariyer fırsatlarını keşfedin, açık pozisyonlarımıza CV'nizle başvurun.",
-                MetaTitleEn = "Career | Ancın İnşaat",
-                MetaDescriptionEn = "Explore career opportunities at Ancın İnşaat and apply to our open positions with your CV.",
+                MetaDescription = "Ancın İnşaat'ta kariyer fırsatlarını keşfedin, CV'nizle başvurun.",
+                MetaTitleEn = "Careers | Ancın İnşaat",
+                MetaDescriptionEn = "Explore career opportunities at Ancın İnşaat and apply with your CV.",
                 CanonicalUrl = "/career",
                 OpenGraphImage = "/images/seo/og-home.webp"
             },
@@ -455,8 +467,8 @@ public static class DbSeeder
                 Page = "kvkk",
                 MetaTitle = "KVKK Aydınlatma Metni | Ancın İnşaat",
                 MetaDescription = "Ancın İnşaat'ın 6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) kapsamında kişisel verilerin işlenmesine ilişkin aydınlatma metni.",
-                MetaTitleEn = "KVKK Privacy Notice | Ancın İnşaat",
-                MetaDescriptionEn = "Ancın İnşaat's notice on the processing of personal data under Turkish Law No. 6698 on the Protection of Personal Data (KVKK).",
+                MetaTitleEn = "Personal Data Protection Notice (KVKK) | Ancın İnşaat",
+                MetaDescriptionEn = "Ancın İnşaat's notice on the processing of personal data under the Turkish Personal Data Protection Law No. 6698 (KVKK).",
                 CanonicalUrl = "/kvkk",
                 OpenGraphImage = "/images/seo/og-home.webp"
             },
@@ -485,7 +497,7 @@ public static class DbSeeder
                 MetaTitle = "Sosyal Sorumluluk | Ancın İnşaat",
                 MetaDescription = "Ancın İnşaat'ın çalışanlara, çevreye ve yerel topluma karşı sorumluluk anlayışını şekillendiren yaklaşımları keşfedin.",
                 MetaTitleEn = "Social Responsibility | Ancın İnşaat",
-                MetaDescriptionEn = "Discover the approach that shapes Ancın İnşaat's sense of responsibility toward its employees, the environment and the local community.",
+                MetaDescriptionEn = "Discover how Ancın İnşaat fulfils its responsibilities towards its employees, the environment and the local community.",
                 CanonicalUrl = "/sosyal-sorumluluk-projelerimiz",
                 OpenGraphImage = "/images/seo/og-home.webp"
             }
@@ -537,6 +549,44 @@ public static class DbSeeder
             if (string.IsNullOrWhiteSpace(row.MetaDescriptionEn) && !string.IsNullOrWhiteSpace(source.MetaDescriptionEn))
             {
                 row.MetaDescriptionEn = source.MetaDescriptionEn;
+                changed = true;
+            }
+        }
+
+        if (changed)
+        {
+            await context.SaveChangesAsync();
+        }
+    }
+
+    // Not a seed — Turkish SEO texts corrected with the 2026-11-03 copy
+    // revision (Nlatis is in İzmir Narlıdere, not Aydın; the Career page
+    // lists no open positions). Same safe rule as EnglishCopyRevision: a
+    // value is replaced only while it still equals the exact previous text,
+    // so a later manual edit is never overwritten. Nlatis's Location is
+    // handled in ReconcileProjectMetadataAsync.
+    private static readonly (string Page, string OldDescription, string Description)[] TurkishSeoDescriptionRevisions =
+    {
+        ("nlatis",
+            "Ancın İnşaat'ın Aydın'daki Nlatis projesini keşfedin. Konum, durum ve proje detayları.",
+            "Ancın İnşaat'ın İzmir Narlıdere'deki Nlatis projesini keşfedin. Konum, durum ve proje detayları."),
+        ("career",
+            "Ancın İnşaat'ta kariyer fırsatlarını keşfedin, açık pozisyonlarımıza CV'nizle başvurun.",
+            "Ancın İnşaat'ta kariyer fırsatlarını keşfedin, CV'nizle başvurun.")
+    };
+
+    private static async Task ReconcileTurkishCopyRevisionAsync(AppDbContext context)
+    {
+        var pages = TurkishSeoDescriptionRevisions.Select(r => r.Page).ToList();
+        var rows = await context.SeoMetadata.Where(s => pages.Contains(s.Page)).ToListAsync();
+
+        var changed = false;
+        foreach (var row in rows)
+        {
+            var revision = TurkishSeoDescriptionRevisions.First(r => r.Page == row.Page);
+            if (string.Equals(row.MetaDescription, revision.OldDescription, StringComparison.Ordinal))
+            {
+                row.MetaDescription = revision.Description;
                 changed = true;
             }
         }
@@ -661,12 +711,17 @@ public static class DbSeeder
         {
             Page = p.Slug,
             MetaTitle = $"{p.Name} | Ancın İnşaat",
-            MetaDescription = $"Ancın İnşaat'ın Aydın'daki {p.Name} projesini keşfedin. Konum, durum ve proje detayları.",
-            // English localization (2026-10-02) — p.Name is never
-            // translated (project names are brand names), only the
-            // surrounding template text.
-            MetaTitleEn = $"{p.Name} | Ancın İnşaat",
-            MetaDescriptionEn = $"Explore Ancın İnşaat's {p.Name} project. Location, status and project details.",
+            // Nlatis is in İzmir Narlıdere, every other project in Aydın
+            // (copy revision, 2026-11-03).
+            MetaDescription = p.Slug == "nlatis"
+                ? $"Ancın İnşaat'ın İzmir Narlıdere'deki {p.Name} projesini keşfedin. Konum, durum ve proje detayları."
+                : $"Ancın İnşaat'ın Aydın'daki {p.Name} projesini keşfedin. Konum, durum ve proje detayları.",
+            // English: only a phase suffix of the name is translated
+            // ("2. Etap" → "Phase 2", see ProjectDisplayText).
+            MetaTitleEn = $"{ProjectDisplayText.Name(p.Name, isEnglish: true)} | Ancın İnşaat",
+            MetaDescriptionEn = p.Slug == "nlatis"
+                ? $"Discover {p.Name} by Ancın İnşaat in Narlıdere, İzmir: location, status and project details."
+                : $"Discover {ProjectDisplayText.Name(p.Name, isEnglish: true)} by Ancın İnşaat in Aydın: location, status and project details.",
             CanonicalUrl = $"/projects/{p.Slug}",
             OpenGraphImage = $"/images/projects/{p.Slug}/cover.webp"
         });
@@ -3258,109 +3313,109 @@ public static class DbSeeder
         // Page 2 — 4+1 / 3+1, Zemin Kat (Kış Bahçeli).
         Add("4+1 Daire | Zemin Kat (Kış Bahçeli)", "4+1 Apartment | Ground Floor (Winter Garden)", "sayfa02-sol-4-1-zemin-kat.jpg", 184.90m, 247.10m, 421.10m,
             ("Salon", "Living Room", 33.90m), ("Mutfak", "Kitchen", 19.70m), ("E.Yatak Odası", "Master Bedroom", 16.10m),
-            ("Giyinme Odası", "Dressing Room", 8.10m), ("E.Banyo", "Master Bathroom", 4.70m), ("Genel Banyo", "Bathroom", 5.20m),
-            ("Çamaşır Odası", "Laundry Room", 4.80m), ("Yatak/Çocuk Odası", "Bedroom/Children's Room", 14.00m),
-            ("Yatak/Çocuk Odası", "Bedroom/Children's Room", 12.70m), ("Yatak/Çocuk Odası", "Bedroom/Children's Room", 12.80m),
-            ("Vestiyer Odası", "Cloakroom", 5.20m), ("Hol", "Hall", 17.70m), ("Teras I", "Terrace I", 24.50m),
+            ("Giyinme Odası", "Walk-in Wardrobe", 8.10m), ("E.Banyo", "En-suite Bathroom", 4.70m), ("Genel Banyo", "Family Bathroom", 5.20m),
+            ("Çamaşır Odası", "Utility Room", 4.80m), ("Yatak/Çocuk Odası", "Bedroom / Children's Room", 14.00m),
+            ("Yatak/Çocuk Odası", "Bedroom / Children's Room", 12.70m), ("Yatak/Çocuk Odası", "Bedroom / Children's Room", 12.80m),
+            ("Vestiyer Odası", "Entrance Wardrobe", 5.20m), ("Hol", "Hallway", 17.70m), ("Teras I", "Terrace I", 24.50m),
             ("Teras II", "Terrace II", 10.30m), ("Kış Bahçesi", "Winter Garden", 30.00m), ("Bahçe", "Garden", 174.00m));
 
         Add("3+1 Daire | Zemin Kat (Kış Bahçeli)", "3+1 Apartment | Ground Floor (Winter Garden)", "sayfa02-sag-3-1-zemin-kat.jpg", 162.20m, 221.60m, 366.60m,
             ("Salon", "Living Room", 33.90m), ("Mutfak", "Kitchen", 19.70m), ("E.Yatak Odası", "Master Bedroom", 18.50m),
-            ("Giyinme Odası", "Dressing Room", 5.00m), ("E.Banyo", "Master Bathroom", 4.20m), ("Genel Banyo", "Bathroom", 5.40m),
-            ("Vestiyer Odası", "Cloakroom", 5.00m), ("Yatak/Çocuk Odası", "Bedroom/Children's Room", 12.70m),
-            ("Yatak/Çocuk Odası", "Bedroom/Children's Room", 14.10m), ("Hol", "Hall", 13.70m), ("Teras I", "Terrace I", 10.60m),
+            ("Giyinme Odası", "Walk-in Wardrobe", 5.00m), ("E.Banyo", "En-suite Bathroom", 4.20m), ("Genel Banyo", "Family Bathroom", 5.40m),
+            ("Vestiyer Odası", "Entrance Wardrobe", 5.00m), ("Yatak/Çocuk Odası", "Bedroom / Children's Room", 12.70m),
+            ("Yatak/Çocuk Odası", "Bedroom / Children's Room", 14.10m), ("Hol", "Hallway", 13.70m), ("Teras I", "Terrace I", 10.60m),
             ("Teras II", "Terrace II", 24.50m), ("Kış Bahçesi", "Winter Garden", 30.00m), ("Bahçe", "Garden", 145.00m));
 
         // Page 3 — two distinct, unlabeled 2+1 Zemin Kat units (see note above).
         Add("2+1 Daire | Zemin Kat (Kış Bahçeli)", "2+1 Apartment | Ground Floor (Winter Garden)", "sayfa03-sol-2-1-zemin-kat.jpg", 120.10m, 152.10m, 193.80m,
             ("Salon", "Living Room", 32.40m), ("Mutfak", "Kitchen", 18.40m), ("E.Yatak Odası", "Master Bedroom", 17.70m),
-            ("Giyinme Odası", "Dressing Room", 4.90m), ("E.Banyo", "Master Bathroom", 4.10m), ("Genel Banyo", "Bathroom", 5.70m),
-            ("Yatak/Çocuk Odası", "Bedroom/Children's Room", 12.60m), ("Hol", "Hall", 6.00m), ("Hol", "Hall", 5.00m),
+            ("Giyinme Odası", "Walk-in Wardrobe", 4.90m), ("E.Banyo", "En-suite Bathroom", 4.10m), ("Genel Banyo", "Family Bathroom", 5.70m),
+            ("Yatak/Çocuk Odası", "Bedroom / Children's Room", 12.60m), ("Hol", "Hallway", 6.00m), ("Hol", "Hallway", 5.00m),
             ("Teras I", "Terrace I", 11.50m), ("Kış Bahçesi", "Winter Garden", 13.30m), ("Bahçe", "Garden", 41.70m));
 
         Add("2+1 Daire | Zemin Kat (Kış Bahçeli)", "2+1 Apartment | Ground Floor (Winter Garden)", "sayfa03-sag-2-1-zemin-kat.jpg", 121.90m, 161.60m, 221.70m,
             ("Salon", "Living Room", 32.50m), ("Mutfak", "Kitchen", 18.40m), ("E.Yatak Odası", "Master Bedroom", 15.30m),
-            ("Giyinme Odası", "Dressing Room", 7.20m), ("E.Banyo", "Master Bathroom", 4.20m), ("Genel Banyo", "Bathroom", 5.80m),
-            ("Yatak/Çocuk Odası", "Bedroom/Children's Room", 14.20m), ("Hol", "Hall", 11.00m), ("Teras I", "Terrace I", 11.50m),
+            ("Giyinme Odası", "Walk-in Wardrobe", 7.20m), ("E.Banyo", "En-suite Bathroom", 4.20m), ("Genel Banyo", "Family Bathroom", 5.80m),
+            ("Yatak/Çocuk Odası", "Bedroom / Children's Room", 14.20m), ("Hol", "Hallway", 11.00m), ("Teras I", "Terrace I", 11.50m),
             ("Kış Bahçesi", "Winter Garden", 13.30m), ("Bahçe", "Garden", 60.10m));
 
         // Page 4 — 1+1 Zemin Kat / 4+1 Kat 1.
         Add("1+1 Daire | Zemin Kat (Kış Bahçeli)", "1+1 Apartment | Ground Floor (Winter Garden)", "sayfa04-sol-1-1-zemin-kat.jpg", 57.40m, 78.70m, 102.70m,
             ("Salon", "Living Room", 12.30m), ("Mutfak", "Kitchen", 9.20m), ("Yatak Odası", "Bedroom", 11.70m),
-            ("Banyo", "Bathroom", 5.00m), ("Hol", "Hall", 8.30m), ("Teras I", "Terrace I", 9.70m),
+            ("Banyo", "Bathroom", 5.00m), ("Hol", "Hallway", 8.30m), ("Teras I", "Terrace I", 9.70m),
             ("Kış Bahçesi", "Winter Garden", 10.90m), ("Bahçe", "Garden", 22.20m));
 
-        Add("4+1 Daire | Kat 1 (Kat 2,3)", "4+1 Apartment | Floor 1 (Floors 2,3)", "sayfa04-sag-4-1-kat1.jpg", 204.00m, 246.30m, null,
+        Add("4+1 Daire | Kat 1 (Kat 2,3)", "4+1 Apartment | Floors 1–3", "sayfa04-sag-4-1-kat1.jpg", 204.00m, 246.30m, null,
             ("Salon", "Living Room", 33.90m), ("Mutfak", "Kitchen", 19.70m), ("E.Yatak Odası", "Master Bedroom", 16.10m),
-            ("Giyinme Odası", "Dressing Room", 8.10m), ("E.Banyo", "Master Bathroom", 4.70m), ("Genel Banyo", "Bathroom", 5.20m),
-            ("Çamaşır Odası", "Laundry Room", 4.80m), ("Yatak/Çocuk Odası", "Bedroom/Children's Room", 14.00m),
-            ("Yatak/Çocuk Odası", "Bedroom/Children's Room", 12.70m), ("Yatak/Çocuk Odası", "Bedroom/Children's Room", 12.80m),
-            ("Vestiyer Odası", "Cloakroom", 5.20m), ("Giriş Holü", "Entrance Hall", 3.50m), ("Hol", "Hall", 14.20m),
+            ("Giyinme Odası", "Walk-in Wardrobe", 8.10m), ("E.Banyo", "En-suite Bathroom", 4.70m), ("Genel Banyo", "Family Bathroom", 5.20m),
+            ("Çamaşır Odası", "Utility Room", 4.80m), ("Yatak/Çocuk Odası", "Bedroom / Children's Room", 14.00m),
+            ("Yatak/Çocuk Odası", "Bedroom / Children's Room", 12.70m), ("Yatak/Çocuk Odası", "Bedroom / Children's Room", 12.80m),
+            ("Vestiyer Odası", "Entrance Wardrobe", 5.20m), ("Giriş Holü", "Entrance Hall", 3.50m), ("Hol", "Hallway", 14.20m),
             ("Balkon", "Balcony", 8.40m), ("Balkon", "Balcony", 40.70m));
 
         // Page 5 — 3+1 Kat 1 / 2+1 Kat 1 (first of two unlabeled units, see note above).
-        Add("3+1 Daire | Kat 1 (Kat 2,3)", "3+1 Apartment | Floor 1 (Floors 2,3)", "sayfa05-sol-3-1-kat1.jpg", 177.80m, 209.40m, null,
+        Add("3+1 Daire | Kat 1 (Kat 2,3)", "3+1 Apartment | Floors 1–3", "sayfa05-sol-3-1-kat1.jpg", 177.80m, 209.40m, null,
             ("Salon", "Living Room", 33.90m), ("Mutfak", "Kitchen", 19.70m), ("E.Yatak Odası", "Master Bedroom", 18.50m),
-            ("Giyinme Odası", "Dressing Room", 5.00m), ("E.Banyo", "Master Bathroom", 4.20m), ("Genel Banyo", "Bathroom", 5.40m),
-            ("Vestiyer Odası", "Cloakroom", 5.00m), ("Yatak/Çocuk Odası", "Bedroom/Children's Room", 12.70m),
-            ("Yatak/Çocuk Odası", "Bedroom/Children's Room", 14.10m), ("Giriş Holü", "Entrance Hall", 3.50m),
-            ("Hol", "Hall", 10.20m), ("Balkon", "Balcony", 5.20m), ("Balkon", "Balcony", 40.70m));
+            ("Giyinme Odası", "Walk-in Wardrobe", 5.00m), ("E.Banyo", "En-suite Bathroom", 4.20m), ("Genel Banyo", "Family Bathroom", 5.40m),
+            ("Vestiyer Odası", "Entrance Wardrobe", 5.00m), ("Yatak/Çocuk Odası", "Bedroom / Children's Room", 12.70m),
+            ("Yatak/Çocuk Odası", "Bedroom / Children's Room", 14.10m), ("Giriş Holü", "Entrance Hall", 3.50m),
+            ("Hol", "Hallway", 10.20m), ("Balkon", "Balcony", 5.20m), ("Balkon", "Balcony", 40.70m));
 
-        Add("2+1 Daire | Kat 1 (Kat 2,3,4,5,6,7)", "2+1 Apartment | Floor 1 (Floors 2,3,4,5,6,7)", "sayfa05-sag-2-1-kat1.jpg", 130.60m, 152.80m, null,
+        Add("2+1 Daire | Kat 1 (Kat 2,3,4,5,6,7)", "2+1 Apartment | Floors 1–7", "sayfa05-sag-2-1-kat1.jpg", 130.60m, 152.80m, null,
             ("Salon", "Living Room", 32.40m), ("Mutfak", "Kitchen", 18.40m), ("E.Yatak Odası", "Master Bedroom", 17.70m),
-            ("Giyinme Odası", "Dressing Room", 4.90m), ("E.Banyo", "Master Bathroom", 4.10m), ("Genel Banyo", "Bathroom", 5.70m),
-            ("Yatak/Çocuk Odası", "Bedroom/Children's Room", 12.60m), ("Giriş Holü", "Entrance Hall", 6.00m),
-            ("Hol", "Hall", 5.00m), ("Balkon", "Balcony", 5.00m), ("Balkon", "Balcony", 18.80m));
+            ("Giyinme Odası", "Walk-in Wardrobe", 4.90m), ("E.Banyo", "En-suite Bathroom", 4.10m), ("Genel Banyo", "Family Bathroom", 5.70m),
+            ("Yatak/Çocuk Odası", "Bedroom / Children's Room", 12.60m), ("Giriş Holü", "Entrance Hall", 6.00m),
+            ("Hol", "Hallway", 5.00m), ("Balkon", "Balcony", 5.00m), ("Balkon", "Balcony", 18.80m));
 
         // Page 6 — 1+1 Kat 1 / 2+1 Kat 1 (second of two unlabeled units, see note above).
-        Add("1+1 Daire | Kat 1 (Kat 2,3,4,5,6,7)", "1+1 Apartment | Floor 1 (Floors 2,3,4,5,6,7)", "sayfa06-sol-1-1-kat1.jpg", 57.70m, 68.20m, null,
+        Add("1+1 Daire | Kat 1 (Kat 2,3,4,5,6,7)", "1+1 Apartment | Floors 1–7", "sayfa06-sol-1-1-kat1.jpg", 57.70m, 68.20m, null,
             ("Salon", "Living Room", 12.30m), ("Mutfak", "Kitchen", 9.20m), ("Yatak Odası", "Bedroom", 11.70m),
             ("Banyo", "Bathroom", 5.00m), ("Giriş Holü", "Entrance Hall", 3.80m), ("Balkon", "Balcony", 9.20m),
-            ("Hol", "Hall", 4.50m));
+            ("Hol", "Hallway", 4.50m));
 
-        Add("2+1 Daire | Kat 1 (Kat 2,3,4,5,6,7)", "2+1 Apartment | Floor 1 (Floors 2,3,4,5,6,7)", "sayfa06-sag-2-1-kat1.jpg", 135.40m, 168.70m, null,
+        Add("2+1 Daire | Kat 1 (Kat 2,3,4,5,6,7)", "2+1 Apartment | Floors 1–7", "sayfa06-sag-2-1-kat1.jpg", 135.40m, 168.70m, null,
             ("Salon", "Living Room", 32.50m), ("Mutfak", "Kitchen", 18.40m), ("E.Yatak Odası", "Master Bedroom", 15.30m),
-            ("Giyinme Odası", "Dressing Room", 7.20m), ("E.Banyo", "Master Bathroom", 4.20m), ("Genel Banyo", "Bathroom", 5.80m),
-            ("Yatak/Çocuk Odası", "Bedroom/Children's Room", 14.20m), ("Giriş Holü", "Entrance Hall", 6.00m),
-            ("Hol", "Hall", 5.00m), ("Balkon", "Balcony", 7.60m), ("Balkon", "Balcony", 19.20m));
+            ("Giyinme Odası", "Walk-in Wardrobe", 7.20m), ("E.Banyo", "En-suite Bathroom", 4.20m), ("Genel Banyo", "Family Bathroom", 5.80m),
+            ("Yatak/Çocuk Odası", "Bedroom / Children's Room", 14.20m), ("Giriş Holü", "Entrance Hall", 6.00m),
+            ("Hol", "Hallway", 5.00m), ("Balkon", "Balcony", 7.60m), ("Balkon", "Balcony", 19.20m));
 
         // Page 7 — 3+1 B Tipi / 2+1 B Tipi, Kat 4 (Kat 5).
-        Add("3+1 B Tipi Daire | Kat 4 (Kat 5)", "3+1 Type B Apartment | Floor 4 (Floor 5)", "sayfa07-sol-3-1-b-tipi-kat4.jpg", 177.00m, 201.10m, null,
+        Add("3+1 B Tipi Daire | Kat 4 (Kat 5)", "3+1 Type B Apartment | Floors 4–5", "sayfa07-sol-3-1-b-tipi-kat4.jpg", 177.00m, 201.10m, null,
             ("Salon", "Living Room", 29.10m), ("Mutfak", "Kitchen", 16.90m), ("E.Yatak Odası", "Master Bedroom", 16.10m),
-            ("Giyinme Odası", "Dressing Room", 8.10m), ("E.Banyo", "Master Bathroom", 4.70m), ("Genel Banyo", "Bathroom", 5.60m),
-            ("Vestiyer Odası", "Cloakroom", 4.40m), ("Yatak/Çocuk Odası", "Bedroom/Children's Room", 12.70m),
-            ("Yatak/Çocuk Odası", "Bedroom/Children's Room", 13.00m), ("Hol", "Hall", 13.40m), ("Balkon", "Balcony", 8.80m),
+            ("Giyinme Odası", "Walk-in Wardrobe", 8.10m), ("E.Banyo", "En-suite Bathroom", 4.70m), ("Genel Banyo", "Family Bathroom", 5.60m),
+            ("Vestiyer Odası", "Entrance Wardrobe", 4.40m), ("Yatak/Çocuk Odası", "Bedroom / Children's Room", 12.70m),
+            ("Yatak/Çocuk Odası", "Bedroom / Children's Room", 13.00m), ("Hol", "Hallway", 13.40m), ("Balkon", "Balcony", 8.80m),
             ("Balkon", "Balcony", 44.20m));
 
-        Add("2+1 B Tipi Daire | Kat 4 (Kat 5)", "2+1 Type B Apartment | Floor 4 (Floor 5)", "sayfa07-sag-2-1-b-tipi-kat4.jpg", 152.10m, 170.70m, null,
+        Add("2+1 B Tipi Daire | Kat 4 (Kat 5)", "2+1 Type B Apartment | Floors 4–5", "sayfa07-sag-2-1-b-tipi-kat4.jpg", 152.10m, 170.70m, null,
             ("Salon", "Living Room", 29.10m), ("Mutfak", "Kitchen", 16.90m), ("E.Yatak Odası", "Master Bedroom", 16.80m),
-            ("Giyinme Odası", "Dressing Room", 4.30m), ("E.Banyo", "Master Bathroom", 4.30m), ("Genel Banyo", "Bathroom", 5.10m),
-            ("Yatak/Çocuk Odası", "Bedroom/Children's Room", 12.70m), ("Hol", "Hall", 13.40m), ("Balkon", "Balcony", 5.30m),
+            ("Giyinme Odası", "Walk-in Wardrobe", 4.30m), ("E.Banyo", "En-suite Bathroom", 4.30m), ("Genel Banyo", "Family Bathroom", 5.10m),
+            ("Yatak/Çocuk Odası", "Bedroom / Children's Room", 12.70m), ("Hol", "Hallway", 13.40m), ("Balkon", "Balcony", 5.30m),
             ("Balkon", "Balcony", 44.20m));
 
         // Page 8 — 2+1 C Tipi, Kat 6 / 2+1 D Tipi, Kat 7.
         Add("2+1 C Tipi Daire | Kat 6", "2+1 Type C Apartment | Floor 6", "sayfa08-sol-2-1-c-tipi-kat6.jpg", 150.00m, 171.50m, null,
             ("Salon", "Living Room", 26.90m), ("Mutfak", "Kitchen", 17.70m), ("E.Yatak Odası", "Master Bedroom", 16.10m),
-            ("Giyinme Odası", "Dressing Room", 8.10m), ("E.Banyo", "Master Bathroom", 4.70m), ("Genel Banyo", "Bathroom", 5.20m),
-            ("Yatak/Çocuk Odası", "Bedroom/Children's Room", 12.80m), ("Çamaşır Odası", "Laundry Room", 4.50m),
-            ("Hol", "Hall", 15.00m), ("Balkon", "Balcony", 9.00m), ("Balkon", "Balcony", 30.00m));
+            ("Giyinme Odası", "Walk-in Wardrobe", 8.10m), ("E.Banyo", "En-suite Bathroom", 4.70m), ("Genel Banyo", "Family Bathroom", 5.20m),
+            ("Yatak/Çocuk Odası", "Bedroom / Children's Room", 12.80m), ("Çamaşır Odası", "Utility Room", 4.50m),
+            ("Hol", "Hallway", 15.00m), ("Balkon", "Balcony", 9.00m), ("Balkon", "Balcony", 30.00m));
 
         Add("2+1 D Tipi Daire | Kat 7", "2+1 Type D Apartment | Floor 7", "sayfa08-sag-2-1-d-tipi-kat7.jpg", 134.00m, 152.60m, null,
             ("Salon", "Living Room", 24.60m), ("Mutfak", "Kitchen", 12.70m), ("E.Yatak Odası", "Master Bedroom", 15.30m),
-            ("Giyinme Odası", "Dressing Room", 4.20m), ("E.Banyo", "Master Bathroom", 5.50m), ("Genel Banyo", "Bathroom", 5.20m),
-            ("Yatak/Çocuk Odası", "Bedroom/Children's Room", 12.90m), ("Hol", "Hall", 10.00m), ("Balkon", "Balcony", 8.00m),
+            ("Giyinme Odası", "Walk-in Wardrobe", 4.20m), ("E.Banyo", "En-suite Bathroom", 5.50m), ("Genel Banyo", "Family Bathroom", 5.20m),
+            ("Yatak/Çocuk Odası", "Bedroom / Children's Room", 12.90m), ("Hol", "Hallway", 10.00m), ("Balkon", "Balcony", 8.00m),
             ("Balkon", "Balcony", 35.60m));
 
         // Page 9 — 2+1 E Tipi, Kat 6 / 1+1 B Tipi, Kat 7.
         Add("2+1 E Tipi Daire | Kat 6", "2+1 Type E Apartment | Floor 6", "sayfa09-sol-2-1-e-tipi-kat6.jpg", 123.30m, 139.00m, null,
             ("Salon + Mutfak", "Living Room + Kitchen", 26.70m), ("E.Yatak Odası", "Master Bedroom", 16.80m),
-            ("Yatak/Çocuk Odası", "Bedroom/Children's Room", 18.20m), ("E.Banyo", "Master Bathroom", 4.70m),
-            ("Genel Banyo", "Bathroom", 5.00m), ("Çamaşır Odası", "Laundry Room", 5.30m), ("Hol", "Hall", 11.30m),
+            ("Yatak/Çocuk Odası", "Bedroom / Children's Room", 18.20m), ("E.Banyo", "En-suite Bathroom", 4.70m),
+            ("Genel Banyo", "Family Bathroom", 5.00m), ("Çamaşır Odası", "Utility Room", 5.30m), ("Hol", "Hallway", 11.30m),
             ("Balkon", "Balcony", 5.30m), ("Balkon", "Balcony", 30.00m));
 
         Add("1+1 B Tipi Daire | Kat 7", "1+1 Type B Apartment | Floor 7", "sayfa09-sag-1-1-b-tipi-kat7.jpg", 99.30m, 110.00m, null,
-            ("Salon + Mutfak", "Living Room + Kitchen", 27.10m), ("Yatak/Çocuk Odası", "Bedroom/Children's Room", 14.90m),
-            ("Genel Banyo", "Bathroom", 5.60m), ("Hol", "Hall", 10.80m), ("Balkon", "Balcony", 5.30m),
+            ("Salon + Mutfak", "Living Room + Kitchen", 27.10m), ("Yatak/Çocuk Odası", "Bedroom / Children's Room", 14.90m),
+            ("Genel Banyo", "Family Bathroom", 5.60m), ("Hol", "Hallway", 10.80m), ("Balkon", "Balcony", 5.30m),
             ("Balkon", "Balcony", 35.60m));
 
         return floorPlans;
@@ -3390,7 +3445,7 @@ public static class DbSeeder
                 Description = "Zarif cepheleri, geniş balkonları ve özenle tasarlanmış sosyal alanlarıyla Nysa Gold Residence, modern mimariyi konforlu bir yaşam deneyimiyle buluşturuyor.",
                 EyebrowEn = "A New Generation of Living",
                 TitleEn = "The Architectural Vision of Nysa Gold Residence",
-                DescriptionEn = "With its elegant façades, wide balconies and thoughtfully designed social areas, Nysa Gold Residence brings modern architecture together with a comfortable living experience.",
+                DescriptionEn = "With elegant façades, generous balconies and thoughtfully designed social facilities, Nysa Gold Residence brings modern architecture together with comfortable living.",
                 DisplayOrder = 1
             }
         };
@@ -3406,9 +3461,9 @@ public static class DbSeeder
                 Eyebrow = "Yukarıdan Bir Bakış",
                 Title = "Peyzajla Bütünleşen Yerleşim",
                 Description = "Havuzu, yeşil alanları ve düzenli site içi dolaşım aksıyla Nysa Gold Residence, kuşbakışı görünümünde bile dengeli ve ferah bir yerleşim planı sunuyor.",
-                EyebrowEn = "A View From Above",
-                TitleEn = "A Layout Integrated with the Landscape",
-                DescriptionEn = "With its pool, green spaces and orderly internal circulation routes, Nysa Gold Residence offers a balanced, open site plan even from a bird's-eye view.",
+                EyebrowEn = "A View from Above",
+                TitleEn = "A Layout in Harmony with the Landscape",
+                DescriptionEn = "With its pool, green spaces and well-organised circulation routes, Nysa Gold Residence presents a balanced, spacious site plan, even when seen from above.",
                 DisplayOrder = 2
             },
             new()
@@ -3417,9 +3472,9 @@ public static class DbSeeder
                 Eyebrow = "Aile Odaklı Yaşam",
                 Title = "Yeşilin İçinde Sosyal Alanlar",
                 Description = "Çocuk oyun alanı ve geniş çim yüzeyleriyle donatılan iç bahçe, Nysa Gold Residence sakinlerine güvenli ve keyifli bir sosyal yaşam alanı sunuyor.",
-                EyebrowEn = "Family-Focused Living",
-                TitleEn = "Social Spaces Within the Greenery",
-                DescriptionEn = "Fitted with a children's playground and expansive lawns, the inner garden offers Nysa Gold Residence's residents a safe and enjoyable social living space.",
+                EyebrowEn = "Family-Centred Living",
+                TitleEn = "Social Spaces Amid the Greenery",
+                DescriptionEn = "With a children's playground and expansive lawns, the inner garden gives residents of Nysa Gold Residence a safe, enjoyable space to socialise.",
                 DisplayOrder = 3
             },
             new()
@@ -3428,9 +3483,9 @@ public static class DbSeeder
                 Eyebrow = "Günbatımı Keyfi",
                 Title = "Havuz Başında Huzurlu Anlar",
                 Description = "Palmiye ağaçları ve şezlonglarıyla çevrelenen havuz alanı, gün batımının sıcak tonlarında Nysa Gold Residence'a otel konforunda bir dinlenme deneyimi katıyor.",
-                EyebrowEn = "Sunset Pleasure",
+                EyebrowEn = "Enjoy the Sunset",
                 TitleEn = "Peaceful Moments by the Pool",
-                DescriptionEn = "Surrounded by palm trees and sun loungers, the pool area adds a hotel-level relaxation experience to Nysa Gold Residence in the warm tones of sunset.",
+                DescriptionEn = "Framed by palm trees and sun loungers, the pool area brings hotel-style relaxation to Nysa Gold Residence in the warm tones of sunset.",
                 DisplayOrder = 4
             },
             new()
@@ -3439,9 +3494,9 @@ public static class DbSeeder
                 Eyebrow = "Geceye Özel Atmosfer",
                 Title = "Işıklarla Aydınlanan Bir Yaşam Alanı",
                 Description = "Peyzaj aydınlatması ve havuz çevresindeki ışık tasarımıyla Nysa Gold Residence, gece saatlerinde de davetkâr ve güvenli bir yaşam atmosferi sunuyor.",
-                EyebrowEn = "An Atmosphere for the Night",
-                TitleEn = "A Living Space Lit Up After Dark",
-                DescriptionEn = "With landscape lighting and a carefully designed pool-area lighting scheme, Nysa Gold Residence offers an inviting, secure atmosphere after dark as well.",
+                EyebrowEn = "Evening Ambience",
+                TitleEn = "A Living Space Illuminated at Night",
+                DescriptionEn = "With landscape lighting and a carefully designed lighting scheme around the pool, Nysa Gold Residence offers an inviting, secure atmosphere after dark.",
                 DisplayOrder = 5
             }
         };
@@ -3462,7 +3517,7 @@ public static class DbSeeder
         {
             new() { ImagePath = "/images/projects/nysa-gold/site-plan-1.webp", AltText = "Nysa Gold Residence vaziyet planı", AltTextEn = "Nysa Gold Residence site plan", DisplayOrder = 1 },
             new() { ImagePath = "/images/projects/nysa-gold/site-plan-2.webp", AltText = "Nysa Gold Residence arsa ve yerleşim görünümü", AltTextEn = "Nysa Gold Residence plot and layout view", DisplayOrder = 2 },
-            new() { ImagePath = "/images/projects/nysa-gold/site-plan-3.webp", AltText = "Nysa Gold Residence çevresel konum görünümü", AltTextEn = "Nysa Gold Residence surrounding location view", DisplayOrder = 3 }
+            new() { ImagePath = "/images/projects/nysa-gold/site-plan-3.webp", AltText = "Nysa Gold Residence çevresel konum görünümü", AltTextEn = "Nysa Gold Residence location context view", DisplayOrder = 3 }
         };
     }
 
@@ -3746,7 +3801,7 @@ public static class DbSeeder
 
         if (string.IsNullOrWhiteSpace(project.AmenitiesEn))
         {
-            project.AmenitiesEn = "Swimming Pool\nBasketball Court\nChildren's Playground\nLandscaped Gardens\nParking\nAydın's First Pet Park";
+            project.AmenitiesEn = "Swimming Pool\nBasketball Court\nChildren's Playground\nLandscaped Gardens\nCar Park\nAydın's First Pet Park";
             changed = true;
         }
 
@@ -4504,7 +4559,7 @@ public static class DbSeeder
                 // not invented. "Aydın'ın İlk Pet Parkı" appended verbatim per
                 // client request (2026-08-20).
                 Amenities = "Yüzme Havuzu\nBasketbol Sahası\nÇocuk Oyun Alanı\nPeyzaj Bahçeleri\nOtopark\nAydın'ın İlk Pet Parkı",
-                AmenitiesEn = "Swimming Pool\nBasketball Court\nChildren's Playground\nLandscaped Gardens\nParking\nAydın's First Pet Park",
+                AmenitiesEn = "Swimming Pool\nBasketball Court\nChildren's Playground\nLandscaped Gardens\nCar Park\nAydın's First Pet Park",
                 DisplayOrder = 1,
                 IsFeatured = true,
                 IsPublished = true,
@@ -4702,7 +4757,7 @@ public static class DbSeeder
                 ShortDescription = "Kıvrımlı ahşap tonlu çatı hattı ve cam kaplı cephesiyle özgün bir mimari kimliğe sahip, İzmir'de tamamlanmış rezidans projesi.",
                 Description = "İzmir'de tamamlanan Nlatis, kıvrımlı ahşap tonlu çatı hattı ve cam kaplı cephesiyle özgün bir mimari kimlik taşıyor. Koyu renkli cephe panelleri ve dikey ahşap vurgularının oluşturduğu katmanlı ritim, cam balkonlarla desteklenerek modern ve sade bir görünüm sunuyor. Zemin kattaki sosyal kullanım alanları, binayı çevresiyle buluşturan canlı bir karşılama noktası oluşturuyor.",
                 Status = ProjectStatus.Completed,
-                Location = "İzmir",
+                Location = "İzmir / Narlıdere",
                 ProjectType = "Residence",
                 CompletionDate = null,
                 CoverImage = "/images/projects/nlatis/cover.webp",
@@ -5340,6 +5395,11 @@ public static class DbSeeder
     // update). Only these three fields are touched; every other column is
     // left exactly as already seeded. Safe to run every startup: a no-op
     // once each field already matches.
+    private static readonly IReadOnlyDictionary<string, string> PreviousConfirmedLocations = new Dictionary<string, string>
+    {
+        ["nlatis"] = "İzmir"
+    };
+
     private static async Task ReconcileProjectMetadataAsync(AppDbContext context)
     {
         var confirmedMetadata = new Dictionary<string, (string Location, ProjectStatus Status, string ProjectType)>
@@ -5347,7 +5407,7 @@ public static class DbSeeder
             ["nysa-gold"] = ("Aydın Efeler", ProjectStatus.Ongoing, "Residence"),
             ["le-jardin"] = ("Aydın Efeler", ProjectStatus.Ongoing, "Villa"),
             ["tralles-gold"] = ("Aydın Efeler", ProjectStatus.Completed, "Residence"),
-            ["nlatis"] = ("İzmir", ProjectStatus.Completed, "Residence"),
+            ["nlatis"] = ("İzmir / Narlıdere", ProjectStatus.Completed, "Residence"),
             ["alinda-gold"] = ("Aydın Efeler", ProjectStatus.Completed, "Residence"),
             ["magnesia-gold"] = ("Aydın Efeler", ProjectStatus.Completed, "Residence"),
             ["la-fiore-karabag"] = ("Aydın İncirliova", ProjectStatus.Completed, "Villa"),
@@ -5367,7 +5427,13 @@ public static class DbSeeder
         {
             var (location, status, projectType) = confirmedMetadata[project.Slug];
 
-            if (project.Location != location)
+            // A location corrected later (copy revision, 2026-11-03) is only
+            // replaced while it still equals its exact previous value, so a
+            // manual edit made since then is kept.
+            var locationMayChange = !PreviousConfirmedLocations.TryGetValue(project.Slug, out var previousLocation) ||
+                project.Location == previousLocation;
+
+            if (project.Location != location && locationMayChange)
             {
                 project.Location = location;
                 changed = true;
@@ -5427,16 +5493,16 @@ public static class DbSeeder
         // never held a placeholder — it is simply unset until now).
         var shortDescriptionUpdatesEn = new Dictionary<string, string>
         {
-            ["nysa-gold"] = "A modern residence offering a privileged life in Aydın Efeler, with elegant façades, a swimming pool and thoughtfully designed social areas.",
-            ["tralles-gold"] = "A completed residence with a strong architectural identity, standing out in Aydın Efeler's skyline with its white façades and vertical red accents.",
-            ["nlatis"] = "A completed residential project in İzmir with a distinctive architectural identity, featuring a curved, timber-toned roofline and a glass-clad façade.",
-            ["alinda-gold"] = "A completed modern residence that brings a new character to Aydın Efeler's skyline with its flowing lines and elegant roofline lighting.",
-            ["magnesia-gold"] = "A completed residence in Aydın Efeler that puts togetherness first, with extensive landscaped grounds and thoughtfully designed shared living spaces.",
-            ["la-fiore-karabag"] = "A completed project offering a calm, private life in Aydın İncirliova, with single-story villas carefully set within a lush pine forest.",
-            ["la-fiore-karabag-2-etap"] = "A distinguished development rising in Aydın İncirliova, set among centuries-old olive trees with a villa layout fully integrated into nature.",
-            ["kuyulu-la-via-villalar-birinci-etap"] = "An exclusive living environment that brings independent villa architecture — each with its own garden and garage — together with Kuyulu's tranquil character.",
-            ["ferhunde-hanim-apt"] = "A completed apartment project that stands out in Aydın Efeler for its softly curved balconies and carefully chosen façade texture.",
-            ["kuyulu-avm"] = "A commercial development rising in Aydın Efeler that turns shopping into a lifestyle experience, with shaded terraces and thoughtfully designed landscaping."
+            ["nysa-gold"] = "A modern residence in Aydın Efeler with elegant façades, a swimming pool and thoughtfully designed social facilities.",
+            ["tralles-gold"] = "A completed residence in Aydın Efeler with a strong architectural identity, distinguished on the skyline by its white façades and vertical red accents.",
+            ["nlatis"] = "A completed residential project in İzmir with a distinctive architectural identity, defined by a curved, timber-toned roofline and a glazed façade.",
+            ["alinda-gold"] = "A completed modern residence that adds a new character to the Aydın Efeler skyline with its flowing lines and elegant roof lighting.",
+            ["magnesia-gold"] = "A completed residence in Aydın Efeler that brings people together, with extensive landscaping and thoughtfully designed shared spaces.",
+            ["la-fiore-karabag"] = "A completed development in Aydın İncirliova offering a calm, private lifestyle, with single-storey villas carefully set within a lush pine forest.",
+            ["la-fiore-karabag-2-etap"] = "An exclusive development in Aydın İncirliova, with villas set among centuries-old olive trees in harmony with nature.",
+            ["kuyulu-la-via-villalar-birinci-etap"] = "An exclusive development combining detached villa architecture, each villa with its own garden and garage, with the tranquil character of Kuyulu.",
+            ["ferhunde-hanim-apt"] = "A completed apartment building in Aydın Efeler, distinguished by softly curved balconies and a carefully chosen façade finish.",
+            ["kuyulu-avm"] = "A commercial development in Aydın Efeler that turns shopping into a lifestyle experience, with shaded terraces and thoughtfully designed landscaping."
         };
 
         const string oldDescription = "Placeholder full description. Replace with approved project copy before launch.";
@@ -5463,19 +5529,19 @@ public static class DbSeeder
         // column is still null.
         var descriptionUpdatesEn = new Dictionary<string, string>
         {
-            ["nysa-gold"] = "Rising in the developing district of Aydın Efeler, Nysa Gold Residence brings modern architecture together with a comfortable, secure way of life. With its swimming pool, basketball court, children's playground and landscaped gardens, the project offers social spaces residents of every age can enjoy at any hour of the day. Every apartment is designed with wide balconies and bright interiors that carry natural light deep inside.",
-            ["le-jardin"] = "Bringing the warm character of the Mediterranean together with modern architecture, Le Jardin welcomes its residents with an inviting atmosphere through its bougainvillea-wrapped entrance and light-toned stone-clad façade. With its private pool, shaded terrace and spacious garden, the project unites the comfort of indoor living with the calm of the outdoors. Located in Aydın Efeler, Le Jardin offers an exclusive villa experience for enjoying both everyday life and hosting your guests.",
-            ["tralles-gold"] = "Rising within the fabric of Aydın Efeler, Tralles Gold Residence carries a strong architectural identity that sets it apart from its surroundings at a glance, with white façades and vertical red accents. Lit up in the evening hours, the project takes on a distinctive character in the city's night silhouette, bringing together the simplicity of day with the vibrancy of night. Now complete, the project is offered to its residents as a lasting living space that reflects Ancın İnşaat's commitment to craftsmanship.",
-            ["nlatis"] = "Completed in İzmir, N-Latis carries a distinctive architectural identity with its curved, timber-toned roofline and glass-clad façade. The layered rhythm created by dark façade panels and vertical timber accents, supported by glass balconies, offers a modern, understated look. The ground-floor social amenity areas form a lively welcome point that connects the building with its surroundings.",
-            ["alinda-gold"] = "Rising on the Aydın Efeler skyline, Alinda Gold Residence brings a new character to the city's silhouette with its flowing lines and elegant roofline lighting. The pool, walking paths and landscaped areas thoughtfully placed between the blocks give residents the chance to start the day outdoors and end it in calm. With its careful lighting design and open composition, the project's entrance makes Ancın İnşaat's premium approach felt from the very first moment.",
-            ["magnesia-gold"] = "Rising side by side on Aydın's skyline, the Magnesia Gold Residence blocks put togetherness first, with extensive landscaped grounds and thoughtfully designed shared living spaces. Palm-lined walking paths, pools and wide lawns offer a peaceful break at any hour of the day, while the pool surrounds — highlighted by careful lighting in the evening — become an inviting gathering point for residents who want to socialize. Now complete, the project places the harmony of greenery and architecture at the center of everyday life.",
-            ["la-fiore-karabag"] = "Carefully set within a lush pine forest in Aydın İncirliova, La Fiore Karabağ offers a living environment that prioritizes calm and privacy through its single-story villas. Uninterrupted walking paths and landscaping throughout the development promise a daily life immersed in nature, while the pergola-covered seating areas and fireplaces in each villa's garden bring the indoors and the garden together as one. Notable for its stone-clad façade and timber detailing, the project's entrance secures residents' peace of mind with a guarded entry point.",
-            ["la-fiore-karabag-2-etap"] = "Set among centuries-old olive trees in Aydın Karabağ, La Fiore Karabağ 2. Etap comes to life with a site plan that preserves the land's natural slope and character. Woven together with wide walking paths, landscaped squares and shared social areas, the project invites its residents into a life together rather than simply a collection of buildings. With its stone walls, elegant lighting and villas surrounded by olive trees, La Fiore Karabağ 2. Etap brings together a peaceful way of life and a strong investment opportunity backed by Karabağ's rising value.",
-            ["kuyulu-la-via-villalar-birinci-etap"] = "La Via Villalar 1. Etap brings independent villa architecture — each with its own garden and garage — together with Kuyulu's tranquil character. Timber-textured façades, elegant lighting and modern lines redefine Ancın İnşaat's commitment to quality in every villa. Designed with its own roof terrace, private pool and landscaped garden for every villa, the project brings social life into your family's own privacy, combining a peaceful way of life with a strong investment opportunity backed by Kuyulu's rising value.",
-            ["davutlar-d-latis"] = "Set amid Kuşadası's thousands of years of history and natural beauty, Davutlar D Latis brings the region's thermal water sources together with a modern architectural living experience. Complete with its spa, fitness and social amenities, the project offers both everyday comfort and a long-term investment opportunity in one of the Aegean's most sought-after tourism destinations. Brought to life under the Ancın İnşaat guarantee, the project aims to be an exclusive address that brings a peaceful life together with thermal healing.",
-            ["ferhunde-hanim-apt"] = "Ferhunde Hanım Apt. presents an architectural identity that stands out in Aydın Efeler with its softly curved balconies and carefully chosen façade texture. With large windows and spacious balconies, every floor carries natural light inside, while the private garden area enclosed by tall hedges gives residents a safe, peaceful outdoor life away from the noise of the city. Complete with its perimeter walls and landscaped front garden, the project offers an investment opportunity that makes everyday life easier while holding its value.",
-            ["kuyulu-avm"] = "Rising at the edge of a wide olive grove in Aydın Efeler, La Via Shopping Center turns shopping into a lifestyle experience rather than simply a daily errand. With its shaded terraces, wide walkways and thoughtfully designed landscaping, the project reinterprets Ancın İnşaat's signature quality approach at a commercial scale. Natural stone cladding, timber-lamella textures and lighting that traces a soft line through the night give the façade a lasting, elegant character.",
-            ["q-latis"] = "Set amid Kuşadası's unique natural surroundings, Hacıfeyzullah - Q-Latis offers a contemporary architectural language that respects the character of the region, with timber-textured façades and wide glazing. The Aegean Sea view from the upper-floor apartments' wide balconies makes every day feel special, while social amenities such as an open terrace, fitness room and an aero-yoga/pilates studio support an active lifestyle. With its hillside position surrounded by olive groves, the project was designed with a site plan that preserves Kuşadası's natural character."
+            ["nysa-gold"] = "Set in a growing part of Aydın Efeler, Nysa Gold Residence combines modern architecture with a comfortable, secure way of life. With a swimming pool, basketball court, children's playground and landscaped gardens, the development offers residents of all ages social spaces to enjoy at any time of day. Every apartment has been designed with generous balconies and bright, spacious interiors that draw in natural light.",
+            ["le-jardin"] = "Bringing the warmth of the Mediterranean together with modern architecture, Le Jardin welcomes residents with a bougainvillea-framed entrance and a light stone-clad façade. With a private pool, shaded terrace and spacious garden, it combines the comfort of indoor living with the calm of the outdoors. Located in Aydın Efeler, Le Jardin offers an exclusive villa lifestyle, ideal for everyday living and for entertaining guests.",
+            ["tralles-gold"] = "Rising within the urban fabric of Aydın Efeler, Tralles Gold Residence has a strong architectural identity, instantly recognisable by its white façades and vertical red accents. Illuminated in the evening, the façade gives the development a distinctive presence on the city's night skyline, pairing daytime simplicity with night-time vibrancy. Now complete, Tralles Gold Residence offers residents an enduring home that reflects Ancın İnşaat's commitment to craftsmanship.",
+            ["nlatis"] = "Completed in İzmir, Nlatis has a distinctive architectural identity, defined by its curved, timber-toned roofline and glazed façade. The layered rhythm of dark façade panels and vertical timber accents, complemented by glass balconies, creates a modern, understated look. Social spaces on the ground floor form a lively welcome point that connects the building with its surroundings.",
+            ["alinda-gold"] = "Rising on the Aydın Efeler skyline, Alinda Gold Residence adds a new character to the city with its flowing lines and elegant roof lighting. The pool, walking paths and landscaped areas set between the blocks allow residents to start the day outdoors and end it in tranquillity. With its carefully designed lighting and open composition, the entrance conveys Ancın İnşaat's premium approach from the very first moment.",
+            ["magnesia-gold"] = "Rising side by side on the Aydın skyline, the blocks of Magnesia Gold Residence are designed to bring people together, with extensive landscaping and thoughtfully designed shared spaces. Palm-lined walking paths, pools and wide lawns offer a peaceful retreat at any time of day, while the beautifully lit pool area becomes an inviting meeting place for residents in the evening. Now complete, the development places the harmony of greenery and architecture at the centre of everyday life.",
+            ["la-fiore-karabag"] = "Carefully set within a lush pine forest in Aydın İncirliova, La Fiore Karabağ offers a calm, private setting with single-storey villas. Continuous walking paths and landscaping throughout the development bring nature into everyday life, while pergola-covered seating areas and fireplaces in the villa gardens connect indoor and outdoor living. Featuring a stone-clad façade and timber details, the entrance includes a security point that ensures residents' peace of mind.",
+            ["la-fiore-karabag-2-etap"] = "Set among centuries-old olive trees in Aydın Karabağ, La Fiore Karabağ 2. Etap follows a site plan that preserves the natural slope and character of the land. Linked by wide walking paths, landscaped squares and shared social spaces, the development invites residents to enjoy a sense of community rather than simply a collection of buildings. With stone walls, elegant lighting and villas surrounded by olive trees, La Fiore Karabağ 2. Etap combines a peaceful way of life with a strong investment opportunity, backed by Karabağ's rising value.",
+            ["kuyulu-la-via-villalar-birinci-etap"] = "La Via Villalar 1. Etap combines detached villa architecture, each villa with its own garden and garage, with the tranquil character of Kuyulu. Timber-textured façades, elegant lighting and clean, modern lines express Ancın İnşaat's commitment to quality in every villa. Designed with a private roof terrace, private pool and landscaped garden for each villa, the development brings social life into the privacy of your own home, combining a peaceful way of life with a strong investment opportunity, backed by Kuyulu's rising value.",
+            ["davutlar-d-latis"] = "Set amid the history and natural beauty of Kuşadası, a region with thousands of years of heritage, Davutlar D Latis brings the area's thermal springs together with a modern architectural living experience. Complete with spa, fitness and social facilities, the development offers both everyday comfort and a long-term investment opportunity in one of the Aegean's most popular tourist destinations. Delivered with the assurance of Ancın İnşaat, the project aims to be an exclusive address where a peaceful life meets the healing power of thermal waters.",
+            ["ferhunde-hanim-apt"] = "Ferhunde Hanım Apt. presents a distinctive architectural identity in Aydın Efeler, with softly curved balconies and a carefully chosen façade finish. Large windows and spacious balconies bring natural light into every floor, while a private garden enclosed by tall hedges offers residents a safe, peaceful outdoor space away from the noise of the city. Complete with perimeter walls and a landscaped front garden, the building offers an investment opportunity that makes everyday life easier and holds its value.",
+            ["kuyulu-avm"] = "Rising on the edge of a wide olive grove in Aydın Efeler, La Via AVM turns shopping from a daily necessity into a lifestyle experience. With shaded terraces, wide walkways and thoughtfully designed landscaping, the project reinterprets Ancın İnşaat's signature approach to quality on a commercial scale. Natural stone cladding, timber louvres and lighting that traces a soft line after dark give the façade an enduring, elegant character.",
+            ["q-latis"] = "Set amid the unique natural surroundings of Kuşadası, Hacıfeyzullah - Q-Latis offers a contemporary architectural language that respects the character of the region, with timber-textured façades and wide glazing. Aegean Sea views from the generous balconies of the upper-floor apartments make every day special, while social facilities such as an open terrace, gym and aerial yoga/Pilates studio support an active lifestyle. Set on a hillside surrounded by olive groves, the development has been designed to preserve the natural character of Kuşadası."
         };
 
         var slugsToCheck = shortDescriptionUpdates.Keys

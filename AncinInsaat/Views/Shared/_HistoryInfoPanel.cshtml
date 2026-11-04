@@ -1,4 +1,9 @@
 @model HistoryInfoPanelModel
+@using System.Globalization
+@{
+    // English localization (English copy revision, 2026-11-03).
+    var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+}
 
 @*
     Navigation only, per the project owner's explicit request — no years,
@@ -13,12 +18,12 @@
 <div class="history-info-panel" data-history-info-panel="@Model.Id" data-reveal-group>
     <p class="history-info-panel-title" data-reveal>@Model.Title</p>
     <div class="history-info-panel-nav" data-reveal>
-        <button type="button" class="history-nav-btn" data-history-prev aria-label="Önceki">
+        <button type="button" class="history-nav-btn" data-history-prev aria-label="@(isEn ? "Previous" : "Önceki")">
             <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
                 <path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
         </button>
-        <button type="button" class="history-nav-btn" data-history-next aria-label="Sonraki">
+        <button type="button" class="history-nav-btn" data-history-next aria-label="@(isEn ? "Next" : "Sonraki")">
             <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
                 <path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>

@@ -16,7 +16,9 @@ namespace AncinInsaat.Services;
 /// </summary>
 public static class ModelStateLocalizer
 {
-    private static readonly Dictionary<string, string> Translations = new(StringComparer.Ordinal)
+    // Internal so ValidationMessageLocalizer (client-side data-val-*
+    // attributes) shares this exact same Turkish → English table.
+    internal static readonly Dictionary<string, string> Translations = new(StringComparer.Ordinal)
     {
         ["Ad soyad alanı zorunludur."] = "Full name is required.",
         ["Ad soyad 2-200 karakter arasında olmalıdır."] = "Full name must be between 2 and 200 characters.",
@@ -35,9 +37,9 @@ public static class ModelStateLocalizer
 
         // CareerController.AddSubmitFailureModelError — added to ModelState
         // directly (not via a DataAnnotations attribute), same lookup.
-        ["CV yalnızca PDF formatında yüklenebilir."] = "The CV can only be uploaded as a PDF.",
+        ["CV yalnızca PDF formatında yüklenebilir."] = "Your CV must be a PDF file.",
         ["Yüklenen dosya geçerli bir PDF değil."] = "The uploaded file is not a valid PDF.",
-        ["CV dosyası 5 MB'tan büyük olamaz."] = "The CV file cannot be larger than 5 MB.",
+        ["CV dosyası 5 MB'tan büyük olamaz."] = "Your CV must not exceed 5 MB.",
         ["Başvurunuz gönderilemedi. Lütfen tekrar deneyin."] = "Your application could not be submitted. Please try again.",
     };
 

@@ -25,5 +25,23 @@
     "posterPath": "/images/kampanyalar/la-fiore-birinci-kampanya-poster.webp",
     "active": true,
     "endDate": null
+  },
+  {
+    "order": 4,
+    "projectSlug": "la-fiore-karabag-2-etap",
+    "name": "La Fiore Karabağ 2. Etap",
+    "videoPath": "/images/kampanyalar/la-fiore-ikinci-kampanya.mp4",
+    "posterPath": "/images/kampanyalar/la-fiore-ikinci-kampanya-poster.webp",
+    "active": true,
+    "endDate": null
+  },
+  {
+    "order": 5,
+    "projectSlug": null,
+    "name": "Alabanda Gold",
+    "videoPath": "/images/kampanyalar/alabanda-gold-kampanya.mp4",
+    "posterPath": "/images/kampanyalar/alabanda-gold-kampanya-poster.webp",
+    "active": true,
+    "endDate": null
   }
 ]

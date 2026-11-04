@@ -1,3 +1,4 @@
+using System.Globalization;
 using AncinInsaat.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,6 +26,16 @@ public class KvkkPolicyViewComponent : ViewComponent
 {
     public IViewComponentResult Invoke()
     {
+        // English localization (English copy revision, 2026-11-03) — an
+        // informational English translation of the Turkish notice, closed
+        // with a "Turkish version prevails" statement (client request).
+        var isEnglish = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+
+        if (isEnglish)
+        {
+            return View(BuildEnglishModel());
+        }
+
         var model = new KvkkPolicyViewModel
         {
             SectionHeader = new SectionHeaderModel
@@ -122,4 +133,97 @@ public class KvkkPolicyViewComponent : ViewComponent
 
         return View(model);
     }
+
+    private static KvkkPolicyViewModel BuildEnglishModel() => new()
+    {
+        SectionHeader = new SectionHeaderModel
+        {
+            HeadingId = "kvkk-policy-heading",
+            Eyebrow = "PERSONAL DATA PROTECTION",
+            Title = "Information Notice",
+            CssClass = "section-header--center"
+        },
+        IntroParagraphs = new List<string>
+        {
+            "Ancın İnşaat attaches great importance to the security of your personal data under " +
+                "the Turkish Personal Data Protection Law No. 6698 (\"KVKK\"). This notice has " +
+                "been prepared to inform you of the purposes for which personal data collected " +
+                "through our website and services is processed, the parties with whom it may be " +
+                "shared, the method and legal basis of its collection, and your rights under the KVKK."
+        },
+        Sections = new List<KvkkPolicySection>
+        {
+            new()
+            {
+                Heading = "1. Data Controller",
+                Paragraphs = new List<string>
+                {
+                    "Your personal data is processed by Ancın İnşaat, as data controller, for the " +
+                        "purposes described below and in accordance with the applicable legislation."
+                }
+            },
+            new()
+            {
+                Heading = "2. Purposes of Processing",
+                Paragraphs = new List<string>
+                {
+                    "The personal data you provide to us is processed for the purposes of evaluating " +
+                        "your requests and complaints, carrying out communication activities, " +
+                        "evaluating job applications, providing information about our projects and " +
+                        "services, and fulfilling our legal obligations."
+                }
+            },
+            new()
+            {
+                Heading = "3. Recipients of Personal Data and Purposes of Transfer",
+                Paragraphs = new List<string>
+                {
+                    "Your personal data may be shared, to a limited extent, with authorised public " +
+                        "institutions and organisations in order to fulfil our legal obligations, and " +
+                        "with the business partners and suppliers from whom we receive services, in " +
+                        "line with the security and confidentiality principles set out in the KVKK."
+                }
+            },
+            new()
+            {
+                Heading = "4. Method and Legal Basis of Collection",
+                Paragraphs = new List<string>
+                {
+                    "Your personal data is collected through the contact and application forms on " +
+                        "our website, email, telephone and similar channels, on the legal grounds set " +
+                        "out in Articles 5 and 6 of the KVKK, such as your explicit consent, the " +
+                        "processing being directly related to the conclusion or performance of a " +
+                        "contract, and our legitimate interests."
+                }
+            },
+            new()
+            {
+                Heading = "5. Rights of the Data Subject",
+                Paragraphs = new List<string>
+                {
+                    "Under Article 11 of the KVKK, you have the right to learn whether your personal " +
+                        "data is processed; to request information if it has been processed; to learn " +
+                        "the purpose of processing and whether it is used in line with that purpose; " +
+                        "to know the third parties in Türkiye or abroad to whom it is transferred; to " +
+                        "request its correction if it is incomplete or inaccurate; to request its " +
+                        "erasure or destruction under the conditions set out in the KVKK; and to " +
+                        "object to any outcome against you arising from the analysis of the processed " +
+                        "data exclusively by automated systems."
+                }
+            },
+            new()
+            {
+                Heading = "6. How to Apply",
+                Paragraphs = new List<string>
+                {
+                    "You may submit requests concerning the rights listed above to Ancın İnşaat in " +
+                        "writing, using the contact details at the bottom of this page. Requests will " +
+                        "be concluded as soon as possible, depending on their nature, and within " +
+                        "thirty days at the latest."
+                }
+            }
+        },
+        ClosingNote = "This English version is provided for information purposes only. In case of " +
+            "any discrepancy, the Turkish version shall prevail."
+    };
 }

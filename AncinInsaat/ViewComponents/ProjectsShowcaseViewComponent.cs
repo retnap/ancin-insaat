@@ -39,6 +39,16 @@ public class ProjectsShowcaseViewComponent : ViewComponent
             ["q-latis"] = "Q-LATIS"
         };
 
+    // English counterparts (English copy revision, 2026-11-03 — general
+    // manager's decision: "Etap" is "Phase" in English). Only the entries
+    // whose text differs; every other slug uses the override above.
+    private static readonly IReadOnlyDictionary<string, string> CardDisplayNameOverridesEnBySlug =
+        new Dictionary<string, string>
+        {
+            ["la-fiore-karabag-2-etap"] = "LA FIORE PHASE 2",
+            ["kuyulu-la-via-villalar-birinci-etap"] = "LA VIA VILLALAR PHASE 1"
+        };
+
     // Nysa Gold Home-carousel card branding refresh (2026-08-20 client
     // request) — swaps this one card's background image for the client's
     // new proje-karti asset and overlays the project's full logo, both
@@ -170,9 +180,11 @@ public class ProjectsShowcaseViewComponent : ViewComponent
 
         var cards = ongoingProjects.Select(project => new ProjectShowcaseCardModel
         {
-            Name = CardDisplayNameOverridesBySlug.TryGetValue(project.Slug, out var displayNameOverride)
-                ? displayNameOverride
-                : project.Name,
+            Name = isEnglish && CardDisplayNameOverridesEnBySlug.TryGetValue(project.Slug, out var displayNameOverrideEn)
+                ? displayNameOverrideEn
+                : CardDisplayNameOverridesBySlug.TryGetValue(project.Slug, out var displayNameOverride)
+                    ? displayNameOverride
+                    : ProjectDisplayText.Name(project.Name, isEnglish),
             CoverImageSrc = CardImageOverridesBySlug.TryGetValue(project.Slug, out var cardImageOverride)
                 ? _displayImageResolver.Resolve(cardImageOverride)
                 : ResolveCoverImage(project.CoverImage),
@@ -198,7 +210,7 @@ public class ProjectsShowcaseViewComponent : ViewComponent
                 // in site.css Section 21 — see comment there for why the eyebrow's
                 // shared decorative line is hidden and why the title's font
                 // diverges from the default h2 treatment).
-                Eyebrow = isEnglish ? "The Architect of Firsts - Ancın İnşaat" : "İlklerin Mimarı - Ancın İnşaat",
+                Eyebrow = isEnglish ? "A Legacy of Firsts – Ancın İnşaat" : "İlklerin Mimarı - Ancın İnşaat",
                 Title = isEnglish ? "Ongoing Projects" : "Devam Eden Projeler",
                 HeadingId = "projects-showcase-heading"
             },

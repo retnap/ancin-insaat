@@ -1,3 +1,4 @@
+using System.Globalization;
 using AncinInsaat.Models;
 using AncinInsaat.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -44,13 +45,15 @@ public class KvkkContactViewComponent : ViewComponent
     public async Task<IViewComponentResult> InvokeAsync()
     {
         var settings = await _siteSettingsService.GetAsync();
+        // English localization (English copy revision, 2026-11-03).
+        var isEnglish = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
         var items = new List<InformationCardItem>();
 
         if (settings is not null)
         {
             if (!string.IsNullOrWhiteSpace(settings.Address))
             {
-                items.Add(new InformationCardItem { IconMarkup = AddressIconMarkup, Label = "Adres", Value = settings.Address });
+                items.Add(new InformationCardItem { IconMarkup = AddressIconMarkup, Label = isEnglish ? "Address" : "Adres", Value = settings.Address });
             }
 
             if (!string.IsNullOrWhiteSpace(settings.Phone))
@@ -58,7 +61,7 @@ public class KvkkContactViewComponent : ViewComponent
                 items.Add(new InformationCardItem
                 {
                     IconMarkup = PhoneIconMarkup,
-                    Label = "Telefon",
+                    Label = isEnglish ? "Phone" : "Telefon",
                     Value = settings.Phone,
                     Href = $"tel:{NormalizePhoneHref(settings.Phone)}"
                 });
@@ -69,7 +72,7 @@ public class KvkkContactViewComponent : ViewComponent
                 items.Add(new InformationCardItem
                 {
                     IconMarkup = EmailIconMarkup,
-                    Label = "E-posta",
+                    Label = isEnglish ? "Email" : "E-posta",
                     Value = settings.Email,
                     Href = $"mailto:{settings.Email}"
                 });
@@ -81,9 +84,11 @@ public class KvkkContactViewComponent : ViewComponent
             SectionHeader = new SectionHeaderModel
             {
                 HeadingId = "kvkk-contact-heading",
-                Eyebrow = "İLETİŞİM",
-                Title = "Veri Sahibi Başvuruları",
-                Description = "KVKK kapsamındaki haklarınızla ilgili taleplerinizi aşağıdaki kanallardan iletebilirsiniz.",
+                Eyebrow = isEnglish ? "CONTACT" : "İLETİŞİM",
+                Title = isEnglish ? "Data Subject Requests" : "Veri Sahibi Başvuruları",
+                Description = isEnglish
+                    ? "You can submit requests concerning your rights under the KVKK through the channels below."
+                    : "KVKK kapsamındaki haklarınızla ilgili taleplerinizi aşağıdaki kanallardan iletebilirsiniz.",
                 CssClass = "section-header--center"
             },
             InformationCard = new InformationCardModel { Items = items }

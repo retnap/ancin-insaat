@@ -26,6 +26,10 @@
                     <p class="kvkk-policy-paragraph">@paragraph</p>
                 }
             }
+            @if (!string.IsNullOrWhiteSpace(Model.ClosingNote))
+            {
+                <p class="kvkk-policy-paragraph kvkk-policy-note"><em>@Model.ClosingNote</em></p>
+            }
         </div>
     </div>
 </section>

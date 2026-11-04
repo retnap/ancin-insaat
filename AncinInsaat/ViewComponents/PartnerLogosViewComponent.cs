@@ -63,7 +63,7 @@ public class PartnerLogosViewComponent : ViewComponent
             .Select(partner => new PartnerLogoItem
             {
                 ImageSrc = partner.ImageSrc,
-                ImageAlt = partner.ImageAlt,
+                ImageAlt = ProjectDisplayText.Name(partner.ImageAlt, isEnglish),
                 DetailUrl = $"{pathPrefix}/projects/{slugsByName[partner.ImageAlt]}"
             })
             .ToList();

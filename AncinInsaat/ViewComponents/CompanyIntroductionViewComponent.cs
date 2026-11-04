@@ -28,7 +28,7 @@ public class CompanyIntroductionViewComponent : ViewComponent
     {
         "Ancın İnşaat, Aydın'da attığı ilk adımlardan bu yana, sağlam mühendislik anlayışını " +
             "insana değer veren bir yaklaşımla birleştirerek yaşam alanları inşa ediyor. Yarım " +
-            "asra yaklaşan yolculuğumuz boyunca, her projede kalıcı değer yaratma hedefinden hiç " +
+            "asırlık yolculuğumuz boyunca, her projede kalıcı değer yaratma hedefinden hiç " +
             "vazgeçmedik.",
         "Kurumsal kültürümüzün merkezinde şeffaflık, zanaatkârlık ve müşteri memnuniyeti yer " +
             "alıyor. Her projeyi, sakinlerinin uzun yıllar güvenle yaşayabileceği bir yuva olarak " +
@@ -59,31 +59,30 @@ public class CompanyIntroductionViewComponent : ViewComponent
     // business fact introduced.
     private static readonly IReadOnlyList<string> IntroParagraphsEn = new List<string>
     {
-        "Since its very first steps in Aydın, Ancın İnşaat has built living spaces by combining " +
-            "sound engineering with a people-first approach. Throughout a journey now " +
-            "approaching half a century, we have never lost sight of our goal of creating " +
-            "lasting value in every project.",
-        "Transparency, craftsmanship and customer satisfaction sit at the heart of our " +
-            "corporate culture. We design every project as a home its residents can live in " +
-            "safely for many years to come, and we act with that responsibility in mind.",
-        "Through the residential and villa projects we bring to life in Aydın's developing " +
-            "districts, we bring modern architecture together with the character of the " +
-            "region. As we carry our experience forward, we always prioritize a construction " +
-            "philosophy that respects both people and nature."
+        "Since its first steps in Aydın, Ancın İnşaat has combined sound engineering with a " +
+            "people-centred approach to create places to live. Throughout a journey of " +
+            "half a century, we have remained committed to creating lasting value in every " +
+            "project.",
+        "Transparency, craftsmanship and customer satisfaction are at the heart of our " +
+            "corporate culture. We design every project as a home where residents can live " +
+            "safely for many years, and we act with that responsibility in mind.",
+        "Through our residential and villa developments in Aydın's growing districts, we " +
+            "bring modern architecture into harmony with the character of the region. As we " +
+            "carry our experience forward, we remain committed to building with respect for " +
+            "people and nature."
     };
 
     private static readonly IReadOnlyList<string> ClosingParagraphsEn = new List<string>
     {
-        "With our expert engineers, architects and site teams, we follow a working discipline " +
-            "in which every project is meticulously tracked from the planning stage through to " +
-            "handover. For us, quality control is not a single stage — it is a principle present " +
-            "at every step of the process.",
-        "We take care to maintain the trust we build with our residents even after handover. " +
-            "Transparent communication and a fast, solution-focused approach are an " +
-            "inseparable part of every project that carries the Ancın İnşaat signature.",
-        "Looking to the future, our goal is to continue offering more families in and around " +
-            "Aydın quality, safe living spaces. As we carry our half-century of experience into " +
-            "a new generation of projects, we never compromise on our people-first philosophy."
+        "Working with expert engineers, architects and site teams, we follow every project " +
+            "meticulously from planning through to handover. For us, quality control is not a " +
+            "single stage but a principle applied at every step of the process.",
+        "We continue to nurture the trust we build with our residents long after handover. " +
+            "Transparent communication and a responsive, solution-focused approach are " +
+            "integral to every Ancın İnşaat project.",
+        "Looking ahead, we aim to provide more families in Aydın and the surrounding area " +
+            "with quality, safe homes. As we bring half a century of experience to a new " +
+            "generation of projects, our people-centred approach remains unchanged."
     };
 
     public IViewComponentResult Invoke(string part)

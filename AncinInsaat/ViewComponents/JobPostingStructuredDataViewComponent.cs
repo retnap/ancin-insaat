@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using AncinInsaat.Data.Entities;
@@ -41,7 +42,11 @@ public class JobPostingStructuredDataViewComponent : ViewComponent
         }
 
         var baseUrl = SiteUrls.CanonicalBaseUrl;
-        var pageUrl = $"{baseUrl}/career";
+        // English localization (English copy revision, 2026-11-03) — the
+        // /en Career page publishes the English title/description columns
+        // (falling back to Turkish when empty) and its own /en URL.
+        var isEnglish = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+        var pageUrl = isEnglish ? $"{baseUrl}/en/career" : $"{baseUrl}/career";
 
         // A JobPosting with no description would fail Google's rich-result
         // validation — skipped defensively rather than emitting invalid
@@ -50,8 +55,8 @@ public class JobPostingStructuredDataViewComponent : ViewComponent
             .Where(p => !string.IsNullOrWhiteSpace(p.Description))
             .Select(p => JsonSerializer.Serialize(new JobPostingSchema
             {
-                Title = p.Title,
-                Description = p.Description,
+                Title = isEnglish && !string.IsNullOrWhiteSpace(p.TitleEn) ? p.TitleEn : p.Title,
+                Description = isEnglish && !string.IsNullOrWhiteSpace(p.DescriptionEn) ? p.DescriptionEn : p.Description,
                 DatePosted = p.CreatedAt.ToString("yyyy-MM-dd"),
                 Url = pageUrl,
                 HiringOrganization = new OrganizationRefSchema

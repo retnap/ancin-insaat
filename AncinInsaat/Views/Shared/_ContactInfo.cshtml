@@ -27,9 +27,9 @@
         {
             <partial name="_SuccessMessage" model="@(new SuccessMessageModel
             {
-                Title = isEn ? "Your Message Has Been Received" : "Mesajınız Alındı",
+                Title = isEn ? "Message Received" : "Mesajınız Alındı",
                 Description = isEn
-                    ? "Thank you for your interest. Our team will get back to you as soon as possible."
+                    ? "Thank you for getting in touch. Our team will contact you shortly."
                     : "İlginiz için teşekkür ederiz. Ekibimiz en kısa sürede sizinle iletişime geçecektir."
             })" />
         }
@@ -48,7 +48,7 @@
                     <p class="form-error form-summary-error" role="alert">@(isEn ? "Please correct the errors in the form and try again." : "Lütfen formdaki hataları düzeltip tekrar deneyin.")</p>
                 }
 
-                <p class="contact-form__required-note"><span aria-hidden="true">*</span> @(isEn ? "marked fields are required." : "işaretli alanlar zorunludur.")</p>
+                <p class="contact-form__required-note"><span aria-hidden="true">*</span> @(isEn ? "indicates a required field." : "işaretli alanlar zorunludur.")</p>
 
                 @* Row pairing follows the reference's "Adınız Soyadınız / İlgili
                    Proje" two-column row — there is no project-selector field in
@@ -108,7 +108,7 @@
                    colours come from the page-scoped .contact-form__submit
                    rule below rather than .btn-primary, since the hover here
                    is a subtle lighten, not the sitewide invert-to-white. *@
-                <button type="submit" class="btn contact-form__submit" data-contact-form-submit>@(isEn ? "Send" : "Gönder")</button>
+                <button type="submit" class="btn contact-form__submit" data-contact-form-submit>@(isEn ? "Send Message" : "Gönder")</button>
             </form>
         }
     </div>

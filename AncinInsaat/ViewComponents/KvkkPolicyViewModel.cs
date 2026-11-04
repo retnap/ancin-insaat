@@ -7,6 +7,11 @@ public class KvkkPolicyViewModel
     public required SectionHeaderModel SectionHeader { get; init; }
     public required IReadOnlyList<string> IntroParagraphs { get; init; }
     public required IReadOnlyList<KvkkPolicySection> Sections { get; init; }
+
+    // Optional closing note rendered after the last section (English copy
+    // revision, 2026-11-03) — used only by the English version for the
+    // "Turkish version shall prevail" statement; null for Turkish.
+    public string? ClosingNote { get; init; }
 }
 
 // One numbered subsection of the Aydınlatma Metni (e.g. "1. Veri

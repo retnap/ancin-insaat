@@ -32,15 +32,15 @@
 
     var breadcrumbTrail = new List<AncinInsaat.ViewComponents.BreadcrumbItem>
     {
-        new() { Label = isEn ? "KVKK Privacy Notice" : "KVKK Aydınlatma Metni" }
+        new() { Label = isEn ? "Personal Data Protection Notice (KVKK)" : "KVKK Aydınlatma Metni" }
     };
 }
 @await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail })
 
 <section class="section kvkk-heading-section">
     <div class="container">
-        <h1 id="kvkk-heading" class="kvkk-heading">@(isEn ? "KVKK Privacy Notice" : "KVKK Aydınlatma Metni")</h1>
-        <p class="kvkk-subheading">@(isEn ? "Our notice on the processing of your personal data." : "Kişisel verilerinizin işlenmesine ilişkin aydınlatma metnimiz.")</p>
+        <h1 id="kvkk-heading" class="kvkk-heading">@(isEn ? "Personal Data Protection Notice (KVKK)" : "KVKK Aydınlatma Metni")</h1>
+        <p class="kvkk-subheading">@(isEn ? "How we process your personal data." : "Kişisel verilerinizin işlenmesine ilişkin aydınlatma metnimiz.")</p>
     </div>
 </section>
 

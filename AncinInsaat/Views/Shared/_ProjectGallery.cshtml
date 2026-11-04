@@ -77,7 +77,7 @@
 
 @if (Model.GalleryImages.Count == 0)
 {
-    <p class="projects-grid-empty">@(isEn ? "Gallery images for this project will be added soon." : "Bu proje için galeri görselleri yakında eklenecek.")</p>
+    <p class="projects-grid-empty">@(isEn ? "Gallery images for this project will be available soon." : "Bu proje için galeri görselleri yakında eklenecek.")</p>
 }
 else
 {
@@ -170,7 +170,7 @@ else
         <div class="project-gallery-chip-row" data-gallery-block-row>
             @foreach (var block in galleryBlocks)
             {
-                <button type="button" class="project-gallery-chip" data-gallery-block-chip="@block">@block</button>
+                <button type="button" class="project-gallery-chip" data-gallery-block-chip="@block">@(isEn ? AncinInsaat.Services.GalleryChipLabels.ToEnglish(block) : block)</button>
             }
         </div>
     }
@@ -179,7 +179,7 @@ else
         <div class="project-gallery-chip-row" data-gallery-apartment-row hidden>
             @foreach (var apartmentType in galleryApartmentTypes)
             {
-                <button type="button" class="project-gallery-chip" data-gallery-apartment-chip="@apartmentType">@apartmentType</button>
+                <button type="button" class="project-gallery-chip" data-gallery-apartment-chip="@apartmentType">@(isEn ? AncinInsaat.Services.GalleryChipLabels.ToEnglish(apartmentType) : apartmentType)</button>
             }
         </div>
     }

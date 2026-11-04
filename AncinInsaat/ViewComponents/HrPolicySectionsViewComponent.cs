@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AncinInsaat.ViewComponents;
@@ -25,6 +26,16 @@ public class HrPolicySectionsViewComponent : ViewComponent
 {
     public IViewComponentResult Invoke()
     {
+        // English localization (English copy revision, 2026-11-03) — the
+        // English sections mirror the Turkish ones one-to-one (same order,
+        // same bullet count); only the copy differs.
+        var isEnglish = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+
+        if (isEnglish)
+        {
+            return View(new HrPolicySectionsViewModel { Sections = SectionsEn });
+        }
+
         var model = new HrPolicySectionsViewModel
         {
             Sections = new List<HrPolicySectionItem>
@@ -121,4 +132,95 @@ public class HrPolicySectionsViewComponent : ViewComponent
 
         return View(model);
     }
+
+    private static readonly List<HrPolicySectionItem> SectionsEn = new()
+    {
+        new()
+        {
+            Heading = "TALENT ACQUISITION",
+            Bullets = new List<string>
+            {
+                "We run our recruitment processes on the principles of transparency, equal opportunity and merit.",
+                "We set objective assessment criteria for every position, aligned with its job description.",
+                "We value the candidate experience and provide clear, timely feedback from application to the first day at work.",
+                "We aim to bring in talented people who share our company culture and values.",
+                "During onboarding, we integrate new employees into our team and working environment step by step."
+            }
+        },
+        new()
+        {
+            Heading = "PERFORMANCE MANAGEMENT",
+            Bullets = new List<string>
+            {
+                "We base performance reviews on clear, measurable and pre-agreed objectives.",
+                "We support our employees' development continuously through regular feedback meetings.",
+                "We recognise achievement fairly and address areas for development constructively."
+            }
+        },
+        new()
+        {
+            Heading = "COMPENSATION AND REWARDS",
+            Bullets = new List<string>
+            {
+                "We shape our pay policy with regard to market conditions and internal fairness.",
+                "We maintain a balanced pay structure that reflects role, responsibility and performance.",
+                "We safeguard our employees' rights by fully meeting our legal obligations.",
+                "We operate reward schemes that recognise strong performance.",
+                "We review our pay and benefits practices regularly.",
+                "We handle all compensation matters in strict confidence."
+            }
+        },
+        new()
+        {
+            Heading = "LEARNING AND DEVELOPMENT",
+            Bullets = new List<string>
+            {
+                "We offer training programmes that support our employees' professional and personal development.",
+                "We share content on technical and architectural developments in the industry with our teams.",
+                "We spread knowledge across the company through internal and external training.",
+                "We foster a learning culture that encourages new skills.",
+                "We design development plans in line with our employees' career goals."
+            }
+        },
+        new()
+        {
+            Heading = "CAREER MANAGEMENT",
+            Bullets = new List<string>
+            {
+                "We offer our employees clear and transparent career paths within the company.",
+                "We support long-term careers by prioritising internal promotion and rotation opportunities."
+            }
+        },
+        new()
+        {
+            Heading = "LEADERSHIP",
+            Bullets = new List<string>
+            {
+                "We expect our leaders to communicate openly, make fair decisions and lead by example.",
+                "We develop the leaders of the future from within through management development programmes."
+            }
+        },
+        new()
+        {
+            Heading = "DIVERSITY AND INCLUSION",
+            Bullets = new List<string>
+            {
+                "Equal opportunity regardless of gender, age, belief or background is a fundamental principle for us.",
+                "We believe different perspectives add value to our organisation, and we create an inclusive working environment.",
+                "We have zero tolerance for discrimination and ensure that every employee feels safe.",
+                "We apply our inclusion principles to every HR process, from recruitment to promotion."
+            }
+        },
+        new()
+        {
+            Heading = "COMMUNICATION AND COLLABORATION",
+            Bullets = new List<string>
+            {
+                "We encourage a culture of open communication based on mutual respect at every level.",
+                "We establish regular information-sharing channels that strengthen collaboration between teams.",
+                "We value our employees' views and suggestions and keep feedback channels open.",
+                "We address issues through constructive dialogue and a solution-focused approach."
+            }
+        }
+    };
 }

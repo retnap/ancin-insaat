@@ -40,7 +40,7 @@ public class ProjectSearchProvider : ISearchIndexProvider
 
                 return new SearchResultItem
                 {
-                    Title = project.Name,
+                    Title = ProjectDisplayText.Name(project.Name, isEnglish),
                     Description = string.IsNullOrWhiteSpace(shortDescription)
                         ? (isEnglish ? "View project details." : "Proje detaylarını görüntüleyin.")
                         : shortDescription,
@@ -52,7 +52,7 @@ public class ProjectSearchProvider : ISearchIndexProvider
                     // as ProjectsController/ProjectsShowcaseViewComponent.
                     Keywords = string.Join(' ', new[]
                     {
-                        ProjectDetailAvailability.GetPublicLocation(project),
+                        ProjectDisplayText.Location(ProjectDetailAvailability.GetPublicLocation(project), isEnglish),
                         project.Status == ProjectStatus.Completed
                             ? (isEnglish ? "Completed" : "Tamamlandı")
                             : (isEnglish ? "Ongoing" : "Devam Ediyor"),

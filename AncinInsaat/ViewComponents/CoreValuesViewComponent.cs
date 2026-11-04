@@ -1,3 +1,4 @@
+using System.Globalization;
 using AncinInsaat.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -58,14 +59,20 @@ public class CoreValuesViewComponent : ViewComponent
 
     public IViewComponentResult Invoke()
     {
+        // English localization (English copy revision, 2026-11-03).
+        var isEnglish = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+
         var model = new CoreValuesViewModel
         {
             SectionHeader = new SectionHeaderModel
             {
                 HeadingId = "core-values-heading",
-                Eyebrow = "TEMEL DEĞERLERİMİZ",
-                Title = "Bize Yön Veren İlkeler",
-                Description = "Aydın'da yarım asra yaklaşan yolculuğumuzda, her projede aynı " +
+                Eyebrow = isEnglish ? "OUR CORE VALUES" : "TEMEL DEĞERLERİMİZ",
+                Title = isEnglish ? "The Principles That Guide Us" : "Bize Yön Veren İlkeler",
+                Description = isEnglish
+                    ? "The core values we apply consistently to every project throughout our " +
+                        "half-century journey in Aydın."
+                    : "Aydın'daki yarım asırlık yolculuğumuzda, her projede aynı " +
                     "şekilde uyguladığımız temel değerler."
             },
             InformationCard = new InformationCardModel
@@ -77,43 +84,61 @@ public class CoreValuesViewComponent : ViewComponent
                     new()
                     {
                         IconMarkup = TrustIconMarkup,
-                        Label = "Güven",
-                        Value = "Sahadan ofise, her adımda verdiğimiz sözün arkasında dururuz; " +
+                        Label = isEnglish ? "Trust" : "Güven",
+                        Value = isEnglish
+                            ? "From the site to the office, we stand behind our word at every " +
+                                "step, and our relationship with our customers continues long after handover."
+                            : "Sahadan ofise, her adımda verdiğimiz sözün arkasında dururuz; " +
                             "müşterilerimizle kurduğumuz ilişki teslimattan sonra da sürer."
                     },
                     new()
                     {
                         IconMarkup = QualityIconMarkup,
-                        Label = "Kalite",
-                        Value = "Malzeme seçiminden uygulamaya kadar her aşamayı aynı titizlikle " +
+                        Label = isEnglish ? "Quality" : "Kalite",
+                        Value = isEnglish
+                            ? "We inspect every stage, from material selection to construction, with " +
+                                "the same rigour to build durable, lasting homes."
+                            : "Malzeme seçiminden uygulamaya kadar her aşamayı aynı titizlikle " +
                             "denetler, kalıcı ve sağlam yaşam alanları inşa ederiz."
                     },
                     new()
                     {
                         IconMarkup = TransparencyIconMarkup,
-                        Label = "Şeffaflık",
-                        Value = "Süreç, maliyet ve zaman planlaması hakkında müşterilerimizi net " +
+                        Label = isEnglish ? "Transparency" : "Şeffaflık",
+                        Value = isEnglish
+                            ? "We keep our customers clearly and honestly informed about the process, " +
+                                "costs and schedule."
+                            : "Süreç, maliyet ve zaman planlaması hakkında müşterilerimizi net " +
                             "ve dürüst biçimde bilgilendiririz."
                     },
                     new()
                     {
                         IconMarkup = SustainabilityIconMarkup,
-                        Label = "Sürdürülebilirlik",
-                        Value = "Doğal kaynakları gözeten malzeme ve uygulama tercihleriyle, " +
+                        Label = isEnglish ? "Sustainability" : "Sürdürülebilirlik",
+                        Value = isEnglish
+                            ? "Through material and construction choices that respect natural resources, " +
+                                "we create projects that leave lasting value for future generations."
+                            : "Doğal kaynakları gözeten malzeme ve uygulama tercihleriyle, " +
                             "gelecek nesillere değer bırakan projeler üretiriz."
                     },
                     new()
                     {
                         IconMarkup = InnovationIconMarkup,
-                        Label = "Yenilikçilik",
-                        Value = "Modern mühendislik ve mimari yaklaşımları takip ederek yaşam " +
+                        Label = isEnglish ? "Innovation" : "Yenilikçilik",
+                        Value = isEnglish
+                            ? "We continually improve the homes we build by following modern " +
+                                "engineering and architectural practice."
+                            : "Modern mühendislik ve mimari yaklaşımları takip ederek yaşam " +
                             "alanlarını sürekli geliştiririz."
                     },
                     new()
                     {
                         IconMarkup = CustomerFocusIconMarkup,
-                        Label = "Müşteri Odaklılık",
-                        Value = "Her projeyi, içinde yaşayacak insanların ihtiyaçlarını merkeze " +
+                        Label = isEnglish ? "Customer Focus" : "Müşteri Odaklılık",
+                        Value = isEnglish
+                            ? "We design and build every project around the needs of the people who " +
+                                "will live in it."
+                            : "Her projeyi, içinde yaşayacak insanların ihtiyaçlarını merkeze " +
                             "alarak tasarlar ve inşa ederiz."
                     }
                 }

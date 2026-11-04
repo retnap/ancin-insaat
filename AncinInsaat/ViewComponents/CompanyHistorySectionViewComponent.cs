@@ -69,7 +69,7 @@ public class CompanyHistorySectionViewComponent : ViewComponent
                 // rather than sectionTitle's Title Case, which stays on
                 // InfoPanel.Title below for that smaller, ordinary heading.
                 DecorativeTitle = isEnglish ? "timeline" : "zaman tüneli",
-                Subtitle = isEnglish ? "The Architect of Firsts" : "İlklerin Mimarı"
+                Subtitle = isEnglish ? "A Legacy of Firsts" : "İlklerin Mimarı"
             },
             Image = new ImageBlockModel
             {

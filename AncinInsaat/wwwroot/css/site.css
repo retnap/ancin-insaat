@@ -8590,14 +8590,42 @@ a.information-card__value:hover {
   scroll-snap-align: start;
 }
 
+/* From 768px (2026-11-03, five campaigns): still one scroll-snap row, but
+   with fixed card widths (three across, four from 1200px) so the cards keep
+   a readable size however many campaigns there are; the Prev/Next buttons
+   below scroll it. The small padding keeps the focus ring inside the
+   scroll box. */
 @media (min-width: 768px) {
   .campaigns-list {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--grid-gap-md);
-    margin: 0;
-    padding: 0;
-    overflow: visible;
+    margin: calc(var(--space-2xs) * -1);
+    padding: var(--space-2xs);
+    scroll-padding-inline: var(--space-2xs);
+  }
+
+  .campaigns-item {
+    flex-basis: calc((100% - 2 * var(--grid-gap-md)) / 3);
+  }
+}
+
+@media (min-width: 1200px) {
+  .campaigns-item {
+    flex-basis: calc((100% - 3 * var(--grid-gap-md)) / 4);
+  }
+}
+
+/* Same placement as .projects-slider-nav. Swipe only below 768px; site.js
+   also hides it while every card already fits. */
+.campaigns-nav {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .campaigns-nav:not([hidden]) {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-sm);
+    margin-block-start: var(--space-lg);
   }
 }
 
@@ -8686,6 +8714,8 @@ a.information-card__value:hover {
   font-weight: var(--font-weight-semibold);
   letter-spacing: 0.1em;
   line-height: 1.3;
+  /* Two even lines rather than a lone last word on narrower cards. */
+  text-wrap: balance;
   /* Plain --color-accent is only ~2.3:1 here (see .btn-secondary--on-dark), so
      small text needs this lighter mix of it to stay readable (~4.5:1). */
   color: color-mix(in srgb, var(--color-accent) 68%, white);

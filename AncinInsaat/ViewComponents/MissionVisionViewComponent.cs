@@ -34,7 +34,7 @@ public class MissionVisionViewComponent : ViewComponent
                 "sakinlerine uzun yıllar boyunca güvenle yaşayabilecekleri, kaliteli ve " +
                 "kalıcı yaşam alanları inşa etmek.",
             VisionLabel = "Vizyon",
-            VisionText = "Yarım asra yaklaşan tecrübesini gelecek nesillere aktaran, bölgesinde " +
+            VisionText = "Yarım asırlık tecrübesini gelecek nesillere aktaran, bölgesinde " +
                 "güven ve zanaatkârlığın öncüsü olarak anılan bir inşaat markası olmak."
         };
 

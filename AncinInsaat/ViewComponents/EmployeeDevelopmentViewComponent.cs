@@ -12,8 +12,8 @@ namespace AncinInsaat.ViewComponents;
 // so no calling page needs to pass data in.
 //
 // PLACEHOLDER copy and figures — the client has not yet supplied real
-// employee-development statistics. The "53+" figure reuses the one
-// confirmed real fact already established elsewhere on the site ("53 Yıllık
+// employee-development statistics. The "50" figure reuses the one
+// confirmed real fact already established elsewhere on the site ("50 Yıllık
 // Tecrübe" from Company Overview); the remaining two figures are
 // realistic-but-fictional placeholders and must be replaced with verified
 // numbers before launch.
@@ -36,7 +36,7 @@ public class EmployeeDevelopmentViewComponent : ViewComponent
                 Columns = 3,
                 Items = new List<StatisticItem>
                 {
-                    new() { Value = "53+", Label = "Yıllık Sektör Tecrübesi", Reveal = "left" },
+                    new() { Value = "50", Label = "Yıllık Sektör Tecrübesi", Reveal = "left" },
                     new() { Value = "150+", Label = "Ekip Üyesi" },
                     new() { Value = "%90+", Label = "Çalışan Bağlılığı", Reveal = "right" }
                 }

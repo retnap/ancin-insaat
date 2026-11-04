@@ -16,6 +16,10 @@
    page (Views/Projects/Details.cshtml). *@
 <partial name="_MediaViewer" />
 
+@* Shared toast — the "Details coming soon" message of a campaign with no
+   project page yet (Campaigns, data-media-viewer-coming-soon). *@
+<partial name="_Toast" />
+
 @section Scripts {
     @* Embla Carousel + Autoplay plugin (vendored at wwwroot/lib/embla-carousel,
        v8.6.0 UMD builds), Home-page-only since ProjectsShowcase is the only

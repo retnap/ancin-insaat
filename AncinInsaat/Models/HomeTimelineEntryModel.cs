@@ -12,6 +12,10 @@ public class HomeTimelineEntryModel
     // A historic building's own name (e.g. "Seda Apartmanı") — a proper
     // noun, never translated, same convention as Project.Name.
     public required string Title { get; init; }
+
+    // English title where it differs — only a phase suffix is translated
+    // ("La Fiore Karabağ 1. Etap" → "La Fiore Karabağ Phase 1", 2026-11-03).
+    public string? TitleEn { get; init; }
     public required string ImageSrc { get; init; }
     public required string ImageAlt { get; init; }
 

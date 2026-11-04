@@ -30,11 +30,13 @@ public class CampaignService : ICampaignService
         var campaigns = await ReadCampaignsAsync(cancellationToken);
 
         // ProjectDetailAvailability — closing a campaign video navigates to
-        // the project page, so never show one whose page is switched off.
+        // the project page, so never show one whose page is switched off. A
+        // campaign with no project slug never navigates (coming-soon
+        // behaviour, see Campaign.ProjectSlug), so it needs no page.
         return campaigns
             .Where(campaign => campaign.Active
                 && (campaign.EndDate is null || campaign.EndDate >= today)
-                && ProjectDetailAvailability.IsDetailPageAvailable(campaign.ProjectSlug))
+                && (campaign.ProjectSlug is null || ProjectDetailAvailability.IsDetailPageAvailable(campaign.ProjectSlug)))
             .OrderBy(campaign => campaign.Order)
             .ToList();
     }

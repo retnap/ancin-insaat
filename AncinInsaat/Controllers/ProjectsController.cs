@@ -82,13 +82,13 @@ public class ProjectsController : Controller
     // of them, same precedent as GalleryCategoryLabels.
     private static readonly Dictionary<string, string> GalleryCategoryLabelsEn = new(StringComparer.OrdinalIgnoreCase)
     {
-        ["Exterior"] = "Exterior Views",
-        ["All Exterior"] = "All Exterior Views",
-        ["Interior"] = "Interior Views",
-        ["Standard Interior"] = "Standard Interior Views",
-        ["Optional Interior"] = "Optional Interior Views",
-        ["Sales Office"] = "Sales Office Views",
-        ["Social Areas"] = "Social Area Views"
+        ["Exterior"] = "Exteriors",
+        ["All Exterior"] = "All Exteriors",
+        ["Interior"] = "Interiors",
+        ["Standard Interior"] = "Standard Interiors",
+        ["Optional Interior"] = "Optional Interiors",
+        ["Sales Office"] = "Sales Office",
+        ["Social Areas"] = "Social Facilities"
     };
 
     // English display label for a Project.ProjectType value (English
@@ -379,7 +379,7 @@ public class ProjectsController : Controller
         var cards = projects.Select(project => new ProjectCardModel
         {
             Slug = project.Slug,
-            Name = CardNameOverridesBySlug.GetValueOrDefault(project.Slug, project.Name),
+            Name = CardNameOverridesBySlug.GetValueOrDefault(project.Slug, ProjectDisplayText.Name(project.Name, IsEnglish)),
             CoverImageSrc = CardImageOverridesBySlug.TryGetValue(project.Slug, out var cardImageOverride)
                 ? cardImageOverride
                 : ResolveCoverImage(project.CoverImage),
@@ -412,12 +412,12 @@ public class ProjectsController : Controller
             // (ProjectDetailAvailability, 2026-10-19), so the listing never
             // renders a link to a 404 even if IsFutureProject is cleared first.
             ComingSoonToastMessage = project.IsFutureProject || !ProjectDetailAvailability.IsDetailPageAvailable(project.Slug)
-                ? Localize("Details coming soon...", "Detaylar yakında...")
+                ? Localize("Details coming soon.", "Detaylar yakında...")
                 : null,
             // Null for projects whose location isn't public yet, which keeps
             // it out of the card, its data-project-location attribute and the
             // location filter options built from these cards below.
-            Location = ProjectDetailAvailability.GetPublicLocation(project),
+            Location = ProjectDisplayText.Location(ProjectDetailAvailability.GetPublicLocation(project), IsEnglish),
             ProjectType = LocalizeNullable(
                 project.ProjectType is not null && ProjectTypeLabelsEn.TryGetValue(project.ProjectType, out var typeEn) ? typeEn : project.ProjectType,
                 project.ProjectType),
@@ -565,7 +565,7 @@ public class ProjectsController : Controller
 
         var model = new ProjectDetailViewModel
         {
-            Name = project.Name,
+            Name = ProjectDisplayText.Name(project.Name, IsEnglish),
             Slug = project.Slug,
             // Gelecek Projeler (2026-09-28 client request) — every field
             // below is still computed exactly as before from this project's
@@ -602,8 +602,8 @@ public class ProjectsController : Controller
             DescriptionParagraphs = SplitDescription(Localize(project.DescriptionEn, project.Description)),
             Information = new ProjectInformationModel
             {
-                Name = project.Name,
-                Location = ProjectDetailAvailability.GetPublicLocation(project),
+                Name = ProjectDisplayText.Name(project.Name, IsEnglish),
+                Location = ProjectDisplayText.Location(ProjectDetailAvailability.GetPublicLocation(project), IsEnglish),
                 StatusLabel = statusLabel,
                 CompletionDateLabel = project.CompletionDate is { } completionDate ? FormatCompletionDate(completionDate) : null
             },
@@ -662,7 +662,7 @@ public class ProjectsController : Controller
             // Project.CatalogueComingSoonHeroToast.
             CatalogueComingSoonHeroToast = project.CatalogueComingSoon && project.CatalogueComingSoonHeroToast,
             CataloguePlaceholderToastMessage = CatalogueComingSoonPlaceholderSlugs.Contains(project.Slug)
-                ? Localize("Coming soon...", "Yakında Eklenecek...")
+                ? Localize("Coming soon.", "Yakında Eklenecek...")
                 : null,
             FloorPlanCatalogueUrl = !string.IsNullOrWhiteSpace(project.FloorPlanCataloguePath) && FileExistsInWebRoot(project.FloorPlanCataloguePath)
                 ? project.FloorPlanCataloguePath

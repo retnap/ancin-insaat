@@ -38,7 +38,7 @@
 
     var breadcrumbTrail = new List<AncinInsaat.ViewComponents.BreadcrumbItem>
     {
-        new() { Label = isEn ? "Our HR Policy" : "İnsan Kaynakları Politikamız" }
+        new() { Label = isEn ? "Human Resources Policy" : "İnsan Kaynakları Politikamız" }
     };
 }
 @await Component.InvokeAsync("Breadcrumb", new { trail = breadcrumbTrail })
@@ -50,7 +50,7 @@
         <p class="hr-policy-intro">
             @if (isEn)
             {
-                @:At Ancın İnşaat, our approach to human resources is built on the belief that our employees' growth and wellbeing are inseparable from the company's success. By creating a fair, transparent and inclusive working environment, we build a corporate culture in which every employee can realize their full potential.
+                @:At Ancın İnşaat, our approach to human resources is built on the belief that our employees' development and wellbeing are integral to the company's success. By creating a fair, transparent and inclusive working environment, we are building a corporate culture in which every employee can reach their full potential.
             }
             else
             {

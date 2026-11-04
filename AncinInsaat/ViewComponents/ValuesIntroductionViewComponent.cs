@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AncinInsaat.ViewComponents;
@@ -20,17 +21,31 @@ public class ValuesIntroductionViewComponent : ViewComponent
 {
     public IViewComponentResult Invoke()
     {
+        // English localization (English copy revision, 2026-11-03) — same
+        // per-request culture check as every other localized component.
+        var isEnglish = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
+
         var model = new ValuesIntroductionViewModel
         {
-            Paragraphs = new List<string>
-            {
-                "Ancın İnşaat için değerler, duvara asılı bir ilke listesi değil; her " +
-                    "projede tekrarlanan bir çalışma biçimidir. 1993'ten bu yana Aydın'da " +
-                    "inşa ettiğimiz her yapı, aynı titizlik ve sorumluluk anlayışıyla " +
-                    "şekillendi.",
-                "Aşağıdaki değerler, ekibimizin günlük kararlarına ve sahaya bakışına " +
-                    "rehberlik eder; müşterilerimize verdiğimiz sözün karşılığıdır."
-            }
+            Paragraphs = isEnglish
+                ? new List<string>
+                {
+                    "For Ancın İnşaat, values are not principles framed on a wall but a way " +
+                        "of working that we apply to every project. Since 1973, every building " +
+                        "we have delivered in Aydın has been shaped by the same diligence and " +
+                        "sense of responsibility.",
+                    "The values below guide our team's everyday decisions and approach on " +
+                        "site; they are how we keep the promise we make to our customers."
+                }
+                : new List<string>
+                {
+                    "Ancın İnşaat için değerler, duvara asılı bir ilke listesi değil; her " +
+                        "projede tekrarlanan bir çalışma biçimidir. 1973'ten bu yana Aydın'da " +
+                        "inşa ettiğimiz her yapı, aynı titizlik ve sorumluluk anlayışıyla " +
+                        "şekillendi.",
+                    "Aşağıdaki değerler, ekibimizin günlük kararlarına ve sahaya bakışına " +
+                        "rehberlik eder; müşterilerimize verdiğimiz sözün karşılığıdır."
+                }
         };
 
         return View(model);

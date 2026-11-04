@@ -29,7 +29,7 @@
 
     panelOpen = true;
     navToggle.setAttribute('aria-expanded', 'true');
-    navToggle.setAttribute('aria-label', 'Menüyü kapat');
+    navToggle.setAttribute('aria-label', document.documentElement.lang === 'en' ? 'Close menu' : 'Menüyü kapat');
     navToggle.classList.add('is-active');
     navPanel.classList.add('is-open');
     document.body.classList.add('no-scroll');
@@ -42,7 +42,7 @@
 
     panelOpen = false;
     navToggle.setAttribute('aria-expanded', 'false');
-    navToggle.setAttribute('aria-label', 'Menüyü aç');
+    navToggle.setAttribute('aria-label', document.documentElement.lang === 'en' ? 'Open menu' : 'Menüyü aç');
     navToggle.classList.remove('is-active');
     navPanel.classList.remove('is-open');
     document.body.classList.remove('no-scroll');
@@ -1160,9 +1160,14 @@
   // sends the visitor to that page whenever the viewer closes, however it was
   // closed. campaignProjectUrl stays null for every other trigger, so none of
   // this touches them.
+  // A campaign with no project page yet (2026-11-03) carries
+  // data-media-viewer-coming-soon instead: projectLinkEl then shows that
+  // message as a toast (see the Toast block below) and closing the viewer
+  // stays on the current page.
   var projectLinkEl = viewer.querySelector('[data-media-viewer-project-link]');
   var unmuteBtn = viewer.querySelector('[data-media-viewer-unmute]');
   var campaignProjectUrl = null;
+  var campaignComingSoon = null;
 
   // ---- Zoom / Pan / Fullscreen (La Fiore Karabağ 2. Etap Vaziyet Planı/
   // Concept/Gallery phase, 2026-08-09) — upgrades this one shared instance
@@ -1669,7 +1674,9 @@
         videoEl.setAttribute('aria-label', alt);
       }
       if (videoPlayBtn) {
-        videoPlayBtn.setAttribute('aria-label', alt ? alt + ' — oynat' : 'Videoyu oynat');
+        videoPlayBtn.setAttribute('aria-label', document.documentElement.lang === 'en'
+          ? (alt ? 'Play ' + alt : 'Play video')
+          : (alt ? alt + ' — oynat' : 'Videoyu oynat'));
       }
     } else {
       imageEl.hidden = false;
@@ -1828,13 +1835,21 @@
     viewer.classList.toggle('is-floorplan-viewer', groupKey === 'floorplans');
 
     campaignProjectUrl = trigger ? trigger.getAttribute('data-media-viewer-project-url') : null;
-    viewer.classList.toggle('is-campaign-viewer', !!campaignProjectUrl);
+    campaignComingSoon = !campaignProjectUrl && trigger ? trigger.getAttribute('data-media-viewer-coming-soon') : null;
+    viewer.classList.toggle('is-campaign-viewer', !!(campaignProjectUrl || campaignComingSoon));
     if (projectLinkEl) {
-      projectLinkEl.hidden = !campaignProjectUrl;
+      projectLinkEl.hidden = !(campaignProjectUrl || campaignComingSoon);
       if (campaignProjectUrl) {
         projectLinkEl.setAttribute('href', campaignProjectUrl);
+        projectLinkEl.removeAttribute('role');
+      } else if (campaignComingSoon) {
+        // Still an <a> with an href so it stays focusable and keyboard-
+        // operable; the click handler below never follows it.
+        projectLinkEl.setAttribute('href', '#');
+        projectLinkEl.setAttribute('role', 'button');
       } else {
         projectLinkEl.removeAttribute('href');
+        projectLinkEl.removeAttribute('role');
       }
     }
 
@@ -1877,6 +1892,9 @@
       campaignProjectUrl = null;
       viewer.classList.remove('is-campaign-viewer');
       window.location.assign(projectUrl);
+    } else if (campaignComingSoon) {
+      campaignComingSoon = null;
+      viewer.classList.remove('is-campaign-viewer');
     }
   }
 
@@ -1958,7 +1976,7 @@
       // are already visible at this point so the visitor can press Play
       // themselves; nothing more to do here. A campaign video retries
       // muted first, with unmuteBtn on screen to bring the sound back.
-      if (campaignProjectUrl && !viewer.hidden && error.name === 'NotAllowedError') {
+      if ((campaignProjectUrl || campaignComingSoon) && !viewer.hidden && error.name === 'NotAllowedError') {
         videoEl.muted = true;
         if (unmuteBtn) {
           unmuteBtn.hidden = false;
@@ -1976,6 +1994,12 @@
   // viewer still open. Modified clicks (new tab) stay native.
   if (projectLinkEl) {
     projectLinkEl.addEventListener('click', function (event) {
+      if (campaignComingSoon) {
+        event.preventDefault();
+        document.dispatchEvent(new CustomEvent('ancin:toast', { detail: { message: campaignComingSoon } }));
+        return;
+      }
+
       if (!event.metaKey && !event.ctrlKey && !event.shiftKey) {
         event.preventDefault();
         close();
@@ -2007,7 +2031,9 @@
 
     var isFullscreen = document.fullscreenElement === viewer;
     fullscreenBtn.classList.toggle('is-active', isFullscreen);
-    fullscreenBtn.setAttribute('aria-label', isFullscreen ? 'Tam ekrandan çık' : 'Tam ekran');
+    fullscreenBtn.setAttribute('aria-label', document.documentElement.lang === 'en'
+      ? (isFullscreen ? 'Exit full screen' : 'Full screen')
+      : (isFullscreen ? 'Tam ekrandan çık' : 'Tam ekran'));
   });
 
   if (figureEl) {
@@ -2195,7 +2221,7 @@
   var toast = document.querySelector('[data-toast]');
   var triggers = Array.prototype.slice.call(document.querySelectorAll('[data-toast-trigger]'));
 
-  if (!toast || !triggers.length) {
+  if (!toast) {
     return;
   }
 
@@ -2228,6 +2254,15 @@
     trigger.addEventListener('click', function () {
       show(trigger.getAttribute('data-toast-message') || '');
     });
+  });
+
+  // Other scripts raise the same toast with
+  // document.dispatchEvent(new CustomEvent('ancin:toast', { detail: { message } }))
+  // — today the Media Viewer's coming-soon campaign button.
+  document.addEventListener('ancin:toast', function (event) {
+    if (event.detail && event.detail.message) {
+      show(event.detail.message);
+    }
   });
 })();
 
@@ -3672,4 +3707,73 @@
   closers.forEach(function (closer) {
     closer.addEventListener('click', close);
   });
+})();
+
+
+// ==========================================================================
+// Home Campaigns — Prev/Next (2026-11-03, five campaigns)
+// From 768px the campaign cards are one fixed-width scroll-snap row
+// (site.css Section 43). These buttons scroll it by one card; they are
+// hidden while every card already fits and disabled at either end. Below
+// 768px the row is swiped and site.css keeps the buttons hidden.
+// ==========================================================================
+
+(function () {
+  'use strict';
+
+  var slider = document.querySelector('[data-campaigns-slider]');
+  if (!slider) {
+    return;
+  }
+
+  var track = slider.querySelector('[data-campaigns-track]');
+  var nav = slider.querySelector('[data-campaigns-nav]');
+  var prevBtn = slider.querySelector('[data-campaigns-prev]');
+  var nextBtn = slider.querySelector('[data-campaigns-next]');
+
+  if (!track || !nav || !prevBtn || !nextBtn) {
+    return;
+  }
+
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var frame = null;
+
+  function update() {
+    frame = null;
+    var maxScroll = track.scrollWidth - track.clientWidth;
+    nav.hidden = maxScroll <= 1;
+    prevBtn.disabled = track.scrollLeft <= 1;
+    nextBtn.disabled = track.scrollLeft >= maxScroll - 1;
+  }
+
+  function scheduleUpdate() {
+    if (frame === null) {
+      frame = window.requestAnimationFrame(update);
+    }
+  }
+
+  // One card plus the gap between cards.
+  function step() {
+    var items = track.children;
+    if (items.length > 1) {
+      return items[1].offsetLeft - items[0].offsetLeft;
+    }
+    return track.clientWidth;
+  }
+
+  function scrollByCards(direction) {
+    track.scrollBy({ left: direction * step(), behavior: reducedMotion ? 'auto' : 'smooth' });
+  }
+
+  prevBtn.addEventListener('click', function () {
+    scrollByCards(-1);
+  });
+
+  nextBtn.addEventListener('click', function () {
+    scrollByCards(1);
+  });
+
+  track.addEventListener('scroll', scheduleUpdate, { passive: true });
+  window.addEventListener('resize', scheduleUpdate);
+  update();
 })();

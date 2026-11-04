@@ -13,7 +13,7 @@ public class SeoService : ISeoService
     private const string DefaultTitle = "Ancın İnşaat";
     private const string DefaultDescription = "Ancın İnşaat — Aydın merkezli, güven ve zanaatkârlıkla şekillenen konut projeleri.";
     private const string DefaultTitleEn = "Ancın İnşaat";
-    private const string DefaultDescriptionEn = "Ancın İnşaat — a premium residential and construction developer based in Aydın, Türkiye.";
+    private const string DefaultDescriptionEn = "Ancın İnşaat — residential developments in Aydın, shaped by trust and craftsmanship.";
     private const string DefaultOgImage = "/images/seo/og-home.webp";
 
     private readonly AppDbContext _context;

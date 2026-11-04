@@ -15,8 +15,8 @@
 
 @{
     var isEn = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
-    var labelMore = isEn ? "more..." : "devamı...";
-    var labelLess = isEn ? "<- less" : "<- gizle";
+    var labelMore = isEn ? "Read more" : "devamı...";
+    var labelLess = isEn ? "← Show less" : "<- gizle";
 }
 
 <div class="history-carousel" data-history-carousel="@Model.Id">
@@ -33,7 +33,7 @@
                 <img class="history-card-image" src="@entry.ImageSrc" alt="@alt" loading="lazy" decoding="async" />
                 <div class="history-card-body">
                     <span class="history-card-year">@entry.Year</span>
-                    <h3 class="history-card-title">@entry.Title</h3>
+                    <h3 class="history-card-title">@(isEn && entry.TitleEn is not null ? entry.TitleEn : entry.Title)</h3>
                     <p class="history-card-description">@summary</p>
                     @if (hasDetail)
                     {

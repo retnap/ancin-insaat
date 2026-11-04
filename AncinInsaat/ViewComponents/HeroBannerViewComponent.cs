@@ -36,21 +36,18 @@ public class HeroBannerViewComponent : ViewComponent
     {
         var latestProject = await _projectQueryService.GetLatestFeaturedProjectAsync();
 
-        // English localization (2026-10-02) — Heading is deliberately NOT
-        // translated even in English: it is this project's display name
-        // ("La Fiore Karabağ 2. Etap"), and project names/phase suffixes
-        // stay untranslated everywhere else on the site (cards, SEO
-        // titles, breadcrumbs), so translating it only here would create
-        // the exact inconsistency docs/13_DevelopmentRules.md's
-        // terminology-consistency rule warns against.
+        // Heading is this project's display name. Only its phase suffix is
+        // translated in English ("2. Etap" → "Phase 2", general manager's
+        // decision, 2026-11-03), the same rule ProjectDisplayText applies to
+        // every other project name on the English site.
         var isEnglish = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase);
         var pathPrefix = isEnglish ? "/en" : "";
 
         var model = new HeroBannerViewModel
         {
-            Heading = "LA FIORE KARABAĞ 2. ETAP",
+            Heading = isEnglish ? "LA FIORE KARABAĞ PHASE 2" : "LA FIORE KARABAĞ 2. ETAP",
             Subheading = isEnglish
-                ? "Ancın İnşaat carries living spaces into the future through projects shaped by trust and craftsmanship."
+                ? "Ancın İnşaat creates homes for the future, shaped by trust and craftsmanship."
                 : "Ancın İnşaat, güven ve zanaatkârlıkla şekillenen projeleriyle yaşam alanlarını geleceğe taşıyor.",
             PrimaryCtaLabel = isEnglish ? "Explore Our Projects" : "Projelerimizi İnceleyin",
             PrimaryCtaUrl = $"{pathPrefix}/projects",

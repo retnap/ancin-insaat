@@ -47,7 +47,7 @@ public class WhyJoinAncinViewComponent : ViewComponent
                 HeadingId = "why-join-heading",
                 Eyebrow = "NEDEN ANCIN?",
                 Title = "Neden Ancın İnşaat'ta Çalışmalısınız?",
-                Description = "Yarım asra yaklaşan bir aile şirketinde, güven ve zanaatkârlıkla şekillenen bir kültürün parçası olun."
+                Description = "Yarım asırlık bir aile şirketinde, güven ve zanaatkârlıkla şekillenen bir kültürün parçası olun."
             },
             InformationCard = new InformationCardModel
             {
@@ -59,7 +59,7 @@ public class WhyJoinAncinViewComponent : ViewComponent
                     {
                         IconMarkup = TrustIconMarkup,
                         Label = "Güven Kültürü",
-                        Value = "Yarım asra yaklaşan köklü bir aile şirketinin istikrarı ve güven ortamında çalışın."
+                        Value = "Yarım asırlık köklü bir aile şirketinin istikrarı ve güven ortamında çalışın."
                     },
                     new()
                     {

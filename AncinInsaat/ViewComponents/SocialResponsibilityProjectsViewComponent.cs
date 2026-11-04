@@ -122,12 +122,12 @@ public class SocialResponsibilityProjectsViewComponent : ViewComponent
             Paragraphs = isEnglish
                 ? new List<string>
                 {
-                    "As Ancın İnşaat, we support the young athletes and dancers who wear the Ancın " +
-                        "jersey at youth sports events organized in cooperation with the Aydın " +
-                        "Directorate of Youth and Sports.",
-                    "Alongside their achievements on the field, we also welcome our young " +
-                        "performers — who keep the region's cultural heritage alive — to our office " +
-                        "to recognize their efforts."
+                    "Ancın İnşaat supports the young athletes and dancers who wear the Ancın " +
+                        "shirt at youth sports events organised in cooperation with the Aydın " +
+                        "Provincial Directorate of Youth and Sports.",
+                    "Beyond celebrating their achievements on the field, we also welcome the " +
+                        "young performers who keep the region's cultural heritage alive to our " +
+                        "office to recognise their efforts."
                 }
                 : new List<string>
                 {
@@ -156,7 +156,7 @@ public class SocialResponsibilityProjectsViewComponent : ViewComponent
     // in that order, after all 55 other photos.
     private static SocialResponsibilityProjectItem BuildProject2(bool isEnglish)
     {
-        var heading = isEnglish ? "Ancın \"Architects of the Future\" Event" : "Ancın Geleceğin Mimarları Etkinliği";
+        var heading = isEnglish ? "Ancın Architects of the Future Event" : "Ancın Geleceğin Mimarları Etkinliği";
         var altSuffix = isEnglish ? "photo" : "fotoğraf";
         var videoAltSuffix = isEnglish ? "video" : "video";
 
@@ -190,13 +190,13 @@ public class SocialResponsibilityProjectsViewComponent : ViewComponent
             Paragraphs = isEnglish
                 ? new List<string>
                 {
-                    "To mark April 23rd National Sovereignty and Children's Day, we held the " +
-                        "\"Ancın Architects of the Future\" event at Aydın OPSmall Mall. Wearing their " +
-                        "own Ancın hard hats and vests, our youngest engineers experienced " +
-                        "construction firsthand.",
-                    "Held in partnership with Neşeli Oyunlar Etkinlik & Oyun Atölyesi, the event " +
-                        "gave children an enjoyable time at a mini construction site, a junior " +
-                        "engineer's workshop and a folk dance performance."
+                    "To mark 23 April National Sovereignty and Children's Day, we held the " +
+                        "\"Ancın Architects of the Future\" event at Aydın OPSmall shopping centre. " +
+                        "Wearing Ancın hard hats and vests, our young engineers experienced " +
+                        "construction first-hand.",
+                    "Organised with Neşeli Oyunlar Etkinlik & Oyun Atölyesi, the event gave " +
+                        "children an enjoyable few hours at a mini construction site, a junior " +
+                        "engineers' workshop and a folk dance performance."
                 }
                 : new List<string>
                 {
@@ -239,8 +239,8 @@ public class SocialResponsibilityProjectsViewComponent : ViewComponent
     private static SocialResponsibilityProjectItem BuildProject3(bool isEnglish)
     {
         var heading = isEnglish
-            ? "N-Latis \"Say No to Violence Against Women\" Fashion Show"
-            : "N-Latis Kadına Şiddete Hayır Defilesi";
+            ? "Nlatis \"Say No to Violence Against Women\" Fashion Show"
+            : "Nlatis Kadına Şiddete Hayır Defilesi";
 
         return new SocialResponsibilityProjectItem
         {
@@ -250,15 +250,16 @@ public class SocialResponsibilityProjectsViewComponent : ViewComponent
             Paragraphs = isEnglish
                 ? new List<string>
                 {
-                    "With our N-Latis project, we supported Ertan Kayıtken's Geleneksel 1 Nisan " +
-                        "\"Kadına Şiddete Hayır!\" (Say No to Violence Against Women) fashion show, an " +
-                        "event that uses fashion to raise public awareness of violence against women.",
-                    "We are proud to stand behind the Kadına Şiddete Hayır message and will continue " +
-                        "to support initiatives that strengthen social awareness."
+                    "Through our Nlatis project, we supported Ertan Kayıtken's traditional 1 April " +
+                        "\"Kadına Şiddete Hayır!\" (Say No to Violence Against Women) fashion show, " +
+                        "which uses the power of fashion to raise public awareness of violence against women.",
+                    "We are proud to be part of this meaningful event, which takes the message of " +
+                        "Say No to Violence Against Women to the catwalk, and we will continue to " +
+                        "support initiatives that strengthen social awareness."
                 }
                 : new List<string>
                 {
-                    "N-Latis projemizle destek verdiğimiz Ertan Kayıtken Geleneksel 1 Nisan " +
+                    "Nlatis projemizle destek verdiğimiz Ertan Kayıtken Geleneksel 1 Nisan " +
                         "\"Kadına Şiddete Hayır!\" Defilesi, modanın gücüyle kadına yönelik şiddete karşı " +
                         "toplumsal farkındalık oluşturmayı amaçlıyor.",
                     "Kadına Şiddete Hayır mesajını podyuma taşıyan bu anlamlı etkinliğin bir parçası " +

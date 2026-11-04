@@ -16,7 +16,7 @@ namespace AncinInsaat.ViewComponents;
 // PLACEHOLDER copy and image — the client has not yet supplied the real HR
 // philosophy text or workplace photography. Realistic-but-fictional,
 // deliberately reuses only the one confirmed real fact already established
-// elsewhere on the site (1973 founding / "53 Yıllık Tecrübe"). Replace both
+// elsewhere on the site (1973 foundations / "50 Yıllık Tecrübe", "yarım asırlık"). Replace both
 // before launch.
 public class HrPhilosophyViewComponent : ViewComponent
 {
@@ -32,7 +32,7 @@ public class HrPhilosophyViewComponent : ViewComponent
             },
             Paragraphs = new List<string>
             {
-                "Ancın İnşaat'ta 53 yıllık tecrübemizin arkasında, her zaman insana verdiğimiz " +
+                "Ancın İnşaat'ta yarım asırlık tecrübemizin arkasında, her zaman insana verdiğimiz " +
                     "değer var. Çalışanlarımızın memnuniyetini ve gelişimini, tamamladığımız " +
                     "projeler kadar önemli görüyoruz.",
                 "Şeffaf iletişimi, adil fırsat eşitliğini ve sürekli gelişimi önceliklendiren bir " +

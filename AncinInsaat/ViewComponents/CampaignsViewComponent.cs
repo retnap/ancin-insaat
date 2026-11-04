@@ -42,25 +42,39 @@ public class CampaignsViewComponent : ViewComponent
             {
                 HeadingId = "campaigns-heading",
                 Eyebrow = isEnglish ? "CAMPAIGNS" : "KAMPANYALAR",
-                Title = isEnglish ? "Our 50th Anniversary Campaigns" : "50. Yılımıza Özel Kampanyalar"
+                Title = isEnglish ? "Celebrating 50 Years with Exclusive Offers" : "50. Yılımıza Özel Kampanyalar"
             },
-            Cards = campaigns.Select(campaign => new CampaignCardModel
+            Cards = campaigns.Select(campaign =>
             {
-                Eyebrow = isEnglish ? "50TH ANNIVERSARY OFFER" : "50. YIL KAMPANYASI",
-                Name = campaign.Name,
-                Location = locationsBySlug.GetValueOrDefault(campaign.ProjectSlug),
-                WatchLabel = isEnglish ? "Watch →" : "İzle →",
-                Slug = campaign.ProjectSlug,
-                VideoSrc = campaign.VideoPath,
-                PosterSrc = campaign.PosterPath,
-                ProjectUrl = $"{pathPrefix}/projects/{campaign.ProjectSlug}",
-                PlayLabel = isEnglish
-                    ? $"Watch the {campaign.Name} campaign video"
-                    : $"{campaign.Name} kampanya videosunu izle",
-                VideoAlt = isEnglish
-                    ? $"{campaign.Name} campaign video"
-                    : $"{campaign.Name} kampanya videosu"
-            }).ToList()
+                var name = ProjectDisplayText.Name(campaign.Name, isEnglish);
+
+                return new CampaignCardModel
+                {
+                    Eyebrow = isEnglish ? "EXCLUSIVE 50TH ANNIVERSARY OFFER" : "50. YIL KAMPANYASI",
+                    Name = name,
+                    // A campaign without a project page has no location line.
+                    Location = campaign.ProjectSlug is null
+                        ? null
+                        : ProjectDisplayText.Location(locationsBySlug.GetValueOrDefault(campaign.ProjectSlug), isEnglish),
+                    WatchLabel = isEnglish ? "Watch →" : "İzle →",
+                    Key = campaign.ProjectSlug ?? $"campaign-{campaign.Order}",
+                    VideoSrc = campaign.VideoPath,
+                    PosterSrc = campaign.PosterPath,
+                    ProjectUrl = campaign.ProjectSlug is null ? null : $"{pathPrefix}/projects/{campaign.ProjectSlug}",
+                    ComingSoonMessage = campaign.ProjectSlug is null
+                        ? (isEnglish ? "Details coming soon." : "Detaylar çok yakında.")
+                        : null,
+                    PlayLabel = isEnglish
+                        ? $"Watch the {name} offer video"
+                        : $"{name} kampanya videosunu izle",
+                    VideoAlt = isEnglish
+                        ? $"{name} offer video"
+                        : $"{name} kampanya videosu"
+                };
+            }).ToList(),
+            PreviousLabel = isEnglish ? "Previous offers" : "Önceki kampanyalar",
+            NextLabel = isEnglish ? "Next offers" : "Sonraki kampanyalar",
+            ListLabel = isEnglish ? "Offers, scrollable" : "Kampanyalar, kaydırılabilir"
         };
 
         return View(model);

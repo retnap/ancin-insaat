@@ -39,10 +39,10 @@ public class CareerPositionSearchProvider : ISearchIndexProvider
                 {
                     Title = title,
                     Description = string.IsNullOrWhiteSpace(description)
-                        ? (isEnglish ? "View this open position's details." : "Açık pozisyon detaylarını görüntüleyin.")
+                        ? (isEnglish ? "View details of this open position." : "Açık pozisyon detaylarını görüntüleyin.")
                         : description,
                     Url = isEnglish ? "/en/career" : "/career",
-                    Category = isEnglish ? "Career" : "Kariyer",
+                    Category = isEnglish ? "Careers" : "Kariyer",
                     Keywords = string.Join(' ', new[] { department, position.Location }
                         .Where(part => !string.IsNullOrWhiteSpace(part))),
                     SortOrder = BaseSortOrder + index
