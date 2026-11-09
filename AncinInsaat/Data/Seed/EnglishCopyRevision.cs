@@ -353,8 +353,8 @@ public static class EnglishCopyRevision
         ["^Opsiyonel İç Mekan – Vestiyer Odası$"] = "optional interior – walk-in wardrobe",
     };
 
-    private const string OldWorkingHoursEn = "Monday - Friday, 09:00 - 18:00";
-    private const string WorkingHoursEn = "Monday to Friday, 09:00–18:00";
+    // Working hours: target and known old values live in DbSeeder
+    // (WorkingHoursEnText / OldWorkingHoursEn, client update 2026-11-09).
 
     // ProjectImage.AltText → AltTextEn, applied to the text after the
     // project-name prefix ("<Project.Name> <rest>"). Only ever fills an
@@ -630,7 +630,10 @@ public static class EnglishCopyRevision
         var settings = await context.SiteSettings.FirstOrDefaultAsync();
         if (settings is not null)
         {
-            settings.WorkingHoursEn = Revise(settings.WorkingHoursEn, OldWorkingHoursEn, WorkingHoursEn, ref changed);
+            foreach (var oldWorkingHoursEn in DbSeeder.OldWorkingHoursEn)
+            {
+                settings.WorkingHoursEn = Revise(settings.WorkingHoursEn, oldWorkingHoursEn, DbSeeder.WorkingHoursEnText, ref changed);
+            }
         }
 
         if (changed)

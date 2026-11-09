@@ -6534,8 +6534,12 @@ select[aria-invalid='true'] {
   color: var(--color-text-secondary);
 }
 
+/* pre-line: a value stored with a line break (Working Hours — weekdays on
+   one line, Sunday on the next, 2026-11-09) renders as two lines; values
+   without one are unaffected. */
 .information-card__value {
   color: var(--color-text-primary);
+  white-space: pre-line;
 }
 
 a.information-card__value {

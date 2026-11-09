@@ -76,8 +76,8 @@ public static class DbSeeder
             Phone = "0256 212 9444",
             Mobile = "0532 232 22 09",
             Email = "info@ancin.com.tr",
-            WorkingHours = "Pazartesi - Cuma, 09:00 - 18:00",
-            WorkingHoursEn = "Monday to Friday, 09:00–18:00",
+            WorkingHours = WorkingHoursTr,
+            WorkingHoursEn = WorkingHoursEnText,
             Facebook = "https://www.facebook.com/ancin.com.tr",
             Instagram = "https://www.instagram.com/ancininsaat",
             LinkedIn = "https://www.linkedin.com/company/ancininsaat",
@@ -202,23 +202,38 @@ public static class DbSeeder
         await context.SaveChangesAsync();
     }
 
-    // Not a seed — corrects an already-seeded SiteSettings row's
-    // WorkingHours/WorkingHoursEn. WorkingHours (the Turkish/default
-    // column, used directly by the Turkish Contact page) was mistakenly
-    // seeded with the English string, and WorkingHoursEn was never
-    // populated — so the English page happened to show correct text only
-    // by falling back to WorkingHours, while Turkish visitors saw raw
-    // English. Guarded against the exact known incorrect value for
-    // WorkingHours, so this never clobbers a real edit made some other way
-    // after this ran once; WorkingHoursEn is only filled when still empty.
-    // Safe to run on every startup, including a freshly seeded database
-    // (where both fields already match and this is a no-op).
+    // Working hours (client update, 2026-11-09): Monday–Saturday 09.00–18.00,
+    // Sunday by appointment. Stored with a line break between the two parts;
+    // the Contact page's Information Card renders it as two lines
+    // (.information-card__value, white-space: pre-line). Shared with
+    // EnglishCopyRevision so the target text lives in one place.
+    internal const string WorkingHoursTr = "Pazartesi – Cumartesi: 09.00 – 18.00\nPazar: Randevu ile";
+    internal const string WorkingHoursEnText = "Monday to Saturday: 09:00–18:00\nSunday: By appointment";
+
+    // Every value this seeder (or the English revision) ever wrote before
+    // the 2026-11-09 update. Only these exact texts (or an empty value) are
+    // replaced — any other value is a deliberate edit and is left alone.
+    // "Monday to Friday, 09:00–18:00" is in the Turkish list too: it is
+    // what WorkingHours was mistakenly seeded with originally.
+    internal static readonly string[] OldWorkingHoursTr =
+    [
+        "Pazartesi - Cuma, 09:00 - 18:00",
+        "Monday to Friday, 09:00–18:00"
+    ];
+
+    internal static readonly string[] OldWorkingHoursEn =
+    [
+        "Monday - Friday, 09:00 - 18:00",
+        "Monday to Friday, 09:00–18:00"
+    ];
+
+    // Not a seed — brings an already-seeded SiteSettings row's
+    // WorkingHours/WorkingHoursEn to the current hours above. Each field is
+    // replaced only while it is empty or still exactly one of the known old
+    // texts, so a manual edit is never overwritten. Safe on every startup;
+    // a no-op once applied (and on a freshly seeded database).
     private static async Task ReconcileSiteSettingsWorkingHoursAsync(AppDbContext context)
     {
-        const string oldWorkingHours = "Monday to Friday, 09:00–18:00";
-        const string correctWorkingHours = "Pazartesi - Cuma, 09:00 - 18:00";
-        const string correctWorkingHoursEn = "Monday to Friday, 09:00–18:00";
-
         var settings = await context.SiteSettings.FirstOrDefaultAsync();
 
         if (settings is null)
@@ -228,15 +243,18 @@ public static class DbSeeder
 
         var changed = false;
 
-        if (settings.WorkingHours == oldWorkingHours)
+        if (string.IsNullOrWhiteSpace(settings.WorkingHours) || OldWorkingHoursTr.Contains(settings.WorkingHours))
         {
-            settings.WorkingHours = correctWorkingHours;
-            changed = true;
+            if (settings.WorkingHours != WorkingHoursTr)
+            {
+                settings.WorkingHours = WorkingHoursTr;
+                changed = true;
+            }
         }
 
-        if (string.IsNullOrWhiteSpace(settings.WorkingHoursEn))
+        if (string.IsNullOrWhiteSpace(settings.WorkingHoursEn) || OldWorkingHoursEn.Contains(settings.WorkingHoursEn))
         {
-            settings.WorkingHoursEn = correctWorkingHoursEn;
+            settings.WorkingHoursEn = WorkingHoursEnText;
             changed = true;
         }
 
@@ -4505,6 +4523,7 @@ public static class DbSeeder
         await ReconcileKuyuluLaViaVillalarRemoveRoofFloorPlanAsync(context);
         await ReconcileLaFioreKarabag2EtapGTipiGirisHoluAsync(context);
         await ReconcileLaFioreKarabag2EtapUcArtiBirKatPlanlariAsync(context);
+        await ReconcileTrallesGoldConceptFirstsAsync(context);
 
         var existingSlugs = new HashSet<string>(await context.Projects.Select(p => p.Slug).ToListAsync());
 
@@ -7133,45 +7152,244 @@ public static class DbSeeder
         return images;
     }
 
-    // Concept section's 3-slide image carousel (Tralles Gold Residence
-    // revision, 2026-08-10) — this project has no concept video, so it gets
-    // the image-only carousel, same shared markup as Alinda Gold Residence/
-    // Magnesia Gold Residence. Images are 3 of the 12 exterior photos above
-    // (a wide daylight establishing aerial, a wide night aerial, and a
-    // closer night facade detail), chosen for visual variety. Copy is
-    // written specifically for this project from what these three photos
-    // actually show plus the project's confirmed Location ("Aydın -
-    // Efeler") — no invented facilities, apartment counts, distances or
-    // figures.
+    // Concept section (Tralles Gold Residence) — four cards, one client-
+    // supplied "first in Aydın" fact each. Final client copy (2026-11-09,
+    // second pass): the first four-card version's text was too plain, so the
+    // client supplied these exact TR/EN texts. Images and order are unchanged
+    // from that first version: the social pavilion beside a tower, the
+    // daylight aerial of the full-height towers, the indoor pool, and a dusk
+    // view of the towers from the base up (the Concept card and lightbox
+    // resolve each to its display WebP). A freshly seeded database gets these
+    // directly via ReconcileTrallesGoldResidenceRevisionAsync; an existing
+    // one converges via ReconcileTrallesGoldConceptFirstsAsync.
     private static List<ProjectConceptImage> BuildTrallesGoldConceptImages()
     {
         return new List<ProjectConceptImage>
         {
             new()
             {
-                ImagePath = "/images/projects/tralles-gold/banner/tralles banner deneme.png",
-                Eyebrow = "Efeler'in Yükselen Üç Kulesi",
-                Title = "Şehrin Kalbinde Yan Yana Yükselen Bloklar",
-                Description = "Aydın Efeler'in dokusu içinde yan yana yükselen Tralles Gold Residence blokları, beyaz cepheleri ve dikey kırmızı vurgularıyla çevresinden hemen ayrışan güçlü bir mimari kimlik ortaya koyuyor. Gün ışığında çekilen bu kuşbakışı görünüm, projenin şehir dokusuyla kurduğu doğrudan bağlantıyı net bir şekilde gösteriyor.",
+                ImagePath = "/images/projects/tralles-gold/gallery/exterior/originals/dis-mekan-gorselleri-14.jpeg",
+                Eyebrow = "Sosyal Yaşam",
+                Title = "Aydın'da Sosyal Tesisli Konutun İlk Adresi",
+                Description = "Tralles Gold Residence, konutu sosyal tesislerle aynı projede buluşturan Aydın'daki ilk örnek oldu. Gündelik yaşamın ihtiyaçlarını sitenin içine taşıyan bu yaklaşım, kentte konut anlayışına yeni bir bakış açısı kazandırdı.",
+                EyebrowEn = "Social Living",
+                TitleEn = "Aydın's First Residence with Social Facilities",
+                DescriptionEn = "Tralles Gold Residence was the first development in Aydın to bring homes and social facilities together in a single project, introducing a new perspective on residential living in the city.",
                 DisplayOrder = 1
             },
             new()
             {
-                ImagePath = "/images/projects/tralles-gold/gallery/exterior/originals/exterior-06.jpg",
-                Eyebrow = "Gece Çöktüğünde Değişen Bir Atmosfer",
-                Title = "Kırmızı Vurgularla Aydınlanan Bir Silüet",
-                Description = "Akşam saatlerinde ışıklandırılan cepheleriyle Tralles Gold Residence, şehrin gece silüetinde kendine özgü bir karakter kazanıyor. Balkonları çevreleyen kırmızı hatlar, gündüzün beyaz sadeliğini gecenin canlılığıyla buluşturan görsel bir imza haline geliyor.",
+                ImagePath = "/images/projects/tralles-gold/banner/tralles-konsept-foto.png",
+                Eyebrow = "18 Kat · 50 Metre",
+                Title = "Aydın'ın Silüetinde Yeni Bir Yükseklik",
+                Description = "18 katı ve 50 metrelik yüksekliğiyle Tralles Gold, Aydın'da bu yüksekliğe ulaşan ilk konut projesi oldu. Dikey hatlarıyla yükselen kuleler, zamanla Efeler silüetinin tanıdık bir parçası haline geldi.",
+                EyebrowEn = "18 Floors · 50 Metres",
+                TitleEn = "A New Height for Aydın",
+                DescriptionEn = "With 18 floors rising to 50 metres, Tralles Gold was the first residential building in Aydın to reach this height. Its vertical lines have since become a familiar part of the Efeler skyline.",
                 DisplayOrder = 2
             },
             new()
             {
-                ImagePath = "/images/projects/tralles-gold/gallery/exterior/originals/exterior-09.jpg",
-                Eyebrow = "Cepheye İşlenen Kırmızı Bir İmza",
-                Title = "Detayda Ortaya Çıkan Mimari Karakter",
-                Description = "Cepheyi boydan boya kat eden kırmızı dikey elemanlar, yakın çekimde Tralles Gold Residence'ın mimari kimliğini daha da belirgin kılıyor. Gece aydınlatmasıyla öne çıkan bu detay, projenin her katmanında hissedilen özenli tasarım yaklaşımını yansıtıyor.",
+                ImagePath = "/images/projects/tralles-gold/gallery/social-facilties/13.png",
+                Eyebrow = "Dört Mevsim Havuz",
+                Title = "Yazın Açılan Çatı, Kışın Isıtmalı Havuz",
+                Description = "Aydın'ın ilk kapalı ve ısıtmalı yüzme havuzu Tralles Gold'da hayata geçti. Yaz aylarında açılan çatısıyla havuz, sıcak günlerde açık havanın ferahlığını, kış aylarında ise ısıtmalı kapalı havuzun konforunu aynı mekânda sunuyor.",
+                EyebrowEn = "Year-Round Swimming",
+                TitleEn = "Open in Summer, Heated in Winter",
+                DescriptionEn = "Aydın's first indoor heated swimming pool was created at Tralles Gold. With a roof that opens in summer, it offers the freshness of open-air swimming on warm days and the comfort of a heated indoor pool in winter.",
                 DisplayOrder = 3
+            },
+            new()
+            {
+                ImagePath = "/images/projects/tralles-gold/gallery/exterior/originals/dis-mekan-gorselleri-13.JPG",
+                Eyebrow = "Görünmeyen Mühendislik",
+                Title = "Sağlam Bir Zeminin Üzerinde",
+                Description = "Tralles Gold'un temelinde, Aydın'da ilk kez uygulanan jet grout zemin iyileştirme yöntemi yer alıyor. Binanın altındaki zemini güçlendiren bu teknik, kulelerin güvenli temelinin ilk adımı oldu.",
+                EyebrowEn = "Engineering Below Ground",
+                TitleEn = "Built on Solid Ground",
+                DescriptionEn = "Tralles Gold was the first project in Aydın to use the jet grout ground improvement method. This technique strengthens the soil beneath the building and laid the groundwork for a secure foundation for the towers.",
+                DisplayOrder = 4
             }
         };
+    }
+
+    // Text of one Tralles Gold Concept card, used only to recognise an
+    // untouched copy of an earlier version.
+    private sealed record TrallesConceptText(
+        string Eyebrow, string Title, string Description,
+        string EyebrowEn, string TitleEn, string DescriptionEn);
+
+    // The first four-card version (2026-11-09, first pass — superseded the
+    // same day before it was deployed, but it is in the committed database
+    // and any database started from it). Same order as
+    // BuildTrallesGoldConceptImages: index i is the earlier text of card i.
+    // English titles from the second pass (2026-11-09) that the client then
+    // shortened the same day — also treated as a previous version of card i
+    // (null = that card's English title was not changed).
+    private static readonly string?[] SupersededTrallesConceptTitlesEn =
+    [
+        null,
+        null,
+        "A Retractable Roof for Summer, a Heated Pool for Winter",
+        null
+    ];
+
+    private static readonly TrallesConceptText[] PreviousTrallesConceptTexts =
+    [
+        new("Sosyal Tesis",
+            "Aydın'ın Sosyal Tesisli İlk Konut Projesi",
+            "Tralles Gold Residence, Aydın'da sosyal tesise sahip ilk konut projesidir.",
+            "Social Facilities",
+            "Aydın's First Residence with Social Facilities",
+            "Tralles Gold Residence is Aydın's first residential development with social facilities."),
+        new("18 Kat, 50 Metre",
+            "Aydın'ın En Yüksek İlk Konut Projesi",
+            "Tralles Gold Residence, 18 katı ve 50 metre yüksekliğiyle Aydın'ın en yüksek ilk konut projesidir.",
+            "18 Floors, 50 Metres",
+            "Aydın's First and Tallest Residential Building",
+            "With 18 floors and a height of 50 metres, Tralles Gold Residence was Aydın's first and tallest residential building."),
+        new("Kapalı Yüzme Havuzu",
+            "Aydın'ın İlk Isıtmalı Kapalı Havuzu",
+            "Projede Aydın'ın ilk kapalı ve ısıtmalı yüzme havuzu bulunur. Havuzun çatısı yaz aylarında açılır.",
+            "Indoor Pool",
+            "Aydın's First Heated Indoor Pool",
+            "The development has Aydın's first indoor heated pool, with a retractable roof that opens in summer."),
+        new("Zemin İyileştirme",
+            "Aydın'da İlk Kez Jet Grout",
+            "Jet grout zemin iyileştirme yöntemi, Aydın'da ilk kez bu projede uygulandı.",
+            "Ground Improvement",
+            "Jet Grout, a First for Aydın",
+            "The jet grout ground improvement method was used for the first time in Aydın on this project.")
+    ];
+
+    // The single Concept card this project carried before the 2026-11-09
+    // rewrite (originally the first of three slides; the other two were
+    // removed by ReconcileTrallesGoldConceptSingleCardAsync). Kept only so
+    // the reconciles can recognise an untouched copy of it.
+    private const string OldTrallesConceptEyebrow = "Efeler'in Yükselen Üç Kulesi";
+    private const string OldTrallesConceptTitle = "Şehrin Kalbinde Yan Yana Yükselen Bloklar";
+    private const string OldTrallesConceptDescription = "Aydın Efeler'in dokusu içinde yan yana yükselen Tralles Gold Residence blokları, beyaz cepheleri ve dikey kırmızı vurgularıyla çevresinden hemen ayrışan güçlü bir mimari kimlik ortaya koyuyor. Gün ışığında çekilen bu kuşbakışı görünüm, projenin şehir dokusuyla kurduğu doğrudan bağlantıyı net bir şekilde gösteriyor.";
+    private const string OldTrallesConceptEyebrowEn = "The Three Rising Towers of Efeler";
+    private const string OldTrallesConceptTitleEn = "Blocks Rising Side by Side in the Heart of the City";
+    private const string OldTrallesConceptDescriptionEn = "Rising side by side within the urban fabric of Aydın Efeler, the blocks of Tralles Gold Residence have a strong architectural identity, instantly recognisable by their white façades and vertical red accents. This aerial view, taken in daylight, clearly shows the development's direct connection with the city.";
+
+    // Titles of the two slides ReconcileTrallesGoldConceptSingleCardAsync
+    // removes (client decision, 2026-09-04).
+    private static readonly string[] OldTrallesRemovedConceptTitles =
+    [
+        "Kırmızı Vurgularla Aydınlanan Bir Silüet",
+        "Detayda Ortaya Çıkan Mimari Karakter"
+    ];
+
+    // Not a seed — Tralles Gold Residence Concept rewrite (client request,
+    // 2026-11-09). Brings an existing database to the four cards of
+    // BuildTrallesGoldConceptImages from either earlier state:
+    //  • the old single card (what the live site has): removed only while its
+    //    Turkish Eyebrow/Title/Description are still exactly the old text and
+    //    each English field is empty or still the old English text — any
+    //    edit keeps the card;
+    //  • the first four-card version: a card is recognised as card i when any
+    //    of its six text fields equals card i's earlier or final text, and
+    //    each field is replaced only while it is empty or still exactly the
+    //    earlier text — a manually edited field is never overwritten. The
+    //    same applies to the superseded second-pass English titles
+    //    (SupersededTrallesConceptTitlesEn).
+    // Card i is inserted only when no existing card is recognised as it. If
+    // an unrelated (e.g. edited old) card is kept, inserted cards are
+    // appended after it rather than sharing its DisplayOrder. Images,
+    // order and every other column of an existing card are left alone.
+    // Idempotent — a no-op once applied and on a freshly seeded database.
+    private static async Task ReconcileTrallesGoldConceptFirstsAsync(AppDbContext context)
+    {
+        var project = await context.Projects
+            .Include(p => p.ConceptImages)
+            .FirstOrDefaultAsync(p => p.Slug == "tralles-gold");
+
+        if (project is null)
+        {
+            return;
+        }
+
+        static bool IsOldOrEmpty(string? value, string oldValue) =>
+            string.IsNullOrEmpty(value) || string.Equals(value, oldValue, StringComparison.Ordinal);
+
+        var untouchedOldCards = project.ConceptImages
+            .Where(c => c.Eyebrow == OldTrallesConceptEyebrow &&
+                        c.Title == OldTrallesConceptTitle &&
+                        c.Description == OldTrallesConceptDescription &&
+                        IsOldOrEmpty(c.EyebrowEn, OldTrallesConceptEyebrowEn) &&
+                        IsOldOrEmpty(c.TitleEn, OldTrallesConceptTitleEn) &&
+                        IsOldOrEmpty(c.DescriptionEn, OldTrallesConceptDescriptionEn))
+            .ToList();
+
+        var changed = false;
+
+        if (untouchedOldCards.Count > 0)
+        {
+            context.ProjectConceptImages.RemoveRange(untouchedOldCards);
+            changed = true;
+        }
+
+        var finalCards = BuildTrallesGoldConceptImages();
+        var remaining = project.ConceptImages.Except(untouchedOldCards).ToList();
+
+        bool IsCard(ProjectConceptImage c, int i)
+        {
+            var f = finalCards[i];
+            var p = PreviousTrallesConceptTexts[i];
+            return c.Eyebrow == f.Eyebrow || c.Eyebrow == p.Eyebrow ||
+                   c.Title == f.Title || c.Title == p.Title ||
+                   c.Description == f.Description || c.Description == p.Description ||
+                   c.EyebrowEn == f.EyebrowEn || c.EyebrowEn == p.EyebrowEn ||
+                   c.TitleEn == f.TitleEn || c.TitleEn == p.TitleEn ||
+                   (SupersededTrallesConceptTitlesEn[i] is { } t && c.TitleEn == t) ||
+                   c.DescriptionEn == f.DescriptionEn || c.DescriptionEn == p.DescriptionEn;
+        }
+
+        string? Revise(string? value, string final, params string?[] previous)
+        {
+            if (value != final && (string.IsNullOrEmpty(value) || previous.Contains(value)))
+            {
+                changed = true;
+                return final;
+            }
+
+            return value;
+        }
+
+        var unrelated = remaining.Where(c => !Enumerable.Range(0, finalCards.Count).Any(i => IsCard(c, i)));
+        var orderOffset = unrelated.Select(c => c.DisplayOrder).DefaultIfEmpty(0).Max();
+
+        for (var i = 0; i < finalCards.Count; i++)
+        {
+            var final = finalCards[i];
+            var previous = PreviousTrallesConceptTexts[i];
+            var existing = remaining.Where(c => IsCard(c, i)).ToList();
+
+            if (existing.Count == 0)
+            {
+                final.ProjectId = project.Id;
+                final.DisplayOrder += orderOffset;
+                context.ProjectConceptImages.Add(final);
+                changed = true;
+                continue;
+            }
+
+            foreach (var card in existing)
+            {
+                card.Eyebrow = Revise(card.Eyebrow, final.Eyebrow!, previous.Eyebrow)!;
+                card.Title = Revise(card.Title, final.Title!, previous.Title)!;
+                card.Description = Revise(card.Description, final.Description!, previous.Description)!;
+                card.EyebrowEn = Revise(card.EyebrowEn, final.EyebrowEn!, previous.EyebrowEn);
+                card.TitleEn = Revise(card.TitleEn, final.TitleEn!, previous.TitleEn, SupersededTrallesConceptTitlesEn[i]);
+                card.DescriptionEn = Revise(card.DescriptionEn, final.DescriptionEn!, previous.DescriptionEn);
+            }
+        }
+
+        if (changed)
+        {
+            await context.SaveChangesAsync();
+        }
     }
 
     // Floor Plans' one and only entry for this project (Tralles Gold
@@ -9526,6 +9744,11 @@ public static class DbSeeder
     // carousel's prev/next arrows on its own — no markup change needed.
     // Guarded so both the image swap and the slide removal are safe no-ops
     // once already applied.
+    //
+    // Narrowed 2026-11-09: the Concept section now has four cards (see
+    // BuildTrallesGoldConceptImages), so this only ever touches the old
+    // first card (by its exact old Title) and the two old slides (by their
+    // exact old Titles) — never the new cards.
     private static async Task ReconcileTrallesGoldConceptSingleCardAsync(AppDbContext context)
     {
         const string correctImagePath = "/images/projects/tralles-gold/banner/tralles-konsept-foto.png";
@@ -9539,13 +9762,13 @@ public static class DbSeeder
             return;
         }
 
-        var firstSlide = project.ConceptImages.FirstOrDefault(i => i.DisplayOrder == 1);
+        var firstSlide = project.ConceptImages.FirstOrDefault(i => i.DisplayOrder == 1 && i.Title == OldTrallesConceptTitle);
         if (firstSlide is not null && firstSlide.ImagePath != correctImagePath)
         {
             firstSlide.ImagePath = correctImagePath;
         }
 
-        var extraSlides = project.ConceptImages.Where(i => i.DisplayOrder != 1).ToList();
+        var extraSlides = project.ConceptImages.Where(i => OldTrallesRemovedConceptTitles.Contains(i.Title)).ToList();
         if (extraSlides.Count > 0)
         {
             context.ProjectConceptImages.RemoveRange(extraSlides);
